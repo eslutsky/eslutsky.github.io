@@ -9,7 +9,7 @@
 <!-- <![endif] -->
 <head>
 <title>
-Metrics Store User Guide &mdash;
+Troubleshooting &mdash;
 oVirt
 </title>
 <meta charset='utf-8'>
@@ -97,19 +97,42 @@ oVirt
 <a href="http://browsehappy.com/">Upgrade your browser today</a> or
 <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 <![endif]-->
-<h1 id="metrics-store-user-guide">Metrics Store User Guide</h1>
+<h1 id="chapter-5-replacing-fluentd-with-rsyslog">Chapter 5: Replacing fluentd with Rsyslog</h1>
 
-<h2 id="chapter-1-introduction">Chapter 1: <a href="Introduction">Introduction</a></h2>
+<p>The following sections explain how to resolve issues that may occur in Metrics Store.</p>
 
-<h2 id="chapter-2-analyzing-metrics">Chapter 2: <a href="analyzing_metrics">Analyzing Metrics</a></h2>
+<h2 id="information-is-missing-from-kibana">Information Is Missing from Kibana</h2>
 
-<h2 id="chapter-3-analyzing-logs">Chapter 3: <a href="Logs">Analyzing Logs</a></h2>
+<p>If Kibana is not displaying metric or log information as expected, you can use <code>journalctl</code> to investigate the collectd and fluentd log files as follows:</p>
 
-<h2 id="chapter-4-troubleshooting">Chapter 4: <a href="Troubleshooting">Troubleshooting</a></h2>
+<ul>
+  <li>
+    <p>If only metrics information is missing, check the collectd log files.</p>
+  </li>
+  <li>
+    <p>If only log information is missing, check the fluentd log files.</p>
+  </li>
+  <li>
+    <p>If both metrics and logs information are missing, check both log files.</p>
+  </li>
+</ul>
 
-<h2 id="chapter-5-replacing-fluentd-with-rsyslog">Chapter 5: <a href="replacing_with_rsyslog.html">Replacing fluentd with Rsyslog</a></h2>
+<ol>
+  <li>
+    <p>To investigate collectd log files:</p>
 
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/metrics_store_user_guide/index">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+<div class="highlight"><pre class="highlight plaintext"><code> # journalctl -u collectd&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>To investigate fluentd log files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # journalctl -u fluentd&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> To learn about the other journalctl options refer to the man page.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="Logs">Chapter 3: Analyzing Logs</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/metrics_store_user_guide/chap-troubleshooting">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
 
 </section>
 </section>
@@ -124,14 +147,12 @@ oVirt
 
 &copy; 2013&ndash;2019 oVirt
 <div class='edit-this-page'>
-<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/metrics-user-guide/metrics-user-guide.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/metrics-user-guide/replacing_with_rsyslog.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
 </div>
 <div class='edit-this-page'>
-<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/metrics-user-guide/metrics-user-guide.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/metrics-user-guide/replacing_with_rsyslog.md"><i class="icon fa fa-github"></i>Edit this page</a>
 </div>
 <div class='last-modified'>
-Page last modified
-Sun 16 Dec 2018 00:48 UTC
 </div>
         <script type="text/javascript">
         var _paq = _paq || [];
