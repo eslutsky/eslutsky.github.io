@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Custom Network Properties &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="appendix-b-custom-network-properties">Appendix B: Custom Network Properties</h1>
+
+<h2 id="explanation-of-bridge_opts-parameters">Explanation of bridge_opts Parameters</h2>
+
+<p><strong>bridge_opts parameters</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>forward_delay</td>
+      <td>Sets the time, in deciseconds, a bridge will spend in the listening and learning states. If no switching loop is discovered in this time, the bridge will enter forwarding state. This allows time to inspect the traffic and layout of the network before normal network operation.</td>
+    </tr>
+    <tr>
+      <td>gc_timer</td>
+      <td>Sets the garbage collection time, in deciseconds, after which the forwarding database is checked and cleared of timed-out entries.</td>
+    </tr>
+    <tr>
+      <td>group_addr</td>
+      <td>Set to zero when sending a general query. Set to the IP multicast address when sending a group-specific query, or group-and-source-specific query.</td>
+    </tr>
+    <tr>
+      <td>group_fwd_mask</td>
+      <td>Enables bridge to forward link local group addresses. Changing this value from the default will allow non-standard bridging behavior.</td>
+    </tr>
+    <tr>
+      <td>hash_elasticity</td>
+      <td>The maximum chain length permitted in the hash table. Does not take effect until the next new multicast group is added. If this cannot be satisfied after rehashing, a hash collision occurs and snooping is disabled.</td>
+    </tr>
+    <tr>
+      <td>hash_max</td>
+      <td>The maximum amount of buckets in the hash table. This takes effect immediately and cannot be set to a value less than the current number of multicast group entries. Value must be a power of two.</td>
+    </tr>
+    <tr>
+      <td>hello_time</td>
+      <td>Sets the time interval, in deciseconds, between sending 'hello' messages, announcing bridge position in the network topology. Applies only if this bridge is the Spanning Tree root bridge.</td>
+    </tr>
+    <tr>
+      <td>hello_timer</td>
+      <td>Time, in deciseconds, since last 'hello' message was sent.</td>
+    </tr>
+    <tr>
+      <td>max_age</td>
+      <td>Sets the maximum time, in deciseconds, to receive a 'hello' message from another root bridge before that bridge is considered dead and takeover begins.</td>
+    </tr>
+    <tr>
+      <td>multicast_last_member_count</td>
+      <td>Sets the number of 'last member' queries sent to the multicast group after receiving a 'leave group' message from a host.</td>
+    </tr>
+    <tr>
+      <td>multicast_last_member_interval</td>
+      <td>Sets the time, in deciseconds, between 'last member' queries.</td>
+    </tr>
+    <tr>
+      <td>multicast_membership_interval</td>
+      <td>Sets the time, in deciseconds, that a bridge will wait to hear from a member of a multicast group before it stops sending multicast traffic to the host.</td>
+    </tr>
+    <tr>
+      <td>multicast_querier</td>
+      <td>Sets whether the bridge actively runs a multicast querier or not. When a bridge receives a 'multicast host membership' query from another network host, that host is tracked based on the time that the query was received plus the multicast query interval time. If the bridge later attempts to forward traffic for that multicast membership, or is communicating with a querying multicast router, this timer confirms the validity of the querier. If valid, the multicast traffic is delivered via the bridge's existing multicast membership table; if no longer valid, the traffic is sent via all bridge ports. Broadcast domains with, or expecting, multicast memberships should run at least one multicast querier for improved performance.</td>
+    </tr>
+    <tr>
+      <td>multicast_querier_interval</td>
+      <td>Sets the maximum time, in deciseconds, between last 'multicast host membership' query received from a host to ensure it is still valid.</td>
+    </tr>
+    <tr>
+      <td>multicast_query_use_ifaddr</td>
+      <td>Boolean. Defaults to '0', in which case the querier uses 0.0.0.0 as source address for IPv4 messages. Changing this sets the bridge IP as the source address.</td>
+    </tr>
+    <tr>
+      <td>multicast_query_interval</td>
+      <td>Sets the time, in deciseconds, between query messages sent by the bridge to ensure validity of multicast memberships. At this time, or if the bridge is asked to send a multicast query for that membership, the bridge checks its own multicast querier state based on the time that a check was requested plus multicast_query_interval. If a multicast query for this membership has been sent within the last multicast_query_interval, it is not sent again.</td>
+    </tr>
+    <tr>
+      <td>multicast_query_response_interval</td>
+      <td>Length of time, in deciseconds, a host is allowed to respond to a query once it has been sent. Must be less than or equal to the value of the multicast_query_interval.</td>
+    </tr>
+    <tr>
+      <td>multicast_router</td>
+      <td>Allows you to enable or disable ports as having multicast routers attached. A port with one or more multicast routers will receive all multicast traffic. A value of 0 disables completely, a value of 1 enables the system to automatically detect the presence of routers based on queries, and a value of 2 enables ports to always receive all multicast traffic.</td>
+    </tr>
+    <tr>
+      <td>multicast_snooping</td>
+      <td>Toggles whether snooping is enabled or disabled. Snooping allows the bridge to listen to the network traffic between routers and hosts to maintain a map to filter multicast traffic to the appropriate links. This option allows the user to re-enable snooping if it was automatically disabled due to hash collisions, however snooping will not be re-enabled if the hash collision has not been resolved.</td>
+    </tr>
+    <tr>
+      <td>multicast_startup_query_count</td>
+      <td>Sets the number of queries sent out at startup to determine membership information.</td>
+    </tr>
+    <tr>
+      <td>multicast_startup_query_interval</td>
+      <td>Sets the time, in deciseconds, between queries sent out at startup to determine membership information.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="how-to-set-up-ovirt-engine-to-use-ethtool">How to Set Up oVirt Engine to Use Ethtool</h2>
+
+<p>You can configure ethtool properties for host network interface cards from the Administration Portal. The <strong>ethtool_opts</strong> key is not available by default and needs to be added to the Manager using the engine configuration tool. You also need to install the required VDSM hook package on the hosts.</p>
+
+<p><strong>Adding the ethtool_opts Key to the Engine</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine, run the following command to add the key:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s UserDefinedNetworkCustomProperties=ethtool_opts=.* --cver=4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>On the hosts that you want to configure ethtool properties, install the VDSM hook package. The package is available by default on oVirt Host but needs to be installed on Enterprise Linux hosts.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install vdsm-hook-ethtool-options&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The <strong>ethtool_opts</strong> key is now available in the Administration Portal. See <a href="Editing_host_network_interfaces">Editing host network interfaces</a> to apply ethtool properties to logical networks.</p>
+
+<h2 id="how-to-set-up-ovirt-engine-to-use-fcoe">How to Set Up oVirt Engine to Use FCoE</h2>
+
+<p>You can configure Fibre Channel over Ethernet (FCoE) properties for host network interface cards from the Administration Portal. The <strong>fcoe</strong> key is not available by default and needs to be added to the Engine using the engine configuration tool. You can check whether <strong>fcoe</strong> has already been enabled by running the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-config -g UserDefinedNetworkCustomProperties&#x000A;</code></pre></div>
+<p>You also need to install the required VDSM hook package on the hosts. Depending on the FCoE card on the hosts, special configuration may also be needed.</p>
+
+<p><strong>Adding the fcoe Key to the Engine</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine, run the following command to add the key:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s UserDefinedNetworkCustomProperties='fcoe=^((enable|dcb|auto_vlan)=(yes|no),?)\*$'&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the VDSM hook package on each of the Enterprise Linux hosts on which you want to configure FCoE properties. The package is available by default on oVirt Node.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install vdsm-hook-fcoe&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The <strong>fcoe</strong> key is now available in the Administration Portal. See <a href="Editing_host_network_interfaces">Editing host network interfaces</a> to apply FCoE properties to logical networks.</p>
+
+<p><strong>Prev:</strong> <a href="appe-VDSM_and_Hooks">Appendix A: VDSM and Hooks</a><br />
+<strong>Next:</strong> <a href="appe-oVirt_User_Interface_Plugins">Appendix C: oVirt User Interface Plugins</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/appe-custom_network_properties">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/appe-Custom_Network_Properties.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/appe-Custom_Network_Properties.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

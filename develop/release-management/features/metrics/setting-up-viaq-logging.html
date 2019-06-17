@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Metrics Store - Setting Up ViaQ Logging &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/metrics/">Metrics</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="setting-up-ovirt-metrics-store">Setting Up oVirt metrics store</h1>
+
+<h2 id="intro">Intro</h2>
+
+<p>The oVirt metrics store is based on the <a href="https://github.com/openshift/origin-aggregated-logging">OpenShift
+Logging</a> stack.
+You can use either the OpenShift Container Platform (OCP) based on RHEL7, or
+OpenShift Origin (Origin) based on CentOS7.  Ansible is used to install logging
+using the <a href="https://github.com/openshift/openshift-ansible">OpenShift Ansible</a>
+logging <a href="https://github.com/openshift/openshift-ansible/blob/master/roles/openshift_logging/README.md">roles</a>.</p>
+
+<p>Ansible is used to install oVirt metrics store using OpenShift Ansible.
+The following packages are required:</p>
+
+<h3 id="customizing-varsyaml">Customizing vars.yaml</h3>
+
+<p>In the first playbook you run <a href="https://ovirt.org/develop/release-management/features/metrics/metrics-store-installation/#run-ovirt-metrics-store-installation-playbook">Run ovirt-metrics-store-installation playbook</a>,
+a few files are generated and copied to the metrics store virtual machine.</p>
+
+<h2 id="running-ansible">Running Ansible</h2>
+
+<p>Log into the admin portal and review the metrics store installer virtual machine creation.</p>
+
+<p>Log into the metrics store installer virtual machine</p>
+<div class="highlight"><pre class="highlight plaintext"><code>  # ssh root@&lt;metrics-store-installer ip or fqdn&gt;&#x000A;</code></pre></div>
+<p>Run the ansible plabook that creates the OpenShift vms and deploys OpenShift</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ANSIBLE_ROLES_PATH="/usr/share/ansible/roles/:/usr/share/ansible/openshift-ansible/roles" \&#x000A;    ANSIBLE_JINJA2_EXTENSIONS="jinja2.ext.do" \&#x000A;    ansible-playbook -i integ.ini install_okd.yaml -e @vars.yaml&#x000A;</code></pre></div>
+<ol>
+  <li>Check <code>/tmp/ansible.log</code> if there are any errors during the run.  If this
+hangs, just kill it and run it again - Ansible is (mostly) idempotent.  Same
+applies if there are any errors during the run - fix the machine and/or the
+<code>vars.yaml</code> and run it again.</li>
+</ol>
+
+<h2 id="enabling-elasticsearch-to-mount-the-directory">Enabling Elasticsearch to Mount the Directory</h2>
+<p>The installation of Elasticsearch will fail because there is currently no way to grant
+the Elasticsearch service account permission to mount that directory.
+After installation is complete, do the following steps to enable Elasticsearch to mount the directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # oc project logging&#x000A;    # oc adm policy add-scc-to-user hostmount-anyuid \&#x000A;      system:serviceaccount:logging:aggregated-logging-elasticsearch&#x000A;&#x000A;    # oc rollout cancel $( oc get -n logging dc -l component=es -o name )&#x000A;    # oc rollout latest $( oc get -n logging dc -l component=es -o name )&#x000A;    # oc rollout status -w $( oc get -n logging dc -l component=es -o name )&#x000A;</code></pre></div>
+<h2 id="enabling-kopf">Enabling Kopf</h2>
+<p>kopf is a simple web administration tool for elasticsearch.</p>
+
+<p>It offers an easy way of performing common tasks on an elasticsearch cluster.
+Not every single API is covered by this plugin, but it does offer a REST client
+which allows you to explore the full potential of the ElasticSearch API.</p>
+
+<p>See:</p>
+
+<p>https://github.com/openshift/origin-aggregated-logging/tree/master/hack/kopf</p>
+
+<h3 id="post-install-checking">Post-Install Checking</h3>
+
+<ol>
+  <li>
+    <p>To confirm that Elasticsearch, Curator, Kibana, and Fluentd pods are running, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project logging&#x000A;# oc get pods&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>To confirm that the Elasticsearch and Kibana services are running, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project logging&#x000A;# oc get svc&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>To confirm that there are routes for Elasticsearch and Kibana, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project logging&#x000A;# oc get routes&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="test-elasticsearch">Test Elasticsearch</h3>
+
+<p>To search Elasticsearch, first get the name of the Elasticsearch pod, then use oc exec to query Elasticsearch.
+The example search below will look for all log records in project.logging and will sort them by @timestamp
+(which is the timestamp when the record was created at the source) in descending order (that is, latest first):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project logging&#x000A;# espod=`oc get pods -l component=es -o jsonpath='{.items[0].metadata.name}'`&#x000A;# oc exec -c elasticsearch $espod -- curl --connect-timeout 1 -s -k \&#x000A;  --cert /etc/elasticsearch/secret/admin-cert \&#x000A;  --key /etc/elasticsearch/secret/admin-key \&#x000A;  'https://localhost:9200/project.logging.*/_search?sort=@timestamp:desc' | \&#x000A;  python -mjson.tool | more&#x000A;&#x000A;&#x000A;{&#x000A;"_shards": {&#x000A;    "failed": 0,&#x000A;    "successful": 1,&#x000A;    "total": 1&#x000A;},&#x000A;"hits": {&#x000A;    "hits": [&#x000A;        {&#x000A;            "_id": "AVi70uBa6F1hLfsBbCQq",&#x000A;            "_index": "project.logging.42eab680-b7f9-11e6-a793-fa163e8a98f9.2016.12.01",&#x000A;            "_score": 1.0,&#x000A;            "_source": {&#x000A;                "@timestamp": "2016-12-01T14:09:53.848788-05:00",&#x000A;                "docker": {&#x000A;                    "container_id": "adcf8981baf37f3dab0a659fbd78d6084fde0a2798020d3c567961a993713405"&#x000A;                },&#x000A;                "hostname": "host-192-168-78-2.openstacklocal",&#x000A;                "kubernetes": {&#x000A;                    "container_name": "deployer",&#x000A;                    "host": "host-192-168-78-2.openstacklocal",&#x000A;                    "labels": {&#x000A;                        "app": "logging-deployer-template",&#x000A;                        "logging-infra": "deployer",&#x000A;                        "provider": "openshift"&#x000A;                    },&#x000A;                    "namespace_id": "42eab680-b7f9-11e6-a793-fa163e8a98f9",&#x000A;                    "namespace_name": "logging",&#x000A;                    "pod_id": "b2806c29-b7f9-11e6-a793-fa163e8a98f9",&#x000A;                    "pod_name": "logging-deployer-akqwb"&#x000A;                },&#x000A;                "level": "3",&#x000A;                "message": "writing new private key to '/etc/deploy/scratch/system.logging.fluentd.key'",&#x000A;                "pipeline_metadata": {&#x000A;                    "collector": {&#x000A;                        "inputname": "fluent-plugin-systemd",&#x000A;                        "ipaddr4": "10.128.0.26",&#x000A;                        "ipaddr6": "fe80::30e3:7cff:fe55:4134",&#x000A;                        "name": "fluentd openshift",&#x000A;                        "received_at": "2016-12-01T14:09:53.848788-05:00",&#x000A;                        "version": "0.12.29 1.4.0"&#x000A;                    }&#x000A;                }&#x000A;            },&#x000A;            "_type": "com.redhat.viaq.common"&#x000A;        }&#x000A;    ],&#x000A;    "max_score": 1.0,&#x000A;    "total": 1453&#x000A;},&#x000A;"timed_out": false,&#x000A;"took": 15&#x000A;}&#x000A;</code></pre></div>
+<h2 id="creating-the-admin-user">Creating the Admin User</h2>
+
+<p>During the metrics store installation an admin user is created.
+The admin user has permissions to access Kibana and view the oVirt metrics and log data and dashboards.</p>
+
+<p>By default, the password for the user "admin" is "admin".
+This can be uodate in the config.yml file, buy updating the "ovirt_metrics_admin_password".</p>
+
+<p>To create additional admin users, Run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project logging&#x000A;# oc create user $username&#x000A;# oc create identity allow_all:$username&#x000A;# oc create useridentitymapping allow_all:$username $username&#x000A;# oc adm policy add-cluster-role-to-user cluster-admin $username&#x000A;</code></pre></div>
+<p>This will create the user account.  The password is set at the
+first login.  To set the password now:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc login --username=$username --password=$userpassword&#x000A;</code></pre></div>
+<h2 id="creating-a-normal-user">Creating a "Normal" User</h2>
+<p>To create an "normal" user that can only view logs in a particular set of
+projects, follow the steps above, except do not assign the <code>cluster-admin</code>
+role, use the following instead:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project $namespace&#x000A;# oc adm policy add-role-to-user view $username&#x000A;</code></pre></div>
+<p>Where <code>$username</code> is the name of the user you created instead of <code>admin</code>,
+and <code>$namespace</code> is the name of the project or namespace you wish to allow
+the user to have access to the logs of.</p>
+
+<p>For example, to create a user
+named <code>loguser</code> that can view logs in <code>ovirt-metrics-engine</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc create user loguser&#x000A;# oc create identity allow_all:loguser&#x000A;# oc create useridentitymapping allow_all:loguser loguser&#x000A;# oc project ovirt-metrics-engine&#x000A;# oc adm policy add-role-to-user view loguser&#x000A;</code></pre></div>
+<p>and to assign the password immediately instead of waiting for the user
+to login:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc login --username=loguser --password=loguser&#x000A;# oc login --username=system:admin&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/metrics/setting-up-viaq-logging.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/metrics/setting-up-viaq-logging.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 17 Feb 2019 21:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

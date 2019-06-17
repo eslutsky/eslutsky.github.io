@@ -1,0 +1,1514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle/>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/feed.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Security group support in OVN external networks</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/05/ovn-security-groups.html"/>
+    <id>http://ovirt.org/blog/2019/05/ovn-security-groups.html</id>
+    <published>2019-05-27T15:35:00+00:00</published>
+    <updated>2019-06-16T09:11:54+00:00</updated>
+    <author>
+      <name>mdbarroso</name>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce and showcase how security groups can be used to
+enable certain scenarios.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://developer.openstack.org/api-ref/network/v2/#security-groups-security-groups"&gt;Security groups&lt;/a&gt;
+allow fine-grained access control to - and from - the oVirt VMs attached to
+external OVN networks.&lt;/p&gt;
+
+&lt;p&gt;The Networking API v2 defines security groups as a white list of rules - the
+user specifies in it which traffic is allowed. That means, that when the rule
+list is empty, neither incoming nor outgoing traffic is allowed (from the VMs
+perspective).&lt;/p&gt;
+
+&lt;p&gt;A demo recording of the security group feature can be found below.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.youtube.com/watch?v=RCdV6W_tFWw"&gt;&lt;img alt="here" src="http://img.youtube.com/vi/RCdV6W_tFWw/0.jpg" /&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="provided-tools"&gt;Provided tools&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo"&gt;This repo&lt;/a&gt;
+adds tools, and information on how to use them, to help manage the security
+groups in oVirt, since currently there is no supported mechanism to provision
+security groups, other than the REST API, and ManageIQ. ManageIQ also doesn't
+fully support security groups, since it lacks a way to attach security groups
+to logical ports.&lt;/p&gt;
+
+&lt;h2 id="demo-scenarios"&gt;Demo scenarios&lt;/h2&gt;
+&lt;p&gt;In the following links you can also find playbooks that can be built upon to
+reach different types of scenarios.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#icmp-configuration"&gt;Allow ICMP traffic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#web-server-configuration"&gt;Allow web traffic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#group-membership-based-access-scenario"&gt;Configure access based on group membership&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Federate oVirt engine authentication to OpenID Connect infrastructure</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/01/sso-keycloak-ovirt-openidc-389ds.html"/>
+    <id>http://ovirt.org/blog/2019/01/sso-keycloak-ovirt-openidc-389ds.html</id>
+    <published>2019-01-22T17:32:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Ravi Nori</name>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce how to integrate OIDC with oVirt engine using &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; and LDAP user federation.&lt;/p&gt;
+
+&lt;p&gt;Prerequisites: I assume you have already setup the &lt;code&gt;389ds&lt;/code&gt; directory server, but the solution is very similar for any other LDAP provider.
+As OIDC is not integrated into oVirt directly, we use Apache to do the OIDC authentication for us. The &lt;a href="https://github.com/zmartzone/mod_auth_openidc"&gt;mod_auth_openidc&lt;/a&gt; module nicely covers all needed functionality.&lt;/p&gt;
+
+&lt;p&gt;Overview&lt;/p&gt;
+
+&lt;p&gt;Integrate with external OpenID Connect Identity Provider (IDP) to provide Single Sign-On  (SSO) across products that use the IDP for authenticating users. We currently have oVirt SSO for providing unified authentication across Administrator and VM portals. The oVirt engine SSO also provides tokens for REST API clients and supports bearer authentication to reuse tokens to access oVirt engine RESTAPI. With external IDP integration the internal oVirt SSO is disabled and browser users will be redirected to the external IDP for authentication. After successful authentication users can access both Admin and VM portals as they normally do. REST API clients don't have to change, they can still obtain a token from engine SSO and use the token for bearer authentication to access oVirt engine RESTAPI. Engine SSO acts as a proxy obtaining the token from external IDP on behalf of the RESTAPI client.&lt;/p&gt;
+
+&lt;p&gt;To access Administrator portal users need to belong to LDAP group named “ovirt-administrator” or an LDAP group that has been manually granted permissions to access Admin portal.&lt;/p&gt;
+
+&lt;p&gt;Note&lt;/p&gt;
+
+&lt;p&gt;In the examples and configuration below we use keycloak.example.com as the Keycloak server FQDN and engineopenid.example.com as the oVirt engine server FQDN. Please note that these should be replaced with real FQDNs from your setup.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="keycloak"&gt;Keycloak&lt;/h2&gt;
+&lt;p&gt;Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the OIDC provider.&lt;/p&gt;
+
+&lt;h2 id="keycloak-configuration"&gt;Keycloak configuration&lt;/h2&gt;
+&lt;p&gt;For our example, we'll use default master realm. First let's create user federation with our &lt;code&gt;389ds&lt;/code&gt; directory server.
+Fill the values of your 389ds server as show in the image below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1502" height="869" src="/images/../images/blog/2019-01-22/user_federation.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Add ldap groups mapper&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1456" height="837" src="/images/../images/blog/2019-01-22/ldap_group_mapper.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After testing the connection and authentication, click the &lt;code&gt;save&lt;/code&gt; button And then Synchronize All Users using the button at the bottom of User Federation Provider page.. Check if your users are searchable, as shown in image below.
+&lt;img alt="" width="1679" height="659" src="/images/../images/blog/2019-01-22/user_search.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that user federation is working and is integrated, let's configure the OIDC client.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1456" height="837" src="/images/../images/blog/2019-01-22/add_client.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt; After the client is created, we must change &lt;code&gt;Access Token Lifespan&lt;/code&gt; to &lt;code&gt;10 days&lt;/code&gt;. This is required because oVirt manages the token lifespan and we do not want Keycloak invalidating the tokens.
+&lt;img alt="" width="900" height="269" src="/images/../images/blog/2019-01-22/life_span.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Make a note of client id and client secret from the client credentials page, the client id and secret is needed to configure the Apache mod_auth_openidc and also ovirt-engine.
+&lt;img alt="" width="1456" height="667" src="/images/../images/blog/2019-01-22/client_id_secret.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Create a mapper to add groups to the claim
+&lt;img alt="" width="1183" height="695" src="/images/../images/blog/2019-01-22/groups_claim.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Add the build in mapper for username
+&lt;img alt="" width="1183" height="970" src="/images/../images/blog/2019-01-22/user_name.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Create the scopes need by ovirt engine, ovirt-app-api and ovirt-app-admin
+&lt;img alt="" width="1183" height="736" src="/images/../images/blog/2019-01-22/scope_ovirt_app_api.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1183" height="723" src="/images/../images/blog/2019-01-22/scope_ovirt_app_admin.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Set up optional client scopes for the ovirt-engine client
+&lt;img alt="" width="1183" height="733" src="/images/../images/blog/2019-01-22/client_scopes.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="mod_auth_openidc-configuration"&gt;mod_auth_openidc configuration&lt;/h2&gt;
+&lt;p&gt;First we need to configure Apache on oVirt engine machine. SSH to the oVirt engine and install mod_auth_openidc and ovirt-engine-extension-aaa-misc.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engineopenid
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; mod_auth_openidc
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; ovirt-engine-extension-aaa-misc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We need to create a file &lt;code&gt;/etc/httpd/conf.d/ovirt-openidc.conf&lt;/code&gt; to configure mod_auth_openidc as follows:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight html"&gt;&lt;code&gt;LoadModule auth_openidc_module modules/mod_auth_openidc.so
+ServerName engineopenid.example.com
+
+OIDCProviderMetadataURL https://keycloak.example.com:8443/auth/realms/master/.well-known/openid-configuration
+OIDCSSLValidateServer Off
+    
+OIDCClientID ovirt-engine
+OIDCClientSecret c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a
+OIDCRedirectURI https://engineopenid.example.com/ovirt-engine/callback
+OIDCDefaultURL https://engineopenid.example.com/ovirt-engine/login?scope=ovirt-app-admin+ovirt-app-portal+ovirt-ext%3Dauth%3Asequence-priority%3D%7E
+    
+# maps the prefered_username claim to the REMOTE_USER environment variable
+OIDCRemoteUserClaim preferred_username
+OIDCCryptoPassphrase random1234
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;sso&lt;/span&gt;&lt;span class="err"&gt;/(&lt;/span&gt;&lt;span class="na"&gt;interactive-login-negotiate&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;oauth&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;token-http-auth&lt;/span&gt;&lt;span class="err"&gt;)|^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;callback&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;If&lt;/span&gt; &lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="na"&gt;req&lt;/span&gt;&lt;span class="err"&gt;('&lt;/span&gt;&lt;span class="na"&gt;Authorization&lt;/span&gt;&lt;span class="err"&gt;')&lt;/span&gt; &lt;span class="err"&gt;!~&lt;/span&gt; &lt;span class="err"&gt;/^(&lt;/span&gt;&lt;span class="na"&gt;Bearer&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;Basic&lt;/span&gt;&lt;span class="err"&gt;)/&lt;/span&gt;&lt;span class="na"&gt;i&lt;/span&gt;&lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    
+      Require valid-user
+      AuthType openid-connect
+    
+      ErrorDocument 401 "&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&amp;lt;meta&lt;/span&gt; &lt;span class="na"&gt;http-equiv=&lt;/span&gt;&lt;span class="s"&gt;\"refresh\"&lt;/span&gt; &lt;span class="na"&gt;content=&lt;/span&gt;&lt;span class="s"&gt;\"0;&lt;/span&gt; &lt;span class="na"&gt;url=&lt;/span&gt;&lt;span class="s"&gt;/ovirt-engine/sso/login-unauthorized\"/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;\"/ovirt-engine/sso/login-unauthorized\"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Here&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/span&gt;"
+    &lt;span class="nt"&gt;&amp;lt;/If&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+    
+OIDCOAuthIntrospectionEndpoint https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/token/introspect
+OIDCOAuthSSLValidateServer    Off
+OIDCOAuthIntrospectionEndpointParams token_type_hint=access_token
+OIDCOAuthClientID ovirt-engine
+OIDCOAuthClientSecret c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a
+OIDCOAuthRemoteUserClaim sub
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;api&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+   AuthType oauth20
+   Require valid-user
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create /etc/ovirt-engine/extensions.d/openidc-authn.properties&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = openidc-authn
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn
+ovirt.engine.aaa.authn.profile.name = openidchttp
+ovirt.engine.aaa.authn.authz.plugin = openidc-authz
+ovirt.engine.aaa.authn.mapping.plugin = openidc-http-mapping
+config.artifact.name = HEADER
+config.artifact.arg = OIDC_CLAIM_preferred_username
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create /etc/ovirt-engine/extensions.d/openidc-http-mapping.properties&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = openidc-http-mapping
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping
+config.mapAuthRecord.type = regex
+config.mapAuthRecord.regex.mustMatch = false
+config.mapAuthRecord.regex.pattern = ^(?&amp;lt;user&amp;gt;.*?)((\\\\(?&amp;lt;at&amp;gt;@)(?&amp;lt;suffix&amp;gt;.*?)@.*)|(?&amp;lt;realm&amp;gt;@.*))$
+config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create /etc/ovirt-engine/extensions.d/openidc-authz.properties&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = openidc-authz
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthzExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz
+config.artifact.name.arg = OIDC_CLAIM_preferred_username
+config.artifact.groups.arg = OIDC_CLAIM_groups
+config.globals.baseDN.simple_baseDN = dc=example,dc=com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create 99-enable-external-auth.conf in /etc/ovirt-engine/engine.conf.d/&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ENGINE_SSO_ENABLE_EXTERNAL_SSO=true
+ENGINE_SSO_EXTERNAL_SSO_LOGOUT_URI="${ENGINE_URI}/callback"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create 99-config-external-auth.conf in /etc/ovirt-engine/engine.conf.d/&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;EXTERNAL_OIDC_USER_INFO_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/userinfo
+EXTERNAL_OIDC_TOKEN_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/token
+EXTERNAL_OIDC_LOGOUT_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/logout
+EXTERNAL_OIDC_CLIENT_ID=ovirt-engine
+EXTERNAL_OIDC_CLIENT_SECRET="c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a"
+EXTERNAL_OIDC_HTTPS_PKI_TRUST_STORE="/home/cacerts"
+EXTERNAL_OIDC_HTTPS_PKI_TRUST_STORE_PASSWORD=""
+EXTERNAL_OIDC_SSL_VERIFY_CHAIN=false
+EXTERNAL_OIDC_SSL_VERIFY_HOST=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Restart ovirt-engine and httpd&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart httpd
+systemctl restart ovirt-engine
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="test-the-setup"&gt;Test the setup&lt;/h2&gt;
+
+&lt;p&gt;Obtain token from engine&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;curl -k -H "Accept: application/json" 'https://engineopenid.example.com/ovirt-engine/sso/oauth/token?grant_type=password&amp;amp;username=user1@openidchttp&amp;amp;password=123456&amp;amp;scope=ovirt-app-api'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Use token to access api&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;curl -v -k -H "Authorization: Bearer $1" -L https://engineopenid.rnori.redhat.com/ovirt-engine/api
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using python SDK to access engine, SDK directly obtains token from engine and doesn’t have to deal with Keycloak&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;import logging
+import pdb
+import ovirtsdk4 as sdk
+import ovirtsdk4.types as types
+
+logging.basicConfig(level=logging.DEBUG, filename='example.log')
+
+# This example will connect to the server and print the names and identifiers of all the data centers and virtual machines:
+
+# Create the connection to the server:
+connection = sdk.Connection(
+    url='https://engineopenid.example.com/ovirt-engine/api',
+    username='user1@openidchttp',
+    password='123456',
+    debug=True,
+    log=logging.getLogger(),
+    insecure=True
+)
+
+# Verify connection
+if connection.test(raise_exception=False):
+    print("Connection works.")
+else:
+    print("Connection doesn't work.")
+
+# Get the reference to the "vms" service:
+dcs_service = connection.system_service().data_centers_service()
+
+# Use the "list" method of the "vms" service to list all the virtual machines of the system:
+dcs = dcs_service.list()
+
+# Print the virtual machine names and identifiers:
+for dc in dcs:
+  print("%s " % (dc.name))
+
+# Get the reference to the "vms" service:
+vms_service = connection.system_service().vms_service()
+
+# Use the "list" method of the "vms" service to list all the virtual machines of the system:
+vms = vms_service.list()
+
+# Print the virtual machine names and identifiers:
+for vm in vms:
+  print("%s: %s" % (vm.name, vm.id))
+
+# Close the connection to the server:
+connection.close()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Login to webadmin, user1 belongs to group ovirt-administrator in ldap, so user1 should be able to login to webadmin without any additional permission settings.&lt;/p&gt;
+
+&lt;h2 id="configuring-ovn"&gt;Configuring OVN&lt;/h2&gt;
+
+&lt;p&gt;Configuring ovn requires to create 20-setup-ovirt-provider-ovn.conf config file under /etc/ovirt-provider-ovn/conf.d/ with the contents. Where user1 belongs to ldap group ovirt-administrator and openidchttp is the profile configured for aaa-ldap-misc&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[OVIRT]
+ovirt-admin-user-name=user1@openidchttp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Restart ovirt-provider-ovn&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart ovirt-provider-ovn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Login in webadmin to update the password for ovn under Administration -&amp;gt; Providers&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="808" height="566" src="/images/../images/blog/2019-01-22/providers_passwd.png?1560777613" /&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>oVirt and OKD</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/01/ovirt-openshift-part-1.html"/>
+    <id>http://ovirt.org/blog/2019/01/ovirt-openshift-part-1.html</id>
+    <published>2019-01-06T09:01:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>rgolan</name>
+    </author>
+    <content type="html">&lt;p&gt;This is a series of posts to demonstrate how to  install  OKD 3.11 on oVirt and what you can do with it.
+&lt;strong&gt;Part I&lt;/strong&gt;   -  How to install OKD 3.11 on oVirt&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img align="left" src="/images/blog/2019-01-06/boxhead.png" width="400px" style="margin-right: 25px;border-radius: 4px" /&gt;&lt;/p&gt;
+
+&lt;h1 id="how-to-install-okd-311-on-ovirt-42-and-up"&gt;How to install OKD 3.11 on oVirt (4.2 and up)&lt;/h1&gt;
+&lt;p&gt;Installing OKD or Kubernetes on oVirt has many advantages, and it's also gotten a lot easier these days. Admins and users who want to take container platform management for a spin, on oVirt, will be encouraged by this.&lt;br /&gt;
+Few of the advantages are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Virtualizing the control plane for Kubernetes - provide HA/backup/affinity capabilities to the controllers and allowing hardware maintenance cycles&lt;/li&gt;
+  &lt;li&gt;Providing persistent volume for containers via the IAAS, without the need for additional storage array dedicated to Kubernetes&lt;/li&gt;
+  &lt;li&gt;Allowing a quick method to build up/tear down Kubernetes clusters, providing hard tenancy model via VMs between clusters.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The installation uses &lt;a href="https://github.com/openshift/openshift-ansible"&gt;openshift-ansible&lt;/a&gt; and, specifically the &lt;code&gt;openshift_ovirt&lt;/code&gt; ansible-role. The integration between OpenShift and oVirt is tighter, and provides storage integration. If you need persistent volumes for your containers you can get that directly from oVirt using &lt;strong&gt;ovirt-volume-provisioner&lt;/strong&gt; and &lt;strong&gt;ovirt-flexvolume-driver&lt;/strong&gt;.&lt;br /&gt;
+For the sake of simplicity, this example will cover an all-in-one OpenShift cluster, on a single VM.&lt;br /&gt;
+On top of that, in the 2nd post, we will run a classic web stack, a Java application with a simple REST-API endpoint + Postgres. Postgres will get a persistent volume from oVirt using its flexvolume driver.&lt;/p&gt;
+
+&lt;p&gt;&lt;span style="font: italic 10px robot, monospace; top: 220px"&gt;Picture by &lt;a href="https://unsplash.com/@soroushgolpoor?utm_medium=referral&amp;amp;utm_campaign=photographer-credit&amp;amp;utm_content=creditBadge"&gt;Soroush golpoor on Unsplash&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;script id="asciicast-219956" src="https://asciinema.org/a/219956.js" async=""&gt;&lt;/script&gt;
+
+&lt;h2 id="single-shell-file-installation"&gt;Single shell file installation&lt;/h2&gt;
+
+&lt;p&gt;Dropping to shell - this &lt;a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/install.sh"&gt;install.sh&lt;/a&gt; is a wrapper for installing  the ovirt-openshift-installer container, it uses ansible-playbook and has two main playbooks: install_okd.yaml and install_extensions.yaml. The latter is mainly for installing oVirt storage plugins.&lt;/p&gt;
+
+&lt;p&gt;The install.sh script has one dependency, it needs to have 'podman' installed on the host, while all the rest runs inside a container.&lt;/p&gt;
+
+&lt;p&gt;The only dependency (except from running oVirt datacenter) is podman:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[bastion ~]#&lt;/span&gt; dnf install podman
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://github.com/containers/libpod/blob/master/docs/tutorials/podman_tutorial.md"&gt;For other ways to install podman consult the readme&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If you can't install &lt;code&gt;podman&lt;/code&gt; docker will be fine as well, just edit the install.sh, and substitute podman for docker.&lt;/p&gt;
+
+&lt;h3 id="get-the-installsh-and-customize"&gt;Get the install.sh and customize&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[bastion ~]#&lt;/span&gt; curl &lt;span class="nt"&gt;-O&lt;/span&gt; &lt;span class="s2"&gt;"https://raw.githubusercontent.com/oVirt/ovirt-openshift-extensions/master/automation/ci/{install.sh,vars.yaml}"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Edit the &lt;code&gt;vars.yaml&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Put the engine details in engine_url
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine-fqdn/ovirt-engine/api&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;Choose the oVirt cluster and data domain you want, if you don't want 'Default'
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;openshift_ovirt_cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;yours&lt;/span&gt;
+&lt;span class="na"&gt;openshift_ovirt_data_store&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;yours&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;Unmark to disable the memory and disks checks in case the VM memory is under 8Gb
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;openshift_disable_check&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;memory_availability,disk_availability,docker_image_availability&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;Domain name of the setup. The setup will create a VM with the name master0.$public_hosted_zone here. This VM will
+be used for all the components of the setup
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;public_hosted_zone&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;example.com&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For a more complete list of customizations, take a look at the &lt;a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/vars.yaml"&gt;vars.yaml&lt;/a&gt; and the &lt;a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/integ.ini"&gt;inventory file&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="install"&gt;Install&lt;/h2&gt;
+
+&lt;p&gt;Run install.sh to start the installation.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[bastion ~]#&lt;/span&gt; bash install.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;install.sh automates the following steps:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Pull the ovirt-openshift-installer container and run it.&lt;/li&gt;
+  &lt;li&gt;Download Centos Cloud Image and import it into oVirt based on the &lt;code&gt;qcow_url&lt;/code&gt; variable.&lt;/li&gt;
+  &lt;li&gt;Create a VM named master0.example.com from the template above.The VM name is based on the &lt;code&gt;public_hosted_zone&lt;/code&gt; variable.&lt;/li&gt;
+  &lt;li&gt;The cloud-init script will configure repositories, a network, ovirt-guest-agent, etc. based on the &lt;code&gt;cloud_init_script_master&lt;/code&gt; variable.&lt;/li&gt;
+  &lt;li&gt;The VM will dynamically be inserted into an ansible inventory, under &lt;code&gt;master&lt;/code&gt;, &lt;code&gt;compute&lt;/code&gt;, and &lt;code&gt;etc&lt;/code&gt; groups&lt;/li&gt;
+  &lt;li&gt;Openshift-ansible main playbooks are executed to install OKD: &lt;code&gt;prerequisite.yml&lt;/code&gt; and &lt;code&gt;deploy_cluster.yml&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;When the script finishes, an all-in-one cluster is installed and running. Let's check it out.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[root@master0 ~]#&lt;/span&gt; oc get nodes
+&lt;span class="go"&gt;NAME                         STATUS    ROLES                  AGE       VERSION
+master0.example.com   Ready     compute,infra,master   1h        v1.11.0+d4cacc0
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Check oVirt's extensions&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[root@master0 ~]#&lt;/span&gt; oc get deploy/ovirt-volume-provisioner
+&lt;span class="go"&gt;NAME                       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+ovirt-volume-provisioner   1         1         1            1           57m
+
+&lt;/span&gt;&lt;span class="gp"&gt;[root@master0 ~]#&lt;/span&gt; oc get ds/ovirt-flexvolume-driver
+&lt;span class="go"&gt;NAME                      DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+&lt;/span&gt;&lt;span class="gp"&gt;ovirt-flexvolume-driver   1         1         1         1            1           &amp;lt;none&amp;gt;&lt;/span&gt;          59m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="default-storage-class"&gt;Default Storage Class&lt;/h3&gt;
+&lt;p&gt;To run all the dynamic storage provisioning through oVirt's provisioner, 
+we need to set oVirt's storage class to the default.&lt;br /&gt;
+Notice that a storage class defines which oVirt storage domain will&lt;br /&gt;
+be used to provision the disks. Also it will set the disk type (thin/thick) provision to be the default, thin.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[root@master ~]#&lt;/span&gt; oc patch sc/ovirt &lt;span class="se"&gt;\ &lt;/span&gt;
+&lt;span class="go"&gt;                    -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="connect-to-okd-web-console"&gt;Connect to OKD web console&lt;/h3&gt;
+&lt;p&gt;You can now connect to the web console, and keep manage your cluster from there. To do so&lt;br /&gt;
+first make sure you can resolve &lt;code&gt;master0.example.com&lt;/code&gt; (substitute example.com with whatever&lt;br /&gt;
+is set in &lt;code&gt;public_hosted_zone&lt;/code&gt; customization variable, as mentioned above.)&lt;/p&gt;
+
+&lt;p&gt;Browse to &lt;code&gt;https://master0.example.com:8443&lt;/code&gt;  and login with whatever user/password you want:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/blog/2019-01-06/okd-web-console.png" /&gt;&lt;/p&gt;
+
+&lt;h1 id="summary"&gt;Summary&lt;/h1&gt;
+&lt;p&gt;This blog post covered the installation of OKD on an oVirt VM. If you followed the step you now have&lt;br /&gt;
+an all-in-one cluster with dynamic storage provisioning from oVirt storage.
+In the next post I'm going deploy Postgres DB in a container with persistent volume from oVirt
+storage domain.&lt;/p&gt;
+
+</content>
+  </entry>
+  <entry>
+    <title>oVirt SAML with keyloak using 389ds user federation</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html"/>
+    <id>http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html</id>
+    <published>2018-08-03T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce how simple it is to integrate SAML with oVirt using &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; and LDAP user federation.&lt;/p&gt;
+
+&lt;p&gt;Prerequisites: I assume you have already setup the &lt;code&gt;389ds&lt;/code&gt; directory server, but the solution is very similar for any other LDAP provider.
+As SAML is not integrated into oVirt directly, we use Apache to do the SAML authentication for us. The &lt;a href="https://github.com/Uninett/mod_auth_mellon"&gt;mod_auth_mellon&lt;/a&gt; module nicely covers all needed functionality.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="mod_auth_mellon-configuration"&gt;mod_auth_mellon configuration&lt;/h2&gt;
+&lt;p&gt;First we need to configure oVirt's apache. SSH to the oVirt engine and create a directory where we'll store all SAML related certificates.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engine
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; mod_auth_mellon
+mkdir &lt;span class="nt"&gt;-p&lt;/span&gt; /etc/httpd/saml2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When we install the &lt;code&gt;mod_auth_mellon&lt;/code&gt; package, it will create &lt;code&gt;/etc/httpd/conf.d/auth_mellon.conf&lt;/code&gt;.
+We need to modify this file to our needs, as follows:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight html"&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;Location&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    MellonEnable "info"
+    MellonDecoder "none"
+    MellonVariable "cookie"
+    MellonSecureCookie On
+    MellonSessionDump On
+    MellonSamlResponseDump On
+    MellonSessionLength 86400
+
+    MellonUser "NAME_ID"
+    MellonEndpointPath /saml2
+
+    MellonSPCertFile /etc/httpd/saml2/ovirtsp-cert.cert
+    MellonSPPrivateKeyFile /etc/httpd/saml2/ovirtsp-key.key
+    MellonSPMetadataFile /etc/httpd/saml2/ovirtsp-metadata.xml
+    MellonIdPMetadataFile /etc/httpd/saml2/idp-metadata.xml
+
+    RewriteEngine On
+    RewriteCond %{LA-U:REMOTE_USER} ^(.*)$
+    RewriteRule ^(.*)$ - [L,NS,P,E=REMOTE_USER:%1]
+    RequestHeader set X-Remote-User %{REMOTE_USER}s
+&lt;span class="nt"&gt;&amp;lt;/Location&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;sso&lt;/span&gt;&lt;span class="err"&gt;/(&lt;/span&gt;&lt;span class="na"&gt;interactive-login-negotiate&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;oauth&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;token-http-auth&lt;/span&gt;&lt;span class="err"&gt;)|^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;api&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;If&lt;/span&gt; &lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="na"&gt;req&lt;/span&gt;&lt;span class="err"&gt;('&lt;/span&gt;&lt;span class="na"&gt;Authorization&lt;/span&gt;&lt;span class="err"&gt;')&lt;/span&gt; &lt;span class="err"&gt;!~&lt;/span&gt; &lt;span class="err"&gt;/^(&lt;/span&gt;&lt;span class="na"&gt;Bearer&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;Basic&lt;/span&gt;&lt;span class="err"&gt;)/&lt;/span&gt;&lt;span class="na"&gt;i&lt;/span&gt;&lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+
+    Require valid-user
+    AuthType "Mellon"
+    AuthName "SAML Login"
+    MellonEnable "auth"
+
+    ErrorDocument 401 "&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&amp;lt;meta&lt;/span&gt; &lt;span class="na"&gt;http-equiv=&lt;/span&gt;&lt;span class="s"&gt;\"refresh\"&lt;/span&gt; &lt;span class="na"&gt;content=&lt;/span&gt;&lt;span class="s"&gt;\"0;&lt;/span&gt; &lt;span class="na"&gt;url=&lt;/span&gt;&lt;span class="s"&gt;/ovirt-engine/sso/login-unauthorized\"/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;\"/ovirt-engine/sso/login-unauthorized\"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Here&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/span&gt;"
+  &lt;span class="nt"&gt;&amp;lt;/If&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You'll notice in the configuration file that we are using the following four files:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Certificate file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-cert.cert&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Private key file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-key.key&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Sp metadata file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-metadata.xml&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Idp metadata file - &lt;code&gt;/etc/httpd/saml2/idp-metadata.xml&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We need to create those files using the provided script from the &lt;code&gt;mod_auth_mellon&lt;/code&gt; package:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /etc/httpd/saml2
+/usr/libexec/mod_auth_mellon/mellon_create_metadata.sh https://&amp;lt;ovirt-fqdn&amp;gt; https://&amp;lt;ovirt-fqdn&amp;gt;/saml2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we rename the created files to match the file names that we defined in &lt;code&gt;/etc/httpd/conf.d/auth_mellon.conf&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;mv https_&amp;lt;ovirt-fqdn&amp;gt;.key  ovirtsp-key.key
+mv https_&amp;lt;ovirt-fqdn&amp;gt;.cert ovirtsp-cert.cert
+mv https_&amp;lt;ovirt-fqdn&amp;gt;.xml  ovirtsp-metadata.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now that we have generated the Service provider &lt;code&gt;ovirtsp-metadata.xml&lt;/code&gt; we can configure Identity provider using &lt;code&gt;Keycloak&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id="keycloak"&gt;Keycloak&lt;/h2&gt;
+&lt;p&gt;Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the SAML provider.&lt;/p&gt;
+
+&lt;h2 id="keycloak-configuration"&gt;Keycloak configuration&lt;/h2&gt;
+&lt;p&gt;For our example, we'll use default master realm. First let's create user federation with our &lt;code&gt;389ds&lt;/code&gt; directory server.
+Fill the values of your 389ds server as show in the image below.
+&lt;img alt="" width="1569" height="897" src="/images/../images/blog/2018-08-03/user_federation.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After testing the connection and authentication, click the &lt;code&gt;save&lt;/code&gt; button and check if your users are searchable, as shown in image below.
+&lt;img alt="" width="1578" height="889" src="/images/../images/blog/2018-08-03/user_search.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that user federation is working and is integrated, let's configure the SAML client. For this we need to upload &lt;code&gt;ovirtsp-metadata.xml&lt;/code&gt; created in the previous step to &lt;code&gt;Keycloak&lt;/code&gt;:
+&lt;img alt="" width="1573" height="621" src="/images/../images/blog/2018-08-03/add_client.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt; After the client is created, we must change &lt;code&gt;Name ID Format&lt;/code&gt; format from the default value &lt;code&gt;transient&lt;/code&gt; to &lt;code&gt;username&lt;/code&gt;,
+and we must enable the &lt;code&gt;Force Name ID Format&lt;/code&gt; option. This is required because oVirt is using username to search in LDAP providers.
+&lt;img alt="" width="900" height="80" src="/images/../images/blog/2018-08-03/name_id.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Our identity provider is configured, so now we add it to our engine configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engine
+&lt;span class="nb"&gt;cd&lt;/span&gt; /etc/httpd/saml2
+curl &lt;span class="nt"&gt;-s&lt;/span&gt; &lt;span class="nt"&gt;-o&lt;/span&gt; idp-metadata.xml http://&amp;lt;keycloak-server&amp;gt;:8080/auth/realms/master/protocol/saml/descriptor
+systemctl restart httpd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="ovirt-aaa-configuration"&gt;oVirt AAA configuration&lt;/h2&gt;
+&lt;p&gt;oVirt AAA is the last piece of configuration needed.&lt;/p&gt;
+
+&lt;h3 id="installation"&gt;Installation&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# yum install -y ovirt-engine-extension-aaa-ldap ovirt-engine-extension-aaa-misc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-authnproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-authn.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-authn
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn
+ovirt.engine.aaa.authn.profile.name = saml-http
+ovirt.engine.aaa.authn.authz.plugin = saml-authz
+ovirt.engine.aaa.authn.mapping.plugin = saml-http-mapping
+config.artifact.name = HEADER
+config.artifact.arg = X-Remote-User
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-http-mappingproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-http-mapping.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-http-mapping
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping
+config.mapAuthRecord.type = regex
+config.mapAuthRecord.regex.mustMatch = false
+config.mapAuthRecord.regex.pattern = ^(?&amp;lt;user&amp;gt;.*?)((\\\\(?&amp;lt;at&amp;gt;@)(?&amp;lt;suffix&amp;gt;.*?)@.*)|(?&amp;lt;realm&amp;gt;@.*))$
+config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-authzproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-authz.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-authz
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz
+config.profile.file.1 = ../aaa/saml-ldap.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineaaasaml-ldapproperties"&gt;Create /etc/ovirt-engine/aaa/saml-ldap.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;include = &amp;lt;389ds.properties&amp;gt;
+
+vars.server = 389ds.example.com
+vars.user = uid=user1,ou=users,dc=389ds,dc=example,dc=com
+vars.password = password
+
+pool.default.auth.simple.bindDN = ${global:vars.user}
+pool.default.auth.simple.password = ${global:vars.password}
+pool.default.serverset.type = single
+pool.default.serverset.single.server = ${global:vars.server}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now restart ovirt-engine:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart ovirt-engine.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now when you login to webadmin, you will be redirected to &lt;code&gt;Keycloak&lt;/code&gt; (if you're not already logged in). Enter credentials from your 389ds ldap setup and login should succeed. Note that by default your users won't have permissions to login, so you must first assign permissions to them in webadmin.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Skydive With oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/08/Skydive-With-oVirt.html"/>
+    <id>http://ovirt.org/blog/2018/08/Skydive-With-oVirt.html</id>
+    <published>2018-08-02T09:01:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Michael Burman</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://skydive.network/"&gt;Skydive network&lt;/a&gt; is an open source real-time network topology and protocols analyzer providing a comprehensive way of understanding what is happening in your network infrastructure.
+The common use cases will be, troubleshooting, monitoring, SDN integration and much more.
+It has features such as:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Topology capturing - Captures network topology, interface, bridge and more&lt;/li&gt;
+  &lt;li&gt;Flow capture - Distributed probe, L2-L4 classifier, GRE, VXLAN, GENEVE, MPLS/GRE, MPLS/UDP tunnelling support&lt;/li&gt;
+  &lt;li&gt;Extendable - Support for external SDN Controllers or container based infrastructure, OpenStack. Supports extensions through API&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="benefit-to-ovirt-users"&gt;Benefit to oVirt users&lt;/h2&gt;
+&lt;p&gt;Skydive allows oVirt administrators to see the network configuration and topology of their oVirt cluster.
+Administrators can capture traffic from VM1 to VM2 or monitor the traffic between VMs or hosts.
+Skydive can generate traffic between 2 running VMs on different hosts and then analyze.
+Administrators can create alerts in Skydive UI to notify when traffic is disconnected or down.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="installation-steps"&gt;Installation steps&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;code&gt;git clone https://github.com/skydive-project/skydive.git&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create inventory file&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight ini"&gt;&lt;code&gt; &lt;span class="nn"&gt;[skydive:children]&lt;/span&gt;
+ &lt;span class="err"&gt;analyzers&lt;/span&gt;
+ &lt;span class="err"&gt;agents&lt;/span&gt;
+
+ &lt;span class="nn"&gt;[skydive:vars]&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_listen_ip&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;0.0.0.0&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_fabric_default_interface&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;ovirtmgmt&lt;/span&gt;
+
+ &lt;span class="py"&gt;skydive_os_auth_url&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;https://&amp;lt;ovn_provider_FQDN&amp;gt;:35357/v2.0&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_os_service_username&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;lt;ovn_provider_username&amp;gt;&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_os_service_password&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;lt;ovn_provider_password&amp;gt;&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_os_service_tenant_name&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;service&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_os_service_domain_name&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;Default&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_os_service_region_name&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;RegionOne&lt;/span&gt;
+
+ &lt;span class="nn"&gt;[analyzers]&lt;/span&gt;
+ &lt;span class="err"&gt;&amp;lt;analyzer_FQDN&amp;gt;&lt;/span&gt; &lt;span class="py"&gt;ansible_ssh_user&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;root ansible_ssh_pass=&amp;lt;ssh_password&amp;gt;&lt;/span&gt;
+
+ &lt;span class="nn"&gt;[agents]&lt;/span&gt;
+ &lt;span class="err"&gt;&amp;lt;agent_FQDN&amp;gt;&lt;/span&gt; &lt;span class="py"&gt;ansible_ssh_user&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;root ansible_ssh_pass=&amp;lt;ssh_password&amp;gt;&lt;/span&gt;
+ &lt;span class="err"&gt;&amp;lt;agent_FQDN&amp;gt;&lt;/span&gt; &lt;span class="py"&gt;ansible_ssh_user&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;root ansible_ssh_pass=&amp;lt;ssh_password&amp;gt;&lt;/span&gt;
+ &lt;span class="err"&gt;&amp;lt;agent_FQDN&amp;gt;&lt;/span&gt; &lt;span class="py"&gt;ansible_ssh_user&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;root ansible_ssh_pass=&amp;lt;ssh_password&amp;gt;&lt;/span&gt;
+ &lt;span class="err"&gt;&amp;lt;agent_FQDN&amp;gt;&lt;/span&gt; &lt;span class="py"&gt;ansible_ssh_user&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;root ansible_ssh_pass=&amp;lt;ssh_password&amp;gt;&lt;/span&gt;
+
+ &lt;span class="nn"&gt;[agents:vars]&lt;/span&gt;
+ &lt;span class="py"&gt;skydive_extra_config&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="s"&gt;{'agent.topology.probes': ['ovsdb', 'neutron'], 'agent.topology.neutron.ssl_insecure': true}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;ul&gt;
+      &lt;li&gt;skydive_os_auth_url - This is the FQDN(hostname or IP) address of ovirt-provider-ovn&lt;/li&gt;
+      &lt;li&gt;skydive_os_service_username - oVirt username used to authenticate the ovirt-provider-ovn, e.g. admin@internal&lt;/li&gt;
+      &lt;li&gt;analyzer_FQDN will be the hostname of your analyzer&lt;/li&gt;
+      &lt;li&gt;agent_FQDN will be the hostname of the hosts running in oVirt&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;cd git/skydive/contrib/ansible&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;ansible-playbook -i inventory.file playbook.yml.sample&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Open port 8082 on the analyzer host - In the future this port will be opened by default after deploy&lt;/li&gt;
+  &lt;li&gt;Connect to skydive UI http://analyzer_FQDN:8082&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id="examples"&gt;Examples&lt;/h2&gt;
+&lt;p&gt;In this screenshot we can see the neutron metadata of vnet1, which has an openstack icon next to it.
+The neutron metadata contains the vnet IPv4 and IPv6, Network's ID, Network's name, port ID, Tenant ID
+&lt;img alt="" width="1683" height="772" src="/images/../images/blog/2018-07-30/skydive_neutron_metadata.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;In this screenshot we can see 2 capture points(red points) between vnet0 and vnet1 and see traffic of 1Gb between the VMs
+&lt;img alt="" width="1657" height="760" src="/images/../images/blog/2018-07-30/skydive_capture.png?1560777613" /&gt;&lt;/p&gt;
+
+</content>
+  </entry>
+  <entry>
+    <title>Upgraded DPDK support in oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/07/ovn-dpdk.html"/>
+    <id>http://ovirt.org/blog/2018/07/ovn-dpdk.html</id>
+    <published>2018-07-29T10:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>lgoldber</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://dpdk.org/"&gt;DPDK (Data Plane Development Kit)&lt;/a&gt; is a set of open-source high-performance packet processing libraries and user space drivers.&lt;/p&gt;
+
+&lt;p&gt;oVirt &lt;a href="https://www.ovirt.org/blog/2017/09/ovs-dpdk/"&gt;support for DPDK&lt;/a&gt; was introduced in 2017, and is now enhanced in terms of deployment via &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;Ansible&lt;/a&gt; and usage via &lt;a href="http://www.ovn.org/"&gt;Open Virtual Network&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While still experimental, OVN-DPDK in oVirt is now available in version 4.2.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1 id="whats-new"&gt;What's new?&lt;/h1&gt;
+
+&lt;h3 id="ansible-dpdk-host-setup"&gt;Ansible DPDK host setup&lt;/h3&gt;
+
+&lt;p&gt;Host configuration for DPDK usage is now automated using Ansible. This primarly includes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Hugepages configuration – hugepage size and quantity in the kernel.&lt;/li&gt;
+  &lt;li&gt;CPU partitioning.&lt;/li&gt;
+  &lt;li&gt;Binding NICs to userspace drivers.&lt;/li&gt;
+  &lt;li&gt;OVS-DPDK related configuration (initialization, socket memory, pmd thread core binding, etc).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The role is installed via Ansible galaxy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An example playbook:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;- hosts: dpdk_host_0
+  vars:
+    pci_drivers:
+      "0000:02:00.1": "vfio-pci"
+      "0000:02:00.2": "igb"
+      "0000:02:00.3": ""
+    configure_kernel: true
+    bind_drivers: true
+    set_ovs_dpdk: false
+  roles:
+    - ovirt-ansible-dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The role is controlled by 3 boolean variables (all set to &lt;code&gt;true&lt;/code&gt; by default) and a dictionary of devices and their drivers:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;configure_kernel&lt;/code&gt; – determines whether the kernel should be configured for DPDK usage (hugepages, CPU partitioning). &lt;strong&gt;WARNING&lt;/strong&gt;: When set to &lt;code&gt;true&lt;/code&gt; it is very likely to trigger a reboot of the host, unless all required configuration is already pre-set.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;bind_drivers&lt;/code&gt; – determines whether the role should bind devices to their specified drivers.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;set_ovs_dpdk&lt;/code&gt; – determines whether the role should initialize and configure OVS for DPDK usage.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pci_drivers&lt;/code&gt; – a dictionary of the PCI addresses of network interface cards as keys and drivers as values. An empty string represents the default Linux driver for the specified device. Non-DPDK compatible drivers may be set; However, NICs with such drivers will not be configured for OVS-DPDK usage and will not have their CPU isolated in multiple NUMA environments. PCI addresses can be retrieved via &lt;code&gt;lshw -class network -businfo&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Additionally, there are several optional performance related variables:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;pmd_threads_count&lt;/code&gt; – determines the number of PMD threads per NIC (default: &lt;code&gt;1&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_2mb_hugepages&lt;/code&gt; – determines the number of 2MB hugepages, if 2MB hugepages are to be used (default: &lt;code&gt;1024&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_1gb_hugepages&lt;/code&gt; – determines the number of 1GB hugepages, if 1GB hugepages are to be used (default: &lt;code&gt;4&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;use_1gb_hugepages&lt;/code&gt; – determines whether 1GB hugepages should be used, where 1GB hugepages are supported (default: &lt;code&gt;true&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For additional information, refer to the role's &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id="ovn-integration"&gt;OVN Integration&lt;/h3&gt;
+&lt;p&gt;DPDK in oVirt now leverages the capabilities of OVN in the form of an OVN localnet. This allows seamless connectivity across OVN networks, benefiting from OVN's software defined routers, switches, security groups, and ACL's.&lt;/p&gt;
+
+&lt;p&gt;For more information about OVN localnet integration in oVirt, refer to oVirt's &lt;a href="https://ovirt.org/develop/release-management/features/network/provider-physical-network/"&gt;Provider Physical Network RFE&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id="usage-in-ovirt"&gt;Usage in oVirt&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install &lt;code&gt;oVirt.dpdk-setup&lt;/code&gt; Ansible role via ansible-galaxy:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; # ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Execute the role as described above.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Unless the host was already configured, the host will restart for kernel changes to be applied. After reboot, the following values are changed (if they are not, you may have incompatible hardware):&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;IOMMU: &lt;code&gt;/sys/devices/virtual/iommu/&amp;lt;DMAR device&amp;gt;/devices/&amp;lt;PCI address&amp;gt;&lt;/code&gt; should exist. DMAR devices are typically annotated by &lt;code&gt;dmar0&lt;/code&gt;, &lt;code&gt;dmar1&lt;/code&gt;, and so forth.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;hugepages: &lt;code&gt;grep Huge /proc/meminfo&lt;/code&gt; should reflect the desired state as defined in the Ansible playbook (i.e. &lt;code&gt;Hugepagesize&lt;/code&gt; and &lt;code&gt;HugePages_Total&lt;/code&gt;)&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;CPU partitioning: based on the devices that are to be used with a DPDK compatible driver, CPUs should be partitioned separately between each NUMA node. Refer to &lt;code&gt;lscpu&lt;/code&gt; to see live CPU NUMA separation information, e.g.: &lt;code&gt;NUMA node1 CPU(s): 8-15&lt;/code&gt;&lt;/p&gt;
+
+        &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: NICs using userspace drivers do not appear in the kernel; &lt;code&gt;ip&lt;/code&gt; commands won't list devices using userspace drivers. in oVirt, such devices appear as &lt;code&gt;dpdk0&lt;/code&gt;, &lt;code&gt;dpdk1&lt;/code&gt;, and so forth.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an oVirt network &lt;code&gt;phys-net-demo&lt;/code&gt; on your data center and attach it to your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Attach &lt;code&gt;phys-net-demo&lt;/code&gt; to DPDK NICs accross your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/set-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an external OVN network &lt;code&gt;ext-net-demo&lt;/code&gt;, setting &lt;code&gt;phys-net-demo&lt;/code&gt; as its physical network. This configuration between &lt;code&gt;ext-net-demo&lt;/code&gt; and &lt;code&gt;phys-net-demo&lt;/code&gt; will enable traffic between &lt;code&gt;phys-net-demo&lt;/code&gt; (which DPDK's physical port is part of) and the rest of the ports present in OVN's &lt;code&gt;ext-net-demo&lt;/code&gt; network.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-ext-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code&gt;ext-net-demo&lt;/code&gt; vNic's may now be added to virtual machines. These vNics now share L2 connectivity with other remote ports in &lt;code&gt;ext-net-demo&lt;/code&gt; via DPDK's NIC (and other local ports internally).&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/ext-net-demo.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Temporarily, SElinux needs to be set to permissive. This is due to an &lt;a href="https://bugzilla.redhat.com/1598435"&gt;open bug&lt;/a&gt; where SElinux blocks the creation of a QEMU socket. Once the bug is resolved, this step should be skipped.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Host to VM packets are transmitted and received on buffers allocated on shared hugepages memory. As such, virtual machines using DPDK based NIC's need to enable hugepage sharing; this is done by running VM's with custom properties:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Review engine custom properties:&lt;br /&gt;
+&lt;code&gt;engine-config -g UserDefinedVMProperties&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Add engine custom properties for hugepages support:&lt;br /&gt;
+&lt;code&gt;engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Restart engine for changes to take effect:&lt;br /&gt;
+&lt;code&gt;systemctl restart ovirt-engine&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;In the VM run once menu dialog, add the following custom properties:&lt;br /&gt;
+&lt;code&gt;hugepages_shared&lt;/code&gt; – &lt;code&gt;true&lt;/code&gt;.&lt;br /&gt;
+&lt;code&gt;hugepages&lt;/code&gt; – the number of hugepages to share.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/hugepages.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Build oVirt Reports Using Grafana</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/06/ovirt-report-using-grafana.html"/>
+    <id>http://ovirt.org/blog/2018/06/ovirt-report-using-grafana.html</id>
+    <published>2018-06-24T09:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>sradco,</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="https://grafana.com/"&gt;Grafana&lt;/a&gt;, The open platform for beautiful analytics and monitoring,
+recently added support for &lt;a href="http://docs.grafana.org/features/datasources/postgres/"&gt;PostgreSQL&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;It in now possible to connect Grafana to &lt;a href="https://www.ovirt.org/documentation/how-to/reports/dwh/"&gt;oVirt DWH&lt;/a&gt;,
+in order to visualize and monitor the oVirt environment.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Grafana dashboard example&lt;/strong&gt;
+&lt;img alt="" width="1920" height="877" src="/images/grafana_dashboard_example.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Adding a Read-Only User to the History Database&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You may want to add a read only user to connect the history database :&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; In oVirt 4.2 we ship postgres 9.5 through the Software Collection.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;In order to run psql you will need to run:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# su - postgres 
+$ scl enable rh-postgresql95 -- psql ovirt_engine_history
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create the user to be granted read-only access to the history database:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt_engine_history=# CREATE ROLE [user name] WITH LOGIN ENCRYPTED PASSWORD '[password]';
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Grant the newly created user permission to connect to the history database:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt_engine_history=# GRANT CONNECT ON DATABASE ovirt_engine_history TO [user name];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Grant the newly created user usage of the public schema:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt_engine_history=# GRANT USAGE ON SCHEMA public TO [user name];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Exit the database&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt_engine_history=# \q
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Generate the rest of the permissions that will be granted to the newly created user and save them to a file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ scl enable rh-postgresql95 -- psql -U postgres -c "SELECT 'GRANT SELECT ON ' || relname || ' TO [user name];' FROM pg_class JOIN pg_namespace ON pg_namespace.oid = pg_class.relnamespace WHERE nspname = 'public' AND relkind IN ('r', 'v');" --pset=tuples_only=on  ovirt_engine_history &amp;gt; grant.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Use the file you created in the previous step to grant permissions to the newly created user:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ scl enable rh-postgresql95 -- psql -U postgres -f grant.sql ovirt_engine_history
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Remove the file you used to grant permissions to the newly created user:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ rm grant.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Ensure the database can be accessed remotely by enabling md5 client authentication. Edit the /var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_hba.conf file, and add the following line immediately underneath the line starting with local at the bottom of the file, replacing user_name with the new user you created:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;host    database_name    user_name    0.0.0.0/0   md5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Allow TCP/IP connections to the database. Edit the /var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf file and add the following line:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;listen_addresses='*'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Restart the postgresql service:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# systemctl restart rh-postgresql95-postgresql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;Install Grafana&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;If you wish to create dashboards to monitor oVirt environment, you will need to &lt;a href="http://docs.grafana.org/installation/rpm/"&gt;install Grafana&lt;/a&gt;. Please follow the rest of the installation instructions to &lt;a href="http://docs.grafana.org/installation/rpm/#start-the-server-via-systemd"&gt;start the Grafana server&lt;/a&gt; and &lt;a href="http://docs.grafana.org/installation/rpm/#enable-the-systemd-service-to-start-at-boot"&gt;enable it&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Please do not install Grafana on the engine machine.&lt;/p&gt;
+
+&lt;p&gt;Grafana automatically creates an admin &lt;a href="http://docs.grafana.org/installation/configuration/#admin-user"&gt;user&lt;/a&gt; and &lt;a href="http://docs.grafana.org/installation/configuration/#admin-password"&gt;password&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Adding the  History Database data source&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You will need to add a &lt;a href="http://docs.grafana.org/features/datasources/graphite/#adding-the-data-source"&gt;PostgreSQL data source&lt;/a&gt; that connects to the DWH database.&lt;/p&gt;
+
+&lt;p&gt;For example:
+&lt;img alt="" width="1064" height="848" src="/images/grafana_data_source_example.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now you can start creating your dashboard widgets.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Creating a Dashboard&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Go to &lt;code&gt;Dashboards&lt;/code&gt; -&amp;gt; &lt;code&gt;+ New&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;First create the variables required for building the different widgets:&lt;/p&gt;
+
+&lt;p&gt;The graph example below uses the &lt;a href="http://docs.grafana.org/reference/templating/"&gt;Variables&lt;/a&gt;feature, to enable drop down input controls that allows taggling between different datacenters / clusters / hosts etc.&lt;/p&gt;
+
+&lt;p&gt;You will need to &lt;a href="https://www.ovirt.org/blog/2018/06/ovirt-report-using-grafana/"&gt;add the following variables&lt;/a&gt;:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Variable Name&lt;/th&gt;
+      &lt;th&gt;Label&lt;/th&gt;
+      &lt;th&gt;Type&lt;/th&gt;
+      &lt;th&gt;Data source&lt;/th&gt;
+      &lt;th&gt;Query&lt;/th&gt;
+      &lt;th&gt;Hide&lt;/th&gt;
+      &lt;th&gt;Multi-value&lt;/th&gt;
+      &lt;th&gt;Include All option&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;userlocale&lt;/td&gt;
+      &lt;td&gt;Language&lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT DISTINCT language_code from enum_translator&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;datacenter_name&lt;/td&gt;
+      &lt;td&gt;Data Center&lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT DISTINCT datacenter_name FROM v4_2_configuration_history_datacenters&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;datacenter_id&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT DISTINCT datacenter_id FROM v4_2_configuration_history_datacenters WHERE datacenter_name='$datacenter_name'&lt;/td&gt;
+      &lt;td&gt;Variable&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;cluster_name&lt;/td&gt;
+      &lt;td&gt;Cluster&lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT cluster_name FROM v4_2_configuration_history_clusters WHERE datacenter_id = '$datacenter_id'&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;Yes&lt;/td&gt;
+      &lt;td&gt;Yes&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;cluster_id&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT cluster_id FROM v4_2_configuration_history_clusters WHERE datacenter_id = '$datacenter_id'&lt;/td&gt;
+      &lt;td&gt;Variable&lt;/td&gt;
+      &lt;td&gt;Yes&lt;/td&gt;
+      &lt;td&gt;Yes&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;hostname&lt;/td&gt;
+      &lt;td&gt;Host&lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT host_name FROM v4_2_configuration_history_hosts WHERE cluster_id IN ('$cluster_id')&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;host_id&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;Query&lt;/td&gt;
+      &lt;td&gt;&lt;code&gt;Choose your data source from the list&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;SELECT host_id FROM v4_2_configuration_history_hosts WHERE host_name = '$hostname'&lt;/td&gt;
+      &lt;td&gt;Variable&lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; All the queries are based on the DWH views that are supported also when upgrading to the next oVirt release.
+In order to use the latest views you please update the DWH v4_2 prefixes to the prefix of your setup version.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Graph panel example:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;To add a &lt;code&gt;Graph&lt;/code&gt; type panel, on the left side you have the &lt;a href="http://docs.grafana.org/guides/getting_started/#dashboards-panels-rows-the-building-blocks-of-grafana"&gt;Row controls menu&lt;/a&gt;.
+Go to the &lt;code&gt;+ Add Panel&lt;/code&gt;, and pick &lt;code&gt;Graph&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Query example for the - Five Most Utilized Hosts by Memory / CPU:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;SELECT DISTINCT
+    min(time) AS time,
+    MEM_Usage,
+    host_name || 'MEM_Usage' as metric
+FROM (
+    SELECT
+        stats_hosts.host_id,
+        CASE
+            WHEN delete_date IS NULL
+                THEN host_name
+            ELSE
+                host_name
+                ||
+                ' (Removed on '
+                ||
+                CAST ( CAST ( delete_date AS date ) AS varchar )
+                ||
+                ')'
+        END AS host_name,
+        stats_hosts.history_datetime AS time,
+        SUM (
+            COALESCE (
+                stats_hosts.max_cpu_usage,
+                0
+            ) *
+            COALESCE (
+                stats_hosts.minutes_in_status,
+                0
+            )
+        ) /
+        SUM (
+            COALESCE (
+                stats_hosts.minutes_in_status,
+                0
+            )
+        ) AS CPU_Usage,
+        SUM (
+            COALESCE (
+                stats_hosts.max_memory_usage,
+                0
+            ) *
+            COALESCE (
+                stats_hosts.minutes_in_status,
+                0
+            )
+        ) /
+        SUM (
+            COALESCE (
+                stats_hosts.minutes_in_status,
+                0
+            )
+        ) AS MEM_Usage
+    FROM v4_2_statistics_hosts_resources_usage_hourly AS stats_hosts
+        INNER JOIN v4_2_configuration_history_hosts
+            ON (
+                v4_2_configuration_history_hosts.host_id =
+                stats_hosts.host_id
+            )
+    WHERE  stats_hosts.history_datetime &amp;gt;= $__timeFrom()
+    AND stats_hosts.history_datetime &amp;lt; $__timeTo()
+        -- Here we get the latest hosts configuration
+       AND  v4_2_configuration_history_hosts.history_id IN (
+            SELECT MAX ( a.history_id )
+            FROM v4_2_configuration_history_hosts AS a
+            GROUP BY a.host_id
+        )
+        AND stats_hosts.host_id IN (
+            SELECT a.host_id
+            FROM v4_2_statistics_hosts_resources_usage_hourly a
+                INNER JOIN v4_2_configuration_history_hosts b
+                    ON ( a.host_id = b.host_id )
+            WHERE
+                -- Here we filter by active hosts only
+                a.host_status = 1
+                -- Here we filter by the datacenter chosen by the user
+                 AND b.cluster_id IN (
+                    SELECT v4_2_configuration_history_clusters.cluster_id
+                    FROM v4_2_configuration_history_clusters
+                    WHERE
+                        v4_2_configuration_history_clusters.datacenter_id =
+                        '$datacenter_id'
+                )
+                -- Here we filter by the clusters chosen by the user
+                AND b.cluster_id IN ('$cluster_id')
+                AND a. history_datetime &amp;gt;= $__timeFrom()
+                AND a.history_datetime &amp;lt; $__timeTo()
+                -- Here we get the latest hosts configuration
+                AND b.history_id IN (
+                    SELECT MAX (g.history_id)
+                    FROM v4_2_configuration_history_hosts g
+                    GROUP BY g.host_id
+                )
+            GROUP BY a.host_id
+            ORDER BY
+                -- Hosts will be ordered according to the summery of
+                -- memory and CPU usage percent.
+                --This determines the busiest hosts.
+                SUM (
+                    COALESCE (
+                        a.max_memory_usage * a.minutes_in_status,
+                        0
+                    )
+                ) /
+                SUM (
+                    COALESCE (
+                        a.minutes_in_status,
+                        0
+                    )
+                ) +
+                SUM (
+                    COALESCE (
+                        a.max_cpu_usage * a.minutes_in_status,
+                        0
+                    )
+                ) /
+                SUM (
+                    COALESCE (
+                        a.minutes_in_status,
+                        0
+                    )
+                ) DESC
+            LIMIT 5
+        )
+GROUP BY
+    stats_hosts.host_id,
+    host_name,
+    delete_date,
+    history_datetime
+) AS a
+GROUP BY a.host_name, a.mem_usage
+ORDER BY time
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; In this example we dont use the &lt;code&gt;Host&lt;/code&gt; variable, so you can not filter the results by it.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Your Container Volumes Served By oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/02/your-container-volumes-served-by-ovirt.html"/>
+    <id>http://ovirt.org/blog/2018/02/your-container-volumes-served-by-ovirt.html</id>
+    <published>2018-02-20T09:01:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>rgolan</name>
+    </author>
+    <content type="html">&lt;blockquote&gt;
+  &lt;p&gt;Note: &lt;em&gt;&amp;lt; 5 minutes read&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;When running a virtualization workload on oVirt, a VM disk is 'natively' a disk somewhere on your network-storage.&lt;br /&gt;
+Entering containers world, on Kubernetes(k8s) or OpenShift, there are many options specifically because the workload can be totally stateless, i.e
+they are stored on a host supplied disk and can be removed when the container is terminated. The more interesting case is &lt;em&gt;stateful workloads&lt;/em&gt; i.e apps that persist data (think DBs, web servers/services, etc). k8s/OpenShift designed an API to dynamically provision the container storage (volume in k8s terminology).&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href="#resources"&gt;resources&lt;/a&gt; section for more details.&lt;/p&gt;
+
+&lt;p&gt;In this post I want to cover how oVirt can provide volumes for containers running on k8s/OpenShift cluster.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Consider this: you want to deploy wikimedia as a container, with all its content served from &lt;code&gt;/opt&lt;/code&gt;. 
+For that you will create a persistent volume for the container - when we have state to keep and server
+creating a volume makes sense. It is persistent, it exists regardless the container state,
+and you can choose which directory exactly you serve that volume, and that is the most important
+part, k8s/OpenShift gives you an API to determine who will provide the volume that you need.&lt;/p&gt;
+
+&lt;p&gt;There are many options, Cinder, AWS, NFS and more. And in case the &lt;em&gt;node&lt;/em&gt; that your pod is running on
+is a &lt;em&gt;VM&lt;/em&gt; in oVirt, you can use ovirt-flexdriver to attach an oVirt disk and that will
+appear as a device in the node, and will be mounted with filesystem to your request. If you want to know more see the documentation about &lt;a href="https://github.com/kubernetes-incubator/external-storage"&gt;kubernetes-incubator/external-storage&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;    k8s/OpenShift Node          +-------&amp;gt; oVirt Vm
++----------------------+
+|                      |                                  +----------------+
+|   mediawiki pod      |                                  |                |
+| +---------------+    |                                  |                |
+| |               |    |                                  |                |
+| |               |    |                                  |     oVirt      |
+| |               |    |                                  |                |
+| |/srv/mediawiki |    |                                  |                |
+| +---------------+    |                                  |                |
+|                      |                                  +----------------+
+|                      |
+|                      |
+|  /dev/pv001 (/srv/mediawiki)  +-------&amp;gt; oVirt Disk
+|                      |
++----------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="demo"&gt;Demo&lt;/h2&gt;
+&lt;p&gt;Checkout this youtube video, that demonstrate how it looks like in &lt;strong&gt;oVirt admin UI&lt;/strong&gt;, &lt;strong&gt;kubernetes UI in cockpit&lt;/strong&gt;, and some &lt;strong&gt;cli&lt;/strong&gt;:&lt;/p&gt;
+&lt;iframe width="800" height="600" src="https://www.youtube.com/embed/_E9pUVrI0hs"&gt;&lt;/iframe&gt;
+
+&lt;h2 id="external-storage-provisioner-and-flexvolume-driver"&gt;External Storage Provisioner and Flexvolume driver&lt;/h2&gt;
+&lt;p&gt;OpenShift is able to request oVirt these special volumes by deploying ovirt-flexdriver and ovirt-provisioner and following this steps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a storage class&lt;/li&gt;
+  &lt;li&gt;Create a storage claim&lt;/li&gt;
+  &lt;li&gt;Create a pod with a volume that refernce the storage claim&lt;/li&gt;
+  &lt;li&gt;Run the pod&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A storage class will can describe slow or fast data storage that maps to data domains in oVirt&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;StorageClass&lt;/span&gt;
+&lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;storage.k8s.io/v1&lt;/span&gt;
+&lt;span class="na"&gt;metadata&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt-ssd-domain&lt;/span&gt;
+&lt;span class="na"&gt;provisioner&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;external/ovirt&lt;/span&gt; 
+&lt;span class="na"&gt;parameters&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;io1&lt;/span&gt;
+  &lt;span class="na"&gt;iopsPerGB&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;10"&lt;/span&gt;
+  &lt;span class="na"&gt;ovirtStorageDomain&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;prod-ssd-domain"&lt;/span&gt;
+  &lt;span class="na"&gt;fsType&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ext4&lt;/span&gt;
+  &lt;span class="na"&gt;ovirtDiskFormat&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;cow"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you create a storage claim, ovirt-provisioner will create an oVirt disk for you on the
+specified domain - notice the reference to the storage class:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="c1"&gt;# storage claim&lt;/span&gt;
+&lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;PersistentVolumeClaim&lt;/span&gt;
+&lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;v1&lt;/span&gt;
+&lt;span class="na"&gt;metadata&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-data-ssd-disk&lt;/span&gt;
+  &lt;span class="na"&gt;annotations&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="s"&gt;volume.beta.kubernetes.io/storage-class&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt-ssd-domain&lt;/span&gt;
+&lt;span class="na"&gt;spec&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;storageClassName&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt-ssd-domain&lt;/span&gt;
+  &lt;span class="na"&gt;accessModes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ReadWriteOnce&lt;/span&gt;
+  &lt;span class="na"&gt;resources&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;requests&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="na"&gt;storage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1Gi&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Once the claim is created, oVirt is creating a 1Gb disk which is not attached to any node yet.&lt;/p&gt;
+
+&lt;p&gt;Run a mediawiki pod with so-called flex volume:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;v1&lt;/span&gt; 
+&lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;Pod&lt;/span&gt; 
+&lt;span class="na"&gt;metadata&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki&lt;/span&gt;
+  &lt;span class="na"&gt;labels&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;app&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt&lt;/span&gt; 
+&lt;span class="na"&gt;spec&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;containers&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;image&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki&lt;/span&gt; 
+    &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki&lt;/span&gt; 
+    &lt;span class="na"&gt;volumeMounts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-storage&lt;/span&gt;
+      &lt;span class="na"&gt;mountPath&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;/data/"&lt;/span&gt;
+  &lt;span class="na"&gt;volumes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-storage&lt;/span&gt;
+    &lt;span class="na"&gt;persistentVolumeClaim&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="na"&gt;claimName&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-data-ssd-disk&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And now it is the flexvolume driver job to tell oVirt to attach the disk into the node this
+pod is running on, and creat file system on it, as described in the &lt;strong&gt;storage class&lt;/strong&gt;, and to mount
+it onto the node. When this is done, the volume is ready and the container can start, with
+the mount set into the &lt;code&gt;/data&lt;/code&gt; directory as set by &lt;code&gt;mountPath&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id="want-to-give-it-a-try-want-to-get-updated-about-this"&gt;Want to give it a try? Want to get updated about this?&lt;/h2&gt;
+&lt;p&gt;This work as for today (Feb 20th 2018) is in progress and all of it can be found at the &lt;a href="https://github.com/rgolangh/ovirt-flexdriver"&gt;ovirt-flexdriver project page&lt;/a&gt;
+To &lt;em&gt;deploy&lt;/em&gt; &lt;em&gt;&lt;strong&gt;ovirt-flexdriver&lt;/strong&gt;&lt;/em&gt; and &lt;em&gt;&lt;strong&gt;ovirt-provisioner&lt;/strong&gt;&lt;/em&gt; I created a container with &lt;em&gt;Ansible&lt;/em&gt; playbook that takes an inventory
+that has the k8s nodes and k8s master specified, along with the ovirt-engine connection details. The playbook will copy and
+configure both component and get you up and running with just few keystrokes. Find more on deployment in the README.md of &lt;a href="https://github.com/rgolangh/ovirt-flexdriver"&gt;project&lt;/a&gt;
+and in an up-coming short video demonstrating the deployment.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note on versions: this should be working against kubernetes 1.9 and oVirt 4.2 but 4.1 should work as well (because the API in use is the same).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/rgolangh/ovirt-flexdriver"&gt;oVirt flexdriver project page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://docs.openshift.org/latest/install_config/persistent_storage/persistent_storage_flex_volume.html"&gt;OpenShift flexvolume driver page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+  </entry>
+  <entry>
+    <title>Up and Running with oVirt 4.2 and Gluster Storage</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/02/up-and-running-with-ovirt-4-2-and-gluster-storage.html"/>
+    <id>http://ovirt.org/blog/2018/02/up-and-running-with-ovirt-4-2-and-gluster-storage.html</id>
+    <published>2018-02-02T20:45:55+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Jason Brooks</name>
+    </author>
+    <content type="html">&lt;p&gt;In December, the oVirt Project &lt;a href="https://ovirt.org/blog/2017/12/ovirt-4.2.0-now-ga/"&gt;shipped version 4.2&lt;/a&gt; of its open source virtualization management system. With a new release comes an update to this howto for running oVirt together with Gluster storage using a trio of servers to provide for the system's virtualization and storage needs, in a configuration that allows you to take one of the three hosts down at a time without disrupting your running VMs.&lt;/p&gt;
+
+&lt;p&gt;If you're looking instead for a simpler, single-machine option for trying out oVirt, your best bet is the &lt;a href="/download/ovirt-live"&gt;oVirt Live ISO&lt;/a&gt; page. This is a LiveCD image that you can burn onto a blank CD or copy onto a USB stick to boot from and run oVirt. This is probably the fastest way to get up and running, but once you're up, this is definitely a low-performance option, and not suitable for extended use or expansion.&lt;/p&gt;
+
+&lt;p&gt;Read on to learn about my favorite way of running oVirt.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="ovirt-glusterized"&gt;oVirt, Glusterized&lt;/h2&gt;
+
+&lt;h3 id="prerequisites"&gt;Prerequisites&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Hardware:&lt;/strong&gt; You’ll need three machines with 16GB or more of RAM and processors with &lt;a href="http://en.wikipedia.org/wiki/X86_virtualization#Hardware-assisted_virtualization"&gt;hardware virtualization extensions&lt;/a&gt;. Physical machines are best, but you can test oVirt using &lt;a href="http://community.redhat.com/blog/2013/08/testing-ovirt-3-3-with-nested-kvm/"&gt;nested KVM&lt;/a&gt; as well. I've written this howto using VMs running on my "real" oVirt+Gluster install.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Software:&lt;/strong&gt; For this howto, I'm using &lt;a href="https://www.ovirt.org/node/"&gt;oVirt Node 4.2&lt;/a&gt;, a streamlined operating system image based on CentOS 7, for my three hosts, and a CentOS-based appliance image for the Engine VM. oVirt does support other OS options. For more info see the project's &lt;a href="http://www.ovirt.org/download/"&gt;download page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Network:&lt;/strong&gt; Your test machine’s host name must resolve properly, either through your network’s DNS, or through the &lt;code&gt;/etc/hosts&lt;/code&gt; file on your virt host(s), on the VM that will host the oVirt engine, and on any clients from which you plan on administering oVirt. It's not strictly necessary, but it's a good idea to set aside a separate storage network for Gluster traffic and for VM migration. In my lab, I use a separate 10G nic on each of the hosts for my storage network.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Storage:&lt;/strong&gt; The hosted engine feature requires NFS, iSCSI, FibreChannel or Gluster storage to house the VM that will host the engine. For this walkthrough, I'm using a Gluster arbiter volume, which involves creating a replica 3 Gluster volume with two standard data bricks and a third arbiter brick that stores only file names and metadata, thereby providing an oVirt hosted engine setup with the data consistency it requires, while cutting down significantly on duplicated data and network traffic.&lt;/p&gt;
+
+&lt;h3 id="installing-ovirt-with-hosted-engine"&gt;Installing oVirt with hosted engine&lt;/h3&gt;
+
+&lt;p&gt;I'm starting out with three test machines with 16 GB of RAM and 4 processor cores, running oVirt Node 4.2. I actually do the testing for this howto in VMs hosted on my "real" oVirt setup, but that "real" setup resembles what I describe below.&lt;/p&gt;
+
+&lt;p&gt;I've identified a quartet of static IP address on my network to use for this test (three for my virt hosts, and one for the hosted engine). I've set up the DNS server in my lab to make these IPs resolve properly, but you can also edit the /etc/hosts files on your test machines for this purpose.&lt;/p&gt;
+
+&lt;p&gt;Our host1 will need to be able to access itself and the other two nodes via passwordless ssh:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[host1]# ssh-keygen
+
+[host1]# ssh-copy-id root@$HOST1
+
+[host1]# ssh-copy-id root@$HOST2
+
+[host1]# ssh-copy-id root@$HOST3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Next, open up a web browser and visit your first host at port 9090 to access the cockpit web interface. Log in with the machine's root account, click the "Virtualization" tab at the left of the screen, and then click the "Hosted Engine" link in the left sidebar. Select the radio button next to "Hosted Engine with Gluster" and hit the "Start" button.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1166" height="561" src="/images/uarwo42-cockpit-1.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;oVirt Node ships with an Ansible-based Gluster deployment tool called &lt;a href="http://gdeploy.readthedocs.io/en/latest/"&gt;gdeploy&lt;/a&gt;. The dialog window that appears contains a series of steps through which you provide gdeploy with the information it needs to configure your three nodes for running ovirt with gluster storage, starting with the hosts you want to configure.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1089" height="690" src="/images/uarwo42-gdeploy-1.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click next to accept the defaults in step two, and then in step three, specify the gluster volumes you want to create. The cockpit gdeploy plugin autofills some values here, including a volume for the engine, a data volume, and a second data volume called vmstore. At this point, you can choose whether to make some or your volumes &lt;a href="http://docs.gluster.org/en/latest/Administrator%20Guide/arbiter-volumes-and-quorum/"&gt;arbiter volumes&lt;/a&gt;, in which the first two nodes contain a full replica of your data, and the third node contains just enough information to arbitrate between the two other nodes when they disagree with each other.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1187" height="537" src="/images/uarwo42-gdeploy-2.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Click "Next" to hit step four, where we'll specify the brick locations for our volumes. Again, the plugin prefills some values here, which aren't likely to be correct for your environment, so pay close attention here. In my test environment, I'm using one additional disk for my gluster data, &lt;code&gt;/dev/sdb&lt;/code&gt;, and I'm specifying one brick per host per volume:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1173" height="768" src="/images/uarwo42-gdeploy-3.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, hit "Deploy" to kick off the deployment process. In some of my tests, I received a "deployment failed" error, and had to click the "redeploy" button before the deployment would proceed. Once underway, the process will take some time to complete, as gdeploy configures your gluster volumes and their underlying storage.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1132" height="870" src="/images/uarwo42-gdeploy-4.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;At the end of the process, you'll see a green check mark, and the message "Successfully deployed Gluster."&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="921" height="672" src="/images/uarwo41-gdeploy-6.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h3 id="hosted-engine-setup"&gt;Hosted engine setup&lt;/h3&gt;
+
+&lt;p&gt;Once gdeploy is finished, click the "Continue to Hosted Engine Deployment" button to begin configuring your hosted engine. Provide hostname, domain, network configuration, password, and, if desired, ssh key information for your hosted engine virtual machine.&lt;/p&gt;
+
+&lt;p&gt;Then, we'll answer a set of questions related to the virtual machine that will serve the oVirt engine application. First, we tell the installer to use the oVirt Engine Appliance image that gdeploy installed for us. Then, we configure cloud-init to customize the appliance on its initial boot, providing various VM configuration details covering networking, VM RAM and storage amounts, and authentication. Enter the details appropriate to your environment, and when the installer asks whether to automatically execute engine-setup on the engine appliance on first boot, answer yes. Here's what the configuration on my test instance looked like:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="928" height="819" src="/images/uarwo42-he-1.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Nest, supply an admin password for the engine instance, and customize your notification server details.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="914" height="816" src="/images/uarwo42-he-2.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;The correct details for the storage portion of the setup process should auto-populate.CK The engine VM will be stored on one of the gluster volumes we configured via gdeploy, with backup volfile servers specified for failover when our first node is unavailable.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="912" height="812" src="/images/uarwo42-he-3.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;You should be able to accept the default values in the networking step, which configures the management bridge used by oVirt.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="907" height="846" src="/images/uarwo42-he-4.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;In step five, you can review your engine VM configuration and click backward to make any changes you require.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="920" height="810" src="/images/uarwo42-he-5.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;In the next four steps, the installer will offer to download the engine appliance, prompt you to accept the GPG key with which the appliance is signed, ask whether you wish to configure your engine to manage gluster volumes, and give you the opportunity to specify an alternate appliance image.&lt;/p&gt;
+
+&lt;p&gt;You can accept the default values in all four steps, but I prefer to answer "Yes" when asked whether to configure the host and cluster for gluster:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="909" height="816" src="/images/uarwo42-he-5c.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you've finished clicking through the hosted engine installer, you'll have a configured VM running on your first host, with storage supplied by gluster, and an instance of the oVirt engine up and running on the VM.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="921" height="855" src="/images/uarwo42-he-5e.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="access-the-engine"&gt;Access the engine&lt;/h2&gt;
+
+&lt;p&gt;When the installation process completes, open a web browser and visit your oVirt engine administration portal at the address of your hosted engine VM. Log in with the user name &lt;code&gt;admin&lt;/code&gt; and the password you chose during setup.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="770" height="480" src="/images/uarwo42-engine-1.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next, check out the navigation bar on the left of the screen, and click Compute –&amp;gt; Clusters –&amp;gt; Default. Under the heading "Action Items," you should see text that reads "Some new hosts are detected in the cluster. You can Import them to engine or Detach them from the cluster." Click "Import," and in the dialog window that appears, provide passwords for your two hosts, and hit OK.&lt;/p&gt;
+
+&lt;h2 id="configuring-storage"&gt;Configuring storage&lt;/h2&gt;
+
+&lt;p&gt;Once that completes, head to the left navigation bar again and click Storage –&amp;gt; Domains –&amp;gt; New Domain. Give your new domain a name, and choose "Data" and "GlusterFS" from the "Domain Function" and "Storage Type" drop down menus. Check the box marked "Use managed gluster," and from the drop down box that appears, choose your "data" volume, and hit the OK button to proceed.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="953" height="501" src="/images/uarwo42-data-domain.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="configuring-hosts-two-and-three-for-hosted-engine"&gt;Configuring hosts two and three for Hosted Engine&lt;/h2&gt;
+
+&lt;p&gt;From the left navigation bar, click Compute –&amp;gt; Hosts, select host two, and in the toolbar toward the right of the screen, click Management, and then Maintenance, and hit OK in the dialog box that appears next. Once the host is in maintenance mode, click Installation, and then Reinstall in the toolbar. In the dialog that appears next, click "Hosted Engine," and then, in the drop down box, choose DEPLOY, and hit OK. After that process completes, repeat the process on host three.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="774" height="474" src="/images/uarwo42-deploy-hosted.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once all three hosts are back up, you should be able to put any one of them into maintenance mode and then upgrade or restart that host without losing access to the management engine, other VMs, or your VM storage.&lt;/p&gt;
+
+&lt;h2 id="running-your-first-vm"&gt;Running your first VM&lt;/h2&gt;
+
+&lt;p&gt;oVirt engine comes pre-configured with a public Glance instance managed by the oVirt project. We'll tap this resource to launch our first VM.&lt;/p&gt;
+
+&lt;p&gt;From the left navigation bar, click Storage –&amp;gt; Domains, and you should see an "ovirt-image-repository" entry next to a little OpenStack logo. Clicking on this domain will bring up a menu of images available in this repository. Click on the "CirrOS" image (which is very small and perfect for testing) in the list and then click "Import," before hitting the OK button in the pop-up dialog to continue.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="573" height="438" src="/images/uarwo42-import-image.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;The image will be copied from the oVirt project's public Glance repository to the storage domain you just configured, where it will be available as a disk to attach to a new VM. In the import image dialog, you have the option of clicking the "Import as Template" check box to give yourself the option of basing multiple future VMs on this image using oVirt's templates functionality.&lt;/p&gt;
+
+&lt;p&gt;Next, head to Compute –&amp;gt; Virtual Machines, click "New," choose "Linux" from the "Operating System" drop down menu, supply a name for your VM, and choose the "ovirtmgmt/ovirtmgmt" network in the drop down menu next to "nic1." Then, click the "Attach" button under the "Instance Images" heading and check the radio button next to the CirrOS disk image you just imported before hitting the "OK" button to close the "Attach Virtual Disks" dialog, and hitting "OK" again to exit the "New Virtual Machine" dialog.&lt;/p&gt;
+
+&lt;p&gt;For additional configuration, such as setting RAM and CPU values and using cloud-init, there's a "Show Advanced Options" button in the dialog, but you can revisit that later.&lt;/p&gt;
+
+&lt;p&gt;Now, back at the Virtual Machines list, right-click your new VM, and choose "Run" from the menu. After a few moments, the status of your new VM will switch from red to green, and you'll be able to click on the green monitor icon next to “Migrate” to open a console window and access your VM.&lt;/p&gt;
+
+&lt;h2 id="storage-network"&gt;Storage network&lt;/h2&gt;
+
+&lt;p&gt;I mentioned above that it's a good idea to set aside a separate storage network for Gluster traffic and for VM migration. If you've set up a separate network for Gluster traffic, you can bring it under oVirt's management by visiting Network –&amp;gt; Networks, clicking "New," and giving your network a name before hitting "OK" to close the dialog.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="859" height="579" src="/images/uarwo42-storage-net.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next, click on the new network, choose the "Hosts" toolbar item, and then click the "Unattached" button. One at a time, highlight each of your hosts, click on "Setup Host Networks," and drag the new network you created from the list of "Unassigned Logical Networks" to the interface you're already using for your Gluster traffic, before clicking OK. Clicking the pencil icon in the network brings up an "Edit Network storage" dialog where you can configure the boot protocol and other configuration details.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="999" height="794" src="/images/uarwo42-storage-net-a.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Then, choose the "Clusters" toolbar item, right-click the "Default" cluster, and choose "Manage Network" from the context menu. Then check the "Migration Network" and "Gluster Network" boxes and hit the "OK" button to close the dialog. This will instruct oVirt to send gluster and migration traffic over your storage network.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="793" height="535" src="/images/uarwo42-storage-net-b.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="maintenance-failover-and-storage"&gt;Maintenance, failover, and storage&lt;/h2&gt;
+
+&lt;p&gt;The key thing to keep in mind regarding host maintenance and downtime is that this converged three node system relies on having at least two of the nodes up at all times. If you bring down two machines at once, you'll run afoul of the Gluster quorum rules that guard us from split-brain states in our storage, the volumes served by your remaining host will go read-only, and the VMs stored on those volumes will pause and require a shutdown and restart in order to run again.&lt;/p&gt;
+
+&lt;p&gt;The oVirt engine pays attention to the state of its configured gluster volumes, and will warn you if certain actions will run afoul of quorum rules or if your volumes have pending healing operations.&lt;/p&gt;
+
+&lt;p&gt;You can bring a single machine down for maintenance by first putting the system into maintenance mode from the oVirt console by clicking on the host entry in the Hosts tab, and then clicking Management, and then Maintenance, before updating, rebooting, shutting down, etc. as desired.&lt;/p&gt;
+
+&lt;p&gt;Putting a host into maintenance mode will also put that host's hosted engine HA services into local maintenance mode, rendering that host ineligible to take over engine-hosting duties.&lt;/p&gt;
+
+&lt;p&gt;If you want to bring down the engine service itself, you can put your whole trio of hosts into global maintenance mode, preventing them from attempting to restart the engine on their own, by left-clicking on the Hosted Engine VM in the web admin console and enabling global maintenance mode.&lt;/p&gt;
+
+&lt;h2 id="till-next-time"&gt;Till next time&lt;/h2&gt;
+
+&lt;p&gt;If you run into trouble following this walkthrough, I’ll be happy to help you get up and running or get pointed in the right direction. On IRC, I’m jbrooks, ping me in the #ovirt room on OFTC or give me a shout on Twitter &lt;a href="https://twitter.com/jasonbrooks"&gt;@jasonbrooks&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you’re interested in getting involved with the oVirt Project, you can find all the mailing list, issue tracker, source repository, and wiki information you need &lt;a href="http://www.ovirt.org/community"&gt;here&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>oVirt 4.2.2 web admin UI browser bookmarks</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/01/ovirt-admin-bookmarks.html"/>
+    <id>http://ovirt.org/blog/2018/01/ovirt-admin-bookmarks.html</id>
+    <published>2018-01-18T12:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>awels,</name>
+    </author>
+    <content type="html">&lt;p&gt;oVirt web admin UI now allows the user to bookmark all entities and searches using their browser.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="synchronizing-url-with-application-state"&gt;Synchronizing URL with application state&lt;/h2&gt;
+
+&lt;p&gt;Whenever you select a detail view in the application, the browser URL is now updated to match the selected entity. For instance if you have a VM named MyVM and you click on the name to see the details, the URL of the browser will go to #vms-general;name=MyVM. If you switch to lets say the network interfaces tab the URL in your browser will switch to #vms-network_interfaces;name=MyVM. Changing entity or changing location will keep the browser URL synchronized. This allows you to use your browsers bookmark functionality to store a link to that VM.&lt;/p&gt;
+
+&lt;h2 id="direct-linking-to-entities"&gt;Direct linking to entities&lt;/h2&gt;
+
+&lt;p&gt;As a complementary functionality you can pass arguments to places that will execute some functionality based on the type of argument you have passed in. The following types are available:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;SEARCH, is for main views only, this allows you to pre populate the search string used in the search bar.&lt;/li&gt;
+  &lt;li&gt;NAME, most entities are uniquely named and you can use their name in a detail view to go directly to that named entity.&lt;/li&gt;
+  &lt;li&gt;DATACENTER, quota and networks are not uniquely named, but are unique combined with their associated data center, to link directly to either you need to specify NAME and DATACENTER.&lt;/li&gt;
+  &lt;li&gt;NETWORK, VNIC profiles are not uniquely named, but need both DATACENTER and NETWORK to be specified to directly link to it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If the user isn't already logged in, they will be redirected to oVirt SSO login page and then back to the desired place in the application. This allows external applications to directly link to entities in web admin UI.&lt;/p&gt;
+
+&lt;h3 id="examples"&gt;Examples&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;#vms-general;NAME=MyVM will take you to general detail tab for the MyVM virtual machine.&lt;/li&gt;
+  &lt;li&gt;#hosts-devices;NAME=host will take you to the devices detail tab for the 'host' host.&lt;/li&gt;
+  &lt;li&gt;#networks;search=name+%255C2+ovirt* will take you to the networks main view and the search will be prefilled with 'name = ovirt*'.&lt;/li&gt;
+  &lt;li&gt;#vnicProfiles-virtual_machines;name=test;dataCenter=test;network=test will take you directly to the VNIC profile test, in data center test, and network test.&lt;/li&gt;
+  &lt;li&gt;#networks-clusters;name=test;dataCenter=test will take you directly to the clusters detail tab with the 'test' network for data center test.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

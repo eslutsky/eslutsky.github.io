@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt SAML with keyloak using 389ds user federation &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='omachace' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='oVirt SAML with keyloak using 389ds user federation' property='og:title'>
+<meta content='In this post I will introduce how simple it is to integrate SAML with oVirt using Keycloak and LDAP user federation.
+
+Prerequisites: I assume you have already setup the 389ds directory server, but the solution is very similar for any other LDAP provider.
+As SAML is not integrated into oVirt directly, we use Apache to do the SAML authentication for us. The mod_auth_mellon module nicely covers all needed functionality.' property='og:description'>
+<meta content='http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html' property='og:url'>
+<meta content='2018-08-03T15:00:00Z' property='article:published_time'>
+<meta content='omachace' property='article:author:username'>
+<meta content='AAA' property='article:tag'>
+<link href='/blog/tag/aaa.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='LDAP' property='article:tag'>
+<link href='/blog/tag/ldap.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='SAML' property='article:tag'>
+<link href='/blog/tag/saml.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='SSO' property='article:tag'>
+<link href='/blog/tag/sso.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='oVirt SAML with keyloak using 389ds user federation' name='twitter:title'>
+<meta content='In this post I will introduce how simple it is to integrate SAML with oVirt using Keycloak and LDAP user federation.
+
+Prerequisites: I assume you have already setup the 389ds directory server, but the solution is very similar for any other LDAP provider.
+As SAML is not integrated into oVirt directly, we use Apache to do the SAML authentication for us. The mod_auth_mellon module nicely covers all needed functionality.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2018</li>
+<li class='active'>08</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+oVirt SAML with keyloak using 389ds user federation
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/omachace.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/omachace/">omachace</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2018-08-03T15:00:00Z'>
+Friday  3 August 2018
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>In this post I will introduce how simple it is to integrate SAML with oVirt using <a href="https://www.keycloak.org/">Keycloak</a> and LDAP user federation.</p>
+
+<p>Prerequisites: I assume you have already setup the <code>389ds</code> directory server, but the solution is very similar for any other LDAP provider.
+As SAML is not integrated into oVirt directly, we use Apache to do the SAML authentication for us. The <a href="https://github.com/Uninett/mod_auth_mellon">mod_auth_mellon</a> module nicely covers all needed functionality.</p>
+
+<p></p>
+
+<h2 id="mod_auth_mellon-configuration">mod_auth_mellon configuration</h2>
+<p>First we need to configure oVirt's apache. SSH to the oVirt engine and create a directory where we'll store all SAML related certificates.</p>
+
+<div class="highlight"><pre class="highlight shell"><code>ssh root@engine&#x000A;yum install <span class="nt">-y</span> mod_auth_mellon&#x000A;mkdir <span class="nt">-p</span> /etc/httpd/saml2&#x000A;</code></pre></div>
+<p>When we install the <code>mod_auth_mellon</code> package, it will create <code>/etc/httpd/conf.d/auth_mellon.conf</code>.
+We need to modify this file to our needs, as follows:</p>
+
+<div class="highlight"><pre class="highlight html"><code><span class="nt">&lt;Location</span> <span class="nt">/&gt;</span>&#x000A;    MellonEnable "info"&#x000A;    MellonDecoder "none"&#x000A;    MellonVariable "cookie"&#x000A;    MellonSecureCookie On&#x000A;    MellonSessionDump On&#x000A;    MellonSamlResponseDump On&#x000A;    MellonSessionLength 86400&#x000A;&#x000A;    MellonUser "NAME_ID"&#x000A;    MellonEndpointPath /saml2&#x000A;&#x000A;    MellonSPCertFile /etc/httpd/saml2/ovirtsp-cert.cert&#x000A;    MellonSPPrivateKeyFile /etc/httpd/saml2/ovirtsp-key.key&#x000A;    MellonSPMetadataFile /etc/httpd/saml2/ovirtsp-metadata.xml&#x000A;    MellonIdPMetadataFile /etc/httpd/saml2/idp-metadata.xml&#x000A;&#x000A;    RewriteEngine On&#x000A;    RewriteCond %{LA-U:REMOTE_USER} ^(.*)$&#x000A;    RewriteRule ^(.*)$ - [L,NS,P,E=REMOTE_USER:%1]&#x000A;    RequestHeader set X-Remote-User %{REMOTE_USER}s&#x000A;<span class="nt">&lt;/Location&gt;</span>&#x000A;&#x000A;<span class="nt">&lt;LocationMatch</span> <span class="err">^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">sso</span><span class="err">/(</span><span class="na">interactive-login-negotiate</span><span class="err">|</span><span class="na">oauth</span><span class="err">/</span><span class="na">token-http-auth</span><span class="err">)|^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">api</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;If</span> <span class="err">"</span><span class="na">req</span><span class="err">('</span><span class="na">Authorization</span><span class="err">')</span> <span class="err">!~</span> <span class="err">/^(</span><span class="na">Bearer</span><span class="err">|</span><span class="na">Basic</span><span class="err">)/</span><span class="na">i</span><span class="err">"</span><span class="nt">&gt;</span>&#x000A;&#x000A;    Require valid-user&#x000A;    AuthType "Mellon"&#x000A;    AuthName "SAML Login"&#x000A;    MellonEnable "auth"&#x000A;&#x000A;    ErrorDocument 401 "<span class="nt">&lt;html&gt;&lt;meta</span> <span class="na">http-equiv=</span><span class="s">\"refresh\"</span> <span class="na">content=</span><span class="s">\"0;</span> <span class="na">url=</span><span class="s">/ovirt-engine/sso/login-unauthorized\"/</span><span class="nt">&gt;&lt;body&gt;&lt;a</span> <span class="na">href=</span><span class="s">\"/ovirt-engine/sso/login-unauthorized\"</span><span class="nt">&gt;</span>Here<span class="nt">&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</span>"&#x000A;  <span class="nt">&lt;/If&gt;</span>&#x000A;<span class="nt">&lt;/LocationMatch&gt;</span>&#x000A;</code></pre></div>
+<p>You'll notice in the configuration file that we are using the following four files:</p>
+
+<ul>
+  <li>Certificate file - <code>/etc/httpd/saml2/ovirtsp-cert.cert</code></li>
+  <li>Private key file - <code>/etc/httpd/saml2/ovirtsp-key.key</code></li>
+  <li>Sp metadata file - <code>/etc/httpd/saml2/ovirtsp-metadata.xml</code></li>
+  <li>Idp metadata file - <code>/etc/httpd/saml2/idp-metadata.xml</code></li>
+</ul>
+
+<p>We need to create those files using the provided script from the <code>mod_auth_mellon</code> package:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nb">cd</span> /etc/httpd/saml2&#x000A;/usr/libexec/mod_auth_mellon/mellon_create_metadata.sh https://&lt;ovirt-fqdn&gt; https://&lt;ovirt-fqdn&gt;/saml2&#x000A;</code></pre></div>
+<p>Now we rename the created files to match the file names that we defined in <code>/etc/httpd/conf.d/auth_mellon.conf</code>:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>mv https_&lt;ovirt-fqdn&gt;.key  ovirtsp-key.key&#x000A;mv https_&lt;ovirt-fqdn&gt;.cert ovirtsp-cert.cert&#x000A;mv https_&lt;ovirt-fqdn&gt;.xml  ovirtsp-metadata.xml&#x000A;</code></pre></div>
+<p>Now that we have generated the Service provider <code>ovirtsp-metadata.xml</code> we can configure Identity provider using <code>Keycloak</code>.</p>
+
+<h2 id="keycloak">Keycloak</h2>
+<p>Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the SAML provider.</p>
+
+<h2 id="keycloak-configuration">Keycloak configuration</h2>
+<p>For our example, we'll use default master realm. First let's create user federation with our <code>389ds</code> directory server.
+Fill the values of your 389ds server as show in the image below.
+<img alt="" width="1569" height="897" src="/images/../images/blog/2018-08-03/user_federation.png?1560777613" /></p>
+
+<p>After testing the connection and authentication, click the <code>save</code> button and check if your users are searchable, as shown in image below.
+<img alt="" width="1578" height="889" src="/images/../images/blog/2018-08-03/user_search.png?1560777613" /></p>
+
+<p>Now that user federation is working and is integrated, let's configure the SAML client. For this we need to upload <code>ovirtsp-metadata.xml</code> created in the previous step to <code>Keycloak</code>:
+<img alt="" width="1573" height="621" src="/images/../images/blog/2018-08-03/add_client.png?1560777613" /></p>
+
+<p><strong>IMPORTANT</strong> After the client is created, we must change <code>Name ID Format</code> format from the default value <code>transient</code> to <code>username</code>,
+and we must enable the <code>Force Name ID Format</code> option. This is required because oVirt is using username to search in LDAP providers.
+<img alt="" width="900" height="80" src="/images/../images/blog/2018-08-03/name_id.png?1560777613" /></p>
+
+<p>Our identity provider is configured, so now we add it to our engine configuration:</p>
+<div class="highlight"><pre class="highlight shell"><code>ssh root@engine&#x000A;<span class="nb">cd</span> /etc/httpd/saml2&#x000A;curl <span class="nt">-s</span> <span class="nt">-o</span> idp-metadata.xml http://&lt;keycloak-server&gt;:8080/auth/realms/master/protocol/saml/descriptor&#x000A;systemctl restart httpd&#x000A;</code></pre></div>
+<h2 id="ovirt-aaa-configuration">oVirt AAA configuration</h2>
+<p>oVirt AAA is the last piece of configuration needed.</p>
+
+<h3 id="installation">Installation</h3>
+<div class="highlight"><pre class="highlight plaintext"><code># yum install -y ovirt-engine-extension-aaa-ldap ovirt-engine-extension-aaa-misc&#x000A;</code></pre></div>
+<h3 id="create-etcovirt-engineextensionsdsaml-authnproperties">Create /etc/ovirt-engine/extensions.d/saml-authn.properties</h3>
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = saml-authn&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn&#x000A;ovirt.engine.aaa.authn.profile.name = saml-http&#x000A;ovirt.engine.aaa.authn.authz.plugin = saml-authz&#x000A;ovirt.engine.aaa.authn.mapping.plugin = saml-http-mapping&#x000A;config.artifact.name = HEADER&#x000A;config.artifact.arg = X-Remote-User&#x000A;</code></pre></div>
+<h3 id="create-etcovirt-engineextensionsdsaml-http-mappingproperties">Create /etc/ovirt-engine/extensions.d/saml-http-mapping.properties</h3>
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = saml-http-mapping&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping&#x000A;config.mapAuthRecord.type = regex&#x000A;config.mapAuthRecord.regex.mustMatch = false&#x000A;config.mapAuthRecord.regex.pattern = ^(?&lt;user&gt;.*?)((\\\\(?&lt;at&gt;@)(?&lt;suffix&gt;.*?)@.*)|(?&lt;realm&gt;@.*))$&#x000A;config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}&#x000A;</code></pre></div>
+<h3 id="create-etcovirt-engineextensionsdsaml-authzproperties">Create /etc/ovirt-engine/extensions.d/saml-authz.properties</h3>
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = saml-authz&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz&#x000A;config.profile.file.1 = ../aaa/saml-ldap.properties&#x000A;</code></pre></div>
+<h3 id="create-etcovirt-engineaaasaml-ldapproperties">Create /etc/ovirt-engine/aaa/saml-ldap.properties</h3>
+<div class="highlight"><pre class="highlight plaintext"><code>include = &lt;389ds.properties&gt;&#x000A;&#x000A;vars.server = 389ds.example.com&#x000A;vars.user = uid=user1,ou=users,dc=389ds,dc=example,dc=com&#x000A;vars.password = password&#x000A;&#x000A;pool.default.auth.simple.bindDN = ${global:vars.user}&#x000A;pool.default.auth.simple.password = ${global:vars.password}&#x000A;pool.default.serverset.type = single&#x000A;pool.default.serverset.single.server = ${global:vars.server}&#x000A;</code></pre></div>
+<p>Now restart ovirt-engine:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl restart ovirt-engine.service&#x000A;</code></pre></div>
+<p>Now when you login to webadmin, you will be redirected to <code>Keycloak</code> (if you're not already logged in). Enter credentials from your 389ds ldap setup and login should succeed. Note that by default your users won't have permissions to login, so you must first assign permissions to them in webadmin.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/aaa.html">AAA</a></li>
+<li><a href="../../tag/ldap.html">LDAP</a></li>
+<li><a href="../../tag/saml.html">SAML</a></li>
+<li><a href="../../tag/sso.html">SSO</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2018-08-03-sso-keycloak-ovirt-saml-389ds.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2018-08-03-sso-keycloak-ovirt-saml-389ds.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 6 Aug 2018 18:19 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

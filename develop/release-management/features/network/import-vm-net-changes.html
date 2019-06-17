@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Change network information in VM import &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="change-network-information-in-vm-import">Change network information in VM import</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Currently importing a VM from an external source might result in a 
+non-functional VM from the network perspective:</p>
+
+<ul>
+  <li>Mapping the vNic profile by name might lead to one of the following:
+    <ul>
+      <li>vNics that are not connected to any network that is defined in the 
+oVirt the VM was imported to</li>
+      <li>vNic is connected to an undesired vNic profile that matches by 
+  name but not by the meaning.</li>
+    </ul>
+  </li>
+  <li>The MAC address that was assigned to the vNic in the external 
+system could be problematic in the local oVirt setup.</li>
+</ul>
+
+<p>The feature intends to solve the mentioned problems in the flow of 
+importing VMs from a data domain storage.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Yevgeny Zaspitsky (YevgenyZ)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#122;&#097;&#115;&#112;&#105;&#116;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#121;&#122;&#097;&#115;&#112;&#105;&#116;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="proposed-solution">Proposed solution</h2>
+
+<h3 id="mapping-vnic-profiles-to-the-target-ones">Mapping vNic profiles to the target ones.</h3>
+<p>The mapping of the source vNic profiles to the ones that are defined 
+under destination DC/custer would be possible as part of the import 
+operation.</p>
+
+<h4 id="rest-api">REST API</h4>
+<p>The user would supply the desired mappings as part of the import VMs 
+request. The mapping would look like a collection of entries, 
+where each of the entries would consist of the following:</p>
+
+<ul>
+  <li>Source network name</li>
+  <li>Source network profile name</li>
+  <li>Target network profile</li>
+</ul>
+
+<p>The mappings data would be passed as additional optional data of the 
+existing VM import request:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>POST /storagedomains/{storagedomain:id}/vms/{vm:id}/register&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;action&gt;</span>&#x000A;    <span class="nt">&lt;cluster</span> <span class="na">id=</span><span class="s">”XXX”/</span><span class="nt">&gt;</span>&#x000A;    ....&#x000A;    <span class="c">&lt;!-- The new addition start --&gt;</span>&#x000A;    <span class="nt">&lt;vnic_profile_mappings&gt;</span>&#x000A;        <span class="nt">&lt;vnic_profile_mapping&gt;</span>&#x000A;            <span class="nt">&lt;source_network_name&gt;</span>red<span class="nt">&lt;/source_network_name&gt;</span>&#x000A;            <span class="nt">&lt;source_network_profile_name&gt;</span>gold<span class="nt">&lt;/source_network_profile_name&gt;</span>&#x000A;            <span class="nt">&lt;target_vnic_profile</span> <span class="na">id=</span><span class="s">"738dd914-8ec8-4a8b-8628-34672a5d449b"</span><span class="nt">/&gt;</span>&#x000A;        <span class="nt">&lt;/vnic_profile_mapping&gt;</span>&#x000A;        <span class="nt">&lt;vnic_profile_mapping&gt;</span>&#x000A;            <span class="nt">&lt;source_network_name&gt;</span>blue<span class="nt">&lt;/source_network_name&gt;</span>&#x000A;            <span class="nt">&lt;source_network_profile_name&gt;</span>silver<span class="nt">&lt;/source_network_profile_name&gt;</span>&#x000A;        <span class="nt">&lt;/vnic_profile_mapping&gt;</span>&#x000A;    <span class="nt">&lt;/vnic_profile_mappings&gt;</span>&#x000A;    <span class="c">&lt;!-- The new addition end --&gt;</span>&#x000A;<span class="nt">&lt;/action&gt;</span>&#x000A;</code></pre></div>
+<p>Since the mappings are optional, any vNic profile that the mapping isn’t
+ supplied for, would be mapped to a profile with the same name, if 
+that exists, or an “empty” profile otherwise, like that’s done 
+currently.
+A missing “target_network_profile” element would mean the target profile
+ is an “empty” profile. That is useful for the case in which source 
+profile is known to be used in a target system for something else and an 
+alternative profile isn’t exist yet.</p>
+
+<h4 id="gui">GUI</h4>
+<p>The engine would scan all VMs that are intended to be imported and will 
+provide a list of network+profile that are defined on the vNics of those
+ VMs. Then mappings could be defined (by the user) in an expandable span
+ that would be added to the import VM dialog. 
+Each line would represent a single mapping with the following fields:</p>
+
+<ul>
+  <li>Source network name</li>
+  <li>Target network name</li>
+  <li>Source vNic profile name</li>
+  <li>Target vNic profile name</li>
+</ul>
+
+<p><img alt="Network mapping modal" width="936" height="658" src="/images/wiki/import_vm-vnic_mapping.jpg?1560777613" /></p>
+
+<p>Initially all vNic profiles would be mapped to a matching (by name) 
+network+profile on the target or would be an “Empty” profile if no match
+ exists. Then the user would be able to change that to any desired 
+profile. The list of the available networks would be filtered according 
+to the chosen cluster and the list of the profiles would be filtered by 
+the chosen network.</p>
+
+<h3 id="re-assign-mac-addresses-for-the-vnics-of-an-imported-vm">Re-assign MAC addresses for the vNics of an imported VM</h3>
+<p>The user will be able to request to re-assign a new MAC instead of the 
+one that is problematic in the context of the target cluster.
+The reasons for a MAC to be problematic are:</p>
+
+<ul>
+  <li>Collision - the MAC is owned by an existing vNic.</li>
+  <li>The MAC is out of range of the destination cluster.</li>
+</ul>
+
+<p>Note that a re-assign request modifies only problematic MACs. If a VM 
+has “good” MACs as well, they would remain.</p>
+
+<h4 id="rest-api-1">REST API</h4>
+<p>The import VM request will have additional boolean 
+parameter “reassign_bad_macs”. In order to keep backward compatibility 
+the default value of the new parameter will be False.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>POST /storagedomains/{storagedomain:id}/vms/{vm:id}/register&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;action&gt;</span>&#x000A;    <span class="nt">&lt;cluster</span> <span class="na">id=</span><span class="s">”XXX”/</span><span class="nt">&gt;</span>&#x000A;    ....&#x000A;    <span class="c">&lt;!-- The new addition start --&gt;</span>&#x000A;    <span class="nt">&lt;reassign_bad_macs&gt;</span>true<span class="nt">&lt;/reassign_bad_macs&gt;</span>&#x000A;    <span class="c">&lt;!-- The new addition end --&gt;</span>&#x000A;<span class="nt">&lt;/action&gt;</span>&#x000A;</code></pre></div>
+<h4 id="gui-1">GUI</h4>
+<p>VM with a problematic MAC would be marked by a warning triangle with an 
+explanatory tooltip. Checking re-assign for that VM may eliminate the 
+warning (if the warning is only due to MAC problem).
+<img alt="" width="1049" height="675" src="/images/wiki/register_vm-mac_in_use.jpg?1560777613" /></p>
+
+<h2 id="related-rfes">Related RFEs</h2>
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1277675">BZ#1277675</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1317447">BZ#1317447</a></li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>Import a VM with a network profile that does not exist on the 
+destination cluster
+    <ul>
+      <li>no mapping supplied -&gt; Empty vNic profile</li>
+      <li>mapping is supplied -&gt; vNic is wired to the profile according to
+  the supplied mapping</li>
+    </ul>
+  </li>
+  <li>Import a VM with the existing vNic profile
+(e.g. network="red", profile="gold")
+    <ul>
+      <li>no mapping supplied -&gt; VM connected to the vNic profile "red-gold"</li>
+      <li>mapping maps the src profile to "green-silver" -&gt; vNic is 
+  connected to "green-silver" profile</li>
+    </ul>
+  </li>
+  <li>On REST API - mapping is supplied but contains a non-existent 
+destination profile -&gt; user should get an error message with HTTP 400 
+series error code.</li>
+  <li>Verify that re-assigning MACs actually works, and that good MACs are 
+given.</li>
+  <li>Verify that warning sign appears in the following cases:
+    <ul>
+      <li>VM with a colliding MAC</li>
+      <li>VM with a MAC, which is out if the range to the destination
+   cluster's MAC-pool.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="future-plans">Future plans</h2>
+<p>Apply the similar changes to flows importing VM from the other sources
+ (e.g. export domain, V2V).</p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/import-vm-net-changes.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/import-vm-net-changes.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Analyzing Logs &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/metrics-user-guide/">Metrics-user-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-3-analyzing-logs">Chapter 3: Analyzing Logs</h1>
+
+<p>Use the <strong>Discover</strong> page to interactively explore the data collected from oVirt. Each set of results that is collected is referred to as a <em>document</em>. Documents are collected from the following log files:</p>
+
+<ul>
+  <li>
+    <p><strong>engine.log</strong> contains all Ovirt Engine UI crashes, Active Directory lookups, database issues, and other events.</p>
+  </li>
+  <li>
+    <p><strong>vdsm.log</strong> is the log file for VDSM, the Manager's agent on the virtualization host(s), and contains host-related events.</p>
+  </li>
+</ul>
+
+<h2 id="graphic-user-interface-elements">Graphic User Interface Elements</h2>
+
+<p>The distribution of documents over time is displayed in a histogram at the top of the page. By default the information is grouped into 30 second intervals, but this can be changed by clicking the time drop-down list that appears above the histogram.</p>
+
+<p><strong>Histogram</strong></p>
+
+<p><img alt="" width="1572" height="319" src="/images/metrics-user-guide/histogram.png?1560777613" /></p>
+
+<p>The bottom of the page displays the documents in a table, sorted according to time.</p>
+
+<p><strong>Documents Table</strong></p>
+
+<p><img alt="" width="1556" height="427" src="/images/metrics-user-guide/doctable.png?1560777613" /></p>
+
+<h2 id="using-the-discover-page">Using the Discover Page</h2>
+
+<p>From the <strong>Discover</strong> page you can:</p>
+
+<ul>
+  <li>
+    <p>Set the time filter</p>
+  </li>
+  <li>
+    <p>Submit search queries</p>
+  </li>
+  <li>
+    <p>Filter the search results</p>
+  </li>
+  <li>
+    <p>View the results in the Visualization page</p>
+  </li>
+  <li>
+    <p>Customize the Documents table</p>
+  </li>
+</ul>
+
+<h3 id="setting-the-time-filter">Setting the Time Filter</h3>
+
+<p>By default, data from the last 15 minutes is displayed. There are several ways to change the time filter:</p>
+
+<ul>
+  <li>
+    <p>Click the time filter <img alt="" width="163" height="42" src="/images/metrics-user-guide/timefilter.png?1560777613" /> and either select a predefined time filter or define a time range from the <strong>Relative</strong> or <strong>Absolute</strong> menus.</p>
+  </li>
+  <li>
+    <p>Define a filter directly from the histogram by clicking a bar or click and drag over several bars.
+For more information, see <a href="https://www.elastic.co/guide/en/kibana/4.5/discover.html#set-time-filter">Setting the Time Filter</a> in the Kibana documentation.</p>
+  </li>
+</ul>
+
+<h3 id="searching-your-data">Searching Your Data</h3>
+
+<p>Use the search field at the top of the page to filter the results according to a specific value. For example, to display results containing the word "login", type <code>&amp;#42;login&amp;#42;</code> in the search field. For more information about searches, see <a href="https://www.elastic.co/guide/en/kibana/4.5/discover.html#search">Searching Your Data</a> in the Kibana documentation.</p>
+
+<h3 id="filtering-by-field">Filtering By Field</h3>
+
+<p>Filtering log data by field enables you to focus on the specific error that interests you.</p>
+
+<p><strong>To filter the log data by field:</strong></p>
+
+<ol>
+  <li>
+    <p>Click the name of the field you want to filter on from the <em>Available Fields</em> pane. This displays the top five values for that field. To the right of each value, there are two magnifying glass buttons, one for adding a regular (positive) filter, and one for adding a negative filter.</p>
+
+    <p><strong>Available Fields</strong></p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Available Field</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>_id</td>
+          <td>The unique ID of the document.</td>
+        </tr>
+        <tr>
+          <td>_index</td>
+          <td>The ID of the index to which the document belongs. The index with the <em>project.ovirt-logs</em> prefix is the only relevant index in the <strong>Discover</strong> page.</td>
+        </tr>
+        <tr>
+          <td>hostname</td>
+          <td>For the engine.log this is the hostname of the Manager. For the vdsm.log this is hostname of the host.</td>
+        </tr>
+        <tr>
+          <td>level</td>
+          <td>The log record's severity: TRACE, DEBUG, INFO, WARN, ERROR, FATAL.</td>
+        </tr>
+        <tr>
+          <td>message</td>
+          <td>The body of the document's message.</td>
+        </tr>
+        <tr>
+          <td>ovirt.class</td>
+          <td>The name of a Java class that produced this log.</td>
+        </tr>
+        <tr>
+          <td>ovirt.correlationid</td>
+          <td>For the engine.log only. This ID is used to correlate the multiple parts of a single task performed by the Manager.</td>
+        </tr>
+        <tr>
+          <td>ovirt.thread</td>
+          <td>The name of a Java thread inside which the log record was produced.</td>
+        </tr>
+        <tr>
+          <td>tag</td>
+          <td>Predefined sets of metadata that can be used to filter the data.</td>
+        </tr>
+        <tr>
+          <td>@timestamp</td>
+          <td>The <a href="Troubleshooting#information-is-missing-from-kibana">time</a> that the record was issued.</td>
+        </tr>
+        <tr>
+          <td>_score</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>_type</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>ipaddr4</td>
+          <td>The machine's IP address.</td>
+        </tr>
+        <tr>
+          <td>ovirt.cluster_name</td>
+          <td>For the vdsm.log only. The name of the cluster to which the host belongs.</td>
+        </tr>
+        <tr>
+          <td>ovirt.engine_fqdn</td>
+          <td>The Manager's FQDN.</td>
+        </tr>
+        <tr>
+          <td>ovirt.module_lineno</td>
+          <td>The file and line number within the file that ran the command defined in <em>ovirt.class</em>.</td>
+        </tr>
+        <tr>
+          <td>pipeline_metadata.collector.inputname</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>pipeline_metadata.collector.ipaddr4</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>pipeline_metadata.collector.ipaddr6</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>pipeline_metadata.collector.name</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>pipeline_metadata.collector.received_at</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>pipeline_metadata.collector.version</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td>service</td>
+          <td>The log file from which the document was extracted.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>To add a positive filter, click the <strong>Positive Filter</strong> button <img alt="" width="25" height="25" src="/images/metrics-user-guide/PositiveFilter.png?1560777613" />. This filters out results that do not contain that value in the field.</p>
+  </li>
+  <li>
+    <p>To add a negative filter, click the <strong>Negative Filter</strong> button <img alt="" width="25" height="25" src="/images/metrics-user-guide/NegativeFilter.png?1560777613" />. This excludes results that contain that value in the field.</p>
+
+    <p>For more information about working with filters, see <a href="https://www.elastic.co/guide/en/kibana/4.5/discover.html#discover-filters">Working with Filters</a> in the Kibana documentation.</p>
+  </li>
+</ol>
+
+<h3 id="visualizing-log-data">Visualizing Log Data</h3>
+
+<p>You can visualize and aggregate log data in the <strong>Visualization</strong> page by selecting a specific field from within the <strong>Discover</strong> page.</p>
+
+<p><strong>To visualize log data:</strong></p>
+
+<ol>
+  <li>
+    <p>Click the name of the field you want to visualize from the <strong>Available Fields</strong> pane (see [Filtering By Field(#filtering-by-field)).</p>
+  </li>
+  <li>
+    <p>Click the <strong>Visualize</strong> button that appears beneath the top five values.</p>
+
+    <p>You are transferred to the <strong>Visualize</strong> page where you can view the filtered value in a graphical format.</p>
+  </li>
+</ol>
+
+<h3 id="customizing-the-documents-table">Customizing the Documents Table</h3>
+
+<p>You can customize the way that the data is displayed in the Documents table by adding fields to the table as columns and changing the display order.</p>
+
+<p><strong>To add fields to the table as columns:</strong></p>
+
+<ol>
+  <li>
+    <p>Hover over the name of the field you want to add to the documents table from the <strong>Available Fields</strong> pane (see [Filtering By Field(#filtering-by-field)).</p>
+  </li>
+  <li>
+    <p>Click <strong>add</strong>. The field is added to the table.</p>
+  </li>
+  <li>
+    <p>Optionally click the <strong>Sort by</strong> arrow <img alt="" width="19" height="19" src="/images/metrics-user-guide/arrow.png?1560777613" /> that appears next to the column title to sort the results by that column.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="analyzing_metrics">Chapter 2: Analyzing Metrics</a><br />
+<strong>Next:</strong> <a href="Troubleshooting">Chapter 4: Troubleshooting</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/metrics_store_user_guide/chap-logs">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/metrics-user-guide/Logs.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/metrics-user-guide/Logs.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

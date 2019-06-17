@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Self Hosted Engine Gluster Support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="self-hosted-engine-gluster-support">Self Hosted Engine Gluster Support</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature enable the user to use Gluster storage for Hosted Engine data domain.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: <a href="https://github.com/sandrobonazzola">Sandro Bonazzola</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h4 id="ux-changes">UX changes</h4>
+<p>For GlusterFS storage types, specify the full address, using either the FQDN or IP address, and path name of the shared storage domain</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>           --== STORAGE CONFIGURATION ==--&#x000A;          &#x000A;           During customization use CTRL-D to abort.&#x000A;           Please specify the storage you would like to use (glusterfs, iscsi, nfs3, nfs4)[nfs3]: glusterfs &#x000A;           Please note that Replica 3 support is required for the shared storage.&#x000A;           Please specify the full shared storage connection path to use (example: host:/path): storage.example.com:/hosted_engine/glusterfs&#x000A;</code></pre></div>
+<h4 id="config-files-changes">Config files changes</h4>
+<p>Hosted engine storage domain can use backup-volfile-servers option to mount the gluster volume. 
+This can be provided to the hosted-engine deployment via an answer file (using –config-append option), as the UX currently does not prompt for it</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   [environment:default]&#x000A;   OVEHOSTED_STORAGE/mntOptions=str:backup-volfile-servers=server2:server3&#x000A;</code></pre></div>
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Users will be able to use Gluster storage as data domain for Hosted Engine.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<ul>
+  <li><a href="/develop/release-management/features/gluster/gluster-support/">Features/Gluster_Support</a></li>
+  <li><a href="/develop/release-management/features/storage/glusterfs-storage-domain/">Features/GlusterFS Storage Domain</a></li>
+  <li>A tracker bug has been created for tracking issues:</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<h3 id="documentation">Documentation</h3>
+
+<h2 id="configuring-the-self-hosted-engine">Configuring the Self-Hosted Engine</h2>
+
+<h3 id="configuring-storage">Configuring Storage</h3>
+<p>Like any other gluster storage domain, the hosted engine storage domain on glusterfs requires a replica 3 gluster volume. For users that want to avoid the 3 way replica, replica 3 arbiter volume is also supported.</p>
+
+<h4 id="pre-requisites">Pre-requisites</h4>
+
+<ul>
+  <li>The GlusterFS Volume must be configured for Replica 3
+    <ul>
+      <li>Replica 3 may be verified using gluster command line or using VDSM client / API applying <a href="http://gerrit.ovirt.org/36783">http://gerrit.ovirt.org/36783</a>:</li>
+    </ul>
+  </li>
+</ul>
+
+<p><code>gluster volume info '&lt;volname&gt;' --remote-host='&lt;server-name&gt;'</code></p>
+
+<p><code>vdsClient -s 0 glusterVolumesList volumeName='&lt;volname&gt;' remoteServer='&lt;server-name&gt;'</code></p>
+
+<ul>
+  <li>The volume must be configured as following:</li>
+</ul>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    gluster volume set &lt;volname&gt; group virt&#x000A;    gluster volume set &lt;volname&gt; storage.owner-uid 36 &#x000A;    gluster volume set &lt;volname&gt; storage.owner-gid 36&#x000A;    gluster volume set &lt;volname&gt; performance.low-prio-threads 32&#x000A;    gluster volume set &lt;volname&gt; cluster.data-self-heal-algorithm full&#x000A;    gluster volume set &lt;volname&gt; network.ping-timeout   30&#x000A;</code></pre></div><p>It is recommended to turn on <a href="http://blog.gluster.org/2015/12/introducing-shard-translator/">sharding</a> for the gluster volume</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    gluster volume set `&lt;volume&gt;` features.shard on&#x000A;    gluster volume set `&lt;volume&gt;` features.shard-block-size 512MB&#x000A;</code></pre></div>
+<ul>
+  <li>Gluster volume has been started</li>
+  <li>Gluster ports opened on all the gluster hosts</li>
+</ul>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li><a href="/documentation/admin-guide/gluster-storage-domain-reference/">Gluster Storage Domain Reference</a></li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li><a href="QA:TestCase Hosted Engine External Gluster Support">QA:TestCase Hosted Engine External Gluster Support</a></li>
+</ul>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ==Self Hosted Engine Gluster Support== `Hosted Engine has now added support for `[`Gluster` `storage`](Features/Self_Hosted_Engine_Gluster_Support)&#x000A;</code></pre></div>
+<p><a href="/develop/release-management/features/">Self Hosted Engine Gluster Support</a> <a href="Category:oVirt 3.6 Feature">Self Hosted Engine Gluster Support</a> <a href="/develop/release-management/releases/3.6/proposed-feature/">Self Hosted Engine Gluster Support</a> <a href="category:HostedEngine">Self Hosted Engine Gluster Support</a> <a href="category:Integration">Self Hosted Engine Gluster Support</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/self-hosted-engine-gluster-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/self-hosted-engine-gluster-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 31 Aug 2017 12:41 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

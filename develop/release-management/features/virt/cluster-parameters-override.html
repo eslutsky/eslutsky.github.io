@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cluster parameters override &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="cluster-parameters-override">Cluster parameters override</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allows to configure the 'emulated machine' and 'cpu model' parameters for each VM separately instead of relying on the cluster default.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Eldan Shachar (eshachar)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#101;&#115;&#104;&#097;&#099;&#104;&#097;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#101;&#115;&#104;&#097;&#099;&#104;&#097;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Currently, every VM inherits its machine-type value('-M' flag in QEMU) and its cpu-model value from the cluster. This feature will allow to override these settings by manually configuring them for each VM. The change will also enable a user to set these properties to values which are unsupported by the cluster compatibility level, in that case the VM will only run on hosts which support its requirements. The cluster level properties will still exist, every new VM will inherit its cluster settings unless specifically stated otherwise.</p>
+
+<h2 id="design">Design</h2>
+
+<p>The new properties will be added to the VM objects (affecting templates as well) and controlled by the user via the different interfaces. When executing a VM, the engine will use the VM level property and will fallback to the cluster level only if the VM property was not set.</p>
+
+<h3 id="database">Database</h3>
+
+<ul>
+  <li>Add the field 'custom_emulated_machine' to the vm_static table. the field default value will be null (use cluster property).</li>
+  <li>Add the field 'custom_cpu_name' to the vm_static table. the field default value will be null (use cluster property).</li>
+  <li>Add the field 'emulated_machine' to the vm_dynamic table.</li>
+</ul>
+
+<h3 id="backend">Backend</h3>
+
+<ul>
+  <li>Add properties to the various VM objects.</li>
+  <li>Add properties to the ovf reader\writer.</li>
+  <li>Change VDSBroker to use the new VM properties and fallback to the cluster only if the VM property was not set.</li>
+  <li>Add support for commands for the following actions: Add VM, Edit VM, Create Template, Edit template, Add Instance, Edit instance, Add pool, Edit pool. The setting will take effect only at the next run of the VM.</li>
+  <li>Add a scheduler filter for emulated-machine property, the scheduler will scan the cluster for hosts which supports the specified machine-type, if none is found the execution will be aborted.</li>
+  <li>Fix the cpu-level scheduler filter to ignore cluster compatibility version. (the VM object patch mentioned above will allow the existing filter to use the static cpu_model property in addition to the existing dynamic one)</li>
+</ul>
+
+<h3 id="vdsm">VDSM</h3>
+
+<p>No need for changes in the VDSM.</p>
+
+<h3 id="user-interface">User Interface</h3>
+
+<p>Support the new settings for the following actions: Add VM, Edit VM, Create Template, Edit template, Add Instance, Edit instance, Add pool, Edit pool.
+*Each host has a limited set of possible machine-types/cpu-models but this information is sometimes unavailable (e.g a cluster without hosts), from this reason these properties can't be validated by the engine until the VM execution stage.</p>
+
+<h4 id="web---user-and-admin">WEB - (User and Admin)</h4>
+
+<ul>
+  <li>Add an editable combo-box labeled 'Emulated machine' in the 'System tab' for each of the specified actions.</li>
+  <li>Add an editable combo-box labeled 'CPU model' in the 'System tab' for each of the specified actions.</li>
+  <li>Add an editable combo-box for the two fields in the 'System tab' under run-once.</li>
+</ul>
+
+<h4 id="rest">REST</h4>
+
+<ul>
+  <li>Add REST properties - 'custom_emulated_machine' and 'custom_cpu_model' for the entities VM\Template\Instance.</li>
+  <li>Add RSDL properties for each of the actions mentioned above.</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>A more flexible host specific preferences - a setup which consists of VMs running under different host parameters currently needs a cluster for each subset of parameters, this change will allow the user to customize each VM with its own host parameters.
+This will allow a user to provide a backward-compatibility for certain VMs and test new emulation settings before changing them for the whole cluster.</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>RFE: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=838487">https://bugzilla.redhat.com/show_bug.cgi?id=838487</a></li>
+  <li>RFE: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=838490">https://bugzilla.redhat.com/show_bug.cgi?id=838490</a></li>
+  <li>RFE: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=952238">https://bugzilla.redhat.com/show_bug.cgi?id=952238</a></li>
+</ul>
+
+<p><a href="/develop/release-management/features/">Cluster parameters override</a> <a href="/develop/release-management/releases/3.6/proposed-feature/">Cluster parameters override</a> <a href="Category:oVirt 3.6 Feature">Cluster parameters override</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/cluster-parameters-override.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/cluster-parameters-override.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Remove-DC-Entity-Network &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="remove-dc-entity-network">Remove-DC-Entity-Network</h1>
+
+<h2 id="eliminate-dc-entity-network-aspects">Eliminate DC entity (Network aspects)</h2>
+
+<h3 id="summary">Summary</h3>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Alona Kaplan (alkaplan)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#108;&#107;&#097;&#112;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#108;&#107;&#097;&#112;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>In 4.0 oVirt is planned to be integrated with 'cloud open'. Since the most top level entity in 'cloud open' is cluster, there is a need to eliminate DC from oVirt.</p>
+
+<h4 id="high-level-feature-description">High Level Feature Description</h4>
+
+<p>All the network flows that are involved with DC should move to the cluster or system level.</p>
+
+<h4 id="db-tables-entities">DB Tables/ Entities</h4>
+
+<ul>
+  <li>Network
+    <ul>
+      <li>'storage_pool_id' column should be removed.</li>
+      <li>'cluster_id' column should be added.</li>
+      <li>NetworkCluster table should be removed, all its properties should be moved to the network table.</li>
+    </ul>
+  </li>
+  <li>Upgrade scripts
+    <ul>
+      <li>Each 'network' in the 'network' table should be copied to the number of 'networkCluster' instances it has.</li>
+      <li>The 'networkCluster' data should be copied to the relevant copy of the network.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="affected-flows">Affected Flows</h4>
+
+<h5 id="network">Network</h5>
+
+<ul>
+  <li>AddNetworkCommand/UpdateNetworkCommand
+    <ul>
+      <li>Should also persist 'required', 'management', 'display', 'migration' and 'gluster' properties.</li>
+      <li>Should execute SetupNetworkNetworks command on the relevant cluster hosts (according to the label changes, same as AttachNetworkToVdsGroup did).</li>
+      <li>When attaching host qos, should check the network's cluster compatibility version support host qos.</li>
+    </ul>
+  </li>
+  <li>RemoveNetworkCommand
+    <ul>
+      <li>Should execute SetupNetworkNetworks command on the relevant cluster hosts (according to the label changes, same as DetachNetworkToVdsGroup did).</li>
+      <li>Should block removing the cluster's management network.</li>
+    </ul>
+  </li>
+  <li>AttachNetworkToVdsGroupCommand/AttachNetworkToClusterInternalCommand
+    <ul>
+      <li>Should be removed</li>
+      <li>Its logic should be combined to 'Add/UpdateNetworkCommand'.</li>
+    </ul>
+  </li>
+  <li>DetachNetworkToVdsGroupCommand/DetachNetworkFromClusterInternalCommand
+    <ul>
+      <li>Should be removed.</li>
+      <li>Its logic should be combined to 'RemoveNetworkCommand'.</li>
+    </ul>
+  </li>
+  <li>ManageNetworkClustersCommand
+    <ul>
+      <li>Should be removed.</li>
+    </ul>
+  </li>
+  <li>ManagementNetworkUtil
+    <ul>
+      <li>'boolean isManagementNetwork(Guid networkId);' should be removed.</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="vnic-profile">vNic profile</h5>
+
+<ul>
+  <li>AddVnicProfileCommand/UpdateVnicProfileCommand/RemoveVnicProfileCommand
+    <ul>
+      <li>Vnic profile is related to a specific network. Therefore it will become cluster level entity.</li>
+      <li>Seems that the DC removal is transparent to the 'vnic proifle' and shouldn't affect its flows.</li>
+      <li>When attaching vm qos, should check the network's cluster compatibility version support vm qos.</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="host-network-qos">Host Network QoS</h5>
+
+<ul>
+  <li>AddHostNetworkQoSCommand/UpdateHostNetworkQoSCommand/RemoveHostNetworkQoSCommand
+    <ul>
+      <li>Host network qos should become cluster level entity.</li>
+      <li>The reason it should become cluster level and not system level entity is that updating a specific host network qos, should affect only the host in the cluster and not potentially all the host in the system.</li>
+    </ul>
+  </li>
+  <li>Copy to cluster action should be added.</li>
+</ul>
+
+<h5 id="vm-network-qos">Vm Network QoS</h5>
+
+<ul>
+  <li>AddNetworkQoSCommand/UpdateNetworkQoSCommand/RemoveNetworkQoSCommand
+    <ul>
+      <li>VM network qos should become cluster level entity.</li>
+    </ul>
+  </li>
+  <li>Copy to cluster action should be added.</li>
+</ul>
+
+<h4 id="user-experience">User Experience</h4>
+
+<h5 id="network-main-tab">Network main tab</h5>
+
+<ul>
+  <li>Data Center Column should be removed.</li>
+  <li>Cluster column should be added.</li>
+</ul>
+
+<h5 id="network--vnic-profiles-sub-tab">Network-&gt; Vnic profiles sub tab</h5>
+
+<ul>
+  <li>No changes.</li>
+</ul>
+
+<h5 id="dc--networks-sub-tab">DC-&gt; Networks sub tab</h5>
+
+<ul>
+  <li>Should be removed.</li>
+</ul>
+
+<h5 id="host-qos">Host qos</h5>
+
+<ul>
+  <li>Should be moved to the system tab (configure window).</li>
+  <li>Copy to cluster button should be added.</li>
+</ul>
+
+<h5 id="vm-qos">VM qos</h5>
+
+<ul>
+  <li>Should be moved to the system tab (configure window).</li>
+  <li>Copy to cluster butoon should be added.</li>
+</ul>
+
+<h5 id="cluster-logical-network-sub-tab">Cluster-&gt;Logical network sub tab</h5>
+
+<ul>
+  <li>Add/Edit network
+    <ul>
+      <li>remove 'The Network will be added to the Data Center 'dc name' as well' from the dialog.</li>
+      <li>Add 'required', 'management', 'display', 'migration' and 'gluster' properties.</li>
+    </ul>
+  </li>
+  <li>Manage networks
+    <ul>
+      <li>Remove this dialog ('required', 'management', 'display', 'migration' and 'gluster' properties will be moved to the Add/Edit network dialog).</li>
+    </ul>
+  </li>
+  <li>Copy network
+    <ul>
+      <li>Create a copy of the network in the selected clusters</li>
+      <li>A new dialog that will contain a table with two columns- (1) 'copy to' checkbox (2) all the clusters in the system (Compatibility version?).</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="rest-api">REST API</h4>
+
+<h5 id="ovirt-engineapinetworks">/ovirt-engine/api/networks</h5>
+
+<ul>
+  <li>&lt;data_center href ..&gt; should be removed.</li>
+  <li>&lt;cluster href …&gt; should be added.</li>
+</ul>
+
+<h5 id="ovirt-engineapidatacentersnetworks">/ovirt-engine/api/datacenters/<dc_id>/networks</dc_id></h5>
+
+<ul>
+  <li>This sub collection should be removed/</li>
+</ul>
+
+<h5 id="ovirt-engineapiclustersnetworks">/ovirt-engine/api/clusters/<cluster_id>/networks</cluster_id></h5>
+
+<ul>
+  <li>Network properties should be added
+    <ul>
+      <li>name</li>
+      <li>description</li>
+      <li>stp</li>
+      <li>mtu</li>
+      <li>vlan</li>
+      <li>usages</li>
+      <li>href permissions</li>
+      <li>href vnicprofiles</li>
+      <li>href labels</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="ovirt-engineapivnicprofiles">/ovirt-engine/api/vnicprofiles</h5>
+
+<ul>
+  <li>no changes</li>
+</ul>
+
+<h5 id="ovirt-engineapinetworkspermissions">/ovirt-engine/api/networks/<network_id>/permissions</network_id></h5>
+
+<ul>
+  <li>no changes</li>
+</ul>
+
+<h5 id="ovirt-engineapidatacentersqoss">/ovirt-engine/api/datacenters/<dc_id>/qoss</dc_id></h5>
+
+<ul>
+  <li>Should become cluster level collection- /ovirt-engine/api/qoss</li>
+  <li>Copy to cluster action should be added.</li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<ul>
+  <li>Reduce complexity.</li>
+  <li>Allow integration to 'cloud open' (in which the most high level entity is cluster).</li>
+</ul>
+
+<h3 id="future-features">Future features</h3>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<h3 id="open-issues">Open issues</h3>
+
+<ul>
+  <li>Mocks for the new expanded network dialog (that will contain the regular properties and the cluster properties).</li>
+  <li>Should manage networks dialog and command be removed. It means there will be no possibility to change the roles of multiple network at the same time.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/remove-dc-entity-network.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/remove-dc-entity-network.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 15:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

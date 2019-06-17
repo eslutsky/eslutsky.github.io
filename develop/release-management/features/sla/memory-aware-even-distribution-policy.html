@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Memory-aware Even-distribution Policy &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="memory-aware-even-distribution-policy">Memory-aware Even-distribution Policy</h1>
+
+<p>This document describes the design for a new algorithm which seeks even distribution of Virtual Machines over Hosts by using host memory usage state as well as its CPU usage state.</p>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>In current implementation the user can select between two policies for optimizing the distribution on Virtual-Machines over the Hosts in the Cluster.</p>
+
+<ul>
+  <li>Even-Distribution - Even Distribution</li>
+  <li>Power Saving</li>
+</ul>
+
+<p>Both policies are based on a single algorithm which takes into consideration only the state of the host's CPU and the VMs CPU usage. This solution can potentially lead to a situation where heavy memory using VMs would be crowded into into the same host. Which would lead to heavy memory use on the host and degradation in the host and the VMs performance.</p>
+
+<p>By adding the state of the host memory and the memory usage of each VM to the algorithm considerations we could avoid situations as described above.</p>
+
+<h2 id="gui">GUI</h2>
+
+<p>Current UI is a 3 radio button selection for selecting only the policy:</p>
+
+<ul>
+  <li>None</li>
+  <li>Even Distribution</li>
+  <li>Power Saving</li>
+</ul>
+
+<p>Since only one algorithm is available there is no UI for algorithm selection.</p>
+
+<p>The new UI would include a selection box for selecting the algorithm (in addition to the policy section radio buttons). The percentage bar currently used to set the top and bottom thresholds for the current algorithm would remain the same. In case the new Memory aware algorithm will be selected, the percentage will be used as memory threshold and cpu threshold.</p>
+
+<h2 id="rest-api">REST API</h2>
+
+<h2 id="backend">Backend</h2>
+
+<p>Solution was designed to simple although not optimal. Future changes may include more complex logic.</p>
+
+<h3 id="logic-design">Logic Design</h3>
+
+<p>In each iteration of the balancing process:</p>
+
+<ol>
+  <li>
+    <p>Handle CPU balancing (ie- consider cpu violators first), as we did so far</p>
+  </li>
+  <li>
+    <p>If (1) has nothing to do, handle memory balancing</p>
+
+    <p>  a. Get a list of memory violator hosts, based on physical memory only
+     b. For each host
+         b.1. Sort VMs by memory usage
+         b.2  Validate if Smallest memory-using VM matches any of under-utilized hosts (based on mem and cpu, so end result will not cause the destination to violate balance thresholds).
+         b.3  If vm+dest host match, Migrate the VM.</p>
+  </li>
+</ol>
+
+<p>Advanced options:</p>
+
+<ul>
+  <li>we can allow the user to choose migration of the biggest memory violator, and he'll need to see if it work better for him. Either way the default will be smallest.</li>
+  <li>we can allow the user to choose handling memory violations prior to CPU. The default will be CPU first.</li>
+</ul>
+
+<h2 id="tests">Tests</h2>
+
+<p>Unit-tests for testing the new policy will be added.</p>
+
+<h3 id="special-considerations">Special considerations</h3>
+
+<p>No special considerations.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/memory-aware-even-distribution-policy.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/memory-aware-even-distribution-policy.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 31 Aug 2017 12:41 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

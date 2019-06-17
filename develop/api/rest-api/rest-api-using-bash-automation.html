@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+REST API Using BASH Automation &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/api/">Api</a></li>
+<li><a href="/develop/api/rest-api/">Rest-api</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="rest-api-using-bash-automation">REST API Using BASH Automation</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>To prepare and regularly refresh a development and/or testing environment for oVirt Engine can be a time-consuming procedure. The REST API can help significantly with the task. This article concentrates on calling oVirt REST API using a BASH scripting from the Linux command line.</p>
+
+<p>It uses:</p>
+
+<ul>
+  <li>BASH interpreter</li>
+  <li>curl (HTML command line client)</li>
+  <li>xmllint (XPath command line parser)</li>
+</ul>
+
+<h2 id="supported-commands">Supported commands</h2>
+
+<ul>
+  <li>create host server</li>
+  <li>create/import/attach/activate storage domain</li>
+  <li>create virtual machine (VM) and its network, attach image disk and iso disk (CD-ROM)</li>
+</ul>
+
+<h2 id="basic-operations">Basic operations</h2>
+
+<ul>
+  <li>The commands should always check the current state, fetch needed parameters and run the actions only if required, e.g. a host is created from the command, if it doesn't exist only.</li>
+  <li>The runtime environment is always synchronized with the script state. If the action is asynchronous, it should wait for a given time-out period and periodically check status of the operation by calling the REST API, parsing returned values using XPath processor and checking expected target status value.</li>
+  <li>For HTTPS connection a trusted authority (CA) server certificate is required, else '–insecure' option is to be specified for the curl command.</li>
+  <li>The responses are saved and processed from the specified communication file.</li>
+</ul>
+
+<h2 id="source-code">Source code</h2>
+
+<p>The script has two parts:</p>
+
+<ul>
+  <li>general support routines (HTTP method call using curl client, XPath parser)</li>
+  <li>environment synchronization script</li>
+</ul>
+
+<p>For download:</p>
+
+<ul>
+  <li>rest_api_routines.sh</li>
+  <li>synch_env.sh</li>
+</ul>
+
+<p>Here: <a href="http://resources.ovirt.org/old-site-files/wiki/Rest_api_files.tar.gz">TGZ</a></p>
+
+<p>GitHub sources:</p>
+
+<ul>
+  <li>git clone &lt;git://github.com/lspevak/ovirt-restapiconf.git&gt;</li>
+</ul>
+
+<p>The following sections contain snipples of code showing the creation of a host in the Engine.</p>
+
+<h2 id="general-support-routines">General support routines</h2>
+
+<h3 id="xpath-support">XPath support</h3>
+
+<ul>
+  <li>support for getting a value or count of elements selected by a XPath expression in XML file using xmllint tool</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code># communication file for request/response&#x000A;COMM_FILE="/tmp/restapi_comm.xml"&#x000A;&#x000A;# get number of rows returned by XPath expression&#x000A;function getXPathCount {&#x000A;    local xPath="count($1)"&#x000A;    echo $(xmllint --xpath $xPath $COMM_FILE)&#x000A;}&#x000A;&#x000A;# get string value of node returned by XPath expression&#x000A;function getXPathValue {&#x000A;    local xPath="string($1)"&#x000A;    echo $(xmllint --xpath $xPath $COMM_FILE)&#x000A;}&#x000A;</code></pre></div>
+<h3 id="http-client-support">HTTP client support</h3>
+
+<ul>
+  <li>basic support for GET, POST methods using curl client</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>HEADER_CONTENT_TYPE="Content-Type: application/xml"&#x000A;HEADER_ACCEPT="Accept: application/xml"&#x000A;&#x000A;function callGETService {&#x000A;    local uri=$1&#x000A;    local certAtt=""&#x000A;&#x000A;    if [[ -n "$CA_CERT_PATH" ]]; then&#x000A;        certAtt="--cacert $CA_CERT_PATH"&#x000A;    fi&#x000A;&#x000A;    echo "Calling URI (GET): " ${uri}&#x000A;    curl -X GET -H "${HEADER_ACCEPT}" -H "${HEADER_CONTENT_TYPE}" -u "${USER_NAME}:${USER_PASSW}" "$certAtt" "${ENGINE_URL}${uri}" --output "${COMM_FILE}" 2&gt; /dev/null &gt; "${COMM_FILE}"&#x000A;}&#x000A;&#x000A;function callPOSTService {&#x000A;    local uri=$1&#x000A;    local xml=$2&#x000A;    local certAtt=""&#x000A;&#x000A;    if [[ -n "$CA_CERT_PATH" ]]; then&#x000A;        certAtt="--cacert $CA_CERT_PATH"&#x000A;    fi&#x000A;&#x000A;    echo "Calling URI (POST): " ${uri}&#x000A;    curl -X POST -H "${HEADER_ACCEPT}" -H "${HEADER_CONTENT_TYPE}" -u "${USER_NAME}:${USER_PASSW}" "$certAtt" "${ENGINE_URL}${uri}" -d "${xml}" 2&gt; /dev/null &gt; "${COMM_FILE}"&#x000A;}&#x000A;</code></pre></div>
+<h3 id="waiting-for-the-state-with-a-time-out">Waiting for the state with a time-out</h3>
+
+<ul>
+  <li>Asynchronous tasks require a testing of the current state returned by HTTP GET method in cycle.</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code># wait till XPath returns non-zero number of rows from specified REST API GET service&#x000A;function waitForStatus {&#x000A;    local uri=$1&#x000A;    local xPathStatusTest=$2&#x000A;    local xPathStatusValue=$3&#x000A;    local timeoutIntervalSec=$4&#x000A;&#x000A;    local status="0"&#x000A;    for i in $(seq 1 10); do&#x000A;        callGETService "${uri}"&#x000A;        local c=`getXPathCount "${xPathStatusTest}"`&#x000A;        local val=`getXPathValue "${xPathStatusValue}"`&#x000A;&#x000A;        if [[ "$c" &gt; "0" ]]; then&#x000A;            echo "Target status ${val} reached. Done."&#x000A;            status="1"&#x000A;            break;&#x000A;        else&#x000A;            echo "Waiting for ${timeoutIntervalSec} s...(${i}, value=${val})"&#x000A;            sleep ${timeoutIntervalSec}&#x000A;        fi&#x000A;    done;&#x000A;&#x000A;    if [[ "$status" == "0" ]]; then&#x000A;        echo "Timeout, waiting interrupted."&#x000A;    fi&#x000A;}&#x000A;</code></pre></div>
+<h3 id="list-hosts-and-create-host-actions">List hosts and create host actions</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code># get all hosts&#x000A;function getHosts {&#x000A;    callGETService "/api/hosts"&#x000A;    local c=`getXPathCount "/hosts/host[@id]"`&#x000A;    echo "Current host count: " ${c}&#x000A;}&#x000A;&#x000A;# create host if it doesn't exist&#x000A;function createHost {&#x000A;    local hostName=$1&#x000A;    local hostAddress=$2&#x000A;    local hostPassword=$3&#x000A;    local clusterName=$4&#x000A;&#x000A;    getHosts&#x000A;    local hostCount=`getXPathCount "/hosts/host[name='${hostName}']"`&#x000A;    getClusters&#x000A;    local idCluster=`getXPathValue "/clusters/cluster[name='${clusterName}']/@id"`&#x000A;&#x000A;    if [[ "${hostCount}" == "0" ]]; then&#x000A;        echo "Host doesn't exist, creating: ${hostName}..."&#x000A;        local xml="&lt;host&gt;&lt;name&gt;${hostName}&lt;/name&gt;&lt;address&gt;${hostAddress}&lt;/address&gt;&lt;root_password&gt;${hostPassword}&lt;/root_password&gt;&lt;cluster id='${idCluster}' href='/api/clusters/${idCluster}'/&gt;&lt;/host&gt;"&#x000A;        callPOSTService "/api/hosts" "${xml}"&#x000A;        # show response&#x000A;        cat $COMM_FILE&#x000A;        # wait for host creation&#x000A;        waitForStatus "/api/hosts" "/hosts/host[name='${hostName}']/status[state='up']" "/hosts/host[name='${hostName}']/status/state" 10&#x000A;        echo "Host created."&#x000A;    else&#x000A;        echo "Host exists: ${hostName}"&#x000A;    fi&#x000A;}&#x000A;</code></pre></div>
+<h3 id="listing-names-of-objects">Listing names of objects</h3>
+
+<ul>
+  <li>Using combination of XPath count and XPath string functions, you can iterate e.g. names.</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>function showList {&#x000A;    local xPath=$1&#x000A;&#x000A;    local c=`getXPathCount "${xPath}"`&#x000A;&#x000A;    for i in $(seq 1 ${c})&#x000A;    do&#x000A;        local val=`getXPathValue "(${xPath})[$i]"`&#x000A;        echo ${val}&#x000A;    done&#x000A;&#x000A;    echo "Count: ${c}"&#x000A;}&#x000A;&#x000A;...&#x000A;# show names of configured hosts&#x000A;function showHostList {&#x000A;    showList "/hosts/host/name"&#x000A;}&#x000A;&#x000A;# show names of configured VMs&#x000A;function showVMList {&#x000A;    showList "/vms/vm/name"&#x000A;}&#x000A;</code></pre></div>
+<h2 id="environment-synchronization-script">Environment synchronization script</h2>
+
+<ul>
+  <li>The script uses general routines and describes the target state of your environment.</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code># configuration of the oVirt engine&#x000A;ENGINE_URL="http://localhost:8700"&#x000A;USER_NAME="admin@internal"&#x000A;USER_PASSW="YOUR_PASSWORD"&#x000A;# CA certificate path&#x000A;CA_CERT_PATH=""&#x000A;&#x000A;echo "Current hosts..."&#x000A;getHosts&#x000A;&#x000A;echo "Synchronizing configuration..."&#x000A;createHost "server1.example.com" "192.168.10.10" "123456" "Default"&#x000A;createHost "server2.example.com" "192.168.10.11" "123456" "Default"&#x000A;&#x000A;getHosts&#x000A;showHostList&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/api/rest-api/rest-api-using-bash-automation.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/api/rest-api/rest-api-using-bash-automation.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

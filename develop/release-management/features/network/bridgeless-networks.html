@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Bridgeless Networks &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="bridgeless-networks">Bridgeless Networks</h1>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>
+    <p>Name: Roy Golan</p>
+  </li>
+  <li>
+    <p>Email: rgolan@redhat.com</p>
+  </li>
+</ul>
+
+<h2 id="functionality">Functionality</h2>
+
+<p>An admin can now set a logical network as "VM network" so when attaching a Network to an Host's NIC,
+a "VM network" is implemented over a bridge, otherwise bridgeless
+If a host network is bridgeless but should be a VM network the host will be set to non-operational state.</p>
+
+<p>Also, A cluster network can be set as "optional", meaning that host is operational as long as it have
+all the non-optional networks attached.</p>
+
+<h2 id="create-logical-network">create logical network</h2>
+
+<ul>
+  <li>create network under the DC - check the "VM network" box.</li>
+  <li>GUI may have the VM network box checked by default</li>
+  <li>to edit this property a network should be detached from all clusters</li>
+</ul>
+
+<h2 id="modified-flows">Modified flows</h2>
+
+<h4 id="create-management-network">Create management network</h4>
+
+<ul>
+  <li>management network is always created as optional=false</li>
+</ul>
+
+<h4 id="add-a-nic-to-vm">Add a Nic to VM</h4>
+
+<ul>
+  <li>validate the Nic's network is vmNetwork - fail with canDoAction ACTION_TYPE_FAILED_NOT_A_VM_NETWORK</li>
+</ul>
+
+<h4 id="import-vm">Import VM</h4>
+
+<ul>
+  <li>validate all Nic's networks are vmNetwork - fire audit log IMPORT_VM_INTERFACES_ON_NON_VM_NETWORKS</li>
+  <li>don't fail the import</li>
+</ul>
+
+<h4 id="run-vm">Run VM</h4>
+
+<ul>
+  <li>validate all Nic's networks is vmNetwork - fail with canDoAction ACTION_TYPE_FAILED_NOT_A_VM_NETWORK</li>
+</ul>
+
+<h4 id="setupnetworks">setupNetworks</h4>
+
+<ul>
+  <li>implicitly set VdsNetworkInterface as bridged when vmNetwork = true</li>
+</ul>
+
+<h4 id="monitoring">Monitoring</h4>
+
+<ul>
+  <li>refresh caps (when host is activated)-
+    <ul>
+      <li>detect if there are VM networks that are implemented as bridgeless - if yes set host non-operational with reason VM_NETWORK_IS_BRIDGELESS</li>
+      <li>if a host misses cluster networks which are not optional - set as non -operational</li>
+    </ul>
+  </li>
+  <li>afterRefreshTreatment (runtime info) - same as above</li>
+</ul>
+
+<h4 id="rest-api">REST API</h4>
+
+<ul>
+  <li>
+    <p>Add a logical network to the Data Center and make it a VM network</p>
+
+    <p><code>POST /api/networks</code></p>
+  </li>
+</ul>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;network</span> <span class="na">id=</span><span class="s">'...'</span><span class="nt">&gt;</span>&#x000A;    <span class="nt">&lt;name&gt;</span>testrest1<span class="nt">&lt;/name&gt;</span>&#x000A;    <span class="nt">&lt;data_center</span> <span class="na">id=</span><span class="s">'...'</span><span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;stp&gt;</span>false<span class="nt">&lt;/stp&gt;</span>&#x000A;    <span class="nt">&lt;usages&gt;</span>&#x000A;        <span class="nt">&lt;usage&gt;</span>VM`<span class="nt">&lt;/usage&gt;</span>&#x000A;    <span class="nt">&lt;/usage&gt;</span>&#x000A;<span class="nt">&lt;/network&gt;</span>&#x000A;</code></pre></div><ul>
+  <li>
+    <p>representation of non-bridged interface in Host NICs</p>
+
+    <p><code>GET /api/hosts/{host.id}/nics/{nic.id}</code></p>
+  </li>
+</ul>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;host_nic&gt;</span>&#x000A;    <span class="nt">&lt;name&gt;</span>MyHostNIC<span class="nt">&lt;/name&gt;</span>&#x000A;    <span class="nt">&lt;bridged&gt;</span>false<span class="nt">&lt;/bridged&gt;</span>&#x000A;<span class="nt">&lt;/host_nic&gt;</span>&#x000A;</code></pre></div>
+<h4 id="entities">Entities</h4>
+
+<ul>
+  <li>
+    <p>VdsNetworkInterface.java</p>
+
+    <p>VdsNetworkInterface
+   boolean bridged</p>
+  </li>
+  <li>
+    <p>vds_interface table</p>
+
+    <p>vds_interface
+   bridged BOOLEAN NOT NULL DEFAULT true</p>
+  </li>
+  <li>
+    <p>network.java</p>
+
+    <p>boolean vmNetwork</p>
+  </li>
+  <li>
+    <p>network table</p>
+
+    <p>vm_network BOOLEAN NOT NULL DEFAULT true</p>
+  </li>
+  <li>
+    <p>network_cluster.java</p>
+
+    <p>boolean optional</p>
+  </li>
+  <li>
+    <p>network_cluster table</p>
+
+    <p>optional BOOLEAN</p>
+  </li>
+</ul>
+
+<h2 id="modelling">Modelling</h2>
+
+<h2 id="enums">Enums</h2>
+
+<ul>
+  <li>
+    <p>AuditLogType.java</p>
+
+    <p>IMPORTEXPORT_IMPORT_VM_INTERFACES_ON_NON_VM_NETWORKS(9600,MINUTE)
+  VDS_SET_NON_OPERATIONAL_VM_NETWORK_IS_BRIDGELESS(9601, MINUTE)</p>
+  </li>
+  <li>
+    <p>VdcBLLMessages</p>
+
+    <p>ACTION_TYPE_FAILED_NOT_A_VM_NETWORK</p>
+  </li>
+  <li>
+    <p>NonOperationalReason.java</p>
+
+    <p>VM_NETWORK_IS_BRIDGELESS(8)</p>
+  </li>
+</ul>
+
+<h2 id="messages">Messages</h2>
+
+<ul>
+  <li>
+    <p>AuditLogMessage.properties</p>
+
+    <p>IMPORTEXPORT_IMPORT_VM_INTERFACES_ON_NON_VM_NETWORKS=Trying to import VM ${VmName} with the interface/s ${Interfaces} attached to non VM network/s ${Networks}.
+  VDS_SET_NON_OPERATIONAL_VM_NETWORK_IS_BRIDGELESS=Host ${VdsName} does not comply with the cluster ${VdsGroupName} networks, the following VM networks are bridgeless: '${Networks}'</p>
+  </li>
+  <li>
+    <p>AppErrors.properties</p>
+
+    <p>ACTION_TYPE_FAILED_NOT_A_VM_NETWORK=Failed ${action} ${type} the network/s ${Networks} is/are not a VM network.</p>
+  </li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/bridgeless-networks.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/bridgeless-networks.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

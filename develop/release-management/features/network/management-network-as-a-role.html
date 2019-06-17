@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Management Network As A Role &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="management-network-as-a-role">Management Network As A Role</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature is about attaching the management network role to an arbitrary network in a cluster.</p>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="motivation">Motivation</h3>
+
+<p>Allow assigning different VLANs to management networks in different clusters under same data center.</p>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<ul>
+  <li>No new entities</li>
+  <li><em>Management</em> boolean field will be added to NetworkCluster entity. <em>True</em> value will indicate that the network is the management one in the given cluster (similarly like it been done for display networks).</li>
+</ul>
+
+<h3 id="user-experience">User Experience</h3>
+
+<h4 id="ui">UI</h4>
+
+<ul>
+  <li>The existing "Manage network(s)" screens will be updated with the new column "Management Network". User will be able to change the management network assignment through the screens in the similar way like it's currently done for display network. Only a required network could be chosen as the management one.
+    <ul>
+      <li>Networks assignments for a single cluster
+        <ul>
+          <li>The management <strong>radio button</strong> will be disabled for non-required networks.
+<img alt="" width="706" height="400" src="/images/wiki/Manage_networks.png?1560777613" /></li>
+        </ul>
+      </li>
+      <li>A single network assignments for all clusters in the DC
+        <ul>
+          <li>The management <strong>checkbox</strong> will be disabled for non-required networks.
+<img alt="" width="727" height="402" src="/images/wiki/Manage_network.png?1560777613" /></li>
+        </ul>
+      </li>
+      <li>The "required" checkbox will become disabled while the network is chosen as the management one and will turn to enabled once it stops being the management network.</li>
+    </ul>
+  </li>
+  <li>The new parameter (management network) will be added in "New cluster" screen. The parameter will have the default value of <em>ovirtmgmt</em> if that is present in the DC and the user will be able to choose any other network as the management one.
+<img alt="" width="801" height="559" src="/images/wiki/Create_cluster.png?1560777613" /></li>
+</ul>
+
+<h4 id="restful-api">RESTful API</h4>
+
+<ul>
+  <li>The new valid value (<em>MANAGEMENT</em>) will be added to Network.Usages collection.
+    <ul>
+      <li>NetworkUsage enum will be extended with the new <em>MANAGEMENT</em> value.</li>
+    </ul>
+  </li>
+  <li>A request that will make a management network non-required will fail.</li>
+  <li>The new optional parameter (management network) will be added for creating a new cluster API call (see <a href="#User_work-flows">point 1 of User work-flows</a>)</li>
+</ul>
+
+<h3 id="user-work-flows">User work-flows</h3>
+
+<p>Here are the work flows that will be affected by implementing the feature:</p>
+
+<ul>
+  <li>In order to make sure that every cluster will continue having a management network the new parameter (management network) will be added to creating new cluster flow.
+    <ul>
+      <li>The parameter will have the default value of <em>ovirtmgmt</em> and the user will be able to choose any other network as the management one.</li>
+      <li><em>ovirtmgmt</em> network will continue to be created upon a DC creation.</li>
+      <li>In case of <em>ovirtmgmt</em> isn't present (was removed) and another single network is present in the DC it will be taken as the default management network.</li>
+      <li>In case of <em>ovirtmgmt</em> isn't present (was removed) and number of network in the DC <strong>isn't one</strong> the cluster creating operation will fail.</li>
+    </ul>
+  </li>
+  <li><em>ovirtmgmt</em> will be created upon creating a new DC. That will be done in order to keep backward compatibility to the current system behavior.</li>
+  <li>Only a required network could be chosen as the management one.</li>
+  <li>It will be possible to remove a network (and yes, <em>ovirtmgmt</em> too) as soon as it stops serving as the management network of any cluster (same rules applied like prior the feature implementation).</li>
+  <li>Changing the management network in a cluster (through one of the options mentioned earlier) will be enabled for an empty cluster only.</li>
+  <li>Moving a host from a cluster to another one will be enabled only in case where the source and destination management networks are the same one.</li>
+  <li>All hard-coded usages of ovirtmgmt network will be changed to the cluster management one:
+    <ul>
+      <li>A new added host will be setup with the cluster management network.</li>
+      <li>The cluster management network will be used as display and/or migration network fallback (e.g. in case of removing a network from a cluser/host).</li>
+      <li>The management network will be used by VDSM as the host default route.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="feature-restrictions">Feature restrictions</h3>
+
+<p>Most of the feature restrictions are intended to prevent changing the management network on a host after inital "setup networks" operation (a part of a host installation process). Changing the management network might lead to loosing connectivity to the host that the connection to it is defined on the IP it was initially installed with in oVirt and the security certificate that was issued with that IP. Changing the mangement network after the host was installed might cause changing the IP that will be assigned to the new management network. Then accessing the host through that new IP will be impossible as the certifacate will not match the new IP address.
+Resolving the certifiacate limitation (e.g. by making possible its changing) will make possible changing the management network after inital "setup networks" operation (a part of a host installation process) , which will enable removing most of the feature restrictions.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>The high level feature description could be found <a href="/develop/release-management/features/network/detailedmanagementnetworkasarole/">here</a>.</p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<ul>
+  <li>What should be done with the host certificate that was issued for a specific IP? If changing certificate was possible most of the feature restriction could've been removed.</li>
+  <li>Moving a cluster from a DC to another one. The scenario is possible only after a DC force removal. At that stage al old DC networks are removed. The possible scenarios are:
+    <ul>
+      <li>The operation will be forbidden. That will push the user to copy the cluster manually:
+        <ul>
+          <li>create an empty cluster under the destination DC</li>
+          <li>remove all old cluster hosts from oVirt and add them back under the new created cluster in the destination DC</li>
+          <li>remove the old cluster from the system</li>
+        </ul>
+      </li>
+      <li>Let the user to choose one of the destination DC networks as the management one for the moved cluster (like it is done in creating a new cluster). The user should be warned that the management traffic to the cluster hosts will remain AS IS until "setup host networks" operation will be successfully completed on each one of the hosts.</li>
+    </ul>
+  </li>
+  <li>How the new "management network" parameter will be represented in "Create new cluster" dialog in UI (see <a href="UI">the second bullet of UI section</a>)?</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/management-network-as-a-role.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/management-network-as-a-role.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+HelperUtilities &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/db-issues/">Db-issues</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="helper-utilities">Helper Utilities</h1>
+
+<p>The directory <code>/usr/share/ovirt-engine/setup/dbutils</code> or on
+developer setup <code>$PREFIX/share/ovirt-engine/setup/dbutils</code> contains
+useful scripts to help with various database issues.</p>
+
+<h2 id="fkvalidator">fkvalidator</h2>
+
+<p><strong>fkvalidaor.sh</strong> is a script that must be run on a customer database before an upgrade
+The utility checks that all data inside the database is consistent and does not break any FK constraint
+<strong>fkvalidaor.sh</strong> lists the found problems and can fix those problem is the <strong>-f</strong> switch is used</p>
+
+<h3 id="usage">Usage</h3>
+
+<p>Usage: fkvalidator.sh [-h] [-s SERVERNAME [-p PORT]] [-d DATABASE] [-u USERNAME] [-l LOGFILE] [-f] [-v]</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   -s SERVERNAME - The database servername for the database  (def. localhost)&#x000A;   -p PORT       - The database port for the database        (def. 5432)&#x000A;   -d DATABASE   - The database name                         (def. engine)&#x000A;   -u USERNAME   - The admin username for the database.&#x000A;   -l LOGFILE    - The logfile for capturing output          (def. fkvalidator.sh.log)&#x000A;   -f            - Fix the non consistent data by removing it from DB.&#x000A;   -v            - Turn on verbosity                         (WARNING: lots of output)&#x000A;   -h            - This help text.&#x000A;</code></pre></div>
+<h2 id="taskcleaner">taskcleaner</h2>
+
+<p><strong>taskcleaner.sh</strong> is a utility for clean async tasks and related Job Steps/Compensation data.
+The utility enables to:
+<strong>Display</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   All async tasks&#x000A;   Only Zombie tasks&#x000A;</code></pre></div>
+<p><strong>Delete</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   All tasks&#x000A;   All Zombie tasks&#x000A;   A task related to a given task id&#x000A;   A Zombie task related to a given task id&#x000A;   All tasks related to a given command id&#x000A;   All Zombie tasks related to a given command id&#x000A;</code></pre></div>
+<p>Flags may be added (-C, -J) to specify if Job Steps &amp; Compensation data should be cleaned as well.</p>
+
+<h3 id="usage-1">Usage</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Usage: taskcleaner.sh [-h] [-s server] [-p PORT]] [-d DATABASE] [-u USERNAME] [-l LOGFILE] [-t taskId] [-c commandId]&#x000A;   [-z] [-R] [-C][-J] [-q] [-v]&#x000A;   -s SERVERNAME - The database servername for the database (def.localhost)&#x000A;   -p PORT - The database port for the database (def. 5432)&#x000A;   -d DATABASE - The database name (def.engine)&#x000A;   -u USERNAME - The admin username for the database.&#x000A;   -l LOGFILE - The logfile for capturing output (def.taskcleaner.sh.log)&#x000A;   -t TASK_ID - Removes a task by its Task ID.&#x000A;   -c COMMAND_ID - Removes all tasks related to the given Command Id.&#x000A;   -z - Removes/Displays a Zombie task.&#x000A;   -R - Removes all Zombie tasks.&#x000A;   -C - Clear related compensation entries.&#x000A;   -J - Clear related Job Steps.&#x000A;   -q - Quite mode, do not prompt for confirmation.&#x000A;   -v - Turn on verbosity (WARNING: lots of output)&#x000A;   -h - Help text.&#x000A;</code></pre></div>
+<h2 id="unlock_entity">unlock_entity</h2>
+
+<p><strong>unlock_entity.sh</strong> is a utility for unlocing <strong>VM</strong> , <strong>Template</strong> and/or their associated <strong>Disks</strong> or a specific <strong>Disk</strong>
+<strong>VM</strong> , <strong>Template</strong> are given by thier names while a specific disk is given by its <strong>UUID</strong></p>
+
+<h3 id="usage-2">Usage</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Usage: ./unlock_entity.sh [options] [ENTITIES]&#x000A;     -h            - This help text.&#x000A;     -v            - Turn on verbosity                         (WARNING: lots of output)&#x000A;     -l LOGFILE    - The logfile for capturing output          (def. )&#x000A;     -s HOST       - The database servername for the database  (def. localhost)&#x000A;     -p PORT       - The database port for the database        (def. 5432)&#x000A;     -u USER       - The username for the database             (def. engine)&#x000A;     -d DATABASE   - The database name                         (def. engine)&#x000A;     -t TYPE       - The object type {vm | template | disk | snapshot}&#x000A;     -r            - Recursive, unlocks all disks under the selected vm/template.&#x000A;     -q            - Query db and display a list of the locked entites.&#x000A;     ENTITIES      - The list of object names in case of vm/template, UUIDs in case of a disk&#x000A;     NOTE: This utility access the database and should have the&#x000A;           corresponding credentals.&#x000A;           In case that a password is used to access the database PGPASSWORD&#x000A;           or PGPASSFILE should be set.&#x000A;     Example:&#x000A;         $ PGPASSWORD=xxxxxx ./unlock_entity.sh -t disk -q&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/db-issues/helperutilities.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/db-issues/helperutilities.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 10 Feb 2019 15:16 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

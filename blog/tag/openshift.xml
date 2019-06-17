@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Openshift</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/openshift.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>oVirt and OKD</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/01/ovirt-openshift-part-1.html"/>
+    <id>http://ovirt.org/blog/2019/01/ovirt-openshift-part-1.html</id>
+    <published>2019-01-06T09:01:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>rgolan</name>
+    </author>
+    <content type="html">&lt;p&gt;This is a series of posts to demonstrate how to  install  OKD 3.11 on oVirt and what you can do with it.
+&lt;strong&gt;Part I&lt;/strong&gt;   -  How to install OKD 3.11 on oVirt&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img align="left" src="/images/blog/2019-01-06/boxhead.png" width="400px" style="margin-right: 25px;border-radius: 4px" /&gt;&lt;/p&gt;
+
+&lt;h1 id="how-to-install-okd-311-on-ovirt-42-and-up"&gt;How to install OKD 3.11 on oVirt (4.2 and up)&lt;/h1&gt;
+&lt;p&gt;Installing OKD or Kubernetes on oVirt has many advantages, and it's also gotten a lot easier these days. Admins and users who want to take container platform management for a spin, on oVirt, will be encouraged by this.&lt;br /&gt;
+Few of the advantages are:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Virtualizing the control plane for Kubernetes - provide HA/backup/affinity capabilities to the controllers and allowing hardware maintenance cycles&lt;/li&gt;
+  &lt;li&gt;Providing persistent volume for containers via the IAAS, without the need for additional storage array dedicated to Kubernetes&lt;/li&gt;
+  &lt;li&gt;Allowing a quick method to build up/tear down Kubernetes clusters, providing hard tenancy model via VMs between clusters.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The installation uses &lt;a href="https://github.com/openshift/openshift-ansible"&gt;openshift-ansible&lt;/a&gt; and, specifically the &lt;code&gt;openshift_ovirt&lt;/code&gt; ansible-role. The integration between OpenShift and oVirt is tighter, and provides storage integration. If you need persistent volumes for your containers you can get that directly from oVirt using &lt;strong&gt;ovirt-volume-provisioner&lt;/strong&gt; and &lt;strong&gt;ovirt-flexvolume-driver&lt;/strong&gt;.&lt;br /&gt;
+For the sake of simplicity, this example will cover an all-in-one OpenShift cluster, on a single VM.&lt;br /&gt;
+On top of that, in the 2nd post, we will run a classic web stack, a Java application with a simple REST-API endpoint + Postgres. Postgres will get a persistent volume from oVirt using its flexvolume driver.&lt;/p&gt;
+
+&lt;p&gt;&lt;span style="font: italic 10px robot, monospace; top: 220px"&gt;Picture by &lt;a href="https://unsplash.com/@soroushgolpoor?utm_medium=referral&amp;amp;utm_campaign=photographer-credit&amp;amp;utm_content=creditBadge"&gt;Soroush golpoor on Unsplash&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;script id="asciicast-219956" src="https://asciinema.org/a/219956.js" async=""&gt;&lt;/script&gt;
+
+&lt;h2 id="single-shell-file-installation"&gt;Single shell file installation&lt;/h2&gt;
+
+&lt;p&gt;Dropping to shell - this &lt;a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/install.sh"&gt;install.sh&lt;/a&gt; is a wrapper for installing  the ovirt-openshift-installer container, it uses ansible-playbook and has two main playbooks: install_okd.yaml and install_extensions.yaml. The latter is mainly for installing oVirt storage plugins.&lt;/p&gt;
+
+&lt;p&gt;The install.sh script has one dependency, it needs to have 'podman' installed on the host, while all the rest runs inside a container.&lt;/p&gt;
+
+&lt;p&gt;The only dependency (except from running oVirt datacenter) is podman:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[bastion ~]#&lt;/span&gt; dnf install podman
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href="https://github.com/containers/libpod/blob/master/docs/tutorials/podman_tutorial.md"&gt;For other ways to install podman consult the readme&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;If you can't install &lt;code&gt;podman&lt;/code&gt; docker will be fine as well, just edit the install.sh, and substitute podman for docker.&lt;/p&gt;
+
+&lt;h3 id="get-the-installsh-and-customize"&gt;Get the install.sh and customize&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[bastion ~]#&lt;/span&gt; curl &lt;span class="nt"&gt;-O&lt;/span&gt; &lt;span class="s2"&gt;"https://raw.githubusercontent.com/oVirt/ovirt-openshift-extensions/master/automation/ci/{install.sh,vars.yaml}"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Edit the &lt;code&gt;vars.yaml&lt;/code&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Put the engine details in engine_url
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine-fqdn/ovirt-engine/api&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;Choose the oVirt cluster and data domain you want, if you don't want 'Default'
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;openshift_ovirt_cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;yours&lt;/span&gt;
+&lt;span class="na"&gt;openshift_ovirt_data_store&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;yours&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;Unmark to disable the memory and disks checks in case the VM memory is under 8Gb
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;openshift_disable_check&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;memory_availability,disk_availability,docker_image_availability&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+  &lt;li&gt;Domain name of the setup. The setup will create a VM with the name master0.$public_hosted_zone here. This VM will
+be used for all the components of the setup
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;public_hosted_zone&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;example.com&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For a more complete list of customizations, take a look at the &lt;a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/vars.yaml"&gt;vars.yaml&lt;/a&gt; and the &lt;a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/integ.ini"&gt;inventory file&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="install"&gt;Install&lt;/h2&gt;
+
+&lt;p&gt;Run install.sh to start the installation.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[bastion ~]#&lt;/span&gt; bash install.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;install.sh automates the following steps:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Pull the ovirt-openshift-installer container and run it.&lt;/li&gt;
+  &lt;li&gt;Download Centos Cloud Image and import it into oVirt based on the &lt;code&gt;qcow_url&lt;/code&gt; variable.&lt;/li&gt;
+  &lt;li&gt;Create a VM named master0.example.com from the template above.The VM name is based on the &lt;code&gt;public_hosted_zone&lt;/code&gt; variable.&lt;/li&gt;
+  &lt;li&gt;The cloud-init script will configure repositories, a network, ovirt-guest-agent, etc. based on the &lt;code&gt;cloud_init_script_master&lt;/code&gt; variable.&lt;/li&gt;
+  &lt;li&gt;The VM will dynamically be inserted into an ansible inventory, under &lt;code&gt;master&lt;/code&gt;, &lt;code&gt;compute&lt;/code&gt;, and &lt;code&gt;etc&lt;/code&gt; groups&lt;/li&gt;
+  &lt;li&gt;Openshift-ansible main playbooks are executed to install OKD: &lt;code&gt;prerequisite.yml&lt;/code&gt; and &lt;code&gt;deploy_cluster.yml&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;When the script finishes, an all-in-one cluster is installed and running. Let's check it out.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[root@master0 ~]#&lt;/span&gt; oc get nodes
+&lt;span class="go"&gt;NAME                         STATUS    ROLES                  AGE       VERSION
+master0.example.com   Ready     compute,infra,master   1h        v1.11.0+d4cacc0
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Check oVirt's extensions&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[root@master0 ~]#&lt;/span&gt; oc get deploy/ovirt-volume-provisioner
+&lt;span class="go"&gt;NAME                       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+ovirt-volume-provisioner   1         1         1            1           57m
+
+&lt;/span&gt;&lt;span class="gp"&gt;[root@master0 ~]#&lt;/span&gt; oc get ds/ovirt-flexvolume-driver
+&lt;span class="go"&gt;NAME                      DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+&lt;/span&gt;&lt;span class="gp"&gt;ovirt-flexvolume-driver   1         1         1         1            1           &amp;lt;none&amp;gt;&lt;/span&gt;          59m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="default-storage-class"&gt;Default Storage Class&lt;/h3&gt;
+&lt;p&gt;To run all the dynamic storage provisioning through oVirt's provisioner, 
+we need to set oVirt's storage class to the default.&lt;br /&gt;
+Notice that a storage class defines which oVirt storage domain will&lt;br /&gt;
+be used to provision the disks. Also it will set the disk type (thin/thick) provision to be the default, thin.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight console"&gt;&lt;code&gt;&lt;span class="gp"&gt;[root@master ~]#&lt;/span&gt; oc patch sc/ovirt &lt;span class="se"&gt;\ &lt;/span&gt;
+&lt;span class="go"&gt;                    -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="connect-to-okd-web-console"&gt;Connect to OKD web console&lt;/h3&gt;
+&lt;p&gt;You can now connect to the web console, and keep manage your cluster from there. To do so&lt;br /&gt;
+first make sure you can resolve &lt;code&gt;master0.example.com&lt;/code&gt; (substitute example.com with whatever&lt;br /&gt;
+is set in &lt;code&gt;public_hosted_zone&lt;/code&gt; customization variable, as mentioned above.)&lt;/p&gt;
+
+&lt;p&gt;Browse to &lt;code&gt;https://master0.example.com:8443&lt;/code&gt;  and login with whatever user/password you want:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="/images/blog/2019-01-06/okd-web-console.png" /&gt;&lt;/p&gt;
+
+&lt;h1 id="summary"&gt;Summary&lt;/h1&gt;
+&lt;p&gt;This blog post covered the installation of OKD on an oVirt VM. If you followed the step you now have&lt;br /&gt;
+an all-in-one cluster with dynamic storage provisioning from oVirt storage.
+In the next post I'm going deploy Postgres DB in a container with persistent volume from oVirt
+storage domain.&lt;/p&gt;
+
+</content>
+  </entry>
+  <entry>
+    <title>Your Container Volumes Served By oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/02/your-container-volumes-served-by-ovirt.html"/>
+    <id>http://ovirt.org/blog/2018/02/your-container-volumes-served-by-ovirt.html</id>
+    <published>2018-02-20T09:01:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>rgolan</name>
+    </author>
+    <content type="html">&lt;blockquote&gt;
+  &lt;p&gt;Note: &lt;em&gt;&amp;lt; 5 minutes read&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;When running a virtualization workload on oVirt, a VM disk is 'natively' a disk somewhere on your network-storage.&lt;br /&gt;
+Entering containers world, on Kubernetes(k8s) or OpenShift, there are many options specifically because the workload can be totally stateless, i.e
+they are stored on a host supplied disk and can be removed when the container is terminated. The more interesting case is &lt;em&gt;stateful workloads&lt;/em&gt; i.e apps that persist data (think DBs, web servers/services, etc). k8s/OpenShift designed an API to dynamically provision the container storage (volume in k8s terminology).&lt;/p&gt;
+
+&lt;p&gt;See the &lt;a href="#resources"&gt;resources&lt;/a&gt; section for more details.&lt;/p&gt;
+
+&lt;p&gt;In this post I want to cover how oVirt can provide volumes for containers running on k8s/OpenShift cluster.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="overview"&gt;Overview&lt;/h2&gt;
+&lt;p&gt;Consider this: you want to deploy wikimedia as a container, with all its content served from &lt;code&gt;/opt&lt;/code&gt;. 
+For that you will create a persistent volume for the container - when we have state to keep and server
+creating a volume makes sense. It is persistent, it exists regardless the container state,
+and you can choose which directory exactly you serve that volume, and that is the most important
+part, k8s/OpenShift gives you an API to determine who will provide the volume that you need.&lt;/p&gt;
+
+&lt;p&gt;There are many options, Cinder, AWS, NFS and more. And in case the &lt;em&gt;node&lt;/em&gt; that your pod is running on
+is a &lt;em&gt;VM&lt;/em&gt; in oVirt, you can use ovirt-flexdriver to attach an oVirt disk and that will
+appear as a device in the node, and will be mounted with filesystem to your request. If you want to know more see the documentation about &lt;a href="https://github.com/kubernetes-incubator/external-storage"&gt;kubernetes-incubator/external-storage&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;    k8s/OpenShift Node          +-------&amp;gt; oVirt Vm
++----------------------+
+|                      |                                  +----------------+
+|   mediawiki pod      |                                  |                |
+| +---------------+    |                                  |                |
+| |               |    |                                  |                |
+| |               |    |                                  |     oVirt      |
+| |               |    |                                  |                |
+| |/srv/mediawiki |    |                                  |                |
+| +---------------+    |                                  |                |
+|                      |                                  +----------------+
+|                      |
+|                      |
+|  /dev/pv001 (/srv/mediawiki)  +-------&amp;gt; oVirt Disk
+|                      |
++----------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="demo"&gt;Demo&lt;/h2&gt;
+&lt;p&gt;Checkout this youtube video, that demonstrate how it looks like in &lt;strong&gt;oVirt admin UI&lt;/strong&gt;, &lt;strong&gt;kubernetes UI in cockpit&lt;/strong&gt;, and some &lt;strong&gt;cli&lt;/strong&gt;:&lt;/p&gt;
+&lt;iframe width="800" height="600" src="https://www.youtube.com/embed/_E9pUVrI0hs"&gt;&lt;/iframe&gt;
+
+&lt;h2 id="external-storage-provisioner-and-flexvolume-driver"&gt;External Storage Provisioner and Flexvolume driver&lt;/h2&gt;
+&lt;p&gt;OpenShift is able to request oVirt these special volumes by deploying ovirt-flexdriver and ovirt-provisioner and following this steps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a storage class&lt;/li&gt;
+  &lt;li&gt;Create a storage claim&lt;/li&gt;
+  &lt;li&gt;Create a pod with a volume that refernce the storage claim&lt;/li&gt;
+  &lt;li&gt;Run the pod&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A storage class will can describe slow or fast data storage that maps to data domains in oVirt&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;StorageClass&lt;/span&gt;
+&lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;storage.k8s.io/v1&lt;/span&gt;
+&lt;span class="na"&gt;metadata&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt-ssd-domain&lt;/span&gt;
+&lt;span class="na"&gt;provisioner&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;external/ovirt&lt;/span&gt; 
+&lt;span class="na"&gt;parameters&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;type&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;io1&lt;/span&gt;
+  &lt;span class="na"&gt;iopsPerGB&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;10"&lt;/span&gt;
+  &lt;span class="na"&gt;ovirtStorageDomain&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;prod-ssd-domain"&lt;/span&gt;
+  &lt;span class="na"&gt;fsType&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ext4&lt;/span&gt;
+  &lt;span class="na"&gt;ovirtDiskFormat&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;cow"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you create a storage claim, ovirt-provisioner will create an oVirt disk for you on the
+specified domain - notice the reference to the storage class:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="c1"&gt;# storage claim&lt;/span&gt;
+&lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;PersistentVolumeClaim&lt;/span&gt;
+&lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;v1&lt;/span&gt;
+&lt;span class="na"&gt;metadata&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-data-ssd-disk&lt;/span&gt;
+  &lt;span class="na"&gt;annotations&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="s"&gt;volume.beta.kubernetes.io/storage-class&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt-ssd-domain&lt;/span&gt;
+&lt;span class="na"&gt;spec&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;storageClassName&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt-ssd-domain&lt;/span&gt;
+  &lt;span class="na"&gt;accessModes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ReadWriteOnce&lt;/span&gt;
+  &lt;span class="na"&gt;resources&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;requests&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="na"&gt;storage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1Gi&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Once the claim is created, oVirt is creating a 1Gb disk which is not attached to any node yet.&lt;/p&gt;
+
+&lt;p&gt;Run a mediawiki pod with so-called flex volume:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;v1&lt;/span&gt; 
+&lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;Pod&lt;/span&gt; 
+&lt;span class="na"&gt;metadata&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki&lt;/span&gt;
+  &lt;span class="na"&gt;labels&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;app&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ovirt&lt;/span&gt; 
+&lt;span class="na"&gt;spec&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;containers&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;image&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki&lt;/span&gt; 
+    &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki&lt;/span&gt; 
+    &lt;span class="na"&gt;volumeMounts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-storage&lt;/span&gt;
+      &lt;span class="na"&gt;mountPath&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;/data/"&lt;/span&gt;
+  &lt;span class="na"&gt;volumes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-storage&lt;/span&gt;
+    &lt;span class="na"&gt;persistentVolumeClaim&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="na"&gt;claimName&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mediawiki-data-ssd-disk&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And now it is the flexvolume driver job to tell oVirt to attach the disk into the node this
+pod is running on, and creat file system on it, as described in the &lt;strong&gt;storage class&lt;/strong&gt;, and to mount
+it onto the node. When this is done, the volume is ready and the container can start, with
+the mount set into the &lt;code&gt;/data&lt;/code&gt; directory as set by &lt;code&gt;mountPath&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id="want-to-give-it-a-try-want-to-get-updated-about-this"&gt;Want to give it a try? Want to get updated about this?&lt;/h2&gt;
+&lt;p&gt;This work as for today (Feb 20th 2018) is in progress and all of it can be found at the &lt;a href="https://github.com/rgolangh/ovirt-flexdriver"&gt;ovirt-flexdriver project page&lt;/a&gt;
+To &lt;em&gt;deploy&lt;/em&gt; &lt;em&gt;&lt;strong&gt;ovirt-flexdriver&lt;/strong&gt;&lt;/em&gt; and &lt;em&gt;&lt;strong&gt;ovirt-provisioner&lt;/strong&gt;&lt;/em&gt; I created a container with &lt;em&gt;Ansible&lt;/em&gt; playbook that takes an inventory
+that has the k8s nodes and k8s master specified, along with the ovirt-engine connection details. The playbook will copy and
+configure both component and get you up and running with just few keystrokes. Find more on deployment in the README.md of &lt;a href="https://github.com/rgolangh/ovirt-flexdriver"&gt;project&lt;/a&gt;
+and in an up-coming short video demonstrating the deployment.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note on versions: this should be working against kubernetes 1.9 and oVirt 4.2 but 4.1 should work as well (because the API in use is the same).&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id="resources"&gt;Resources&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/rgolangh/ovirt-flexdriver"&gt;oVirt flexdriver project page&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://docs.openshift.org/latest/install_config/persistent_storage/persistent_storage_flex_volume.html"&gt;OpenShift flexvolume driver page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+  </entry>
+  <entry>
+    <title>Integrating Kibana/Elasticsearch on Top of OpenShift with oVirt Engine SSO</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/05/openshift-openId-integration-with-engine-sso.html"/>
+    <id>http://ovirt.org/blog/2017/05/openshift-openId-integration-with-engine-sso.html</id>
+    <published>2017-05-16T12:35:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Ravi Nori</name>
+    </author>
+    <content type="html">&lt;p&gt;oVirt Engine provides a powerful way to manage users and domains using the oVirt Engine AAA extensions. oVirt Engine supports many different LDAP server types for authentication using the &lt;code&gt;ovirt-engine-extension-aaa-ldap&lt;/code&gt; extension and supports managing internal users using the &lt;code&gt;ovirt-engine-extension-aaa-jdbc&lt;/code&gt; extension. Clients can use the powerful oVirt Engine user management in their applications by using the OAuth2 or OpenId Connect end points provided by oVirt Engine SSO to authenticate users in their applications.&lt;/p&gt;
+
+&lt;p&gt;Below is step-by-step instructions on how to integrate Kibana/Elasticsearch on top of OpenShift with oVirt Engine SSO. The instructions should work for any client application that can be configured to use a OAuth2 or OpenID Connect server to authenticate its users.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;The goal is to integrate Kibana/Elasticsearch on top of OpenShift with oVirt Engine SSO, so existing engine users can access Kibana/Elasticsearch without reauthentication (we don't need to maintain authentication configuration separately for oVirt Engine and Kibana/Elasticsearch).&lt;/p&gt;
+
+&lt;p&gt;The integration requires a fully working and configured oVirt Engine instance on oVirt Engine host and a fully working and configured instance of Kibana/Elasticsearch on top of OpenShift on the OpenShift host.&lt;/p&gt;
+
+&lt;h2 id="installing-kibanaelasticsearch-and-openshift-backend"&gt;Installing Kibana/Elasticsearch and OpenShift Backend&lt;/h2&gt;
+
+&lt;p&gt;Install Kibana/Elasticsearch/OpenShift on CentOS7 or RHEL 7.3 as described in https://www.ovirt.org/develop/release-management/features/metrics/setting-up-viaq-logging/&lt;/p&gt;
+
+&lt;h2 id="installing-ovirt-engine"&gt;Installing oVirt Engine&lt;/h2&gt;
+
+&lt;p&gt;Setup oVirt Engine on a separate host ovirt-engine.example.com as described in https://www.ovirt.org/download/&lt;/p&gt;
+
+&lt;h2 id="setting-up-ovirt-engine-certificate-on-openshift-machine"&gt;Setting up oVirt Engine certificate on OpenShift machine&lt;/h2&gt;
+
+&lt;p&gt;Get the oVirt Engine CA as described here https://www.ovirt.org/documentation/how-to/guest-console/connect-to-spice-console-without-portal/&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;scp root@&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;OVIRT&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;:/etc/pki/ovirt-engine/ca.pem &lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;CA_FILE&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Add the certificate to system-wide trusted certificates. Copy the certificate to /etc/pki/ca-trust/source/anchors/ and run update-ca-trust&lt;/p&gt;
+
+&lt;h2 id="register-a-new-sso-client-on-ovirt-engine-host"&gt;Register a New sso Client on ovirt-engine Host&lt;/h2&gt;
+
+&lt;p&gt;Run the client registration tool ovirt-register-sso-client to register a new sso client. The tool will prompt the user to enter the client id, location of the client certificate (downloaded to oVirt Engine host) and the callback url prefix. Make note of the client id and client secret generated by the tool. The client id and client secret need to be entered in the master configuration file on the OpenShift host to configure authentication with oVirt Engine. The client registration tool is only available in oVirt Engine 4.2 and later.&lt;/p&gt;
+
+&lt;h2 id="setup-oauthconfig-on-kibanaelasticsearchopenshift-host"&gt;Setup oauthconfig on Kibana/Elasticsearch/OpenShift Host&lt;/h2&gt;
+
+&lt;p&gt;On Kibana/Elasticsearch/OpenShift host edit /etc/origin/master/master-config.yaml to setup oauthconfig as below. For oVirt Engine 4.1, see note below.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="na"&gt;oauthConfig&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;assetPublicURL&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://openshift.example.com:8443/console/&lt;/span&gt;
+  &lt;span class="na"&gt;grantConfig&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;method&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;auto&lt;/span&gt;
+  &lt;span class="na"&gt;identityProviders&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;challenge&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+    &lt;span class="na"&gt;login&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+    &lt;span class="na"&gt;mappingMethod&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;claim&lt;/span&gt;
+    &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;my_openid_connect&lt;/span&gt;
+    &lt;span class="na"&gt;provider&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="na"&gt;apiVersion&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;v1&lt;/span&gt;
+      &lt;span class="na"&gt;kind&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;OpenIDIdentityProvider&lt;/span&gt;
+      &lt;span class="na"&gt;clientID&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;lt;client id specified in previous step&amp;gt;&lt;/span&gt;
+      &lt;span class="na"&gt;clientSecret&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;&amp;lt;client id generated in previous step&amp;gt;&lt;/span&gt;
+      &lt;span class="na"&gt;extraScopes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+      &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ovirt-app-api&lt;/span&gt;
+      &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ovirt-ext=auth:sequence-priority=~&lt;/span&gt;
+      &lt;span class="na"&gt;extraAuthorizeParameters&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="na"&gt;include_granted_scopes&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;true"&lt;/span&gt;
+&lt;span class="na"&gt;claims&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="na"&gt;id&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;custom_id_claim&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;sub&lt;/span&gt;
+        &lt;span class="na"&gt;preferredUsername&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;preferred_username&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;email&lt;/span&gt;
+        &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;nickname&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;given_name&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;name&lt;/span&gt;
+        &lt;span class="na"&gt;email&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;custom_email_claim&lt;/span&gt;
+        &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;email&lt;/span&gt;
+      &lt;span class="na"&gt;urls&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+        &lt;span class="na"&gt;authorize&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/sso/openid/authorize&lt;/span&gt;
+        &lt;span class="na"&gt;token&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/sso/openid/token&lt;/span&gt;
+  &lt;span class="na"&gt;masterCA&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ca-bundle.crt&lt;/span&gt;
+  &lt;span class="na"&gt;masterPublicURL&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://openshift.example.com:8443&lt;/span&gt;
+  &lt;span class="na"&gt;masterURL&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://openshift.example.com:8443&lt;/span&gt;
+  &lt;span class="na"&gt;sessionConfig&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;sessionMaxAgeSeconds&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;3600&lt;/span&gt;
+    &lt;span class="na"&gt;sessionName&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ssn&lt;/span&gt;
+    &lt;span class="na"&gt;sessionSecretsFile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/etc/origin/master/session-secrets.yaml&lt;/span&gt;
+  &lt;span class="na"&gt;tokenConfig&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;accessTokenMaxAgeSeconds&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;86400&lt;/span&gt;
+    &lt;span class="na"&gt;authorizeTokenMaxAgeSeconds&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;500&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In oVirt engine 4.1 the authorize and token endpoints point to oauth endpoints.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;      urls:
+        authorize: https://ovirt-engine.example.com/ovirt-engine/sso/oauth/authorize
+        token: https://ovirt-engine.example.com/ovirt-engine/sso/oauth/token
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="restart-ovirt-engine"&gt;Restart oVirt Engine&lt;/h2&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart ovirt-engine
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="restart-origin-master-and-origin-node-on-openshift-host"&gt;Restart origin-master and origin-node on OpenShift Host&lt;/h2&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart origin-master
+systemctl restart origin-node
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="configure-hostnames"&gt;Configure hostnames&lt;/h2&gt;
+
+&lt;p&gt;Make sure the hosts are reachable by their hostnames if required add host aliases in /etc/hosts&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight conf"&gt;&lt;code&gt;&lt;span class="m"&gt;10&lt;/span&gt;.&lt;span class="m"&gt;16&lt;/span&gt;.&lt;span class="m"&gt;19&lt;/span&gt;.&lt;span class="m"&gt;48&lt;/span&gt; &lt;span class="n"&gt;openshift&lt;/span&gt;.&lt;span class="n"&gt;example&lt;/span&gt;.&lt;span class="n"&gt;com&lt;/span&gt; &lt;span class="n"&gt;kibana&lt;/span&gt;.&lt;span class="n"&gt;example&lt;/span&gt;.&lt;span class="n"&gt;com&lt;/span&gt; &lt;span class="n"&gt;mux&lt;/span&gt;.&lt;span class="n"&gt;example&lt;/span&gt;.&lt;span class="n"&gt;com&lt;/span&gt;
+
+&lt;span class="m"&gt;10&lt;/span&gt;.&lt;span class="m"&gt;10&lt;/span&gt;.&lt;span class="m"&gt;116&lt;/span&gt;.&lt;span class="m"&gt;110&lt;/span&gt; &lt;span class="n"&gt;ovirtengine&lt;/span&gt;.&lt;span class="n"&gt;example&lt;/span&gt;.&lt;span class="n"&gt;com&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="grant-permissions"&gt;Grant Permissions&lt;/h2&gt;
+
+&lt;p&gt;The user needs to be granted permissions manually in OpenShift, using the console UI or the command line, so that the user can view the data in Kibana. Accessing https://kibana.example.com should redirect to the engine login page. Enter credentials and login will redirect user back to Kibana.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

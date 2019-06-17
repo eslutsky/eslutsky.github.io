@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Extension tester tool &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="extension-tester-tool">Extension tester tool</h1>
+
+<p>Extension tester tool serves to user to be able test his configuration of his oVirt extensions. Tool provides command line interface to send specific commands to these extensions. We currently support logger and aaa extension, but there will be more in future.</p>
+
+<h3 id="command-line-interface">Command-line interface</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt-engine-extensions-tool&#x000A;  --extension-file=[STRING]  Extension file to be used.&#x000A;  --extensions-dir=[STRING]  Path to directory of extensions.&#x000A;  --help  Show test tool help.&#x000A;  --log-file=[STRING]  File where log will be stored.&#x000A;  --log-level=[STRING]  Log level of test tool.&#x000A;  --version  Show version of test tool.&#x000A;</code></pre></div>
+<h2 id="aaa-module">AAA module</h2>
+
+<p>This modules provides basic functionality to test your aaa extensions. You can search within your extension, login test sequence and other.</p>
+
+<h3 id="command-line-interface-1">Command-line interface</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>aaa&#x000A;  login-user&#x000A;    --help&#x000A;      Show help for login-user action.&#x000A;&#x000A;    --password=[PASSWORD]&#x000A;      Password can be specified in one of the following format:&#x000A;        interactive: - query password interactively [default].&#x000A;        pass:STRING - provide a password as STRING.&#x000A;        env:KEY - provide a password using environment KEY.&#x000A;        file:FILE - provide a password as 1st line of FILE.&#x000A;&#x000A;    --profile=[STRING]&#x000A;      Name of profile to perform login with&#x000A;&#x000A;    --user-name=[STRING]&#x000A;      User name to login with&#x000A;&#x000A;  search&#x000A;    --authz-flag=[FLAG]&#x000A;      Authz flags to be used, can be specified multiple times.&#x000A;      Valid values: resolve-groups-recursive|resolve-groups&#x000A;&#x000A;    --entity=[ENTITY]&#x000A;      Type of entity to search for&#x000A;      Valid values: principal|group, default: principal.&#x000A;&#x000A;    --entity-id=[STRING]&#x000A;      Entity id to search.&#x000A;&#x000A;    --entity-name=[STRING]&#x000A;      Entity name to search, can be followed by '*' as wildcard, default: *.&#x000A;&#x000A;    --extension-name=[STRING]&#x000A;      Name of extension to perform search with&#x000A;&#x000A;    --help&#x000A;      Show help for search action.&#x000A;&#x000A;    --namespace=[STRING]&#x000A;      Namespace to search within, see extension context for available namespaces, default: all.&#x000A;      Can be specified multiple times.&#x000A;&#x000A;    --page-size=[STRING]&#x000A;      Page size, default: 100&#x000A;&#x000A;  authz-fetch_principal_record:&#x000A;    --authz-flag=[FLAG]&#x000A;      Authz flags to be used, can be specified multiple times.&#x000A;      Valid values: resolve-groups-recursive|resolve-groups&#x000A;&#x000A;    --extension-name=[STRING]&#x000A;      Extension name to be used for fetch of principal&#x000A;&#x000A;    --help&#x000A;      Show help for authz action.&#x000A;&#x000A;    --principal-name=[STRING]&#x000A;      Principal name to fetch&#x000A;&#x000A;  authn-authenticate_credentials&#x000A;&#x000A;    --extension-name=[STRING]&#x000A;      Extension name to be used for authenticate&#x000A;&#x000A;    --help&#x000A;      Show help for authn action.&#x000A;&#x000A;    --password=[PASSWORD]&#x000A;      Password can be specified in one of the following format:&#x000A;        interactive: - query password interactively [default].&#x000A;        pass:STRING - provide a password as STRING.&#x000A;        env:KEY - provide a password using environment KEY.&#x000A;        file:FILE - provide a password as 1st line of FILE.&#x000A;&#x000A;    --user-name=[STRING]&#x000A;      User name to authenticate with&#x000A;</code></pre></div>
+<h3 id="examples">Examples</h3>
+
+<p>Search example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ovirt-engine-extensions-tool aaa search --extension-name=my_ldap --user-name=user&#x000A;</code></pre></div>
+<p>Login example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ovirt-engine-extensions-tool aaa login-user --profile=my_ldap --user-name=user&#x000A;</code></pre></div>
+<h2 id="logger-module">Logger module</h2>
+
+<p>Logger module provides functionality to setup specific logging of oVirt. You can find more information <a href="https://gerrit.ovirt.org/gitweb?p=ovirt-engine-extension-logger-log4j">here</a>.</p>
+
+<h3 id="command-line-interface-2">Command-line interface</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>logger &#x000A;  --help  Show help for logger module.&#x000A;  log-record&#x000A;      --extension-name=[STRING]  Name of logger extension.&#x000A;      --help  Show help for log-record action.&#x000A;      --level=[STRING]  Level of log message to be sent.&#x000A;      --logger-name=[STRING]  Name of logger.&#x000A;      --message=[STRING]  Message which should be sent to logger.&#x000A;</code></pre></div>
+<h3 id="example">Example</h3>
+
+<p>This example log message with text 'test' at level 'INFO' using logger name 'test-logger'. It fill find extension named 'ovirt-logger' in directory <i>/etc/ovirt-engine/extensions.d</i></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt-engine-extensions-tool logger log-record --extension-name=ovirt-logger --message=test --logger-name=test-logger --level=INFO&#x000A;</code></pre></div>
+<h2 id="info-module">Info module</h2>
+
+<p>This module provides basic command to check your extensions configuration.</p>
+
+<h3 id="command-line-interface-3">Command-line interface</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>info&#x000A;  context&#x000A;    --extension-name=[STRING]&#x000A;      Name of extension.&#x000A;&#x000A;    --format=[STRING]&#x000A;      Format to use, place holders: {key}, {value}, {name}, default: {name}: {value}.&#x000A;&#x000A;    --help&#x000A;      Show help for context action.&#x000A;&#x000A;    --key=[STRING]&#x000A;      Key to output, default all, can be specified multiple times.&#x000A;&#x000A;  configuration&#x000A;    --extension-name=[STRING]&#x000A;      Name of extension.&#x000A;&#x000A;    --format=[STRING]&#x000A;      Format to use, place holders: {key}, {value}, default: {key}: {value}.&#x000A;&#x000A;    --help&#x000A;      Show help for configuration action.&#x000A;&#x000A;    --key=[STRING]&#x000A;      Key to output, default all, can be specified multiple times.&#x000A;&#x000A;  list-extensions&#x000A;    --help&#x000A;      Show help for list-extensions action.&#x000A;</code></pre></div>
+<h3 id="example-1">Example</h3>
+
+<p>List extensions example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt-engine-extensions-tool info list-extensions&#x000A;</code></pre></div>
+<p>Author: –Ondra Machacek (Omachace) (<a href="User talk:Omachace">talk</a>)</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/extension-tester-tool.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/extension-tester-tool.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Automating Configuration Tasks Using Ansible &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-14-automating-configuration-tasks-using-ansible">Chapter 14: Automating Configuration Tasks Using Ansible</h1>
+
+<p>Ansible is an automation tool used to configure systems, deploy software, and perform rolling updates. Ansible includes support for oVirt, and Ansible modules are available to allow you to automate post-installation tasks such as data center setup and configuration, managing users, or virtual machine operations.</p>
+
+<p>Ansible provides an easier method of automating oVirt configuration compared to REST APIs and SDKs, and allows you to integrate with other Ansible modules. For more information about the Ansible modules available for oVirt, see the oVirt modules in the Ansible documentation.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The AWX Project is a graphically enabled framework accessible through a web interface and REST APIs for Ansible.&#x000A;</code></pre></div>
+<p>To install Ansible, ensure that you have enabled the required repositories. Run the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install ansible&#x000A;</code></pre></div>
+<p>See the Ansible Documentation for alternate installation instructions, and information about using Ansible.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** To permanently increase the verbose level for the Engine when running Ansible playbooks, create a configuration file in `/etc/ovirt-engine/engine.conf.d/` with following line:&#x000A;&#x000A;    ANSIBLE_PLAYBOOK_VERBOSE_LEVEL=4&#x000A;&#x000A;You must restart the Manager after creating the file by running `systemctl restart ovirt-engine`.&#x000A;</code></pre></div>
+<h2 id="ansible-roles">Ansible Roles</h2>
+
+<p>Multiple Ansible roles are available to help configure and manage various parts of the oVirt infrastructure. Ansible roles provide a method of modularizing Ansible code by breaking up large playbooks into smaller, reusable files that can be shared with other users.</p>
+
+<p>The Ansible roles available for oVirt are categorized by the various infrustructure components. For more information about the Ansible roles, see the oVirt Ansible Roles documentation.</p>
+
+<h3 id="installing-ansible-roles">Installing Ansible Roles</h3>
+
+<p>Use the following command to install the Ansible roles:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install ovirt-ansible-roles&#x000A;</code></pre></div>
+<p>By default the roles are installed to <strong>/usr/share/ansible/roles</strong>. The structure of the <code>ovirt-ansible-roles</code> package is as follows:</p>
+
+<ul>
+  <li>
+    <p><strong>/usr/share/ansible/roles</strong> - stores the roles.</p>
+  </li>
+  <li>
+    <p><strong>/usr/share/doc/ovirt-ansible-roles/</strong> - stores the examples, a basic overview, and the license.</p>
+  </li>
+  <li>
+    <p><strong>/usr/share/doc/ansible/roles/role_name</strong> - stores the documentation specific to the role.</p>
+  </li>
+</ul>
+
+<h3 id="using-ansible-roles-to-configure-ovirt">Using Ansible Roles to Configure oVirt</h3>
+
+<p>The following procedure guides you through creating and running a playbook that uses Ansible roles to configure oVirt. This example uses Ansible to connect to the Engine on the local machine and create a new data center.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>Ensure the <code>roles_path</code> option in <strong>/etc/ansible/ansible.cfg</strong> points to the location of your Ansible roles (<strong>/usr/share/ansible/roles</strong>).</p>
+  </li>
+  <li>
+    <p>Ensure that you have the Python SDK installed on the machine running the playbook.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring oVirt using Ansible Roles</strong></p>
+
+<ol>
+  <li>
+    <p>Create a file in your working directory to store the oVirt Engine user password:</p>
+
+    <p># cat passwords.yml
+   —
+ engine_password: youruserpassword</p>
+  </li>
+  <li>
+    <p>Encrypt the user password. You will be asked for a Vault password.</p>
+
+    <p># ansible-vault encrypt passwords.yml
+ New Vault password:
+ Confirm New Vault password:</p>
+  </li>
+  <li>
+    <p>Create a file that stores the Engine details such as the URL, certificate location, and user.</p>
+
+    <p># cat engine_vars.yml
+ —
+ engine_url: https://example.engine.redhat.com/ovirt-engine/api
+ engine_user: admin@internal
+ engine_cafile: /etc/pki/ovirt-engine/ca.pem</p>
+
+    <p><strong>Note:</strong> If you prefer, these variables can be added directly to the playbook instead.</p>
+  </li>
+  <li>
+    <p>Create your playbook. To simplify this you can copy and modify an example in <strong>/usr/share/doc/ovirt-ansible-roles/examples</strong>.</p>
+
+    <p># cat rhv_infra.yml
+ —</p>
+    <ul>
+      <li>
+        <p>name: RHV infrastructure
+hosts: localhost
+connection: local
+gather_facts: false</p>
+
+        <p>vars_files:
+  # Contains variables to connect to the Manager</p>
+        <ul>
+          <li>engine_vars.yml
+  # Contains encrypted engine_password variable using ansible-vault</li>
+          <li>passwords.yml</li>
+        </ul>
+
+        <p>pre_tasks:</p>
+        <ul>
+          <li>name: Login to RHV
+ovirt_auth:
+  url: "{{ engine_url }}"
+  username: "{{ engine_user }}"
+  password: "{{ engine_password }}"
+  ca_file: "{{ engine_cafile | default(omit) }}"
+  insecure: "{{ engine_insecure | default(true) }}"
+tags:
+            <ul>
+              <li>always</li>
+            </ul>
+          </li>
+        </ul>
+
+        <p>vars:
+  data_center_name: mydatacenter
+  data_center_description: mydatacenter
+  data_center_local: false
+  compatibility_version: 4.1</p>
+
+        <p>roles:</p>
+        <ul>
+          <li>ovirt-datacenters</li>
+        </ul>
+
+        <p>post_tasks:</p>
+        <ul>
+          <li>name: Logout from RHV
+ovirt_auth:
+  state: absent
+  ovirt_auth: "{{ ovirt_auth }}"
+tags:
+            <ul>
+              <li>always</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Run the playbook.</p>
+
+    <p># ansible-playbook –ask-vault-pass rhv_infra.yml</p>
+  </li>
+</ol>
+
+<p>You have successfully used the <code>ovirt-datacenters</code> Ansible role to create a data center named <code>mydatacenter</code>.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Backups_and_Migration">Chapter 13: Backups and Migration</a><br />
+<strong>Next:</strong> <a href="chap-Users_and_Roles">Chapter 15: Users and Roles</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-automating_rhv_configuration_using_ansible">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Automating_Configuration_Tasks_Using_Ansible.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Automating_Configuration_Tasks_Using_Ansible.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

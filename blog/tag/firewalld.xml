@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Firewalld</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/firewalld.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Customizing the host deploy process</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/12/host-deploy-customization.html"/>
+    <id>http://ovirt.org/blog/2017/12/host-deploy-customization.html</id>
+    <published>2017-12-08T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;In 4.2 release we have introduced a possibility to customize the host-deploy process by running the Ansible post-tasks after the host-deploy process successfully finishes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="the-reason"&gt;The reason&lt;/h2&gt;
+&lt;p&gt;Prior to oVirt 4.2 release administrators could customize host's firewall rules using &lt;code&gt;engine-config&lt;/code&gt; option &lt;code&gt;IPTablesConfigSiteCustom&lt;/code&gt;.
+Unfortunately writing custom &lt;code&gt;iptables&lt;/code&gt; rules into string value to be used in &lt;code&gt;engine-config&lt;/code&gt; was very user unfriendly and using &lt;code&gt;engine-config&lt;/code&gt; to provide custom
+&lt;code&gt;firewalld&lt;/code&gt; rules would be even much worse. Because of above we have introduced Ansible integration as a part of host deploy flow, which allows administrators to
+add any custom actions executed on the host during host deploy flow.&lt;/p&gt;
+
+&lt;h2 id="special-tasks-file"&gt;Special tasks file&lt;/h2&gt;
+
+&lt;p&gt;As part of this role we also include additional tasks, which could be written by the user, to modify the host-deploy
+process for example to open some more FirewallD ports.&lt;/p&gt;
+
+&lt;p&gt;Those additional tasks can be added to following file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;/etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This post-task file is executed as part of host-deploy process just before setup network invocation.&lt;/p&gt;
+
+&lt;h2 id="example"&gt;Example&lt;/h2&gt;
+&lt;p&gt;An example post-tasks file is provided by ovirt-engine installation, at following location:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;/etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml.example
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is just an example file, to add some task into host deploy flow, you need to create below mentioned file and add some proper Ansible custom tasks:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ touch /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now let's add some tasks which should be executed on the host.
+Note that you can call any Ansible task, not only firewalld task.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cat&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;EOF&lt;/span&gt;&lt;span class="sh"&gt; &amp;gt;&amp;gt; /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml
+&amp;gt; ---
+&amp;gt; - name: Enable custom firewall port
+&amp;gt;   firewalld:
+&amp;gt;     port: "12345/tcp"
+&amp;gt;     permanent: yes
+&amp;gt;     immediate: yes
+&amp;gt;     state: enabled
+&amp;gt;
+&amp;gt; - name: Print debug information
+&amp;gt;   debug:
+&amp;gt;     msg: "My custom tasks was successfully executed!"
+&amp;gt; EOF
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you add new host or reinstall an existing host, you may see the installation logs in &lt;code&gt;/var/log/ovirt-engine/host-deploy/&lt;/code&gt; directory.
+Ansible specific log files has &lt;code&gt;-ansible&lt;/code&gt; suffix. In events view you can see relevant log file path for the specific host installation or
+reinstallation.&lt;/p&gt;
+
+&lt;p&gt;Note that host's firewall type &lt;code&gt;iptables&lt;/code&gt; is deprecated in version 4.2 and will be removed in version 4.3&lt;/p&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+VDSM on Debian &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<p>The aim is this page is tracking the progress to have oVirt managing a Debian based host for virtualizaion purposes. oVirt require to have an agent on each host, the agent is called VDSM so the first step is to have VDSM running on Debian.</p>
+
+<p>Targeted Debian Version: Debian Jessie (8), is current testing and feature frozen, it should be releases when ready so it's about months.</p>
+
+<h1 id="vdsm-on-debian">VDSM on Debian</h1>
+
+<p>The aim is to have VDSM 4.17 on Debian. Here we have a patch for the packaging work. <a href="http://gerrit.ovirt.org/#/c/37737/">http://gerrit.ovirt.org/#/c/37737/</a> Currently VDSM is just running on Fedora/RHEL/Centos and derivates. No positive feedback on other distribution till today.</p>
+
+<h3 id="building-it">Building it</h3>
+
+<p>The build command is:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  fakeroot debian/rules binary&#x000A;</code></pre></div>
+<p>The clean up one:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  fakeroot debian/rules binary&#x000A;</code></pre></div>
+<h3 id="creating-a-simple-repo-for-it">Creating a simple repo for it</h3>
+
+<p>To build a simple repo:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  $ mkdir ~/debian&#x000A;  $ mkdir ~/debian/binary&#x000A;  $ mkdir ~/debian/source&#x000A;</code></pre></div>
+<p>copy all the .deb to ~/debian/binary than regenerate Packages.gz and Source.gz</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  $ cd ~/debian&#x000A;  $ dpkg-scanpackages binary /dev/null | gzip -9c &gt; binary/Packages.gz&#x000A;  $ cd ~/debian&#x000A;  $ dpkg-scansources source /dev/null | gzip -9c &gt; source/Sources.gz&#x000A;</code></pre></div>
+<p>Than add Release files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  stirabos@debian8t1:~/archive_20150624$ cat ~/debian/binary/Release &#x000A;  Archive: unstable&#x000A;  Component: contrib&#x000A;  Origin: stirabos&#x000A;  Label: First attempt to have VDSM on Debian Jessie (still not working)&#x000A;  Architecture: amd64&#x000A;  stirabos@debian8t1:~/archive_20150624$ cat ~/debian/source/Release &#x000A;  Archive: unstable&#x000A;  Component: contrib&#x000A;  Origin: stirabos&#x000A;  Label: First attempt to have VDSM on Debian Jessie (still not working)&#x000A;  Architecture: source&#x000A;</code></pre></div>
+<p>Upload it to the destination folder</p>
+
+<p>You can use it adding</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # vdsm 4.17&#x000A;  deb `[`http://resources.ovirt.org/pub/ovirt-3.6-pre/debian/`](http://resources.ovirt.org/pub/ovirt-3.6-pre/debian/)` binary/&#x000A;</code></pre></div>
+<p>under /etc/apt/sources.list Than $ sudo apt-get update $ sudo apt-get install vdsm to install vdsm</p>
+
+<h2 id="dependency-packages">Dependency Packages</h2>
+
+<ul>
+  <li>python-cpopen - Creates a subprocess in simpler safer manner
+    <ul>
+      <li>Currently not available in Debian</li>
+      <li>Here we have a patch to package it for Debian <a href="http://gerrit.ovirt.org/#/c/37926/">http://gerrit.ovirt.org/#/c/37926/</a></li>
+      <li>Here the corresponding ITP <a href="https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1302660.html">https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1302660.html</a></li>
+    </ul>
+  </li>
+  <li>python-pthreading - Reimplement threading.Lock, RLock and Condition with libpthr
+    <ul>
+      <li>Currently not available in Debian</li>
+      <li>Here we have a patch to package it for Debian <a href="http://gerrit.ovirt.org/#/c/37916/">http://gerrit.ovirt.org/#/c/37916/</a></li>
+      <li>Here the corresponding ITP <a href="https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1302710.html">https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1302710.html</a></li>
+    </ul>
+  </li>
+  <li>python-ioprocess - Slave process for safe IO on linux
+    <ul>
+      <li>Currently not available in Debian</li>
+      <li>Here we have a patch to package it for Debian <a href="http://gerrit.ovirt.org/#/c/38074/">http://gerrit.ovirt.org/#/c/38074/</a></li>
+      <li>previously packed by evilissimo</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="open-issue">Open Issue</h2>
+
+<p>VDSM is relaying on a custom release of M2Crypto python libraries. M2Crypto is an OpenSSL wrapper. Upstream release of M2Crypto is available here: <a href="https://github.com/M2Crypto/M2Crypto/">https://github.com/M2Crypto/M2Crypto/</a></p>
+
+<p>Fedora release (and derivate including RHEL and Centos) includes some additional patches, in particular one to properly work with SSL timeouts: <a href="http://pkgs.fedoraproject.org/cgit/m2crypto.git/tree/m2crypto-0.21.1-timeouts.patch">http://pkgs.fedoraproject.org/cgit/m2crypto.git/tree/m2crypto-0.21.1-timeouts.patch</a> The path was submitted for upstream but never merged cause not compatible with Windows.</p>
+
+<p>VDSM needs that for SSL communication; an attempt to have a path to avoid it was done here <a href="http://gerrit.ovirt.org/#/c/37746/">http://gerrit.ovirt.org/#/c/37746/</a> but it was not enough to pass SSL unit tests.</p>
+
+<p>The bug is tracked here: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1192496">https://bugzilla.redhat.com/show_bug.cgi?id=1192496</a> I asked to the M2Crypto upstream maintainer about the process to have the patch merged but it's quite a long process and we need to ensure it works on every platform. One possible alternative is repackaging M2Crypto for Debian in a custom version with the timeout patch requiring it instead of the vanilla one for VDSM. Apply:</p>
+
+<ol>
+  <li><a href="http://pkgs.fedoraproject.org/cgit/m2crypto.git/tree/m2crypto-0.21.1-timeouts.patch">http://pkgs.fedoraproject.org/cgit/m2crypto.git/tree/m2crypto-0.21.1-timeouts.patch</a></li>
+  <li><a href="http://pkgs.fedoraproject.org/cgit/m2crypto.git/tree/m2crypto-0.21.1-memoryview.patch">http://pkgs.fedoraproject.org/cgit/m2crypto.git/tree/m2crypto-0.21.1-memoryview.patch</a></li>
+</ol>
+
+<p>and rebuilding it starting from &lt;git://anonscm.debian.org/collab-maint/m2crypto&gt;</p>
+
+<p>Applying the two patches seams to be enough to pass most of SSL unit tests. Still an open issue on sslTests.VerifyingTransportTests</p>
+
+<p>To complete some unit tests, VDSM is looking for /etc/pki/vdsm/keys/libvirt_password which of course doesn't exists prior of VDSM installation. Creating that file with the right content seams to be enough to pass that tests.</p>
+
+<h2 id="current-results">Current results</h2>
+
+<p>VDSM building process is running 915 unit tests skipping 20 of them and getting errors on 1. Here a build log with the open errors: <a href="http://fpaste.org/189250/">http://fpaste.org/189250/</a></p>
+
+<h2 id="todo">TODO</h2>
+
+<ul>
+  <li>Successfully pass each unit test on Debian</li>
+  <li>Add CI jobs to keep it nigtly-builded</li>
+  <li>start testing activities of hosts</li>
+</ul>
+
+<h1 id="existing-efforts">Existing Efforts</h1>
+
+<ul>
+  <li><a href="/develop/developer-guide/ubuntu/">Ovirt build on debian/ubuntu</a></li>
+  <li><a href="/develop/developer-guide/porting-ovirt/">Porting oVirt</a></li>
+  <li><a href="/develop/developer-guide/vdsm/on-ubuntu/">VDSM_on_Ubuntu</a></li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/on-debian.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/on-debian.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

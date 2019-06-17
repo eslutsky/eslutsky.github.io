@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Gerrit server backup &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gerrit-server-backup">Gerrit server backup</h1>
+
+<p><strong>Goal: create a cronjob that sends a tar backup of Gerrit.</strong></p>
+
+<h2 id="on-linode01ovirtorg">On linode01.ovirt.org</h2>
+
+<ul>
+  <li>Create Gerrit backup user, saving the password in <em>/root/passwords</em>:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>useradd gerrit-backup&#x000A;passwd gerrit-backup&#x000A;</code></pre></div>
+<ul>
+  <li>Create SSH key structure:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>touch /home/gerrit-backup/.ssh/authorized_keys&#x000A;vi /home/gerrit-backup/.ssh/authorized_keys # add id_rsa.pub contents&#x000A;chmod 644 /home/gerrit-backup/.ssh/authorized_keys &#x000A;chmod 700 /home/gerrit-backup/.ssh/&#x000A;</code></pre></div>
+<ul>
+  <li>Create backup directory and sub-dir tree:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>mkdir -p /home/gerrit-backup/backup/src&#x000A;</code></pre></div>
+<h2 id="on-gerritovirtorg">On gerrit.ovirt.org</h2>
+
+<h3 id="backup-git-source-directories">Backup git source directories</h3>
+
+<ul>
+  <li>Switch to the Gerrit user:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>su - gerrit2&#x000A;</code></pre></div>
+<ul>
+  <li>Create an SSH key without a passphrase, then copy the public key for the <em>authorized_keys</em> file on the remote host:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>ssh-keygen # set no passphrase&#x000A;cat .ssh/id_rsa.pub&#x000A;</code></pre></div>
+<ul>
+  <li>Prepare backup script:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>mkdir /home/gerrit2/bin&#x000A;vi bin/gerrit-backup.sh&#x000A;</code></pre></div>
+<ul>
+  <li>Bash script to remotely backup git repository directories using rsync over ssh:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c">#!/bin/bash</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># Gerrit backup script - git source backup</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># 0.1 Alpha - 20111207 Karsten Wade &lt;kwade@redhat.com&gt; &lt;quaid@iquaid.org&gt;</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># Copyright 2011 Karsten Wade &lt;kwade@redhat.com&gt; &lt;quaid@iquaid.org&gt;</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c">#   Licensed under the Apache License, Version 2.0 (the "License");</span>&#x000A;<span class="c">#   you may not use this file except in compliance with the License.</span>&#x000A;<span class="c">#   You may obtain a copy of the License at</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># http://www.apache.org/licenses/LICENSE-2.0</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c">#   Unless required by applicable law or agreed to in writing, software</span>&#x000A;<span class="c">#   distributed under the License is distributed on an "AS IS" BASIS,</span>&#x000A;<span class="c">#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>&#x000A;<span class="c">#   See the License for the specific language governing permissions and</span>&#x000A;<span class="c">#   limitations under the License.</span>&#x000A;<span class="c">#</span>&#x000A;&#x000A;<span class="c"># Set variables</span>&#x000A;<span class="nv">RSYNC</span><span class="o">=</span><span class="s2">"/usr/bin/rsync"</span>&#x000A;<span class="nv">RSYNCOPTS</span><span class="o">=</span><span class="s2">"-az -e"</span>&#x000A;<span class="nv">SSH</span><span class="o">=</span><span class="s2">"/usr/bin/ssh"</span>&#x000A;<span class="nv">GITSRC</span><span class="o">=</span><span class="s2">"/usr/local/src/git/"</span>&#x000A;<span class="nv">REMOTEUSER</span><span class="o">=</span><span class="s2">"gerrit-backup"</span>&#x000A;<span class="nv">REMOTEHOST</span><span class="o">=</span><span class="s2">"ovirt.org"</span>&#x000A;<span class="nv">REMOTEDIR</span><span class="o">=</span><span class="s2">"gerrit.ovirt.org-src-backup/src/"</span>&#x000A;&#x000A;<span class="c"># Run backup - rsync local git source to remote backup directory</span>&#x000A;<span class="c"># Note: gerrit user has sshkeys with no passphrase</span>&#x000A;<span class="nv">$RSYNC</span> <span class="nv">$RSYNCOPTS</span> <span class="nv">$SSH</span> <span class="nv">$GITSRC</span> <span class="nv">$REMOTEUSER</span>@<span class="nv">$REMOTEHOST</span>:<span class="nv">$REMOTEDIR</span>&#x000A;</code></pre></div>
+<ul>
+  <li>Make script executable:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>chmod 700 bin/gerrit-backup.sh&#x000A;</code></pre></div>
+<ul>
+  <li>Make cronjob run every day at 2200 EST</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>crontab -e&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <ul>
+      <li>Contents of user's <em>crontab</em>:</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code># mail all output to root&#x000A;MAILTO=root&#x000A;# Run at 2200 (10 pm) system time every day&#x000A;0 22 * * *     $HOME/bin/gerrit-backup.sh&#x000A;# Run database backup at 2220 (10:20 pm) system time every day&#x000A;20 22 * * *    $HOME/bin/gerrit-database-backup.sh&#x000A;# Run backup of /home/gerrit2 at 2240 (10:30 pm) system time every day&#x000A;40 22 * * *    $HOME/bin/gerrit-gerrit2-home-backup.sh&#x000A;</code></pre></div>
+<h3 id="backup-gerrit-database">Backup Gerrit database</h3>
+
+<ul>
+  <li>Add this backup script to the <em>gerrit2</em> user's crontab:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c">#!/bin/bash</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># Gerrit backup script - database backup</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># 0.1 Alpha - 20111207 Karsten Wade &lt;kwade@redhat.com&gt; &lt;quaid@iquaid.org&gt;</span>&#x000A;<span class="c"># </span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># Copyright 2011 Karsten Wade &lt;kwade@redhat.com&gt; &lt;quaid@iquaid.org&gt;</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c">#   Licensed under the Apache License, Version 2.0 (the "License");</span>&#x000A;<span class="c">#   you may not use this file except in compliance with the License.</span>&#x000A;<span class="c">#   You may obtain a copy of the License at</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># http://www.apache.org/licenses/LICENSE-2.0</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c">#   Unless required by applicable law or agreed to in writing, software</span>&#x000A;<span class="c">#   distributed under the License is distributed on an "AS IS" BASIS,</span>&#x000A;<span class="c">#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>&#x000A;<span class="c">#   See the License for the specific language governing permissions and</span>&#x000A;<span class="c">#   limitations under the License.</span>&#x000A;<span class="c">#</span>&#x000A;&#x000A;<span class="c"># set variables</span>&#x000A;<span class="nv">SU</span><span class="o">=</span><span class="s2">"/bin/su"</span>&#x000A;<span class="nv">SCP</span><span class="o">=</span><span class="s2">"/usr/bin/scp"</span>&#x000A;<span class="nv">TAR</span><span class="o">=</span><span class="s2">"/bin/tar"</span>&#x000A;<span class="nv">TAROPTS</span><span class="o">=</span><span class="s2">"-czf"</span>&#x000A;<span class="nv">HOME</span><span class="o">=</span><span class="s2">"/home/gerrit2/"</span>&#x000A;<span class="nv">PGDUMP</span><span class="o">=</span><span class="s2">"/usr/bin/pg_dump"</span>&#x000A;<span class="nv">PGUSER</span><span class="o">=</span><span class="s2">"gerrit2"</span>&#x000A;<span class="nv">PGHOST</span><span class="o">=</span><span class="s2">"localhost"</span>&#x000A;<span class="c"># PGPORT=""</span>&#x000A;<span class="c"># The -w directive stops a password request, the ~/.pgpass file provides the password</span>&#x000A;<span class="nv">PGOPTS</span><span class="o">=</span><span class="s2">"-w"</span>&#x000A;<span class="nv">DATE</span><span class="o">=</span><span class="sb">`</span>/bin/date +%Y%m%d<span class="sb">`</span>&#x000A;<span class="nv">DBNAME</span><span class="o">=</span><span class="s2">"reviewdb"</span>&#x000A;<span class="nv">BACKUPDIR</span><span class="o">=</span><span class="s2">"/home/gerrit2/backups/database"</span>&#x000A;<span class="nv">BACKUPFILE</span><span class="o">=</span><span class="s2">"gerrit-pg-dump"</span>&#x000A;<span class="nv">REMOTEHOST</span><span class="o">=</span><span class="s2">"ovirt.org"</span>&#x000A;<span class="nv">REMOTEUSER</span><span class="o">=</span><span class="s2">"gerrit-backup"</span>&#x000A;<span class="nv">REMOTEDIR</span><span class="o">=</span><span class="s2">"gerrit.ovirt.org-database-backup"</span>&#x000A;&#x000A;<span class="c">## Run backup</span>&#x000A;<span class="c"># Switch to the Gerrit user - useful if root runs the script</span>&#x000A;<span class="c">#$SU - $PGUSER</span>&#x000A;<span class="c"># The gerrit2 user should change to the home directory</span>&#x000A;<span class="nb">cd</span> <span class="nv">$HOME</span>&#x000A;<span class="c"># Dump the database to a SQL script file with a dated filename</span>&#x000A;<span class="nv">$PGDUMP</span> <span class="nv">$PGOPTS</span> <span class="nv">$DBNAME</span> <span class="o">&gt;</span> <span class="nv">$BACKUPDIR</span>/<span class="nv">$BACKUPFILE</span>-<span class="nv">$DATE</span>.sql&#x000A;<span class="c"># Compress the SQL script</span>&#x000A;<span class="nv">$TAR</span> <span class="nv">$TAROPTS</span> <span class="nv">$BACKUPDIR</span>/<span class="nv">$BACKUPFILE</span>-<span class="nv">$DATE</span>.tgz <span class="nv">$BACKUPDIR</span>/<span class="nv">$BACKUPFILE</span>-<span class="nv">$DATE</span>.sql&#x000A;<span class="c"># Securely copy the SQL script to a remote backup host</span>&#x000A;<span class="nv">$SCP</span> <span class="nv">$BACKUPDIR</span>/<span class="nv">$BACKUPFILE</span>-<span class="nv">$DATE</span>.tgz <span class="nv">$REMOTEUSER</span>@<span class="nv">$REMOTEHOST</span>:<span class="nv">$REMOTEDIR</span>/&#x000A;</code></pre></div>
+<h3 id="backup-gerrit2-user-home-directory">Backup gerrit2 user home directory</h3>
+
+<ul>
+  <li>Add this backup script to the <em>gerrit2</em> user's crontab:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c">#!/bin/bash</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># Gerrit backup script - gerrit2 user home backup</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># 0.1 Alpha - 20111208 Karsten Wade &lt;kwade@redhat.com&gt; &lt;quaid@iquaid.org&gt;</span>&#x000A;<span class="c"># </span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># Copyright 2011 Karsten Wade &lt;kwade@redhat.com&gt; &lt;quaid@iquaid.org&gt;</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c">#   Licensed under the Apache License, Version 2.0 (the "License");</span>&#x000A;<span class="c">#   you may not use this file except in compliance with the License.</span>&#x000A;<span class="c">#   You may obtain a copy of the License at</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c"># http://www.apache.org/licenses/LICENSE-2.0</span>&#x000A;<span class="c">#</span>&#x000A;<span class="c">#   Unless required by applicable law or agreed to in writing, software</span>&#x000A;<span class="c">#   distributed under the License is distributed on an "AS IS" BASIS,</span>&#x000A;<span class="c">#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>&#x000A;<span class="c">#   See the License for the specific language governing permissions and</span>&#x000A;<span class="c">#   limitations under the License.</span>&#x000A;<span class="c">#</span>&#x000A;&#x000A;<span class="c"># set variables</span>&#x000A;<span class="nv">SCP</span><span class="o">=</span><span class="s2">"/usr/bin/scp"</span>&#x000A;<span class="nv">TAR</span><span class="o">=</span><span class="s2">"/bin/tar"</span>&#x000A;<span class="nv">TAROPTS</span><span class="o">=</span><span class="s2">"-czf"</span>&#x000A;<span class="c"># Follwing variable doesn't work, probably due to a bash expansion order</span>&#x000A;<span class="nv">TAREXCLUDE</span><span class="o">=</span><span class="s2">"--exclude='/home/gerrit2/backups*'"</span>&#x000A;<span class="nv">HOME</span><span class="o">=</span><span class="s2">"/home/gerrit2/"</span>&#x000A;<span class="nv">DATE</span><span class="o">=</span><span class="sb">`</span>/bin/date +%Y%m%d<span class="sb">`</span>&#x000A;<span class="nv">BACKUPDIR</span><span class="o">=</span><span class="s2">"/home/gerrit2/backups/gerrit2-home/"</span>&#x000A;<span class="nv">BACKUPFILE</span><span class="o">=</span><span class="s2">"gerrit-gerrit2-home-backup"</span>&#x000A;<span class="nv">BACKUPTARGET</span><span class="o">=</span><span class="s2">"/home/gerrit2"</span>&#x000A;<span class="nv">REMOTEHOST</span><span class="o">=</span><span class="s2">"ovirt.org"</span>&#x000A;<span class="nv">REMOTEUSER</span><span class="o">=</span><span class="s2">"gerrit-backup"</span>&#x000A;<span class="nv">REMOTEDIR</span><span class="o">=</span><span class="s2">"gerrit.ovirt.org-gerrit2-home-backup/"</span>&#x000A;&#x000A;<span class="c">## Run backup</span>&#x000A;<span class="c"># Switch to the Gerrit user - useful if root runs the script</span>&#x000A;<span class="c">#$SU - $PGUSER</span>&#x000A;<span class="c"># The gerrit2 user should change to the home directory</span>&#x000A;<span class="nb">cd</span> <span class="nv">$HOME</span>&#x000A;<span class="c"># Compress the home directory</span>&#x000A;<span class="nv">$TAR</span> <span class="nv">$TAROPTS</span> <span class="nv">$BACKUPDIR</span>/<span class="nv">$BACKUPFILE</span>-<span class="nv">$DATE</span>.tgz <span class="nv">$BACKUPTARGET</span> <span class="nt">--exclude</span><span class="o">=</span><span class="s1">'/home/gerrit2/backups*'</span>&#x000A;<span class="c"># Securely copy the compressed archive to a remote backup host</span>&#x000A;<span class="nv">$SCP</span> <span class="nv">$BACKUPDIR</span>/<span class="nv">$BACKUPFILE</span>-<span class="nv">$DATE</span>.tgz <span class="nv">$REMOTEUSER</span>@<span class="nv">$REMOTEHOST</span>:<span class="nv">$REMOTEDIR</span>&#x000A;</code></pre></div>
+<h3 id="resources">Resources</h3>
+
+<ul>
+  <li><a href="http://www.postgresql.org/docs/8.4/static/backup-dump.html">http://www.postgresql.org/docs/8.4/static/backup-dump.html</a></li>
+  <li><a href="http://www.postgresql.org/docs/8.4/static/libpq-pgpass.html">http://www.postgresql.org/docs/8.4/static/libpq-pgpass.html</a></li>
+</ul>
+
+<p><a href="/develop/infra/infrastructure-documentation/">Category:Infrastructure documentation</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/gerrit-server-backup.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/gerrit-server-backup.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

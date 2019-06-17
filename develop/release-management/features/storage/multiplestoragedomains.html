@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Multiple storage domains &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="design-for-multiple-storage-domains">Design for multiple storage domains</h1>
+
+<h3 id="multiple-storage-domains">Multiple Storage Domains</h3>
+
+<h2 id="user-stories">User Stories</h2>
+
+<ul>
+  <li><strong>Add VM</strong> - As a RHEV-M user, when I create a VM using the GUI/REST API, I want to be able to select different storage domains for each disk in the VM so that I can make efficient use of my storage. I know the feature works when I can create a VM with 3 disks each on different storage domains.</li>
+  <li><strong>Import VM</strong> - As a RHEV-M user, when I import a VM using the GUI/REST API, I want to be able to select different storage domains for each disk in the VM so that I can make efficient use of my storage. I know the feature works when I can import a VM with 3 disks each on different storage domains.</li>
+  <li><strong>Add Disk to VM</strong> - As a RHEV-M user, when I add a disk to a VM using the GUI/REST API, I can select which storage domain to associate with it so that I can make more efficient use of my storage. I know the feature works when I can add a disk to a VM and put it on a storage domain not already in use by the VM.</li>
+  <li><strong>Import VM template</strong> - As a RHEV-M user, when I import a VM template using the GUI/REST API, I want to be able to select different storage domains for each disk in the template so that I can make efficient use of my storage. I know the feature works when I can import a template with 3 disks each on different storage domains.</li>
+  <li><strong>Move Disk</strong> - As a RHEV-M user, I want to be able to use the GUI/REST API to move a disk from one storage domain to another so that I can make efficient use of my storage. I know the feature works when I can move a disk to an existing storage domain not already in use by the VM.</li>
+  <li><strong>Create VM from template</strong> - As a RHEV-M user, I want to be able to use the GUI/REST API to create a VM from a template and be able to specify on which storage domain each disk should be created. I know the feature works when I can create a VM from a template that has 3 disks and I can put each disk on a separate storage domain.</li>
+  <li><strong>Create Template from VM</strong> - As a RHEV-M user, I want to be able to use the GUI/REST API to create a template from a VM and be able to specify which storage domain should hold its disks. I know the feature works when I can create a template on a different storage domain than the one the VM resides on.</li>
+  <li><strong>Clone Template</strong> - As a RHEV-M user, I want to be able to use the GUI/REST API to clone a template and be able to specify which storage domain should hold its disks. I know the feature works when I can clone a template on a different storage domain than the one the source template resides on.</li>
+</ul>
+
+<h2 id="acceptance-tests">Acceptance Tests</h2>
+
+<p>Will be based on the "I know the feature works…" in the user stories.</p>
+
+<h3 id="additional-functionality-to-verify">Additional functionality to verify</h3>
+
+<ul>
+  <li>create snapshots</li>
+  <li>delete disk</li>
+  <li>delete VM</li>
+  <li>start VM</li>
+  <li>hibernate VM</li>
+</ul>
+
+<h2 id="overall-design">Overall design</h2>
+
+<p>The main change that needs to happen is to have each image associated with its own storage domain.</p>
+
+<h3 id="gui">GUI</h3>
+
+<h4 id="general-changes">General Changes</h4>
+
+<h5 id="virtual-machines-tab">Virtual Machines Tab</h5>
+
+<ul>
+  <li>The Virtual Disks tab need to have a Storage Domain column added</li>
+</ul>
+
+<h5 id="storage-tab">Storage Tab</h5>
+
+<ul>
+  <li>The Virtual Machines tab need to have some columns removed</li>
+  <li>There needs to be a new tab for Virtual Disks so that users can view which disks are on which domains.</li>
+</ul>
+
+<h4 id="workflow-changes">Workflow Changes</h4>
+
+<ul>
+  <li>Add a VM</li>
+  <li>Import a VM</li>
+  <li>Add Disk to VM</li>
+  <li>Import VM Template</li>
+  <li>Move Disk</li>
+  <li>Create VM from Template</li>
+  <li>Create template from VM</li>
+  <li>Clone template</li>
+</ul>
+
+<h5 id="user-experience">User Experience</h5>
+
+<p>The following UI mockups contain guidelines for the different screens and wizards:</p>
+
+<p><img alt="" width="1023" height="590" src="/images/wiki/VM_from_template_single.png?1560777612" /></p>
+
+<p><img alt="" width="1023" height="590" src="/images/wiki/VM_from_template_multi.png?1560777612" /></p>
+
+<p><img alt="" width="728" height="467" src="/images/wiki/import_vm_single.png?1560777612" /></p>
+
+<p><img alt="" width="728" height="467" src="/images/wiki/import_vm_multi.png?1560777612" /></p>
+
+<p><img alt="" width="729" height="468" src="/images/wiki/import_template_single.png?1560777612" /></p>
+
+<p><img alt="" width="729" height="468" src="/images/wiki/import_template_multi.png?1560777612" /></p>
+
+<p><img alt="" width="811" height="522" src="/images/wiki/disks_subtab.png?1560777612" /></p>
+
+<p><img alt="" width="1048" height="240" src="/images/wiki/new_move_disk_dialog.png?1560777612" /></p>
+
+<p><img alt="" width="1023" height="590" src="/images/wiki/storage_vms_subtab.png?1560777612" /></p>
+
+<p><img alt="" width="472" height="557" src="/images/wiki/new_template.png?1560777612" /></p>
+
+<p><img alt="" width="812" height="522" src="/images/wiki/templates_storage_subtab.png?1560777612" /></p>
+
+<p><img alt="" width="812" height="522" src="/images/wiki/templates_vms_subtab.png?1560777612" /></p>
+
+<h3 id="rest-design-modeling">REST Design (Modeling)</h3>
+
+<p>This section describes the REST design for this feature.</p>
+
+<ul>
+  <li>Add a VM</li>
+  <li>Import a VM</li>
+  <li>Add Disk to VM</li>
+  <li>Import VM Template</li>
+  <li>Move Disk</li>
+  <li>Create VM from Template</li>
+  <li>Create template from VM</li>
+  <li>Clone template</li>
+</ul>
+
+<p>The changes will be done at java code, by processing passed parameters from client</p>
+
+<h3 id="backend">Backend</h3>
+
+<p>There should not be any changes to the database or the object model to support this feature. Many of the command classes will need their logic changes to handle processing each disk individually by their storage domain instead of handling them all at once.</p>
+
+<h2 id="vdsm">VDSM</h2>
+
+<p>Vdsm already supports this feature; it has no limitation on the location of disk images. Any storage domain for any VM disk will do.</p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<ol>
+  <li>Need to consider negative cases when some storage domains fail, etc.</li>
+  <li>Need to determine which flows will need additional transactionality due to multiple storage domains.</li>
+  <li>Need to figure out how hibernation will work</li>
+</ol>
+
+<h2 id="known-issues--risks">Known Issues / Risks</h2>
+
+<p>Being developed in parallel with quotas. Can't anticipate changes needed to work with quotas.</p>
+
+<h2 id="needed-documentation">Needed documentation</h2>
+
+<p>The docs will need to be updated with new screenshots showing adding a disk to a VM and selecting the storage domain there.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/multiplestoragedomains.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/multiplestoragedomains.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 8 Nov 2017 07:10 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

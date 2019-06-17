@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+MultiHostNetworkConfiguration &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h2 id="multi-host-network-configuration">Multi-Host Network Configuration</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>The feature allows the administrator to modify a network (i.e. vlan-id, mtu) which is already provisioned by the hosts and to apply the network changes to all of the hosts within the data-center to which the network is assigned.
+The feature will be enabled for 3.1 data-centers and above, regardless cluster level in order to avoid inconsistency between hosts network configuration in various clusters.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Moti Asayag</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Ready</li>
+  <li>Planned for ovirt-engine-3.4</li>
+  <li>Last updated on – by</li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>Having this feature simplifies significantly the maintenance of hosts within the system:
+It reduces the amount of actions required to reflect a logical network definition change by the administrator (a single 'Setup Network' action per host).
+In addition, the feature reduces the risk of having hosts network configuration not synchronized with the logical network definition.</p>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h4 id="phase-1">Phase 1</h4>
+
+<p>Updating a network will trigger sync the change to all of the hosts: The 'UpdateNetworkCommand' will be changed to a non-transactive. Its execution will be consisted of 2 steps:</p>
+<h1 id="updating-the-network-logical-definition-on-the-db-and-handles-vnic-profile-accordingly-remove-all-if-network-changed-to-non-vm-network-will-run-in-a-new-transaction-scope">Updating the network logical definition on the DB and handles vnic profile accordingly (remove all if network changed to non-vm network) will run in a new transaction scope.</h1>
+
+<ol>
+  <li>Applying the network changes by executing a 'setup networks' command for each host which the network is assigned to.</li>
+  <li>Save the network changes to the host upon a successful 'setup networks'</li>
+</ol>
+
+<p>The Setup Networks command will use the 'sync network' for the modified network.
+A dedicated multiple action runner will be added to run the 'Setup Networks' commands in parallel.
+Currently, Updating the network is blocked for network which is used by VMs. As part of the feature we should permit the change in these cases:</p>
+
+<ul>
+  <li>Networks that aren't used by VMs</li>
+  <li>No running VMs using the network and the change doesn't include modifying a VM network to a non-VM network.</li>
+</ul>
+
+<p>The feature will be enabled only for 3.1 data-center and above since it relies on the 'Setup Networks' which was introduced in 3.1. Renaming of network which is used by the hosts, vms or templates will be blocked, since it will make the network on hosts as "unmanaged" and leave the vm/templates without a required network.</p>
+
+<ol>
+  <li>This will revert the fix for bug <a href="https://bugzilla.redhat.com/show_bug.cgi?id=909820">Don't block removing/updating network "used" by host</a></li>
+  <li>The user should create a new network instead of renaming a used network.</li>
+</ol>
+
+<h4 id="phase-2">Phase 2</h4>
+
+<ol>
+  <li>The same behaviour will be added to 'Remove Network' action as well in a similar manner:
+    <ul>
+      <li>Removing a network from the system will attempt to remove it from all of the hosts it is defined on.</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="user-experience">User Experience</h4>
+
+<p>The 'Edit Network' action will attempt to configure the network on all of the eligible hosts. No changes are required to the UI.</p>
+
+<h4 id="rest">REST</h4>
+
+<p>No changes are required to the api.</p>
+
+<h4 id="events">Events</h4>
+
+<p>The following events will be logged for the command when applied to all hosts:</p>
+
+<ol>
+  <li>For partial hosts update: "${TotalUpdatedHosts} are planned to be updated, however only ${ActualUpdatedHosts} could be updated."</li>
+  <li>If a 'setup networks' action is not supported by data center version: "${Network} network changes will not be applied to data center: ${UnsupportedDCName} due to unsupported data center version."</li>
+  <li>For each host being updated:
+    <ol>
+      <li>"1/3 applying network ${Network} on host ${Host}"</li>
+      <li>"2/3 applying network ${Network} on host ${Host}"</li>
+      <li>"3/3 applying network ${Network} on host ${Host}"</li>
+    </ol>
+  </li>
+</ol>
+
+<p>And for their completion:</p>
+
+<ol>
+  <li>"1/3 network ${Network} were updated on host ${Host}"</li>
+  <li>"2/3 failed to update ${Network} changes on host ${Host} due to: ${Failure}"</li>
+  <li>"3/3 network ${Network} were updated on host ${Host}"</li>
+</ol>
+
+<ul>
+  <li>All the actions should contain the same correlation-id.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>UpdateNetworkCommand can-do-action messages should be modify to reflect the proper message:
+    <ul>
+      <li>Changing A vm network to a non-vm network is not permitted while VMs or templates are using the VM.</li>
+      <li>Changing A vm network properties while running VMs are using it is not permitted.</li>
+      <li>Renaming a network which is configured on hosts is not supported.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p>The feature is purely engine-side related. It doesn't depended on any other package.
+A reuse of a mass-operations on host should be consider for network labels.</p>
+
+<h3 id="testing">Testing</h3>
+
+<p>To test the feature, a setup should include at least one host within the data-center having a network 'red' attached to on of its interfaces.</p>
+
+<ol>
+  <li>Edit the logical network definition of network 'red' (i.e. change vlan-id or any property but its name)</li>
+  <li>Approve the command.</li>
+  <li>Verify network 'red' was modified correctly on the relevant data-center's hosts.</li>
+</ol>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/multihostnetworkconfiguration.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/multihostnetworkconfiguration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+InClusterUpgrade &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="inclusterupgrade">InClusterUpgrade</h1>
+
+<ul>
+  <li>Owner: Roman Mohr</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#109;&#111;&#104;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#114;&#109;&#111;&#104;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Bugzilla: <a href="//bugzilla.redhat.com/show_bug.cgi?id=1241149">1241149</a></li>
+</ul>
+
+<h2 id="upgrade-policy">Upgrade policy</h2>
+
+<p>The upgrade flow is centered arount a new cluster upgrade policy called <em>' InClusterPolicy</em>' which consists of the <strong>InClusterUpgradeFilterPolicyUnit</strong> and the <strong>InClusterUpgradeWeightPolicyUnit</strong>. When these two policy units are activated, it should be save to mix different major host OS versions. VMs will only migrate to newer hosts and will not migrate back. To allow the activation of these policy units, some preconditions have to be met which are described later.</p>
+
+<h3 id="filter---inclusterupgradefilterpolicyunit">Filter - InClusterUpgradeFilterPolicyUnit</h3>
+
+<p>The filter is responsible for filtering out all hosts which run older OS versions than the host the VM is currently running on. In other words, the filter forbids downgrades. So a VM which is running on Fedora 22 can migrate to Fedora 22 or Fedora 23 but not to Fedora 21. Once it is on a Fedora 23 host, only other Fedora 23 hosts are viable targets. When a VM was shut down, it can start on any host in the cluster.</p>
+
+<h3 id="weight---inclusterupgradeweightpolicyunit">Weight - InClusterUpgradeWeightPolicyUnit</h3>
+
+<p>The weight policy unit gives an OS which is newer than the OS where the VM is currently running on no penalty. It penalizes OS versions significantly which are running the same OS versions. Finally older OS versions are penalized even more. The policy makes sure that hosts with newer major versions of an OS will be preferred when a VM is migrating or started.</p>
+
+<h2 id="overview-of-activated-and-deactivated-features">Overview of activated and deactivated features</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>PolicyUnit</th>
+      <th>Considerations</th>
+      <th>UUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EmulatedMachineFilter</td>
+      <td>keep</td>
+      <td>Has no fixed uuid</td>
+    </tr>
+    <tr>
+      <td>NoneBalance</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>EvenDistributionBalance</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HaReservationWeight</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PowerSavingWeight</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>EvenDistributionWeight</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HostedEngineHAClusterFilter</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HaReservationBalance</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>CpuAndMemoryBalancing</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PowerSavingBalance</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>EvenGuestDistributionWeight</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Network</td>
+      <td>keep?</td>
+      <td>72163d1c-9468-4480-99d9-0888664eb143</td>
+    </tr>
+    <tr>
+      <td>EvenGuestDistributionBalance</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HostedEngineHAClusterWeight</td>
+      <td>disabled, HE is out of scope</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Migration</td>
+      <td>keep</td>
+      <td>e659c871-0bf1-4ccc-b748-f28f5d08ddda</td>
+    </tr>
+    <tr>
+      <td>NoneWeight</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Memory</td>
+      <td>keep</td>
+      <td>c9ddbb34-0e1d-4061-a8d7-b0893fa80932</td>
+    </tr>
+    <tr>
+      <td>CPU</td>
+      <td>keep</td>
+      <td>6d636bf6-a35c-4f9d-b68d-0731f720cddc</td>
+    </tr>
+    <tr>
+      <td>VmAffinityFilter</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>VmAffinityWeight</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>PinToHost</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>HostDeviceFilter</td>
+      <td>disabled</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>CpuLevelFilter</td>
+      <td>keep</td>
+      <td>438b052c-90ab-40e8-9be0-a22560202ea6</td>
+    </tr>
+    <tr>
+      <td>CpuPinningPolicy</td>
+      <td>disabled (not yet merged)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>NumaPinningPolicy</td>
+      <td>disabled (not yet merged)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>InClusterUpgradeFilter</td>
+      <td>mandatory</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>InClusterUpgradeWeight</td>
+      <td>mandatory</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="preconditions-to-allow-policy-activation">Preconditions to allow policy activation</h3>
+
+<ul>
+  <li>No suspended VMs are allowed in the cluster</li>
+  <li>No CPU pinning on any VM in the cluster</li>
+  <li>No NUMA pinning on any VM in the cluster</li>
+  <li>No preferred hosts with migration strategy "No migrations allowed" on any VM in the cluster</li>
+  <li>No PCI pass through on any VM in the cluster</li>
+</ul>
+
+<h3 id="limitations-during-upgrade">Limitations during upgrade</h3>
+
+<ul>
+  <li>Suspending VMs is forbidden</li>
+  <li>HA reservation for VMs is disabled. But the engine will still try to restart HA VMs if they are failing</li>
+  <li>Affinity Groups will not be respected. After the upgrade is done the Affiniy Rules Enforcement Manager will reestablish them</li>
+  <li>No load balancing will happen</li>
+  <li>Migrating a VM back to an older OS version is not possible during upgrade. To run a VM on an older host OS, the VM hast to be stopped first.</li>
+</ul>
+
+<p>Since affinity will be ignored through the upgrade process, the affinity rules enforcement manager will be disabled.</p>
+
+<h2 id="upgrade-flow-from-35-to-36">Upgrade Flow from 3.5 to 3.6</h2>
+
+<ol>
+  <li>Enable the upgrade mode with <code>engine-config -s CheckMixedRhelVersions=false --cver=3.5</code> (This allows to set the InClusterUpgrade policy).</li>
+  <li>Restart the engine</li>
+  <li>Set the InClusterUpgrade Policy on the desired cluster (this allows mixing different major host OS versions)
+    <ol>
+      <li>When saving this cluster configuration change a lot of checks are happening. They are making sure that all preconditions as described above are met</li>
+      <li>If setting the policy fails, resolve the mentioned issue and try again</li>
+    </ol>
+  </li>
+  <li>Move a host X to maintenance (If this is the 2nd+ host some VMs will move to el7 machines)
+    <ol>
+      <li>If needed, pre-migrate VMs manually as a precaution</li>
+    </ol>
+  </li>
+  <li>Upgrade host in place (fedup style) to el7 and reboot to get the new kernel or just install a new image</li>
+  <li>Activate (fedup) or Reinstall (new image) the host in the engine (should move to ‘up’).</li>
+  <li>Go to step 4 until all hosts upgraded for this cluster and then reset the scheduling policy.</li>
+  <li>Increase cluster level to 3.6.</li>
+  <li>Go to step 3 and repeat for all clusters.</li>
+  <li>Disable the config from step 1 with <code>engine-config -s CheckMixedRhelVersions=true --cver=3.5</code>.</li>
+  <li>Restart the engine</li>
+</ol>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/inclusterupgrade.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/inclusterupgrade.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 15:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

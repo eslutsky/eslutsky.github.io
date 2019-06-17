@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Affinity Labels Management via the Administration Portal &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="affinity-labels-management-via-the-administration-portal">Affinity Labels Management via the Administration Portal</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Provide affinity label management within the the administration portal UI.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Owner: Phillip Bailey</li>
+  <li>Email: phbailey@redhat.com</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p><a href="/documentation/sla/affinity-labels">Affinity labels</a> were introduced in version 4.0, but could only be managed via the REST API. This feature allows users to manage their labels without ever leaving the the administration portal UI.</p>
+
+<h3 id="affinity-label-detail-tabs">Affinity Label Detail Tabs</h3>
+
+<p>An affinity labels detail tab has been added to the clusters, virtual machines, and hosts main views. They can be accessed by clicking on the name of any entity from the main view and click on "Affinity Labels".</p>
+
+<p>The detail tabs for the virtual machines and hosts main views display the labels that have been assigned to the currently selected entity. For the moment, the clusters detail tab displays all labels in the system. In the future, the plan is to only display labels associated with the selected cluster.</p>
+
+<p><img alt="" width="1914" height="938" src="/images/wiki/affinity-labels-vm-subtab-with-label.png?1560777612" />
+<br /></p>
+
+<h4 id="label-creationmodification">Label Creation/Modification</h4>
+
+<p>Affinity labels can be created and modified from the detail tabs. To create a new affinity label:</p>
+
+<ul>
+  <li>Click the "New" button in the top right corner to open the "New Affinity Label" popup dialog</li>
+  <li>Enter a name for the label in the "Name" field</li>
+  <li>Select the desired VMs and hosts from the drop down menus</li>
+  <li>Click the plus buttons next to the drop downs to add additional VMs and hosts</li>
+  <li>Click "OK"</li>
+</ul>
+
+<p><strong>Note</strong>: If you open the dialog from the detail tabs located in the VM or host main tabs, the currently selected entity will automatically be selected for you.</p>
+
+<p>To edit a label:</p>
+
+<ul>
+  <li>Click on the label you wish to edit</li>
+  <li>Click the "Edit" button in the top right corner to open the "Edit Affinity Label" popup dialog</li>
+  <li>Make the desired changes</li>
+  <li>Click "OK"</li>
+</ul>
+
+<p><img alt="" width="528" height="352" src="/images/wiki/affinity-labels-new-label-popup.png?1560777612" />
+<br /></p>
+
+<h4 id="label-deletion">Label Deletion</h4>
+
+<p>Affinity labels can be deleted from the detail tab associated with the clusters main view. To delete a label:</p>
+
+<ul>
+  <li>Click on the label you wish to delete</li>
+  <li>Click the "Edit" button in the top right corner to open the "Edit Affinity Label" popup dialog</li>
+  <li>Click the minus buttons next to each VM and host entry until they are all removed</li>
+  <li>Click "OK"</li>
+  <li>With the label still selected, click "Delete" in the top right corner</li>
+  <li>Click "OK" on the confirmation popup</li>
+</ul>
+
+<p><strong>Note</strong>: All hosts and VMs must be removed from a label before it can be deleted.</p>
+
+<p><img alt="" width="1910" height="923" src="/images/wiki/affinity-labels-cluster-subtab-with-labels.png?1560777612" />
+<br /></p>
+
+<h3 id="addingremoving-existing-labels">Adding/Removing Existing Labels</h3>
+
+<p>Existing affinity labels can be added to VMs and hosts from the "Affinity Labels" side tab of their respective new/edit popup dialogs.</p>
+
+<p>To locate the affinity labels side tab:</p>
+
+<ul>
+  <li>From the Administration Portal vertical menu, select Compute &gt; Virtual Machines / Hosts</li>
+  <li>Click the "Edit" button in the top right corner to open the respective edit popup dialog</li>
+  <li>Click on "Affinity Labels" at the bottom of the vertical menu</li>
+</ul>
+
+<p>To add a label:</p>
+<ul>
+  <li>Either click the drop down arrow and select one from the list OR</li>
+  <li>Click inside the text box area of the drop down and enter text to filter the list</li>
+  <li>Once you have selected a label, click the "Add" button</li>
+  <li>The label will be added to the list of selected labels located below the drop down menu</li>
+</ul>
+
+<p>To remove a label, simply click the "x" next to the label name in the selected label list.</p>
+
+<p><img alt="" width="966" height="768" src="/images/wiki/affinity-labels-edit-vm-with-label.png?1560777612" />
+<br /></p>
+
+<h2 id="references">References</h2>
+<p>RFE in Bugzilla: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1338799">BZ 1338799</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/affinity-labels-management-via-admin-portal.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/affinity-labels-management-via-admin-portal.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 10 May 2019 13:50 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

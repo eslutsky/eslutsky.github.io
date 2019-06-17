@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+SharedRawDisk &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="shared-raw-disk">Shared Raw Disk</h1>
+
+<h3 id="summary">Summary</h3>
+
+<p>The shared raw disk feature enables to share disks between multiple VMs in the Data Center.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Feature owner: Maor Lipchuk (mlipchuk)</p>
+
+    <ul>
+      <li>
+        <p>GUI Component owner: Daniel Erez (derez)</p>
+      </li>
+      <li>
+        <p>REST Component owner: Michael Pasternak (mpasternak)</p>
+      </li>
+      <li>
+        <p>Engine Component owner: Maor Lipchuk (mlipchuk)</p>
+      </li>
+      <li>
+        <p>QA Owner: Yaniv Kaul (ykaul)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: mlipchuk@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>The shared disk feature should provide the ability to attach a disk to multiple VMs. It is the user's responsibility to make sure that the VMs do not corrupt disk data.
+Users should be able to easily manage disks as standalone entities which are not shared between VMs (see <a href="/develop/release-management/features/storage/floatingdisk/">Features/FloatingDisk</a>),
+ or as entities which are shared between multiple VMs, and be able to switch between the two states. This feature will enable oVirt users to more easily run external cluster applications, or shared data warehouses on VMs.</p>
+
+<h4 id="entity-description">Entity Description</h4>
+
+<h5 id="disk">Disk</h5>
+
+<ul>
+  <li>Disk should have a field indicating whether it is shareable or not.</li>
+</ul>
+
+<h4 id="functionality">Functionality</h4>
+
+<p>General</p>
+
+<ul>
+  <li>Shareable raw disk is configured the same as a regular disk, but with a shareable flag will be marked as true.</li>
+  <li>Currently only raw disks without snapshot can be shareable.</li>
+  <li>Shareable disks are attached with R/W permissions.</li>
+  <li>The synchronization/clustering of data access to shareable disks is the responsibility of the guests. Attaching a shareable disk to non-cluster aware guests will lead to corruption of the data on the disk.</li>
+  <li>When detaching a shareable disk from all VMs in the Data Center. the disk will become 'floating'.</li>
+</ul>
+
+<p>Attach Shareable Disk</p>
+
+<ul>
+  <li>When attaching a shareable disk to a VM, the disk will be logically connected to the VM and will be activated (hot plug VDSM command will be send), if the activation will fail the disk not be activated.</li>
+</ul>
+
+<p>Remove Shareable Disk</p>
+
+<ul>
+  <li>
+    <p>User can remove the shareable raw disk entirely from the setup, whether the disk is inactive in all the VMs which are attached to it, or all the VMs which the disk attached to, are in status down (or any combination of the two).
+ When disk will be removed a warning message should display the user the following message :</p>
+
+    <p>Removing the shareable disk will remove it from all the VMs which are associated with it.</p>
+  </li>
+</ul>
+
+<p>Remove VM</p>
+
+<ul>
+  <li>When VM will be removed the shareable disk will be detached from the VM.</li>
+</ul>
+
+<p>Templates</p>
+
+<ul>
+  <li>When creating a template from a VM which has one or more shareable disks, the creation will of the template will be without the shareable disk.</li>
+  <li>Template disks should not be shareable.</li>
+</ul>
+
+<p>VM pool</p>
+
+<ul>
+  <li>Shareable disk should not be supported with VM from pool, since VM pool is based on a template which does not support shareable disk.</li>
+</ul>
+
+<p>Export/Import</p>
+
+<ul>
+  <li>When exporting a VM which has one or more shareable disks, the VM will be exported without its shareable disks.</li>
+  <li>Exported disks (Whether with VMs or Templates) should not be shareable.</li>
+</ul>
+
+<p>Move disk</p>
+
+<ul>
+  <li>Moving a shareable disk is permitted only when all the attached VMs statuses are down, or all the VMs which the disks are attached to are inactive.</li>
+</ul>
+
+<p>Snapshot</p>
+
+<ul>
+  <li>When taking a vm snapshot, a snapshot of the shareable disk should not be taken and should not be part of the VM snapshot configuration.</li>
+</ul>
+
+<p>Stateless VM</p>
+
+<ul>
+  <li>When running stateless VM, the shareable raw disk will not be handled as stateless, the user should get a warning message indicating that the disk will not be handled as stateless.</li>
+</ul>
+
+<h4 id="user-experience">User Experience</h4>
+
+<ul>
+  <li>Display shareable disk
+    <ul>
+      <li>The shareable disks will be displayed in the 'disks' main tab.</li>
+      <li>The shareable disk details tab will include the number of VMs to which it is connected.</li>
+    </ul>
+  </li>
+  <li>Adding shareable disk
+    <ul>
+      <li>Creating/Editing a shareable disk is available through the new/edit disk dialog from the disks sub tab in the VM main tab.
+ The add/edit disk dialog box will have a check box indicating whether the disk is shareable or not.
+When a user wants to configure a regular disk to be a shareable disk, he will edit the disk and mark the checkbox as shareable.</li>
+      <li>User will also be able to attach/detach a shareable disk through the disks sub tab of the VMs main tab,</li>
+    </ul>
+  </li>
+  <li>Remove shareable disk
+    <ul>
+      <li>User will be able to remove a shareable disk from the disks main tab.</li>
+      <li>When user will try to remove a shareable disk which is attached to only one VM from the disks sub tab, the user will be able to choose whether to remove the disk permanently from the storage or only detach it from the VM.</li>
+      <li>When user will try to remove a shareable disk which is attached to more then one VM from the disks sub tab, the disk should only be detached from the VM, and not removed permanently.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="api">API</h4>
+
+<ul>
+  <li>User can set a disk to be shareable or not through the API, by setting the shareable property in the disk entity appropriately.</li>
+  <li>Shareable disk entity should provide a list of VMs which the disk is associated with (Will be provided soon as disk root rest implementation will be provided).</li>
+</ul>
+
+<h4 id="installationupgrade">Installation/Upgrade</h4>
+
+<ul>
+  <li>
+    <p>Disk name should be generated automatically based on the vm name and disk number in the VM, as follow:
+<code>&lt;VM-name&gt;_&lt;Disk-name&gt;</code> ("&lt;Disk-name" = "Disk" + internal_drive_mapping) . Description will be empty.</p>
+  </li>
+  <li>
+    <p>New disk will present a calculated default disk name which the user can change.</p>
+  </li>
+</ul>
+
+<p>=== User work-flows ===
+<!-- Describe the high-level work-flows relevant to this feature. --></p>
+
+<p>The Administrator Portal should allow the following operations:</p>
+
+<ul>
+  <li>Search should provide the user to view all sharebale raw disks from the disks main tab.</li>
+  <li>Regular disk can become a shareable raw disk, by editing the existing disk and marking the 'shareable' property type.</li>
+  <li>When removing a VM with shareable disks attached to it, the shareable disks will not be removed.</li>
+  <li>If the shareable disk is not attached to any other VMs then it will become a 'floating' disk.</li>
+  <li>Attach/Detach of a shareable disk can be performed only when the VM is in status 'down'.</li>
+</ul>
+
+<p>The Power User Portal should allow the following operations:</p>
+
+<ul>
+  <li>Attach/detach disks to/from a VM.</li>
+  <li>View shareable disks in the Data Center which the power user can attach/detach</li>
+  <li>The power user will not have permissions to create a shareable disk from the user portal.</li>
+</ul>
+
+<p>The following UI mockups contain guidelines for the different screens and wizards:</p>
+
+<p><img alt="" src="/images/wiki/grid_vmvdisks.png" /></p>
+
+<p><img alt="" src="/images/wiki/attach_dialogue.png" /></p>
+
+<p><img alt="" src="/images/wiki/new_disk.png" /></p>
+
+<h3 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h3>
+
+<p>Attaching shareable disk will not consume new Quota resource. Affected oVirt projects:</p>
+
+<ul>
+  <li>API</li>
+  <li>CLI</li>
+  <li>Engine-core</li>
+  <li>Webadmin</li>
+  <li>User Portal</li>
+  <li>History Data Warehouse</li>
+  <li>VDSM</li>
+</ul>
+
+<p>Quota has to be taken in consideration, for every new feature that will involve consumption of resources managed by it.</p>
+
+<ul>
+  <li>Quota - Same as regular disk, shareable raw disk will need to be attached to quota, he will consume from. Attach and detach should not affect the quota consumption.</li>
+  <li>Floating Disk - Shareable raw disk will be considered to be floating when the shareable disk will not be attach to any VM.</li>
+  <li>Disk Permissions - Manage permissions for creating/removing/configuring shareable disk.</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/sharedrawdisk.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/sharedrawdisk.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

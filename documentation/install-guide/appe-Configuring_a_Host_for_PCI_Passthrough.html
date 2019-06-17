@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Configuring a Host for PCI Passthrough &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="appendix-g-configuring-a-host-for-pci-passthrough">Appendix G: Configuring a Host for PCI Passthrough</h1>
+
+<p>Enabling PCI passthrough allows a virtual machine to use a host device as if the device were directly attached to the virtual machine. To enable the PCI passthrough function, you need to enable virtualization extensions and the IOMMU function. The following procedure requires you to reboot the host. If the host is attached to the Engine already, ensure you place the host into maintenance mode before running the following procedure.</p>
+
+<p><strong>Prerequisites:</strong></p>
+
+<ul>
+  <li>Ensure that the host hardware meets the requirements for PCI device passthrough and assignment. See <a href="chap-System_Requirements">Chapter 2: System Requirements</a> for more information.</li>
+</ul>
+
+<p><strong>Configuring a Host for PCI Passthrough</strong></p>
+
+<ol>
+  <li>
+    <p>Enable the virtualization extension and IOMMU extension in the BIOS.</p>
+  </li>
+  <li>
+    <p>Enable the IOMMU flag in the kernel by selecting the <strong>Hostdev Passthrough &amp; SR-IOV</strong> check box when adding the host to the Manager or by editing the <code>grub</code> configuration file manually.</p>
+
+    <ul>
+      <li>
+        <p>To enable the IOMMU flag from the Administration Portal, see "Adding a Host to the oVirt Engine" and "Kernel Settings Explained" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a>.</p>
+      </li>
+      <li>
+        <p>To edit the <code>grub</code> configuration file manually, see Enabling IOMMU Manually below.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>For GPU passthrough, you need to run additional configuration steps on both the host and the guest system. See "Preparing Host and Guest Systems for GPU Passthrough" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a> for more information.</p>
+  </li>
+</ol>
+
+<p><strong>Enabling IOMMU Manually</strong></p>
+
+<ol>
+  <li>
+    <p>Enable IOMMU by editing the grub configuration file.</p>
+
+    <p><strong>Note:</strong> If you are using IBM POWER8 hardware, skip this step as IOMMU is enabled by default.</p>
+
+    <ul>
+      <li>
+        <p>For Intel, boot the machine, and append <code>intel_iommu=on</code> to the end of the <code>GRUB_CMDLINE_LINUX</code> line in the <code>grub</code> configuration file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # vi /etc/default/grub&#x000A;  ...&#x000A;  GRUB_CMDLINE_LINUX="nofb splash=quiet console=tty0 ... intel_iommu=on&#x000A;  ...&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For AMD, boot the machine, and append <code>amd_iommu=on</code> to the end of the <code>GRUB_CMDLINE_LINUX</code> line in the <code>grub</code> configuration file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # vi /etc/default/grub&#x000A;  ...&#x000A;  GRUB_CMDLINE_LINUX="nofb splash=quiet console=tty0 ... amd_iommu=on&#x000A;  ...&#x000A;</code></pre></div>      </li>
+    </ul>
+
+    <p><strong>Note:</strong> If <code>intel_iommu=on</code> or <code>amd_iommu=on</code> works, you can try replacing them with <code>intel_iommu=pt</code> or <code>amd_iommu=pt</code>. The <code>pt</code> option only enables IOMMU for devices used in passthrough and will provide better host performance. However, the option may not be supported on all hardware. Revert to previous option if the <code>pt</code> option doesn't work for your host.</p>
+
+    <p>If the passthrough fails because the hardware does not support interrupt remapping, you can consider enabling the <code>allow_unsafe_interrupts</code> option if the virtual machines are trusted. The <code>allow_unsafe_interrupts</code> is not enabled by default because enabling it potentially exposes the host to MSI attacks from virtual machines. To enable the option:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/modprobe.d&#x000A; options vfio_iommu_type1 allow_unsafe_interrupts=1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Refresh the <code>grub.cfg</code> file and reboot the host for these changes to take effect:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # grub2-mkconfig -o /boot/grub2/grub.cfg&#x000A;&#x000A; # reboot&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="appe-Installing_the_Websocket_Proxy_on_a_Separate_Machine">Appendix F: Installing the Websocket Proxy on a Separate Machine</a>
+<strong>Next:</strong> <a href="appe-Preparing_a_Host_for_vGPU_Installation">Appendix H: Preparing a Host for vGPU Installation</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/appe-configuring_a_hypervisor_host_for_pci_passthrough">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/appe-Configuring_a_Host_for_PCI_Passthrough.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/appe-Configuring_a_Host_for_PCI_Passthrough.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

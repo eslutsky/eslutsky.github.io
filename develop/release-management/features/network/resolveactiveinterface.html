@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+ResolveActiveInterface &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<p>Features/ResolveActiveInterface</p>
+
+<h1 id="resolve-active-interface">Resolve Active Interface</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The feature will extend the engine ability to resolve the active interface in which vdsm uses to communicates over it with engine.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: <a href="Eliraz Levi">Eliraz Levi</a></li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#101;&#108;&#101;&#118;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#101;&#108;&#101;&#118;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>When adding host to the Data Center, engine will instruct vdsm (if required) to deploy management network.
+However, engine must first know, the correct interface to deploy the management network on top of it.
+Until now, engine acquired the correct interface by looking at the lastClientIface element of VdsGetCapabilities verb.
+As approaching the removal of the direct Engine-Vdsm TCP connection requirement, vdsm will no longer be able to compute the lastClientIface element.
+Instead, engine will resolve the correct interface as followed next:
+engine will resolve the host ip address by using the java's <a href="http://download.java.net/jdk7/archive/b123/docs/api/java/net/InetAddress.html#getByName(java.lang.String)">INetAddress.getByName</a> function. The limitation of this approach will be discussed later.
+Next, engine will compare between the resolved host's ip address and the one that owned (if exists) by each of host's interfaces. In case of a match, the interface will be resolved as the hostActiveNic.
+note that the host's interface's ip address, is reported by vdsm's VdsGetCapabilities verb.
+ The main concept of the feature, is that in case of a "nested" network topology configuration , only the top Link-Layer component will own an ip address.
+for example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  == network layout ==&#x000A;bond0        slaves=ens1, ens2&#x000A;</code></pre></div>
+<p>in this case, only bond0 will own an ip address (if configured) as it the top Link-Layer component.</p>
+
+<p>Note that in case vdsm is communicating with engine over a bridge, the bridge will be resolved as "hostActiveNic".
+important to mention that oVirt doesn't support deployment of management network over a bridge, resulting with a setup network failure in this scenario.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Engine will be able to resolve the host active interface, without being depended on vdsm to report it. By doing so, freeing vdsm from reporting it and helps to break the Engine-Vdsm TCP connection dependency which is required to be eliminated.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>vdsm:</p>
+
+<ul>
+  <li>eliminating the need of "get route" vdsm's verb.</li>
+  <li>lastClientIface element of getVdsCapabilites verb will be no longer needed.</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p>Is there upstream documentation on this feature, or notes you have written yourself? Link to that material here so other interested developers can get involved. Links to RFEs.</p>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>Verification of management network setup in different network topology configurations:
+    <ul>
+      <li>one nic owns the same ip address as host-ip.</li>
+      <li>multiple nics own an ip address , only one has the resolved host-ip address.</li>
+      <li>multiple nics own an ip address , more than one has the resolved host-ip address.
+        <ul>
+          <li>note that this scenario is possible in case that DNS host name resolution has more than one ip address.</li>
+        </ul>
+      </li>
+      <li>bond with nics, bond owns the same ip address as host-ip.</li>
+      <li>all the scenario above, with VLAN configured on top.</li>
+      <li>all the scenario above, with Bridge configured on top (should fail).</li>
+    </ul>
+  </li>
+  <li>UTest in which will mock host interfaces and confirm that the correct interface is being resolved as hostActiveNic</li>
+</ul>
+
+<h2 id="feature-limitations">Feature Limitations</h2>
+
+<ul>
+  <li>In case host name resolution has more than one ip address, the following scenario is possible:
+    <ul>
+      <li>Let be a host with two interfaces "A" with ip "a.a.a.a", "B" with ip address "b.b.b.b".</li>
+      <li>The DNS is configured to has two ip address resolutions of the host under the key "host name".</li>
+      <li>Say that host with name "host name" was added to the Data Center before.</li>
+      <li>The DNS name resolution of "host name" was "a.a.a.a" and management network was deployed over interface "A" with ip "a.a.a.a" as interface "A" was resolved to be the hostActiveNic.</li>
+      <li>Later the host was removed from the Data Center.
+        <ul>
+          <li>Note, in this case the host's network configuration is not being reverted as before the host was initially added to the Data Center, resulting the management network to still be configured at the host.</li>
+        </ul>
+      </li>
+      <li>Later, the host was added again, but this time the DNS name resolution was "b.b.b.b", resulting interface "B" to be resolved as hostActiveNic.</li>
+      <li>In this case, the management network deployment will failed as it fail to pass the validation of NETWORKS_ALREADY_ATTACHED_TO_IFACES.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="contingency-plan">Contingency Plan</h2>
+
+<p>Explain what will be done in case the feature won't be ready on time</p>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  == Your feature heading ==&#x000A;  A descriptive text of your feature to be included in release notes&#x000A;</code></pre></div>
+<h2 id="comments-and-discussion">Comments and Discussion</h2>
+
+<ul>
+  <li>important to mention, the original "GetRoute" feature in which a new vdsm verb defining an API of engine telling the host its ip address. Vdsm will then response with the hostActiveNic.
+    <ul>
+      <li>The feature was abandoned as engine is not able to tell vdsm it's own ip address as same as vdsm is seeing it as the engine can be hiding behind NAT for example.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/resolveactiveinterface.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/resolveactiveinterface.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 14:44 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

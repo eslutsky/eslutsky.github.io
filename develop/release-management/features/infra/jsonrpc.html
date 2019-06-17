@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+JsonRpc &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="json-rpc">Json Rpc</h1>
+
+<h2 id="introduction-of-messaged-based-communication-using-json-rpc-on-top-of-various-transport-protocols">Introduction of messaged based communication using JSON-RPC on top of various transport protocols</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Using a phased approach, we are going to a point where messaging is the main communication model between the engine and VDSM as well as the numerous VDSM subsystems. The biggest difference between current implementation and the goal is communication model change from synchronous HTTP to asynchronous TCP. The XML message format is going to be replaced with JSON, which will reduce parsing time.</p>
+
+<h3 id="advantages-of-jsonrpc-over-xmlrpc">Advantages Of JsonRPC Over XmlRPC</h3>
+
+<ul>
+  <li>Less data send over the wire</li>
+  <li>Faster parsing of message content</li>
+  <li>Asynchronous communication</li>
+  <li>Enable broker usage by using stomp 1.2 protocol</li>
+  <li>Maintains connection and uses heart beats to check its health</li>
+</ul>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Saggi Mizrahi (smizrahi)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#109;&#105;&#122;&#114;&#097;&#104;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#109;&#105;&#122;&#114;&#097;&#104;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Last updated on – by (WIKI)</li>
+  <li>Were currently in <a href="#Phase_1">Phase 1</a></li>
+</ul>
+
+<h2 id="phases">Phases</h2>
+
+<h3 id="phase-0">Phase 0</h3>
+
+<p>Below is prior state to the messaging changes. The engine uses XML-RPC over HTTP to communicate with the VDSM. There are two connections active between the engine and a VDSM.</p>
+
+<p><img alt="" width="1070" height="158" src="/images/wiki/Jsonrpc_phase0.png?1560777613" /></p>
+
+<h3 id="phase-1">Phase 1</h3>
+
+<p>This phase is intermediate development milestone which is not meant to be released. It makes introduction of new protocols easier and it paves the way for engine/vdms asynchronous communication. VDSM would listen on a different port for each supported transport.</p>
+
+<p>The engine sends messages by using one of the protocol reactors or apache http client for xml-rpc. VDSM parses messages using appropriate transport reactor and the message body is passed to a json-rpc server for processing. The Server parses json data and calls the appropriate method on the bridge which is mapped to corresponding vdsm object responsible for performing the command.</p>
+
+<p>AMQP protocol is available but not usable due to instability of the protocol implementation used.</p>
+
+<p><img alt="" width="1364" height="236" src="/images/wiki/Jsonrpc_phase1.png?1560777613" /></p>
+
+<h3 id="phase-2">Phase 2</h3>
+
+<p>For this phase the main addition is protocol detection. Instead of having a dedicated port per protocol there is single port used by protocol detector. It is responsible for performing SSL handshake and peeking at the first message to recognize which reactor should handle communication. After detecting the protocol it passes a socket to the correct reactor for further message processing.</p>
+
+<p>This is going to be released for 3.5</p>
+
+<p><img alt="" width="1566" height="236" src="/images/wiki/Jsonrpc_phase2.png?1560777613" /></p>
+
+<h3 id="phase-3-to-be-done">Phase 3 (To be done)</h3>
+
+<p>For VDSM the main addition in this phase is a broker. Up until this point protocol reactors ignored brokering semantics. This change adds an actual entity with brokering semantics.</p>
+
+<p>For the engine the main change is to reduce number of active connections to single VDSM. IRS and VDS will share a client using particular protocol.</p>
+
+<p>Broker Features:</p>
+
+<ul>
+  <li>Subscriptions</li>
+  <li>Topics</li>
+</ul>
+
+<p>Low Priority Features:</p>
+
+<ul>
+  <li>Queues</li>
+  <li>Message acknowledgment\settlement (provided by AMQP 1.0)</li>
+</ul>
+
+<p>There is a possibility this phase would be skipped and we would just use existing broker implementation.</p>
+
+<p><img alt="" width="1747" height="184" src="/images/wiki/Jsonrpc_phase3.png?1560777613" /></p>
+
+<h3 id="phase-4-to-be-done">Phase 4 (To be done)</h3>
+
+<p>In this phase VDSM subsystems would start using json-rpc communication and manage their own topics. There would still be the legacy interface but there will be a move towards a segmented and separate task management per subsystem.</p>
+
+<p><img alt="" width="1825" height="185" src="/images/wiki/Jsonrpc_phase4.png?1560777613" /></p>
+
+<h3 id="phase-5-to-be-done">Phase 5 (To be done)</h3>
+
+<p>In this phase internal broker will be pulled out (if we are not already using standalone broker implementation). We will remove the xml-rpc interface entirely and more subsystems are being separated. It is encouraged for VDSM subsystems to run in their own processes in this phase.</p>
+
+<p><img alt="" width="2029" height="243" src="/images/wiki/Jsonrpc_phase5.png?1560777613" /></p>
+
+<h2 id="external-links">External links</h2>
+
+<ul>
+  <li><a href="http://stomp.github.io">STOMP</a></li>
+  <li><a href="http://www.jsonrpc.org/">JSON-RPC</a></li>
+  <li><a href="http://www.amqp.org/">AMQP</a></li>
+</ul>
+
+<h2 id="attachments">Attachments</h2>
+
+<ul>
+  <li><a href="http://resources.ovirt.org/old-site-files/wiki/Schemas.tgz"> schema </a> (<a href="https://wiki.gnome.org/Apps/Dia/">dia</a> file containing the schema sources)</li>
+</ul>
+
+<p><a href="/develop/release-management/features/">JsonRpc</a> <a href="/develop/release-management/releases/3.5/feature/">JsonRpc</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/jsonrpc.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/jsonrpc.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

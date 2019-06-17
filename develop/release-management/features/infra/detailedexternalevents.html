@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DetailedExternalEvents &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-external-events">Detailed External Events</h1>
+
+<h2 id="adding-external-events-to-audit-log">Adding External Events to Audit Log</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Currently all events audited in system are internal events. That means that all events are inserted to the Audit Log by the application.
+This document describes a requirement to enable injection of External Events to the system via API.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Feature owner: Eli Mesika (emesika)</p>
+
+    <ul>
+      <li>
+        <p>GUI Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>REST Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>Engine Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>QA Owner: Yaniv Kaul (ykaul)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: emesika@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release: 3.2</li>
+  <li>Status: Design</li>
+  <li>Last updated date: Nov 8 2012</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>Enable plug-ins to inject their own events to the system using API
+This will be done by adding a new <em>AddExternalEvent</em> command and expose it to the REST API
+External events should be displayed in the Events tab in UI and may be searched as any other event.
+External Events are classified as application events based on severity values of NORMAL, WARNING ERROR or ALERT
+Alerts that are deleted from the system are only marked as deleted in the <em>audit_log</em> table and not removed permanently from the database
+External Events can not use application variables, therefore no '$' expressions should appear in the Event/Alert free message text</p>
+
+<h3 id="crud">CRUD</h3>
+
+<p>Adding <em>deleted</em> boolean field to audit_log with a default value of <em>false</em>
+Adding <em>origin</em> varchar field to audit_log with a default value of <em>oVirt</em> [1]
+Adding <em>custom_event_id</em> integer field to audit_log with a default value of <em>-1</em> [2]
+Adding <em>event_flood_in_sec</em> integer field to audit_log with a default value of <em>30</em> [3]
+Adding <em>custom_data</em> text field to audit_log with a default value of empty string [4]
+ [1] <em>origin</em> is a unique string that identifies the origin adding an event
+[2] <em>custom_event_id</em> is a sequential number that identifies the event/alert instance
+[3] <em>event_flood_in_sec</em> value will not affect application events
+[4] <em>custom data</em> value will be used to store any data about the event, (for example {a=xxx,b=12})
+ Update relevant views to return the additional fields.</p>
+
+<h4 id="dao">DAO</h4>
+
+<p>Adding additional fields to AuditLog BE
+Handling additional fields in AuditLogDAODbFacadeImpl</p>
+
+<h4 id="metadata">Metadata</h4>
+
+<p>Modifying AuditLogDAOTest to include the added fields
+Adding additional fields to fixtures.xml</p>
+
+<h3 id="business-logic">Business Logic</h3>
+
+<p>Adding additional fields to <em>AuditLog</em> BE
+ Adding the following types to AuditLogType</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    EXTERNAL_EVENT_NORMAL  &#x000A;    EXTERNAL_EVENT_WARNING &#x000A;    EXTERNAL_EVENT_ERROR   &#x000A;    EXTERNAL_ALERT&#x000A;</code></pre></div>
+<p>Adding severities for the new types in AuditLogDirector
+Adding AddExternalEvent command
+Adding AddExternalEventParameters with the following fields</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    AuditLogSeverity [Mandatory]&#x000A;    Message [Mandatory]&#x000A;    Origin  [Mandatory]&#x000A;    CustomEventId [Mandatory]&#x000A;    CustomData [Mandatory]&#x000A;    EventFloodInSec[[Optional] -- 30 sec if not defined&#x000A;    UserId [Optional]&#x000A;    DataCenterId [Optional]&#x000A;    StorageDomainId [Optional]&#x000A;    ClusterId [Optional]&#x000A;    HostId [Optional]&#x000A;    VmId [Optional]&#x000A;    TemplateId [Optional]&#x000A;    GlusterVolumeId [Optional]&#x000A;</code></pre></div>
+<h3 id="search-engine">Search Engine</h3>
+
+<p>Adding support for searching events by:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   deleted&#x000A;   origin&#x000A;   custom_event_id&#x000A;</code></pre></div>
+<p>External Events can be filtered using <em>origin != 'oVirt</em>'</p>
+
+<h3 id="flow">Flow</h3>
+
+<p><em>Add Event/Alert</em> Flow:
+Invoke <em>..api/events/add</em> API giving at least Description(the message text), Severity, Origin &amp; CustomEventId
+When the Event/Alert is on a specific object, the object instance id should be set.
+ <em>Delete Alert</em> Flow:
+Invoke ..api/events/delete API giving AuditLogId (this id is returned when adding an External Event)
+Mark the relevant entry of the Alert in DB with <em>deleted = true</em>
+Add a NORMAL event on the Alert deletion with all relevant details (user, time etc.)</p>
+
+<h3 id="permissions">Permissions</h3>
+
+<h4 id="command-permissions">Command Permissions</h4>
+
+<p>A new permission to access this command will be added by default only to superuser role.
+A new role that can inject <em>External Events</em> will be added and may be attached/added to any user in the system</p>
+
+<h4 id="permissions-on-entity-instances">Permissions on Entity Instances</h4>
+
+<p>There will be no permission check on entity instances on which <em>External Events</em> are injected
+The reason is that in order to invoke an <em>External Events</em> on an entity instance, the invoker should know the entity instance UUID and therefore we had already checked that the invoker has the right permissions on the entity instance when he gets the information.
+Also, double checking that in the AddExternalEvent command is not simple, since each Entity may have several ActionGroups (Create, Edit etc.) associated with it, so it is not clear which to check
+So, in order to keep things simple, we will assume that if the caller to <em>Add External Event</em> has the <em>Entity UUID</em> in hand, all we have to check is that he has permission to inject <em>External Events</em></p>
+
+<h3 id="api">API</h3>
+
+<p>We will use the existing events URL (…/api/events) and the existing Event business-entity in the API and open the possibility to add (POST) a new event or delete an alert (engine will off course impose permissions check on this operation).
+ 1) Add REST–&gt;Backend mapping in EventMapper (right now only the other direction exists).
+2) Add add() method declaration to EventsResource (this is the interface)
+3) Add add() method implementation to BackendEvenetsResource (take example of creation implementation in BackendHostsResource)
+4) Add delete() method declaration to EventsResource (forced for Alerts only in canDoAction)
+5) Add delete() method implementation to BackendEvenetsResource
+6) Add signatures to meta-data file (rsdl_metadata_v-3.1.yaml)
+7) Add tests
+*Note that no update is required.
+*</p>
+
+<p>Example of add event</p>
+
+<p><code>  </code><event>
+`       `<description>`message`</description>
+`       `<severity>`normal`</severity>
+`       `<origin>`Origin`</origin>
+`       `<custom_event_id>`1`</custom_event_id>
+`       `<event_flood_in_sec>`30`</event_flood_in_sec>
+`   `</event></p>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>Global External Events will be displayed on the Global Events TAB
+Entity instance External Events will be displayed on the Events TAB when selecting the Entity instance
+External Alerts will be displayed in the <em>Alerts</em> TAB
+ Events Grids (Both General and those displayed when an entity is selected) should display and allow sorting on the following fields :</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     Origin&#x000A;     CustomEventId&#x000A;</code></pre></div>
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>Add additional fields to audit_log table upon upgrade
+Add the permission(ActionGroup) to manipulate External Events to other <em>admin</em> roles already defined upon upgrade.</p>
+
+<h4 id="user-work-flows">User work-flows</h4>
+
+<h3 id="enforcement">Enforcement</h3>
+
+<h3 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h3>
+
+<h4 id="affected-ovirt-projects">Affected oVirt projects</h4>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=866123">RFE1</a>
+<a href="https://bugzilla.redhat.com/show_bug.cgi?id=873223">RFE2</a>
+ <a href="/develop/release-management/features/infra/externalevents/">Features/ExternalEvents</a></p>
+
+<h3 id="future-directions">Future directions</h3>
+
+<p>External Event types should be exposed to the engine-notification tool in future releases
+Gathering Events/Alerts by the History ETL should be considered in future releases
+Separate between Events and Alerts in DB/BL/API
+Support search on <em>custom_data</em></p>
+
+<p><a href="Category: Feature">Category: Feature</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/detailedexternalevents.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/detailedexternalevents.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+ImportUnregisteredEntities &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="import-unregistered-entities">Import Unregistered Entities</h1>
+
+<h2 id="detachattach-storage-domain-with-entities">Detach/Attach Storage Domain with Entities</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Currently, the operation of moving entities, such as VMs or Templates, from one Data Center to another Data Center in the same setup must be done through a mediator called Export Storage Domain.
+The migration of those entities is done by two copy operations, one to the mediator (Export Storage Domain) and another one from the Export Storage Domain to the target Storage Domain.
+Needless to say, those operations require allocation of free space in the Export Storage domain, and take a long time to be complete.
+This feature aims at providing this capability without the use of the
+mediator, thus saving both space and time.
+Currently, we can detach a Storage Domain from the DC only if it is empty, i.e. does not contain any virtual disks.
+This new feature would add the ability to detach a Storage Domain containing disks, and re-attach it again to another Data Center.
+Each Data Storage Domain is an entity which contains disks and sometime VMs' and Templates' OVF.
+The OVF is an XML standard representing the VM/Template configuration, including disks, memory, CPU etc.
+Based on this information stored in the Storage Domain, we can relate the disks, VMs and Templates to any Data Center which we will relate the Storage Domain to.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Maor Lipchuk (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#108;&#105;&#112;&#099;&#104;&#117;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#108;&#105;&#112;&#099;&#104;&#117;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Released in oVirt 3.5, additional improvements included in later versions</li>
+</ul>
+
+<h3 id="general-functionality">General Functionality</h3>
+
+<ul>
+  <li>When detaching a Storage Domain the VMs/Templates related to the Storage Domain should be deleted from the engine, but their data will be converted to an XML which will be preserved in a database table called <code>unregistered_ovf_of_entities</code>, and will still be part of the OVF disk contained in the Storage Domain.</li>
+  <li>When attaching a Storage Domain the user will be able to choose the VMs/Templates/Disks he wants to register to the Data Center, and will choose which cluster and quota for each Vm/Template it will be assigned with.</li>
+  <li>After a successful registration of a VM/Template, the entity should be removed from the entities candidates for registration.</li>
+  <li>The VM's snapshots and disks (active/deactivate) should be preserved upon attachment, the same as they were when those entities were on the detached Storage Domain.</li>
+  <li>Regarding quota enforcement Data Centers, the user will choose for each disk the quota he'll want to consume from, when choosing a VM/Template to register in the setup.</li>
+</ul>
+
+<h3 id="restrictions">Restrictions</h3>
+
+<ul>
+  <li>Detaching/Attaching a Storage Domain containing entities, should not be restricted by any Data Center version. VMs and Templates can be moved from between older and newer Data Centers with no limitation, except the cluster which the user choose for each VM/Template.</li>
+  <li>Detaching will not be permitted if there are VMs/Templates which are delete protected. In case there are such entities, there should be an appropriate message which should indicate those entities names.</li>
+  <li>Detaching will also not be permitted if there are VMs which are in PREVIEW mode. In case there are such entities, there should be an appropriate message which should indicate those entities names.</li>
+  <li>Detaching will not be permitted if there are VMs which are part of pools. In case there are such entities, there should be an appropriate message which should indicate those entities names.</li>
+  <li>A Storage Domain can not be detached if it contains disks which are related to a running VM, unless this disks is inactive.</li>
+  <li>Shareable and Direct lun disks are not currently supported in the OVF file.</li>
+  <li>The VMs and Templates which are candidates for registration must exist in the Storage Domain OVF contained in the <code>unregistered_ovf_of_entities</code> table (see <a href="#gaps">implementation gap #1</a>).</li>
+  <li>If a VM is thinly provisioned from a Template, the registration process will not allow registering it without registering the Template first.</li>
+  <li>A Template with disks on multiple Storage Domains will be registered as one copy of the disk related to the source Storage Domain (see [4]).</li>
+  <li>Currently, floating disks will be registered using the existing REST command for importing unregistered disk (see <a href="#rest">REST</a>).</li>
+  <li>Permissions on VMs and Templates will not be preserved on detach, since they are not part of the OVF (see <a href="https://bugzilla.redhat.com/1108904">Bug #1108904</a>).</li>
+  <li>Local Storage Domain cannot be detached/attached. This is due to the fact that detaching a Local Storage Domain caused it to be deleted from the host.</li>
+</ul>
+
+<p><a name="gaps"></a></p>
+
+<h4 id="implementation-gaps">Implementation gaps</h4>
+
+<ol>
+  <li>VMs/Templates with no disks do not exist in the Storage Domain's OVF, therefore those VMs will not be present in the setup when attaching any domain. (Fixed in oVirt 3.6 - see <a href="https://bugzilla.redhat.com/1138134">Bug #1138134</a>)</li>
+  <li>There should be an option to register a VM even if the Storage Domain does not exist in the Data Center. In this case the VM will be registered with only the available disks. The user will be able to attach the missing Storage Domain at a later phase but he will be able to register those disks to the existing VM only if this VM didn't changed from it's last import (to preserve the snapshot tree of the VM and its images) (see <a href="https://bugzilla.redhat.com/1108904">Bug #1108904</a>)</li>
+</ol>
+
+<h4 id="rfes">RFEs</h4>
+
+<ul>
+  <li>There should be an extra button in the GUI to import all those floating disks. Currently, those disks will not have an alias, which should be fixed once the alias will be saved in the description meta data. (This was delivered in oVirt 4.0 - see <a href="https://bugzilla.redhat.com/1138139">Bug #1138139</a>)</li>
+  <li>There should be an extra button to delete any unregistered entity the user doesn't want to register to the setup (see <a href="https://bugzilla.redhat.com/1138142">Bug #1138142</a>)</li>
+  <li>We should add the ability to "clone" a VM when the user tries to register an existing VM from a different Storage Domain. "Clone" means that only the VM name will be changed (there will not be any copy operations). This will enable us to a use case of a VM which had two disks on different Storage Domains, and it will be registered once from one Storage Domain and after that it will be registered from another Storage Domain, so in the setup there will be two VMs, each with one disk. (see <a href="https://bugzilla.redhat.com/1108904">Bug #1108904</a>)</li>
+</ul>
+
+<h3 id="work-flow-for-detach-and-attach-storage-domain-with-entities---ui-flow">Work flow for detach and attach Storage Domain with entities - UI flow</h3>
+
+<iframe width="300" src="//youtube.com/embed/DLcxDB0MY38" frameborder="0" align="right" allowfullscreen="true"></iframe>
+
+<ol>
+  <li>Choose an active Storage Domain from an active Data Center, make sure this Storage Domain contains VMs/Templates with disks hosted in the specific Storage Domain</li>
+  <li>Move the Storage Domain to maintenance, and detach it from the Data Center - At this point all the entities related to the Storage Domain should be deleted from the setup</li>
+  <li>Attach the Storage Domain to another Data Center and activate it.</li>
+  <li>After the Storage Domain is activated, navigate to the Storage main tab and pick the Storage Domain which was activated a minute ago</li>
+  <li>In the same Storage main tab, you should see two sub tabs, "Import VMs" and "Import Templates". In the "Import VMs" sub tab, you should see all the VMs which are import candidates, and in the "Import Templates" sub tab, you should see the same only for templates.</li>
+  <li>You can pick several VMs (or Templates), and press on the "import" button.</li>
+  <li>When the "Import" button is pressed, a dialog should be opened, showing the list of all the entities you chose to register.</li>
+  <li>Choose a cluster for each entity which should be compatible for it.</li>
+  <li>You can also view the entity's properties (such as disks or networks) in the sub tab inside the dialog.</li>
+</ol>
+
+<h4 id="import-vmtemplate-sub-tabs">Import VM/Template sub-tabs</h4>
+
+<p><img alt="" width="800" height="489" src="/images/wiki/Import_vm_template_subtab.png?1560777613" /></p>
+
+<h4 id="import-vmtemplate-dialog">Import VM/Template Dialog</h4>
+
+<p><img alt="" width="790" height="456" src="/images/wiki/Import_vm_template_dialog.png?1560777613" /></p>
+
+<p><a name="rest"></a></p>
+
+<h3 id="rest">REST</h3>
+
+<h4 id="get-list-of-unregistered-vmtemplate">Get list of unregistered VM/Template</h4>
+
+<p>The user can get a list of all the unregistered VMs or unregistered Templates by adding the prefix <code>;unregistered</code> after the vms/Templates, in the Storage Domain.
+E.g., to get all the unregistered VMs in the Storage Domain <code>68ca2f73-9b15-4839-83c9-859244ad2cd3</code> the URL will be <code>http://localhost:8080/api/storagedomains/68ca2f73-9b15-4839-83c9-859244ad2cd3/vms;unregistered</code></p>
+
+<p><img alt="" width="972" height="679" src="/images/wiki/UnregisterVM2.png?1560777612" /></p>
+
+<h4 id="register-vm-to-a-new-cluster">Register VM to a new cluster</h4>
+
+<p>To register a VM to the setup, the URL should indicate <code>/register</code> after the VM id: <code>http://localhost:8080/api/storagedomains/xxxxxxx-xxxx-xxxx-xxxxxx/vms/xxxxxxx-xxxx-xxxx-xxxxxx/register</code></p>
+
+<p><img alt="" width="967" height="628" src="/images/wiki/UnregisterVM1.png?1560777612" /></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/importunregisteredentities.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/importunregisteredentities.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

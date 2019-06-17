@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Data Centers &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-4-data-centers">Chapter 4: Data Centers</h1>
+
+<h2 id="introduction-to-data-centers">Introduction to Data Centers</h2>
+
+<p>A data center is a logical entity that defines the set of resources used in a specific environment. A data center is considered a container resource, in that it is comprised of logical resources, in the form of clusters and hosts; network resources, in the form of logical networks and physical NICs; and storage resources, in the form of storage domains.</p>
+
+<p>A data center can contain multiple clusters, which can contain multiple hosts; it can have multiple storage domains associated to it; and it can support multiple virtual machines on each of its hosts. An oVirt environment can contain multiple data centers; the data center infrastructure allows you to keep these centers separate.</p>
+
+<p>All data centers are managed from the single Administration Portal.</p>
+
+<p><strong>Data Centers</strong></p>
+
+<p><img alt="" width="660" height="430" src="/images/admin-guide/523.png?1560777613" /></p>
+
+<p>oVirt creates a default data center during installation. You can configure the default data center, or set up new appropriately named data centers.</p>
+
+<p><strong>Data Center Objects</strong></p>
+
+<p><img alt="" width="660" height="420" src="/images/admin-guide/179.png?1560777613" /></p>
+
+<h2 id="the-storage-pool-manager">The Storage Pool Manager</h2>
+
+<p>The Storage Pool Manager (SPM) is a role given to one of the hosts in the data center enabling it to manage the storage domains of the data center. The SPM entity can be run on any host in the data center; the oVirt Engine grants the role to one of the hosts. The SPM does not preclude the host from its standard operation; a host running as SPM can still host virtual resources.</p>
+
+<p>The SPM entity controls access to storage by coordinating the metadata across the storage domains. This includes creating, deleting, and manipulating virtual disks (images), snapshots, and templates, and allocating storage for sparse block devices (on SAN). This is an exclusive responsibility: only one host can be the SPM in the data center at one time to ensure metadata integrity.</p>
+
+<p>The oVirt Engine ensures that the SPM is always available. The Manager moves the SPM role to a different host if the SPM host encounters problems accessing the storage. When the SPM starts, it ensures that it is the only host granted the role; therefore it will acquire a storage-centric lease. This process can take some time.</p>
+
+<h2 id="spm-priority">SPM Priority</h2>
+
+<p>The SPM role uses some of a host's available resources. The SPM priority setting of a host alters the likelihood of the host being assigned the SPM role: a host with high SPM priority will be assigned the SPM role before a host with low SPM priority. Critical virtual machines on hosts with low SPM priority will not have to contend with SPM operations for host resources.</p>
+
+<p>You can change a host’s SPM priority in the <strong>SPM</strong> tab in the <strong>Edit Host</strong> window.</p>
+
+<h2 id="data-center-tasks">Data Center Tasks</h2>
+
+<h3 id="creating-a-new-data-center">Creating a New Data Center</h3>
+
+<p>This procedure creates a data center in your virtualization environment. The data center requires a functioning cluster, host, and storage domain to operate.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Once the **Compatibility Version** is set, it cannot be lowered at a later time; version regression is not allowed.&#x000A;&#x000A;The option to specify a MAC pool range for a data center has been disabled, and is now done at the cluster level.&#x000A;</code></pre></div>
+<p><strong>Creating a New Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> and <strong>Description</strong> of the data center.</p>
+  </li>
+  <li>
+    <p>Select the storage <strong>Type</strong>, <strong>Compatibility Version</strong>, and <strong>Quota Mode</strong> of the data center from the drop-down menus.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to create the data center and open the <strong>Data Center - Guide Me</strong> window.</p>
+  </li>
+  <li>
+    <p>The <strong>Guide Me</strong> window lists the entities that need to be configured for the data center. Configure these entities or postpone configuration by clicking the <strong>Configure Later</strong> button; configuration can be resumed by selecting the data center and clicking <strong>More Actions</strong> → <strong>Guide Me</strong>.</p>
+  </li>
+</ol>
+
+<p>The new data center is added to the virtualization environment. It will remain <strong>Uninitialized</strong> until a cluster, host, and storage domain are configured for it; use <strong>Guide Me</strong> to configure these entities.</p>
+
+<h3 id="explanation-of-settings-in-the-new-data-center-and-edit-data-center-windows">Explanation of Settings in the New Data Center and Edit Data Center Windows</h3>
+
+<p>The table below describes the settings of a data center as displayed in the <strong>New Data Center</strong> and <strong>Edit Data Center</strong> windows. Invalid entries are outlined in orange when you click <strong>OK</strong>, prohibiting the changes being accepted. In addition, field prompts indicate the expected values or range of values.</p>
+
+<p><strong>Data Center Properties</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field</td>
+   <td>Description/Action</td>
+  </tr>
+   </thead>
+   <tbody>
+  <tr>
+   <td><b>Name</b></td>
+   <td>The name of the data center. This text field has a 40-character limit and must be a unique name with any combination of uppercase and lowercase letters, numbers, hyphens, and underscores.</td>
+  </tr>
+  <tr>
+   <td><b>Description</b></td>
+   <td>The description of the data center. This field is recommended but not mandatory.</td>
+  </tr>
+  <tr>
+   <td><b>Type</b></td>
+   <td>
+    <p>The storage type. Choose one of the following:</p>
+    <ul>
+     <li><b>Shared</b></li>
+     <li><b>Local</b></li>
+    </ul>
+    <p>The type of data domain dictates the type of the data center and cannot be changed after creation without significant disruption. Multiple types of storage domains (iSCSI, NFS, FC, POSIX, and Gluster) can be added to the same data center, though local and shared domains cannot be mixed.</p>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Compatibility Version</b></td>
+   <td>
+    <p>The version of oVirt.</p>
+    <p>After upgrading the oVirt Engine, the hosts, clusters and data centers may still be in the earlier version. Ensure that you have upgraded all the hosts, then the clusters, before you upgrade the Compatibility Level of the data center.</p>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Quota Mode</b></td>
+   <td>
+    <p>Quota is a resource limitation tool provided with oVirt. Choose one of:</p>
+    <ul>
+     <li><b>Disabled</b>: Select if you do not want to implement Quota</li>
+     <li><b>Audit</b>: Select if you want to edit the Quota settings</li>
+     <li><b>Enforced</b>: Select to implement Quota</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Comment</b></td>
+   <td>Optionally add a plain text comment about the data center.&lt;/a&gt;</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="re-initializing-a-data-center-recovery-procedure">Re-Initializing a Data Center: Recovery Procedure</h3>
+
+<p>This recovery procedure replaces the master data domain of your data center with a new master data domain; necessary in the event of data corruption of your master data domain. Re-initializing a data center allows you to restore all other resources associated with the data center, including clusters, hosts, and non-problematic storage domains.</p>
+
+<p>You can import any backup or exported virtual machines or templates into your new master data domain.</p>
+
+<p><strong>Re-Initializing a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong> and select the data center to re-initialize.</p>
+  </li>
+  <li>
+    <p>Ensure that any storage domains attached to the data center are in maintenance mode.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Re-Initialize Data Center</strong>.</p>
+  </li>
+  <li>
+    <p>The <strong>Data Center Re-Initialize</strong> window lists all available (detached; in maintenance mode) storage domains. Click the radio button for the storage domain you are adding to the data center.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Approve operation</strong> check box.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain is attached to the data center as the master data domain and activated. You can now import any backup or exported virtual machines or templates into your new master data domain.</p>
+
+<h3 id="removing-a-data-center">Removing a Data Center</h3>
+
+<p>An active host is required to remove a data center. Removing a data center will not remove the associated resources.</p>
+
+<p><strong>Removing a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Ensure the storage domains attached to the data center is in maintenance mode.</p>
+  </li>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong> and select the data center to remove.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="force-removing-a-data-center">Force Removing a Data Center</h3>
+
+<p>A data center becomes <code>Non Responsive</code> if the attached storage domain is corrupt or if the host becomes <code>Non Responsive</code>. You cannot <strong>Remove</strong> the data center under either circumstance.</p>
+
+<p><strong>Force Remove</strong> does not require an active host. It also permanently removes the attached storage domain.</p>
+
+<p>It may be necessary to <strong>Destroy</strong> a corrupted storage domain before you can <strong>Force Remove</strong> the data center.</p>
+
+<p><strong>Force Removing a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong> and select the data center to remove.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Force Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Approve operation</strong> check box.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong></p>
+  </li>
+</ol>
+
+<p>The data center and attached storage domain are permanently removed from the oVirt environment.</p>
+
+<h3 id="changing-the-data-center-storage-type">Changing the Data Center Storage Type</h3>
+
+<p>You can change the storage type of the data center after it has been initialized. This is useful for data domains that are used to move virtual machines or templates around.</p>
+
+<p><strong>Limitations</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Shared to Local</strong> - For a data center that does not contain more than one host and more than one cluster, since a local data center does not support it.</p>
+  </li>
+  <li>
+    <p><strong>Local to Shared</strong> - For a data center that does not contain a local storage domain.</p>
+  </li>
+</ul>
+
+<p><strong>Changing the Data Center Storage Type</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong> and select the data center to change.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the <strong>Storage Type</strong> to the desired value.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="changing-the-data-center-compatibility-version">Changing the Data Center Compatibility Version</h3>
+
+<p>oVirt data centers have a compatibility version. The compatibility version indicates the version of oVirt that the data center is intended to be compatible with. All clusters in the data center must support the desired compatibility level.</p>
+
+<p><strong>Important:</strong> To change the data center compatibility version, you must have first updated all the clusters in your data center to a level that supports your desired compatibility level.</p>
+
+<p><strong>Procedure</strong></p>
+
+<ol>
+  <li>
+    <p>From the Administration Portal, click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Select the data center to change from the list displayed.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the <strong>Compatibility Version</strong> to the desired value.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to open the <strong>Change Data Center Compatibility Version</strong> confirmation window.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to confirm.</p>
+  </li>
+</ol>
+
+<p>You have updated the compatibility version of the data center.</p>
+
+<p><strong>Important:</strong> Upgrading the compatibility will also upgrade all of the storage domains belonging to the data center.</p>
+
+<h2 id="data-centers-and-storage-domains">Data Centers and Storage Domains</h2>
+
+<h3 id="attaching-an-existing-data-domain-to-a-data-center">Attaching an Existing Data Domain to a Data Center</h3>
+
+<p>Data domains that are <strong>Unattached</strong> can be attached to a data center. Shared storage domains of multiple types (iSCSI, NFS, FC, POSIX, and Gluster) can be added to the same data center.</p>
+
+<p><strong>Attaching an Existing Data Domain to a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Storage</strong> tab to list the storage domains already attached to the data center.</p>
+  </li>
+  <li>
+    <p>Click <strong>Attach Data</strong>.</p>
+  </li>
+  <li>
+    <p>Select the check box for the data domain to attach to the data center. You can select multiple check boxes to attach multiple data domains.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The data domain is attached to the data center and is automatically activated.</p>
+
+<h3 id="attaching-an-existing-iso-domain-to-a-data-center">Attaching an Existing ISO domain to a Data Center</h3>
+
+<p>An ISO domain that is <strong>Unattached</strong> can be attached to a data center. The ISO domain must be of the same <strong>Storage Type</strong> as the data center.</p>
+
+<p>Only one ISO domain can be attached to a data center.</p>
+
+<p><strong>Attaching an Existing ISO Domain to a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Storage</strong> tab to list the storage domains already attached to the data center.</p>
+  </li>
+  <li>
+    <p>Click <strong>Attach ISO</strong>.</p>
+  </li>
+  <li>
+    <p>Click the radio button for the appropriate ISO domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The ISO domain is attached to the data center and is automatically activated.</p>
+
+<h3 id="attaching-an-existing-export-domain-to-a-data-center">Attaching an Existing Export Domain to a Data Center</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The export storage domain is deprecated. Storage data domains can be unattached from a data center and imported to another data center in the same environment, or in a different environment. Virtual machines, floating virtual disk images, and templates can then be uploaded from the imported storage domain to the attached data center. See [Importing Existing Storage Domains](sect-Importing_Existing_Storage_Domains) for information on importing storage domains.&#x000A;</code></pre></div>
+<p>An export domain that is <strong>Unattached</strong> can be attached to a data center. Only one export domain can be attached to a data center.</p>
+
+<p><strong>Attaching an Existing Export Domain to a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Storage</strong> tab to list the storage domains already attached to the data center.</p>
+  </li>
+  <li>
+    <p>Click <strong>Attach Export</strong>.</p>
+  </li>
+  <li>
+    <p>Click the radio button for the appropriate export domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The export domain is attached to the data center and is automatically activated.</p>
+
+<h3 id="detaching-a-storage-domain-from-a-data-center">Detaching a Storage Domain from a Data Center</h3>
+
+<p>Detaching a storage domain from a data center will stop the data center from associating with that storage domain. The storage domain is not removed from the oVirt environment; it can be attached to another data center.</p>
+
+<p>Data, such as virtual machines and templates, remains attached to the storage domain.</p>
+
+<p><strong>Note:</strong> The master storage, if it is the last available storage domain, cannot be removed.</p>
+
+<p><strong>Detaching a Storage Domain from a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Storage</strong> tab to list the storage domains already attached to the data center.</p>
+  </li>
+  <li>
+    <p>Select the storage domain to detach. If the storage domain is <code>Active</code>, click <strong>Maintenance</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to initiate maintenance mode.</p>
+  </li>
+  <li>
+    <p>Click <strong>Detach</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have detached the storage domain from the data center. It can take up to several minutes for the storage domain to disappear from the details pane.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Quality_of_Service">Chapter 3: Quality of Service</a><br />
+<strong>Next:</strong> <a href="chap-Clusters">Chapter 5: Clusters</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-data_centers">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Data_Centers.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Data_Centers.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

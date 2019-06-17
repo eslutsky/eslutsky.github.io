@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using oVirt Engine with a PostgreSQL container. &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<p>The base environment used here is CentOS 7.</p>
+
+<ol>
+  <li>Install ovirt-engine:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install -y http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm&#x000A;yum install ovirt-engine -y&#x000A;</code></pre></div>
+<ol>
+  <li>Start postgres container:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>docker run --name=postgresql -d -p 5432:5432 registry.centos.org/centos/postgres:latest &#x000A;</code></pre></div>
+<ol>
+  <li>Prepare the PostgreSQL database according to the guide below:
+https://www.ovirt.org/documentation/install-guide/appe-Preparing_a_Remote_PostgreSQL_Database_for_Use_with_the_oVirt_Engine/</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>docker exec -ti postgresql bash&#x000A;su - postgres&#x000A;psql&#x000A;&#x000A;postgres=# create role engine with login encrypted password 'password';&#x000A;postgres=# create database engine owner engine template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';&#x000A;postgres=# \q&#x000A;&#x000A;vi /var/lib/pgsql/data/pg_hba.conf&#x000A;</code></pre></div>
+<p>Ensure the database can be accessed remotely by enabling md5 client authentication. Edit the /var/lib/pgsql/data/pg_hba.conf file, and add the following line immediately underneath the line starting with local at the bottom of the file, replacing X.X.X.X with the IP address of the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> host    database_name    user_name    X.X.X.X/32   md5&#x000A;</code></pre></div>
+<p>Edit <code>postgresql.conf</code> and add following lines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>vi /var/lib/pgsql/data/postgresql.conf&#x000A;&#x000A;autovacuum_vacuum_scale_factor = 0.01&#x000A;autovacuum_analyze_scale_factor = 0.075&#x000A;autovacuum_max_workers = 6&#x000A;maintenance_work_mem = 65536&#x000A;max_connections = 150&#x000A;lc_messages = 'en_US.UTF-8'&#x000A;</code></pre></div>
+<ol>
+  <li>Restart the database within the container:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>-bash-4.2$ pg_ctl restart&#x000A;exit&#x000A;exit&#x000A;</code></pre></div>
+<ol>
+  <li>Setup ovirt-engine:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>engine-setup&#x000A;&#x000A;# engine-setup &#x000A;[ INFO  ] Stage: Initializing&#x000A;[ INFO  ] Stage: Environment setup&#x000A;          Configuration files: ['/etc/ovirt-engine-setup.conf.d/10-packaging-jboss.conf', '/etc/ovirt-engine-setup.conf.d/10-packaging.conf']&#x000A;          Log file: /var/log/ovirt-engine/setup/ovirt-engine-setup-20170803144341-soqdsk.log&#x000A;          Version: otopi-1.6.2 (otopi-1.6.2-1.el7.centos)&#x000A;[ INFO  ] Stage: Environment packages setup&#x000A;[ INFO  ] Stage: Programs detection&#x000A;[ INFO  ] Stage: Environment setup&#x000A;[ INFO  ] Stage: Environment customization&#x000A;         &#x000A;          --== PRODUCT OPTIONS ==--&#x000A;         &#x000A;          Configure Engine on this host (Yes, No) [Yes]: &#x000A;          Configure Image I/O Proxy on this host? (Yes, No) [Yes]: &#x000A;          Configure WebSocket Proxy on this host (Yes, No) [Yes]: &#x000A;          Please note: Data Warehouse is required for the engine. If you choose to not configure it on this host, you have to configure it on a remote host, and then configure the engine on this host so that it can access the database of the remote Data Warehouse host.&#x000A;          Configure Data Warehouse on this host (Yes, No) [Yes]: No&#x000A;          Configure VM Console Proxy on this host (Yes, No) [Yes]: &#x000A;         &#x000A;          --== PACKAGES ==--&#x000A;         &#x000A;[ INFO  ] Checking for product updates...&#x000A;[ INFO  ] No product updates found&#x000A;         &#x000A;          --== NETWORK CONFIGURATION ==--&#x000A;         &#x000A;          Host fully qualified DNS name of this server [centos-1.osas.lab]: &#x000A;          Setup can automatically configure the firewall on this system.&#x000A;          Note: automatic configuration of the firewall may overwrite current settings.&#x000A;          Do you want Setup to configure the firewall? (Yes, No) [Yes]: &#x000A;[ INFO  ] firewalld will be configured as firewall manager.&#x000A;         &#x000A;          --== DATABASE CONFIGURATION ==--&#x000A;         &#x000A;          Where is the Engine database located? (Local, Remote) [Local]: Remote&#x000A;         &#x000A;          ATTENTION&#x000A;         &#x000A;          Manual action required.&#x000A;          Please create database for ovirt-engine use. Use the following commands as an example:&#x000A;         &#x000A;          create role engine with login encrypted password '&lt;password&gt;';&#x000A;          create database engine owner engine&#x000A;           template template0&#x000A;           encoding 'UTF8' lc_collate 'en_US.UTF-8'&#x000A;           lc_ctype 'en_US.UTF-8';&#x000A;         &#x000A;          Make sure that database can be accessed remotely.&#x000A;         &#x000A;          Engine database host [localhost]: centos-1.osas.lab&#x000A;          Engine database port [5432]: &#x000A;          Engine database secured connection (Yes, No) [No]: &#x000A;          Engine database name [engine]: &#x000A;          Engine database user [engine]: &#x000A;          Engine database password: &#x000A;         &#x000A;          --== OVIRT ENGINE CONFIGURATION ==--&#x000A;         &#x000A;          Engine admin password: &#x000A;          Confirm engine admin password: &#x000A;          Application mode (Virt, Gluster, Both) [Both]: &#x000A;         &#x000A;          --== STORAGE CONFIGURATION ==--&#x000A;         &#x000A;          Default SAN wipe after delete (Yes, No) [No]: &#x000A;         &#x000A;          --== PKI CONFIGURATION ==--&#x000A;         &#x000A;          Organization name for certificate [osas.lab]: &#x000A;         &#x000A;          --== APACHE CONFIGURATION ==--&#x000A;         &#x000A;          Setup can configure the default page of the web server to present the application home page. This may conflict with existing applications.&#x000A;          Do you wish to set the application as the default page of the web server? (Yes, No) [Yes]: &#x000A;          Setup can configure apache to use SSL using a certificate issued from the internal CA.&#x000A;          Do you wish Setup to configure that, or prefer to perform that manually? (Automatic, Manual) [Automatic]: &#x000A;         &#x000A;          --== SYSTEM CONFIGURATION ==--&#x000A;         &#x000A;          Configure an NFS share on this server to be used as an ISO Domain? (Yes, No) [No]: &#x000A;         &#x000A;          --== MISC CONFIGURATION ==--&#x000A;         &#x000A;         &#x000A;          --== END OF CONFIGURATION ==--&#x000A;         &#x000A;[ INFO  ] Stage: Setup validation&#x000A;[WARNING] Less than 16384MB of memory is available&#x000A;         &#x000A;          --== CONFIGURATION PREVIEW ==--&#x000A;         &#x000A;          Application mode                        : both&#x000A;          Default SAN wipe after delete           : False&#x000A;          Firewall manager                        : firewalld&#x000A;          Update Firewall                         : True&#x000A;          Host FQDN                               : centos-1.osas.lab&#x000A;          Configure local Engine database         : False&#x000A;          Set application as default page         : True&#x000A;          Configure Apache SSL                    : True&#x000A;          Engine database secured connection      : False&#x000A;          Engine database user name               : engine&#x000A;          Engine database name                    : engine&#x000A;          Engine database host                    : centos-1.osas.lab&#x000A;          Engine database port                    : 5432&#x000A;          Engine database host name validation    : False&#x000A;          Engine installation                     : True&#x000A;          PKI organization                        : osas.lab&#x000A;          DWH installation                        : False&#x000A;          Configure local DWH database            : False&#x000A;          Configure Image I/O Proxy               : True&#x000A;          Configure VMConsole Proxy               : True&#x000A;          Configure WebSocket Proxy               : True&#x000A;         &#x000A;          Please confirm installation settings (OK, Cancel) [OK]: &#x000A;[ INFO  ] Stage: Transaction setup&#x000A;[ INFO  ] Stopping engine service&#x000A;[ INFO  ] Stopping ovirt-fence-kdump-listener service&#x000A;[ INFO  ] Stopping Image I/O Proxy service&#x000A;[ INFO  ] Stopping vmconsole-proxy service&#x000A;[ INFO  ] Stopping websocket-proxy service&#x000A;[ INFO  ] Stage: Misc configuration&#x000A;[ INFO  ] Stage: Package installation&#x000A;[ INFO  ] Stage: Misc configuration&#x000A;[ INFO  ] Upgrading CA&#x000A;[ INFO  ] Creating CA&#x000A;[ INFO  ] Creating/refreshing Engine database schema&#x000A;[ INFO  ] Configuring Image I/O Proxy&#x000A;[ INFO  ] Setting up ovirt-vmconsole proxy helper PKI artifacts&#x000A;[ INFO  ] Setting up ovirt-vmconsole SSH PKI artifacts&#x000A;[ INFO  ] Configuring WebSocket Proxy&#x000A;[ INFO  ] Creating/refreshing Engine 'internal' domain database schema&#x000A;[ INFO  ] Generating post install configuration file '/etc/ovirt-engine-setup.conf.d/20-setup-ovirt-post.conf'&#x000A;[ INFO  ] Stage: Transaction commit&#x000A;[ INFO  ] Stage: Closing up&#x000A;[ INFO  ] Starting engine service&#x000A;[ INFO  ] Restarting ovirt-vmconsole proxy service&#x000A;         &#x000A;          --== SUMMARY ==--&#x000A;         &#x000A;[ INFO  ] Restarting httpd&#x000A;          Please use the user 'admin@internal' and password specified in order to login&#x000A;          The engine requires access to the Data Warehouse database.&#x000A;          Data Warehouse was not set up. Please set it up on some other machine and configure access to it on the engine.&#x000A;          Web access is enabled at:&#x000A;              http://myexample.domain.org:80/ovirt-engine&#x000A;              https://myexample.domain.org:443/ovirt-engine&#x000A;          Internal CA 8F:C8:A6:B6:D0:6E:34:92:D2:65:21:63:9C:35:64:4D:EE:09:59:72&#x000A;          SSH fingerprint: 0d:54:5c:7e:63:6f:fb:85:47:f7:00:8d:4f:95:cc:c1&#x000A;[WARNING] Less than 16384MB of memory is available&#x000A;         &#x000A;          --== END OF SUMMARY ==--&#x000A;         &#x000A;[ INFO  ] Stage: Clean up&#x000A;          Log file is located at /var/log/ovirt-engine/setup/ovirt-engine-setup-20170803144341-soqdsk.log&#x000A;[ INFO  ] Generating answer file '/var/lib/ovirt-engine/setup/answers/20170803144525-setup.conf'&#x000A;[ INFO  ] Stage: Pre-termination&#x000A;[ INFO  ] Stage: Termination&#x000A;[ INFO  ] Execution of setup completed successfully&#x000A;</code></pre></div><p>You should be able to access oVirt's web portal at the address mentioned above.</p>
+
+<p>Notes: When you first start your machine, be sure to start the Docker container that has your database. 
+After this, restart the <code>ovirt-engine</code> service using the following command:
+  <code>systemctl restart ovirt-engine</code></p>
+
+<p>Do use the image pulled from registry.centos.org/centos/postgres:latest. 
+The one provided by PostgreSQL is difficult to configure since it seems intended to use as is. Your mileage on this may vary. 
+The 404 error that appears initially should disappear and you should get the web login page for oVirt, after a few seconds or so.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/Using-oVirt-Engine-with-a-PostgreSQL-container.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/Using-oVirt-Engine-with-a-PostgreSQL-container.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 15 Dec 2018 19:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

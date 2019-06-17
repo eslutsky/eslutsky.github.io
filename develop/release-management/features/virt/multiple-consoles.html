@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Multiple Consoles &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="multiple-consoles">Multiple Consoles</h1>
+
+<p>Multiple Consoles for single VM</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Frank Kobzik (Fkobzik)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#107;&#111;&#098;&#122;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#102;&#107;&#111;&#098;&#122;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="brief-description">Brief description</h2>
+
+<p>This feature will allow a VM to have multiple consoles (e.g. SPICE and VNC at the same time) so that user can switch clients without restarting that VM.</p>
+
+<h2 id="status">Status</h2>
+
+<ul>
+  <li>1st phase
+    <ul>
+      <li>VDSM part - design</li>
+      <li>Backend part - design</li>
+    </ul>
+  </li>
+  <li>2nd phase - Frontend part
+    <ul>
+      <li>Refactoring frontend models to support more graphics - merged (patch: <a href="http://gerrit.ovirt.org/#/c/21488/">http://gerrit.ovirt.org/#/c/21488/</a>)</li>
+      <li>UI patch - adding new UI elements to VM/Template dialog - waiting for ^</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="detailed-descripiton">Detailed descripiton</h2>
+
+<p>There are two libvirt devices that are related to this feature: <code>video</code> and <code>graphics</code>.</p>
+
+<ul>
+  <li><code>video</code> determines the video card (VGA, Cirrus, QXL…)</li>
+  <li><code>graphics</code> is for graphics framebuffer (SPICE, VNC)</li>
+</ul>
+
+<p>Currently engine sends only <code>video</code> device to the vdsm. The <code>graphics</code> device is created according to 'display' element in JSON structure that is sent on createVM. Possible values of this 'display' value are inconsistent (it's either 'vnc' or 'qxl', which doesn't make any sense).</p>
+
+<ul>
+  <li>The first phase consists of changing modeling the <code>graphics</code> device. It should be treated as a regular device. For this both Engine and VDSM must be changed. This would also allow us to set these devices separately (various <code>video</code> and <code>graphics</code> combinations).</li>
+  <li>The second phase is to reflect these changes to frontend. There should be a way to configure <code>graphics</code> type and <code>video</code> type in the New/Edit VM/Template dialog. Current frontend implementation of console must be slightly refactored since now the VM doesn't allow SPICE and VNC to be set simultaneously.</li>
+</ul>
+
+<h3 id="engine---vdsm-communication-scheme">Engine &lt;-&gt; VDSM Communication scheme</h3>
+
+<h4 id="current-situation---pseudocode">Current situation - pseudocode</h4>
+
+<h5 id="engine---vdsm">Engine -&gt; VDSM</h5>
+
+<ul>
+  <li>Creating VM</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>// "vmCreate" JSON sent from Engine to VDSM&#x000A;{&#x000A;    display: 'vnc',&#x000A;    displayPort: -1,&#x000A;    displaySecurePort: -1,&#x000A;    // engine -&gt; vdsm video device&#x000A;    'devices': [{&#x000A;      'device': 'cirrus',&#x000A;      'type': 'video',&#x000A;      'deviceId': '0ec7c2b9-62c9-4578-b096-f453b5cfc677', 'address': ..., 'specParams': {'vram': '32768', 'heads': '1'}&#x000A;    }, ... // other devices&#x000A;  ]}&#x000A;</code></pre></div>
+<ul>
+  <li>Setting VM ticket for console auth</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>// SetVmTicket class&#x000A;{&#x000A;  //todo&#x000A;}&#x000A;</code></pre></div>
+<p>This call will result in adding following devices:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;graphics&#x000A;  autoport="yes"&#x000A;  keymap="en-us" &#x000A;  listen="0"&#x000A;  passwd="*****"&#x000A;  passwdValidTo="1970-01-01T00:00:01"&#x000A;  port="-1"&#x000A;  type="vnc"/&gt;&#x000A;&#x000A;&lt;video&gt;&#x000A;    &lt;address bus="0x00" domain="0x0000" function="0x0" slot="0x02" type="pci"/&gt;&#x000A;    &lt;model heads="1" type="cirrus" vram="32768"/&gt;&#x000A;&lt;/video&gt;&#x000A;</code></pre></div>
+<h5 id="vdsm---engine">VDSM -&gt; Engine</h5>
+
+<p>VdsBrokerObjectsBuilder processes these fields "sent" by VDSM:</p>
+
+<ul>
+  <li><code>displayPort</code> - port of graphics framebuffer (no matter if it's SPICE or VNC)</li>
+  <li><code>displaySecurePort</code> - SPICE secured graphics port</li>
+  <li><code>displayType</code> - same value as 'display' that is sent from Engine on VM create.</li>
+</ul>
+
+<h4 id="proposal">Proposal</h4>
+
+<h5 id="engine---vdsm-1">Engine -&gt; VDSM</h5>
+
+<ul>
+  <li>Creating VM</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>// New "vmCreate" JSON sent from Engine to VDSM&#x000A;{&#x000A;    'devices': [&#x000A;      {'device': 'cirrus',&#x000A;       'type': 'video',&#x000A;       'deviceId': 'blah', 'address': ..., 'specParams': {'vram': '32768', 'heads': '1'}&#x000A;      },&#x000A;      {'device': 'qxl', 'type': 'graphics', 'specParams': {} },  //send graphics as a regular device&#x000A;      {'device': 'vnc', 'type': 'graphics', 'specParams': {} }  //dtto&#x000A;  ]}&#x000A;</code></pre></div>
+<h5 id="vdsm---engine-1">VDSM -&gt; Engine</h5>
+
+<p>In future we'll need to report more ports (for multiple graphics devices). There are various solutions, but for sake of simlicity and backward compatibility I'm inclined in introducing a new field 'additionalDisplayPort' to ports mentioned in <a href="VDSM -&gt; Engine">VDSM -&gt; Engine</a>. The data 'sent' by VDSM would look like this:</p>
+
+<ul>
+  <li><code>displayPort</code> - port of first graphics framebuffer - two corner cases might happen
+    <ul>
+      <li>Both SPICE and VNC are configured: In this case this field would contain <em>SPICE</em> port and the additionalDisplayPort would be dedicated the VNC port</li>
+      <li>Only VNC is configured: In this case displayPort would contain VNC port and additionalDisplayPort would be empty.</li>
+    </ul>
+  </li>
+  <li><code>displaySecurePort</code> - SPICE secured graphics port</li>
+  <li><code>additionalDisplayPort</code> - port of VNC graphics framebuffer (only used when both SPICE and VNC are configured)</li>
+</ul>
+
+<p>This behavior is not certainly ideal, but is backward compatible with current version of the engine.</p>
+
+<h4 id="note-about-backwards-compatibility">Note about backwards compatibility</h4>
+
+<p>Firstly, this feature will require certain cluster level (planned for 3.4).</p>
+
+<p>Changes proposed by this page would be backward compatible:</p>
+
+<ul>
+  <li>'Old' Engine + 'New' VDSM
+    <ul>
+      <li><strong>Engine -&gt; VDSM:</strong> 'New' VDSM would still check if incoming vmCreate JSON contains regular graphics device(s), if not, it'd switch to legacy behavior (i.e. using 'display' field in vmCreate JSON).</li>
+      <li><strong>VDSM -&gt; Engine:</strong> As noted in 'proposal' section, the displayPort and securedDisplayPort would contain same information as with old VDSM.</li>
+    </ul>
+  </li>
+  <li>'Old' VDSM + 'New' Engine
+    <ul>
+      <li>In this case engine would contain logic that switches behavior of VmInfoBuilder and VdsObjectsBrokerBuilder classes depending on cluster level of given VM.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="frontend">Frontend</h3>
+
+<p>Nothing interesting so far.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/multiple-consoles.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/multiple-consoles.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

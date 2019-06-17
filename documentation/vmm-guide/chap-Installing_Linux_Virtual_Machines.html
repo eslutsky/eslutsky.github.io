@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing Linux Virtual Machines &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/vmm-guide/">Vmm-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-2-installing-linux-virtual-machines">Chapter 2: Installing Linux Virtual Machines</h1>
+
+<p>This chapter describes the steps required to install a Linux virtual machine:</p>
+
+<ol>
+  <li>
+    <p>Create a blank virtual machine on which to install an operating system.</p>
+  </li>
+  <li>
+    <p>Add a virtual disk for storage.</p>
+  </li>
+  <li>
+    <p>Add a network interface to connect the virtual machine to the network.</p>
+  </li>
+  <li>
+    <p>Install an operating system on the virtual machine. See your operating system's documentation for instructions.</p>
+
+    <ul>
+      <li>
+        <p>Enterprise Linux 6</p>
+      </li>
+      <li>
+        <p>Enterprise Linux 7</p>
+      </li>
+      <li>
+        <p>CentOS Atomic Host 7</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Install guest agents and drivers for additional virtual machine functionality.</p>
+  </li>
+</ol>
+
+<p>When all of these steps are complete, the new virtual machine is functional and ready to perform tasks.</p>
+
+<h2 id="creating-a-linux-virtual-machine">Creating a Linux Virtual Machine</h2>
+
+<p>Create a new virtual machine and configure the required settings.</p>
+
+<p><strong>Creating Linux Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> &amp;raar; <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong> button to open the <strong>New Virtual Machine</strong> window.</p>
+  </li>
+  <li>
+    <p>Select an <strong>Operating System</strong> from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> for the virtual machine.</p>
+  </li>
+  <li>
+    <p>Add storage to the virtual machine. <strong>Attach</strong> or <strong>Create</strong> a virtual disk under <strong>Instance Images</strong>.</p>
+
+    <ul>
+      <li>
+        <p>Click <strong>Attach</strong> and select an existing virtual disk.</p>
+      </li>
+      <li>
+        <p>Click <strong>Create</strong> and enter a <strong>Size(GB)</strong> and <strong>Alias</strong> for a new virtual disk. You can accept the default settings for all other fields, or change them if required. See <a href="Add_Virtual_Disk_dialogue_entries">Add Virtual Disk dialogue entries</a> for more details on the fields for all disk types.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Connect the virtual machine to the network. Add a network interface by selecting a vNIC profile from the <strong>nic1</strong> drop-down list at the bottom of the <strong>General</strong> tab.</p>
+  </li>
+  <li>
+    <p>Specify the virtual machine's <strong>Memory Size</strong> on the <strong>System</strong> tab.</p>
+  </li>
+  <li>
+    <p>Choose the <strong>First Device</strong> that the virtual machine will boot from on the <strong>Boot Options</strong> tab.</p>
+  </li>
+  <li>
+    <p>You can accept the default settings for all other fields, or change them if required. For more details on all fields in the <strong>New Virtual Machine</strong> window, see <a href="sect-Explanation_of_Settings_in_the_New_Virtual_Machine_and_Edit_Virtual_Machine_Windows">Explanation of Settings in the New Virtual Machine and Edit Virtual Machine Windows</a>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new virtual machine is created and displays in the list of virtual machines with a status of <code>Down</code>.</p>
+
+<h2 id="starting-the-virtual-machine">Starting the Virtual Machine</h2>
+
+<h3 id="starting-a-virtual-machine">Starting a Virtual Machine</h3>
+
+<p><strong>Starting Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> &amp;raar; <strong>Virtual Machines</strong> and select a virtual machine with a status of <code>Down</code>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Run</strong>.</p>
+  </li>
+</ol>
+
+<p>The <strong>Status</strong> of the virtual machine changes to <code>Up</code>, and the operating system installation begins. Open a console to the virtual machine if one does not open automatically.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** A virtual machine will not start on a host that the CPU is overloaded on. By default, a host’s CPU is considered overloaded if it has a load of more than 80% for 5 minutes but these values can be changed using scheduling policies.&#x000A;</code></pre></div>
+<h3 id="opening-a-console-to-a-virtual-machine">Opening a Console to a Virtual Machine</h3>
+
+<p>Use Remote Viewer to connect to a virtual machine.</p>
+
+<p><strong>Connecting to Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Install Remote Viewer if it is not already installed. See <a href="sect-Installing_Console_Components">Installing Console Components</a>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Compute</strong> &amp;raar; <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Console</strong>. A <strong>console.vv</strong> file will be downloaded.</p>
+  </li>
+  <li>
+    <p>Click on the file and a console window will automatically open for the virtual machine.</p>
+
+    <p><strong>Note:</strong> You can configure the system to automatically connect to a virtual machine. See the “Automatically Connecting to a Virtual Machine” below.</p>
+  </li>
+</ol>
+
+<h3 id="opening-a-serial-console-to-a-virtual-machine">Opening a Serial Console to a Virtual Machine</h3>
+
+<p>You can access a virtual machine’s serial console from the command line instead of opening a console from the Administration Portal or the VM Portal. The serial console is emulated through VirtIO channels, using SSH and key pairs. The Engine acts as a proxy for the connection, provides information about virtual machine placement, and stores the authentication keys. You can add public keys for each user from either the Administration Portal or the VM Portal. You can access serial consoles for only those virtual machines for which you have appropriate permissions.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** To access the serial console of a virtual machine, the user must have **UserVmManager**, **SuperUser**, or **UserInstanceManager** permission on that virtual machine. These permissions must be explicitly defined for each user. It is not enough to assign these permissions to **Everyone**.&#x000A;</code></pre></div>
+<p>The serial console is accessed through TCP port 2222 on the Engine. This port is opened during engine-setup on new installations. To change the port, see <strong>ovirt-vmconsole/README</strong>.</p>
+
+<p>The serial console relies on the <code>ovirt-vmconsole</code> package and the <code>ovirt-vmconsole-proxy</code> on the Engine, and the <code>ovirt-vmconsole</code> package and the <code>ovirt-vmconsole-host</code> package on the virtualization hosts. These packages are installed by default on new installations. To install the packages on existing installations, reinstall the host.</p>
+
+<p><strong>Enabling a Virtual Machine’s Serial Console</strong></p>
+
+<ol>
+  <li>
+    <p>On the virtual machine whose serial console you are accessing, add the following lines to /etc/default/grub:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> GRUB_CMDLINE_LINUX_DEFAULT="console=tty0 console=ttyS0,115200n8"&#x000A; GRUB_TERMINAL="console serial"&#x000A; GRUB_SERIAL_COMMAND="serial --speed=115200 --unit=0 --word=8 --parity=no --stop=1"&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> <code>GRUB_CMDLINE_LINUX_DEFAULT</code> applies this configuration only to the default menu entry. Use <code>GRUB_CMDLINE_LINUX</code> to apply the configuration to all the menu entries.</p>
+
+    <p>If these lines already exist in <strong>/etc/default/grub</strong>, update them. Do not duplicate them.</p>
+  </li>
+  <li>
+    <p>Rebuild <strong>/boot/grub2/grub.cfg</strong>:</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>BIOS-based machines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # grub2-mkconfig -o /boot/grub2/grub.cfg&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>UEFI-based machines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg&#x000A;</code></pre></div>  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>On the client machine from which you are accessing the virtual machine serial console, generate an SSH key pair. The Engine supports standard SSH key types, for example, an RSA key:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ssh-keygen -t rsa -b 2048 -C "user@domain" -f .ssh/serialconsolekey&#x000A;</code></pre></div>
+    <p>This command generates a public key and a private key.</p>
+  </li>
+  <li>
+    <p>In the Administration Portal or the VM Portal, click the name of the signed-in user on the header bar and click <strong>Options</strong> to open the <strong>Edit Options</strong> window.</p>
+  </li>
+  <li>
+    <p>In the <strong>User’s Public Key</strong> text field, paste the public key of the client machine that will be used to access the serial console.</p>
+  </li>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Console</strong> tab of the <strong>Edit Virtual Machine</strong> window, select the <strong>Enable VirtIO serial console</strong> check box.</p>
+  </li>
+</ol>
+
+<p><strong>Connecting to a Virtual Machine’s Serial Console</strong></p>
+
+<p>On the client machine, connect to the virtual machine’s serial console:</p>
+
+<ul>
+  <li>
+    <p>If a single virtual machine is available, this command connects the user to that virtual machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ssh -t -p 2222 ovirt-vmconsole@Manager_FQDN -i .ssh/serialconsolekey&#x000A;  Red Hat Enterprise Linux Server release 6.7 (Santiago)&#x000A;  Kernel 2.6.32-573.3.1.el6.x86_64 on an x86_64&#x000A;  USER login:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>If more than one virtual machine is available, this command lists the available virtual machines and their IDs:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ssh -t -p 2222 ovirt-vmconsole@Manager_FQDN -i .ssh/serialconsolekey list&#x000A;  1. vm1 [vmid1]&#x000A;  2. vm2 [vmid2]&#x000A;  3. vm3 [vmid3]&#x000A;  \&gt; 2&#x000A;  Red Hat Enterprise Linux Server release 6.7 (Santiago)&#x000A;  Kernel 2.6.32-573.3.1.el6.x86_64 on an x86_64&#x000A;  USER login:&#x000A;</code></pre></div>
+    <p>Enter the number of the machine to which you want to connect, and press <code>Enter</code>.</p>
+  </li>
+  <li>
+    <p>Alternatively, connect directly to a virtual machine using its unique identifier or its name:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ssh -t -p 2222 ovirt-vmconsole@Manager_FQDN connect --vm-id vmid1&#x000A;  # ssh -t -p 2222 ovirt-vmconsole@Manager_FQDN connect --vm-name vm1&#x000A;</code></pre></div>  </li>
+</ul>
+
+<p><strong>Disconnecting from a Virtual Machine’s Serial Console</strong></p>
+
+<p>Press any key followed by <code>~</code> . to close a serial console session.</p>
+
+<p>If the serial console session is disconnected abnormally, a TCP timeout occurs. You will be unable to reconnect to the virtual machine’s serial console until the timeout period expires.</p>
+
+<h3 id="automatically-connecting-to-a-virtual-machine">Automatically Connecting to a Virtual Machine</h3>
+
+<p>Once you have logged in, you can automatically connect to a single running virtual machine. This can be configured in the VM Portal.</p>
+
+<p><strong>Automatically Connecting to a Virtual Machine</strong></p>
+
+<ol>
+  <li>
+    <p>In the Virtual Machines page, click the name of the virtual machine to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the pencil icon beside <strong>Console</strong> and set <strong>Connect automatically to ON</strong>.</p>
+  </li>
+</ol>
+
+<p>The next time you log into the VM Portal, if you have only one running virtual machine, you will automatically connect to that machine.</p>
+
+<h2 id="installing-guest-agents-and-drivers">Installing Guest Agents and Drivers</h2>
+
+<h1 id="ovirt-guest-agents-and-drivers">oVirt Guest Agents and Drivers</h1>
+
+<p>The oVirt guest agents and drivers provide additional information and functionality for Enterprise Linux and Windows virtual machines. Key features include the ability to monitor resource usage and gracefully shut down or reboot virtual machines from the User Portal and Administration Portal. Install the oVirt guest agents and drivers on each virtual machine on which this functionality is to be available.</p>
+
+<p><strong>oVirt Guest Drivers</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Driver</td>
+   <td>Description</td>
+   <td>Works on</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><tt>virtio-net</tt></td>
+   <td>Paravirtualized network driver provides enhanced performance over emulated devices like rtl.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>virtio-block</tt></td>
+   <td>Paravirtualized HDD driver offers increased I/O performance over emulated devices like IDE by optimizing the coordination and communication between the guest and the hypervisor. The driver complements the software implementation of the virtio-device used by the host to play the role of a hardware device.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>virtio-scsi</tt></td>
+   <td>Paravirtualized iSCSI HDD driver offers similar functionality to the virtio-block device, with some additional enhancements. In particular, this driver supports adding hundreds of devices, and names devices using the standard SCSI device naming scheme.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>virtio-serial</tt></td>
+   <td>Virtio-serial provides support for multiple serial ports. The improved performance is used for fast communication between the guest and the host that avoids network complications. This fast communication is required for the guest agents and for other features such as clipboard copy-paste between the guest and the host and logging.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>virtio-balloon</tt></td>
+   <td>Virtio-balloon is used to control the amount of memory a guest actually accesses. It offers improved memory over-commitment. The balloon drivers are installed for future compatibility but not used by default in oVirt.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>qxl</tt></td>
+   <td>A paravirtualized display driver reduces CPU usage on the host and provides better performance through reduced network bandwidth on most workloads.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+ </tbody>
+</table>
+
+<p><strong>oVirt Guest Agents and Tools</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Guest agent/tool</td>
+   <td>Description</td>
+   <td>Works on</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><tt>ovirt-engine-guest-agent-common</tt></td>
+   <td>
+    <p>Allows the oVirt Engine to receive guest internal events and information such as IP address and installed applications. Also allows the Engine to execute specific commands, such as shut down or reboot, on a guest.</p>
+    <p>On Enterprise Linux 6 and higher guests, the ovirt-engine-guest-agent-common installs <i>tuned</i> on your virtual machine and configures it to use an optimized, virtualized-guest profile.</p>
+   </td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>spice-agent</tt></td>
+   <td>The SPICE agent supports multiple monitors and is responsible for client-mouse-mode support to provide a better user experience and improved responsiveness than the QEMU emulation. Cursor capture is not needed in client-mouse-mode. The SPICE agent reduces bandwidth usage when used over a wide area network by reducing the display level, including color depth, disabling wallpaper, font smoothing, and animation. The SPICE agent enables clipboard support allowing cut and paste operations for both text and images between client and guest, and automatic guest display setting according to client-side settings. On Windows guests, the SPICE agent consists of vdservice and vdagent.</td>
+   <td>Server and Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>ovirt-sso</tt></td>
+   <td>An agent that enables users to automatically log in to their virtual machines based on the credentials used to access the oVirt Engine.</td>
+   <td>Desktop.</td>
+  </tr>
+  <tr>
+   <td><tt>ovirt-usb</tt></td>
+   <td>A component that contains drivers and services for Legacy USB support (version 3.0 and earlier) on guests. It is needed for accessing a USB device that is plugged into the client machine. <tt>ovirt-USB Client</tt> is needed on the client side.</td>
+   <td>Desktop.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="installing-the-guest-agents-and-drivers-on-enterprise-linux">Installing the Guest Agents and Drivers on Enterprise Linux</h3>
+
+<p>The ovirt guest agents and drivers are installed on Enterprise Linux virtual machines using the <code>ovirt-engine-guest-agent</code> package provided by the ovirt Agent repository.</p>
+
+<p><strong>Installing the Guest Agents and Drivers on Enterprise Linux</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Enterprise Linux virtual machine.</p>
+  </li>
+  <li>
+    <p>Enable the ovirt Agent repository.</p>
+  </li>
+  <li>
+    <p>Install the <code>ovirt-engine-guest-agent-common</code> package and dependencies:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-guest-agent-common&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Start and enable the service:</p>
+
+    <ul>
+      <li>
+        <p>For Enterprise Linux 6</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service ovirt-guest-agent start&#x000A;  # chkconfig ovirt-guest-agent on&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Enterprise Linux 7</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # systemctl start ovirt-guest-agent.service&#x000A;  # systemctl enable ovirt-guest-agent.service&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Start and enable the <strong>qemu-ga</strong> service:</p>
+
+    <ul>
+      <li>
+        <p>For Enterprise Linux 6</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service qemu-ga start&#x000A;  # chkconfig qemu-ga on&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Enterprise Linux 7</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # systemctl start qemu-guest-agent.service&#x000A;  # systemctl enable qemu-guest-agent.service&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+</ol>
+
+<p>The guest agent now passes usage information to the ovirt Engine. The ovirt agent runs as a service called <strong>ovirt-guest-agent</strong> that you can configure via the <strong>ovirt-guest-agent.conf</strong> configuration file in the <strong>/etc/</strong> directory.</p>
+
+<h3 id="installing-the-guest-agent-on-an-atomic-host">Installing the Guest Agent on an Atomic Host</h3>
+
+<p>The ovirt guest agent should be installed as a <a href="https://github.com/projectatomic/atomic-system-containers/blob/master/USAGE.md">system container on Atomic hosts</a></p>
+
+<p><strong>Installing the Guest Agent on an Atomic Host</strong></p>
+
+<p>The commands for a Centos7 Atomic host are essentially:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # atomic pull --storage=ostree ovirtguestagent/centos7-atomic&#x000A;     # atomic install --system --system-package=no --name=ovirt-guest-agent ovirtguestagent/centos7-atomic&#x000A;     # systemctl status ovirt-guest-agent&#x000A;     # systemctl start ovirt-guest-agent&#x000A;</code></pre></div>
+<p>Note: there is <a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/managing_containers/running_system_containers#using_the_ovirt_guest_agent_system_container_image_for_red_hat_virtualization">official documentation and separate image registry</a> for those with a RHV subscription.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Introduction">Chapter 1: Introduction</a><br />
+<strong>Next:</strong> <a href="chap-Installing_Windows_Virtual_Machines">Chapter 3: Installing Windows Virtual Machines</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/virtual_machine_management_guide/chap-installing_linux_virtual_machines">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/vmm-guide/chap-Installing_Linux_Virtual_Machines.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/vmm-guide/chap-Installing_Linux_Virtual_Machines.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 10 May 2019 13:51 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

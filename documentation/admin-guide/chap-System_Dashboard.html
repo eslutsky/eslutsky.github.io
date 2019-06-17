@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Dashboard &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-2-dashboard">Chapter 2: Dashboard</h1>
+
+<p>The Dashboard provides an overview of the oVirt system status by displaying a summary of oVirt's resources and utilization. This summary can alert the user to a problem and allows them to analyze the problem area.</p>
+
+<p>The information in the dashboard is updated every 15 minutes by default from the Data Warehouse, and every 15 seconds by default by the Engine API, or whenever the Dashboard is refreshed. The Dashboard is refreshed when the user changes back from another tab or when manually refreshed. The Dashboard does not automatically refresh. The inventory card information is supplied by the Engine API and the utilization information is supplied by the Data Warehouse. The Dashboard is implemented as a UI plugin component, which is automatically installed and upgraded alongside the Engine.</p>
+
+<p><strong>The Dashboard</strong></p>
+
+<p><img alt="" width="1506" height="890" src="/images/admin-guide/RHVdashboard.png?1560777613" /></p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>The Dashboard requires that the Data Warehouse is installed and configured. For more information on installing and configuring the Data Warehouse see "Installing and Configuring Data Warehouse" in the <a href="/documentation/data-warehouse/Data_Warehouse_Guide/">Data Warehouse Guide</a></p>
+
+<h2 id="global-inventory">Global Inventory</h2>
+
+<p>The top section of the Dashboard provides a global inventory of the oVirt resources and includes items for data centers, clusters, hosts, storage domains, virtual machines, and events. Icons show the status of each resource and numbers show the quantity of the each resource with that status.</p>
+
+<p><strong>Global Inventory</strong></p>
+
+<p><img alt="" width="1589" height="130" src="/images/admin-guide/Dashboard_Inventory.png?1560777613" /></p>
+
+<p>The title shows the number of a type of resource and their status is displayed below the title. Clicking on the resource title navigates to the related tab in the oVirt Engine. The status for <strong>Clusters</strong> is always displayed as N/A.</p>
+
+<p><strong>Resource Status</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Icon</td>
+   <td>Status</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><img src="/images/admin-guide/Dashboard_No_Items.png" /></td>
+   <td>None of that resource added to oVirt. </td>
+  </tr>
+  <tr>
+   <td><img src="/images/admin-guide/Dashboard_Warning.png" /></td>
+   <td>
+    <p>Shows the number of a resource with a warning status. Clicking on the icon navigates to the appropriate tab with the search limited to that resource with a warning status. The search is limited differently for each resource:</p>
+    <ul>
+     <li><b>Data Centers</b>: The search is limited to data centers that are not operational or non-responsive.</li>
+     <li><b>Hosts</b>: The search is limited to hosts that are unassigned, in maintenance mode, installing, rebooting, preparing for maintenance, pending approval, or connecting.</li>
+     <li><b>Storage Domains</b>: The search is limited to storage domains that are uninitialized, unattached, inactive, in maintenance mode, preparing for maintenance, detaching, or activating.</li>
+     <li><b>Virtual Machines</b>: The search is limited to virtual machines that are powering up, paused, migrating, waiting, suspended, or powering down.  </li>
+     <li><b>Events</b>: The search is limited to events with the severity of warning.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><img src="/images/admin-guide/Dashboard_Up.png" /></td>
+   <td>Shows the number of a resource with an up status. Clicking on the icon navigates to the appropriate tab with the search limited to resources that are up. </td>
+  </tr>
+  <tr>
+   <td><img src="/images/admin-guide/Dashboard_Down.png" /></td>
+   <td>
+    <p>Shows the number of a resource with a down status. Clicking on the icon navigates to the appropriate tab with the search limited to resources with a down status. The search is limited differently for each resource:</p>
+    <ul>
+     <li><b>Data Centers</b>: The search is limited to data centers that are uninitialized, in maintenance mode, or with a down status.</li>
+     <li><b>Hosts</b>: The search is limited to hosts that are non-responsive, have an error, have an installation error, non-operational, initializing, or down.</li>
+     <li><b>Storage Domains</b>: The search is limited to storage domains that are detached or inactive.</li>
+     <li><b>Virtual Machines</b>: The search is limited to virtual machines that are down, not responding, or rebooting.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><img src="/images/admin-guide/Dashboard_Alert.png" /></td>
+   <td>Shows the number of events with an alert status. Clicking on the icon navigates to the <b>Events</b> tab with the search limited to events with the severity of alert. </td>
+  </tr>
+  <tr>
+   <td><img src="/images/admin-guide/Dashboard_Error.png" /></td>
+   <td>Shows the number of events with an error status. Clicking on the icon navigates to the <b>Events</b> tab with the search limited to events with the severity of error.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="global-utilization">Global Utilization</h2>
+
+<p>The <strong>Global Utilization</strong> section shows the system utilization of the CPU, Memory and Storage.</p>
+
+<p><strong>Global Utilization</strong></p>
+
+<p><img alt="" width="1584" height="459" src="/images/admin-guide/Dashboard_Global_Utilization.png?1560777613" /></p>
+
+<ul>
+  <li>
+    <p>The top section shows the percentage of the available CPU, memory or storage and the over commit ratio. For example, the over commit ratio for the CPU is calculated by dividing the number of virtual cores by the number of physical cores that are available for the running virtual machines based on the latest data in the Data Warehouse.</p>
+  </li>
+  <li>
+    <p>The donut displays the usage in percentage for the CPU, memory or storage and shows the average usage for all hosts based on the average usage in the last 5 minutes. Hovering over a section of the donut will display the value of the selected section.</p>
+  </li>
+  <li>
+    <p>The line graph at the bottom displays the trend in the last 24 hours. Each data point shows the average usage for a specific hour. Hovering over a point on the graph displays the time and the percentage used for the CPU graph and the amount of usage for the memory and storage graphs.</p>
+  </li>
+</ul>
+
+<h3 id="top-utilized-resources">Top Utilized Resources</h3>
+
+<p><strong>Top Utilized Resources (Memory)</strong></p>
+
+<p><img alt="" width="872" height="358" src="/images/admin-guide/Dashboard_Pop_Up.png?1560777613" /></p>
+
+<p>Clicking the donut in the global utilization section of the Dashboard will display a list of the top utilized resources for the CPU, memory or storage. For CPU and memory the pop-up shows a list of the ten hosts and virtual machines with the highest usage. For storage the pop-up shows a list of the top ten utilized storage domains and virtual machines. The arrow to the right of the usage bar shows the trend of usage for that resource in the last minute.</p>
+
+<h2 id="cluster-utilization">Cluster Utilization</h2>
+
+<p>The <strong>Cluster Utilization</strong> shows the cluster utilization for the CPU and memory in a heatmap.</p>
+
+<p><strong>Cluster Utilization</strong></p>
+
+<p><img alt="" width="1057" height="263" src="/images/admin-guide/Dashboard_Cluster_Utilization.png?1560777613" /></p>
+
+<h3 id="cpu">CPU</h3>
+
+<p>The heatmap of the CPU utilization for a specific cluster that shows the average utilization of the CPU for the last 24 hours. Hovering over the heatmap displays the cluster name. Clicking on the heatmap navigates to <strong>Compute</strong> → <strong>Hosts</strong> and displays the results of a search on a specific cluster sorted by CPU utilization.  The formula used to calculate the usage of the CPU by the cluster is the average host CPU utilization in the cluster. This is calculated by using the average host CPU utilization for each host over the last 24 hours to find the total average usage of the CPU by the cluster.</p>
+
+<h3 id="memory">Memory</h3>
+
+<p>The heatmap of the memory utilization for a specific cluster that shows the average utilization of the memory for the last 24 hours. Hovering over the heatmap displays the cluster name. Clicking on the heatmap navigates to <strong>Compute</strong> → <strong>Hosts</strong> and displays the results of a search on a specific cluster sorted by memory usage. The formula used to calculate the memory usage by the cluster is the total utilization of the memory in the cluster in GB. This is calculated by using the average host memory utilization for each host over the last 24 hours to find the total average usage of memory by the cluster.</p>
+
+<h2 id="storage-utilization">Storage Utilization</h2>
+
+<p>The <strong>Storage Utilization</strong> shows the storage utilization in a heatmap.</p>
+
+<p><strong>Storage Utilization</strong></p>
+
+<p><img alt="" width="521" height="264" src="/images/admin-guide/Dashboard_Storage_Utilization.png?1560777613" /></p>
+
+<p>The heatmap shows the average utilization of the storage for the last 24 hours. The formula used to calculate the storage usage by the cluster is the total utilization of the storage in the cluster. This is calculated by using the average storage utilization for each host over the last 24 hours to find the total average usage of the storage by the cluster. Hovering over the heatmap displays the storage domain name. Clicking on the heatmap navigates to <strong>Storage</strong> → <strong>Domains</strong> with the storage domains sorted by utilization.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Global_Configuration">Chapter 1: Global Configuration</a><br />
+<strong>Next:</strong> <a href="chap-Quality_of_Service">Chapter 3: Quality of Service</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-system_dashboard">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-System_Dashboard.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-System_Dashboard.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

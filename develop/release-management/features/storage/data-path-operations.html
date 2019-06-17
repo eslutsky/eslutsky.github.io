@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Data Path operations on any host &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="data-path-operations-on-any-host">Data Path Operations On Any Host</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Until now almost all data path operations on the hosts were performed only on the elected SPM, causing a potential bottleneck.
+This feature enables data path operations on any host.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Adam Litke (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#108;&#105;&#116;&#107;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#108;&#105;&#116;&#107;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+  <li>Liron Aravot (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#108;&#097;&#114;&#097;&#118;&#111;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#108;&#097;&#114;&#097;&#118;&#111;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+  <li>Nir Soffer (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#110;&#115;&#111;&#102;&#102;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#110;&#115;&#111;&#102;&#102;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+  <li>Fred Rolland (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#114;&#111;&#108;&#108;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#102;&#114;&#111;&#108;&#108;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>There are a lot of data path operations in oVirt. For example: move disk, create VM from template, create template from VM, live storage migration and more.
+These operations are performed on the SPM host, potentially creating a bottleneck in scale setups or if the operations are performed frequently.</p>
+
+<p>By adding the new framework on VDSM, the engine is capable to convert the data path operations flows to run on any host.</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>With this feature the load of the data operations is spread between all the hosts, preventing the throttling of the SPM host.</p>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>A progress indication of the operation is available on the disks status for the "Move Disk" operation.
+Otherwise, there are no changes in the user experience.</p>
+
+<h3 id="high-level-flow">High level flow</h3>
+
+<p>Here is the high level flow for "Move Disk" operation</p>
+<ul>
+  <li>User starts disk move operation via UI or REST, no change is needed</li>
+  <li>Engine clone image structure via the SPM host and existing VDSM apis</li>
+  <li>Engine select hosts for copying volume</li>
+  <li>Engine starts copy_data operation on selected hosts</li>
+  <li>On each host, VDSM schedule copy_data job, copying data from source volume to destination volume</li>
+  <li>Engine monitor jobs progress</li>
+  <li>Engine wait until all jobs are done</li>
+</ul>
+
+<p>For "Create VM from Template (Clone/Independent)" operation, the flow is the same as above.
+The only difference is that Templates have only one volume.</p>
+
+<h3 id="vdsm">VDSM</h3>
+
+<p>The following verb is added:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>SDM.copy_data:&#x000A;    added: '4.1'&#x000A;    description: Copy data from one volume to another.&#x000A;    params:&#x000A;    -   description: A UUID to be used for tracking the job progress&#x000A;        name: job_id&#x000A;        type: *UUID&#x000A;&#x000A;    -   description: The source endpoint&#x000A;        name: source&#x000A;        type: *CopyDataEndpoint&#x000A;&#x000A;    -   description: The destination endpoint&#x000A;        name: destination&#x000A;        type: *CopyDataEndpoint&#x000A;</code></pre></div>
+<h3 id="engine">Engine</h3>
+
+<p>The engine will monitor the operation using the <code>Job</code> API.
+In case the job is not present, the lease status on the volume information is retrieved from VDSM.
+If the lease is not free, the job is still running.
+If the lease is free, the status of the copy operation will be determined by checking the volume legality.</p>
+
+<p>A configuration value is available to disable this feature: <code>DataOperationsByHSM</code>.</p>
+
+<p>The following commands are added:</p>
+
+<ul>
+  <li>CopyImageGroupWithDataCommand</li>
+  <li>CloneImageGroupVolumesStructureCommand</li>
+  <li>CreateVolumeContainerCommand</li>
+  <li>CopyImageGroupVolumesDataCommand</li>
+  <li>CopyDataCommand</li>
+</ul>
+
+<p>In addition, the framework for tracking progress on entities is added to the infrastructure.</p>
+
+<h3 id="testing">Testing</h3>
+
+<ul>
+  <li>Move a disk between storage domains. Check that the operation may run on none-SPM hosts.</li>
+  <li>Create a VM from template with clone provisioning.  Check that the operation may run on none-SPM hosts.</li>
+  <li>Start a 'Move Disk' operation, and take down the network of the VDSM host after the operation has started.
+Make sure engine can recover when the host comes back (check if the job failed or succeeded).
+Make sure engine can recover if the host never comes back.</li>
+</ul>
+
+<h3 id="open-issues">Open Issues</h3>
+
+<ul>
+  <li>The host that will perform the data operation is currently selected randomly. A better mechanism may be needed in the future.</li>
+  <li>In case of multiple volumes, the operation is currently performed in a serial way. In the future, it can be performed in parallel.</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/data-path-operations.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/data-path-operations.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 12 Dec 2016 15:55 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

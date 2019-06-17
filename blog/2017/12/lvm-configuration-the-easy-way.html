@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+LVM Configuration the Easy Way &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='jmarks, nsofer' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='LVM Configuration the Easy Way' property='og:title'>
+<meta content='Now oVirt features a simple way to prevent a host from scanning and then activating logical volumes that are not required directly by the host. In particular, the solution addresses logical volumes on shared storage managed by oVirt, and logical volumes created by a guest in oVirt raw volumes. Why is a solution required? Because scanning and activating other logical volumes may cause data corruption, slow boot, and other issues.
+
+The solution is configuring an LVM filter on each host, which allows LVM on a host to scan only the logical volumes required directly by the host. To achieve this, we have introduced a vdsm-tool command, config-lvm-filter, that will configure the host for you.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/12/lvm-configuration-the-easy-way.html' property='og:url'>
+<meta content='2017-12-04T09:00:00Z' property='article:published_time'>
+<meta content='jmarks, nsofer' property='article:author:username'>
+<meta content='LVM' property='article:tag'>
+<link href='/blog/tag/lvm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='VDSM' property='article:tag'>
+<link href='/blog/tag/vdsm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='LVM Configuration the Easy Way' name='twitter:title'>
+<meta content='Now oVirt features a simple way to prevent a host from scanning and then activating logical volumes that are not required directly by the host. In particular, the solution addresses logical volumes on shared storage managed by oVirt, and logical volumes created by a guest in oVirt raw volumes. Why is a solution required? Because scanning and activating other logical volumes may cause data corruption, slow boot, and other issues.
+
+The solution is configuring an LVM filter on each host, which allows LVM on a host to scan only the logical volumes required directly by the host. To achieve this, we have introduced a vdsm-tool command, config-lvm-filter, that will configure the host for you.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>12</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+LVM Configuration the Easy Way
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/jmarks, nsofer.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/jmarks-nsofer/">jmarks, nsofer</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-12-04T09:00:00Z'>
+Monday  4 December 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Now oVirt features a simple way to prevent a host from scanning and then activating logical volumes that are not required directly by the host. In particular, the solution addresses logical volumes on shared storage managed by oVirt, and logical volumes created by a guest in oVirt raw volumes. Why is a solution required? Because scanning and activating other logical volumes may cause data corruption, slow boot, and other issues.</p>
+
+<p>The solution is configuring an LVM filter on each host, which allows LVM on a host to scan only the logical volumes required directly by the host. To achieve this, we have introduced a vdsm-tool command, config-lvm-filter, that will configure the host for you.</p>
+
+<p></p>
+
+<p>The new command, <code>vdsm-tool config-lvm-filter</code> analyzes the current LVM configuration to decide
+whether a filter should be configured. Then, if the LVM filter has yet to be configured, the command generates an LVM filter option for this host, and adds the option to the LVM configuration.</p>
+
+<h2 id="scenario-1-an-unconfigured-host">Scenario 1: An Unconfigured Host</h2>
+
+<p>On a host yet to be configured, the command automatically configures the LVM once the user confirms the operation:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vdsm-tool config-lvm-filter&#x000A;Analyzing host...&#x000A;Found these mounted logical volumes on this host:&#x000A;&#x000A;  logical volume:  /dev/mapper/vg0-lv_home&#x000A;  mountpoint:      /home&#x000A;  devices:         /dev/vda2&#x000A;&#x000A;  logical volume:  /dev/mapper/vg0-lv_root&#x000A;  mountpoint:      /&#x000A;  devices:         /dev/vda2&#x000A;&#x000A;  logical volume:  /dev/mapper/vg0-lv_swap&#x000A;  mountpoint:      [SWAP]&#x000A;  devices:         /dev/vda2&#x000A;&#x000A;This is the recommended LVM filter for this host:&#x000A;&#x000A;  filter = [ "a|^/dev/vda2$|", "r|.*|" ]&#x000A;&#x000A;This filter will allow LVM to access the local devices used by the&#x000A;hypervisor, but not shared storage owned by Vdsm. If you add a new&#x000A;device to the volume group, you will need to edit the filter manually.&#x000A;&#x000A;Configure LVM filter? [yes,NO] ? [NO/yes] yes&#x000A;Configuration completed successfully!&#x000A;&#x000A;Please reboot to verify the LVM configuration.&#x000A;</code></pre></div>
+<h2 id="scenario-2-a-configured-host">Scenario 2: A Configured Host</h2>
+
+<p>If the host is already configured, the command simply informs the user that the LVM filter is already configured:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vdsm-tool config-lvm-filter&#x000A;Analyzing host...&#x000A;LVM filter is already configured for Vdsm&#x000A;</code></pre></div><h2 id="scenario-3-manual-configuration-required">Scenario 3: Manual Configuration Required</h2>
+
+<p>If the host configuration does not match the configuration required by Vdsm, the LVM filter will need to be configured manually:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vdsm-tool config-lvm-filter&#x000A;Analyzing host...&#x000A;Found these mounted logical volumes on this host:&#x000A;&#x000A;  logical volume:  /dev/mapper/vg0-lv_home&#x000A;  mountpoint:      /home&#x000A;  devices:         /dev/vda2&#x000A;&#x000A;  logical volume:  /dev/mapper/vg0-lv_root&#x000A;  mountpoint:      /&#x000A;  devices:         /dev/vda2&#x000A;&#x000A;  logical volume:  /dev/mapper/vg0-lv_swap&#x000A;  mountpoint:      [SWAP]&#x000A;  devices:         /dev/vda2&#x000A;&#x000A;This is the recommended LVM filter for this host:&#x000A;&#x000A;  filter = [ "a|^/dev/vda2$|", "r|.*|" ]&#x000A;&#x000A;This filter will allow LVM to access the local devices used by the&#x000A;hypervisor, but not shared storage owned by Vdsm. If you add a new&#x000A;device to the volume group, you will need to edit the filter manually.&#x000A;&#x000A;This is the current LVM filter:&#x000A;&#x000A;  filter = [ "a|^/dev/vda2$|", "a|^/dev/vdb1$|", "r|.*|" ]&#x000A;&#x000A;WARNING: The current LVM filter does not match the recommended filter,&#x000A;Vdsm cannot configure the filter automatically.&#x000A;&#x000A;Please edit /etc/lvm/lvm.conf and set the 'filter' option in the&#x000A;'devices' section to the recommended value.&#x000A;&#x000A;It is recommended to reboot after changing LVM filter.&#x000A;</code></pre></div>
+<h2 id="future-developments">Future Developments</h2>
+<p>In the future, we plan to integrate the command into the host deployment. This will allow the LVM filter to be configured automatically in common scenarios.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/lvm.html">LVM</a></li>
+<li><a href="../../tag/vdsm.html">VDSM</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-12-04-lvm-configuration-the-easy-way.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-12-04-lvm-configuration-the-easy-way.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 5 Dec 2017 13:01 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

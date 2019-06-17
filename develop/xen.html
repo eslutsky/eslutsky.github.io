@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Xen &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<!-- TODO: Content review -->
+
+<h1 id="configuring-xen-hosts">Configuring Xen Hosts</h1>
+
+<p>oVirt uses libvirt to abstract access to its virtual machines. This makes it theoretically possible for oVirt to manage Xen hosts. Trying this out was a goal in <a href="http://wiki.xen.org/wiki/Hackathon/May2014#Libvirt_and_Xen_integration_.2F_co-operation">Xen hackathon 2014</a>.</p>
+
+<p>This is not going to be easy, as oVirt is permeated with KVM-specific assumptions, and Xen (or libvirt's xenlight driver) is currently missing features that are important to oVirt. Still, we've managed to add a Xen dom0 to oVirt and start a VM with Fedora guest.</p>
+
+<p>This page describes the hacked solution, and tracks the known gaps to its fruition.</p>
+
+<h2 id="whats-done-and-how-to-use-it">What's Done and How to Use It</h2>
+
+<ol>
+  <li>To manage Xen hosts in oVirt, you first need a Xen host to manage. I followed <a href="http://wiki.xen.org/wiki/Fedora_Host_Installation">http://wiki.xen.org/wiki/Fedora_Host_Installation</a> to install Xen on Fedora 19. Please note that you'd better set up a bridge named <code>ovirtmgmt</code> instead of <code>br0</code>. Reboot the host to see that everything is fine, and that you have access to your dom0.</li>
+  <li>A second step is to installed an unchanged oVirt Engine on a host. I used an <a href="/Feature/AllInOne">All-in-One</a> installation of oVirt, running on my Xen dom0.</li>
+  <li>I needed to modify Vdsm in so it would be possible to run Xen VMs. My patches are not expected to by accepted upstream, at least not in their current form, so you would need to build Vdsm <a href="Vdsm Developers">from source</a>, first applying the <a href="http://gerrit.ovirt.org/#/q/status:open+project:vdsm+branch:master+topic:xen,n,z">Xen-related patches</a>. When you build Vdsm, take note of <a href="Vdsm_Developers#Building_with_hooks_support">Vdsm_Developers#Building_with_hooks_support</a>.</li>
+  <li>Install Vdsm on your dom0. Do not forget to install vdsm-hook-xen.rpm, too.</li>
+  <li>
+    <p>On your Engine host,</p>
+
+    <ol>
+      <li>cat «EOF &gt;/etc/ovirt-host-deploy.conf.d/50-xen.conf</li>
+    </ol>
+
+    <p>[environment:enforce]</p>
+
+    <p>VDSM/checkVirtHardware=bool:False</p>
+
+    <p>EOF</p>
+  </li>
+  <li>Log into your Engine's admin portal, and add your dom0 to your cluster. Define a VM and start it up.</li>
+  <li>To actually have something running inside the VM, I've copied a Fedora image onto the VM's disk volume. I suppose that importing a VM would work, too.</li>
+</ol>
+
+<h2 id="whats-not-done">What's not Done</h2>
+
+<p>The whole thing is a fragile hack, with plenty of stuff yet to be solved. The TO-DO list is split to Vdsm-side fixes, and libvirt-side fixes.</p>
+
+<h3 id="ovirt-host-deploy">ovirt-host-deploy</h3>
+
+<ol>
+  <li>Identify that the added host is a Xen dom0, and check Virt Hardware appropriately.</li>
+</ol>
+
+<h3 id="vdsm">Vdsm</h3>
+
+<ol>
+  <li>virt/vm.py has strict assumptions on how each device is reported in libvirt's domain xml. However, Xen's devices do not have a bus address, or a driver, or even an alias. Vdsm should learn to identify devices without this information, or get libvirt-xl expose it.</li>
+  <li>Xen does not support virtio-serial. Guests agents could be tweaked to use Xen paravirt consoles instead. Until then - virtio-serial devices should not be passed to libvirt</li>
+  <li>Xen's balloon is not implemented as a virtio-device. Vdsm should user the proper means to specify balloon existence and its size changes.</li>
+  <li>virtio-net and virtio-block are not supported. The hook converts them to Xen paravirt devices.</li>
+  <li>I did not try spice, as I was told that it's broken on lower levels, but that's supposedly not exact.</li>
+</ol>
+
+<h3 id="libvirt-xl-driver">libvirt xl driver</h3>
+
+<ol>
+  <li>I found no way to specify "qcow2" in libxl images. Only raw images can be used.</li>
+  <li>Implement virConnectCompareCPU. At the moment, Vdsm connects to <code>qemu:///system</code> to use this API call.</li>
+  <li>Expose an alias per virtual device. Aliases are assigned by libvirt and are used to uniquely identify a device.</li>
+  <li>
+    <p>When a cdrom is specified with</p>
+
+    <p><tt><disk device="cdrom" snapshot="no" type="file"></disk></tt></p>
+
+    <target bus="ide" dev="hdc" />
+
+    <readonly />
+
+    <serial />
+
+    <p>&lt;/disk&gt;&lt;/tt&gt;</p>
+
+    <p>the VM does not attempt to boot from its hard disk. Only complete removal of cdrom worked for me.</p>
+  </li>
+  <li>When the above cdrom spec has file="", libvirt does a frightening null-pointer dereferencing, instead of interpreting this as an empty cdrom</li>
+  <li>On an occasion which I did not reproduce, <code>virsh dumpxml dom</code> reported a wrong vnc port. This made <code>virt-viewer</code> fail, while <code>xl vncviewer</code> worked fine.</li>
+  <li>Some consider this a Xen feature, but for me it is a bug: if for some reason qemu dies, the Xen domain may still live on, and libvirt does not report of any issue. That's usually bad of HVM guests - qemu was started for a reason (to emulate devices) and without it, the guest is not going to get very far along. I'd rather have a means to specify that I'd like such a VM to be shut down in this condition, or at least be told that it has lost its device emulation.</li>
+  <li>When VM fails to boot, <code>&lt;on_crash&gt;destroy&lt;/on_crash&gt;</code> takes into actions and stops the VM. My attempts to change this to <code>preserve</code> proved futile.</li>
+  <li>No support for floppy, which is still (seldom) used by oVirt</li>
+  <li><code>&lt;interface&gt;&lt;filterref&gt;</code> is silently ignored</li>
+  <li>There is no <code>&lt;link state="down"&gt;</code>.</li>
+  <li>VNC password cannot be set <code>libvirtError: unsupported configuration: device type 'graphics' cannot be updated</code></li>
+  <li>I failed to connect to the VNC port from outside dom0; I have no idea why I get <code>unable connect to socket: Connection refused (111)</code> with iptables set to ACCEPT all.</li>
+  <li>Live migration is in the works</li>
+  <li>Migration cancellation is missing</li>
+  <li>VIR_DOMAIN_DESTROY_GRACEFUL is unsupported: Unknown libvirterror: ecode: 8 edom: 41 level: 2 message: unsupported flags (0x1) in function libxlDomainDestroyFlags</li>
+</ol>
+
+<h3 id="xen">Xen</h3>
+
+<ol>
+  <li>When asked to start a domain with only 64MiB RAM, things break in an odd way. qemu dies, but libvirt reports the domain as running.</li>
+  <li>No CPU hot-plugging, and certainly not something compatible with oVirt's implementation (of starting a VM with 160 considerable CPUs, and setting the current number to 1).</li>
+</ol>
+
+<h3 id="nested-kvm">Nested KVM</h3>
+
+<p>If I could run HVM Xen guests within KVM L1 guests, development would have been easier. Unfortunately, with kernel-3.14.5-200.fc20.x86_64 and qemu-kvm-2.0.0-5.fc20.x86_64 on the host, the L1 dom0 `xl dmesg` complains about</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  (XEN) VMX: CPU0 has insufficient VMExit Control (000f6fff; requires 00008200)&#x000A;  (XEN) VMX: failed to initialise.&#x000A;</code></pre></div>
+<p><a href="Category:How to">Category:How to</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/xen.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/xen.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 15 Dec 2018 19:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

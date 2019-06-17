@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Gluster Hooks Management &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-hooks-management">Gluster Hooks Management</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allows the user to manage the gluster hooks(Volume lifecycle extensions) from oVirt Engine. With this the user can view the list of hooks available in the hosts along with their statuses. The user will be able to enable or disable hooks and view the content s of them.</p>
+
+<p>To read more about gluster hooks <a href="http://www.gluster.org/community/documentation/index.php/Features/Hooks">http://www.gluster.org/community/documentation/index.php/Features/Hooks</a></p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Shireesh Anjal <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#110;&#106;&#097;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#110;&#106;&#097;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner: Kanagaraj Mayilsamy <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#107;&#109;&#097;&#121;&#105;&#108;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#107;&#109;&#097;&#121;&#105;&#108;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>Engine Component owner: Sahina Bose<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>VDSM Component owner: Balamurugan Arumugam <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#098;&#097;&#114;&#117;&#109;&#117;&#103;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#098;&#097;&#114;&#117;&#109;&#117;&#103;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>QA Owner: Sudhir Dharanendraiah <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status: Completed</li>
+  <li>Last updated: ,</li>
+  <li>Available in: version 3.3</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<h4 id="glusterhook">GlusterHook</h4>
+
+<p>GlusterHook is the entity that represents the gluster hook in the cluster. It has the following properties</p>
+
+<ol>
+  <li>Gluster command</li>
+  <li>Stage</li>
+  <li>Hook name (script name)</li>
+  <li>Hook status (Enabled, Disabled, Missing)</li>
+  <li>Content type (Binary/Text)</li>
+  <li>Checksum</li>
+  <li>Content text (Stored in base64 encoded format)</li>
+  <li>Conflict Status</li>
+</ol>
+
+<p>Conflict Status is a 3 bit representation of the conflicts found between servers for the hook.</p>
+
+<ul>
+  <li>Bit 1 - set if there's conflict in content</li>
+  <li>Bit 2 - set if there's conflict in status</li>
+  <li>Bit 3 - set if the hook script is missing in one of the servers</li>
+</ul>
+
+<h4 id="glusterserverhook">GlusterServerHook</h4>
+
+<p>GlusterServerHook entity represents the hook's properties in each server of the cluster. Properties :</p>
+
+<ol>
+  <li>Hook Id</li>
+  <li>Server Id</li>
+  <li>Hook Status</li>
+  <li>Content type</li>
+  <li>Checksum</li>
+</ol>
+
+<p>Note that the content of each server's hook is not stored in the engine. It is retrieved from the server when required (while resolving conflicts betweek hook scripts)</p>
+
+<h3 id="crud">CRUD</h3>
+
+<ul>
+  <li>Gluster Hooks are added whenever a cluster is imported. The hooks that exist in the cluster will be added to the database.</li>
+  <li>Gluster Hooks are also added as part of a routine sync operation. There will be a periodic job that looks for new hooks in cluster. If found, the database will be updated with the new hook details</li>
+  <li>'GlusterHooksRefreshRate' configuration will determine the frequency of the hooks sync operation (Defaults to 1 Hr).</li>
+  <li>Engine copy of the hooks will be treated as master copy while searching for/resolving conflicts</li>
+</ul>
+
+<h3 id="user-experience">User Experience</h3>
+
+<h4 id="hooks-tab">Hooks Tab</h4>
+
+<p><img alt="" width="958" height="356" src="/images/wiki/Gluster-Hooks-table.png?1560777613" /></p>
+
+<h4 id="resolving-conflicts">Resolving Conflicts</h4>
+
+<p><img alt="" width="1024" height="720" src="/images/wiki/Gluster-Hooks-conflicts.png?1560777613" /></p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<h3 id="user-work-flows">User work-flows</h3>
+
+<ul>
+  <li>On click of a gluster supported cluster, a Gluster Hooks sub-tab is shown which lists the hooks in the cluster.</li>
+  <li>An admin should be able to enable/disable a hook on all nodes in the cluster by selecting it.</li>
+  <li>Content of the hook can be viewed by clicking the 'View Contents' button if the hook content type is 'Text'.</li>
+  <li>An 'Exclamation' against a hook denotes, either there is a conflict in hook content/status across the servers in the cluster or the hook script is missing in one or more servers.</li>
+  <li>If there are conflicts in hook scripts across the servers in the cluster, administrator will have the option to resolve it. This will open a new window for conflict resolution.</li>
+</ul>
+
+<h3 id="resolving-the-conflicts">Resolving the Conflicts</h3>
+
+<p>As the hooks present in the servers are periodically synchronized with engine database, there may be a chance of conflicts of the following types</p>
+
+<ul>
+  <li>Content Conflict - content of the hook is different across servers</li>
+  <li>Status Conflict - status of the hook is different across servers</li>
+  <li>Content + Status Conflict - both content and status of the hook is different across servers</li>
+  <li>Missing - One or more servers of the cluster doesn't have the hook</li>
+</ul>
+
+<h3 id="events">Events</h3>
+
+<ul>
+  <li>Periodic polling for hooks will report changes in hook and new hook scripts found in the events manager</li>
+</ul>
+
+<h2 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h2>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p><a href="http://www.gluster.org/community/documentation/index.php/Features/Hooks">http://www.gluster.org/community/documentation/index.php/Features/Hooks</a></p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<h2 id="test-cases">Test Cases</h2>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Click on "Clusters" and select a <Cluster></Cluster></li>
+  <li>Click on the "Gluster Hooks" sub-tab</li>
+</ul>
+
+<p><strong>\1</strong></p>
+
+<ol>
+  <li>Verify that it lists all the hooks in the cluster including the ones that are manually created</li>
+  <li>Verify that "Enable" button is present for "Disabled" hooks and "Disable" button is present for "Enabled" hooks</li>
+</ol>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Manually create one or more hooks in the servers from the back-end.</li>
+  <li>Click on "Clusters" and select a <Cluster></Cluster></li>
+  <li>Click on the "Gluster Hooks" sub-tab which will list all the hooks in the cluster.</li>
+  <li>Select any disabled Hook and click to "Enable"</li>
+  <li>Select any enabled Hook and click to "Disable"</li>
+</ul>
+
+<p>'' Expected Results: ''</p>
+
+<ol>
+  <li>Enable button should be seen (for disabled hooks) when viewing the list of hooks and Disable button should be seen (for enabled hooks) when viewing the list of hooks</li>
+  <li>Should get a confirmation pop-up window during Disabling hooks</li>
+  <li>Event message should be generated for the above actions</li>
+  <li>The status of the Hook should get updated accordingly</li>
+</ol>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Click on "Clusters" and select a <Cluster></Cluster></li>
+  <li>Click on the "Gluster Hooks" sub-tab and it lists the hooks in the cluster</li>
+  <li>Select a Hook with "Content Type" 'Text' and click on "View Content"</li>
+</ul>
+
+<p>'' Expected Results: ''</p>
+
+<ol>
+  <li>Content of the hook can be viewed in a pop-up ONLY if the hook content type is 'Text'.</li>
+</ol>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Click on "Clusters" and select a <Cluster></Cluster></li>
+  <li>Click on the "Gluster Hooks" sub-tab</li>
+  <li>Click on "Sync"</li>
+</ul>
+
+<p>'' Expected Results: ''</p>
+
+<ol>
+  <li>Verify that the manually created hooks are getting synced and listed in the UI successfully.</li>
+</ol>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Check for Status Conflict:</li>
+  <li>If there are conflicts in hook scripts across the servers in the cluster, click on "Resolve Conflicts". This will open a new window for conflict resolution.</li>
+  <li>Now resolve the Content Conflict either by:
+    <ul>
+      <li>Applying the content of the hook from one of the servers '' OR ''</li>
+      <li>Applying the content of the hook from the engine copy</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>\1</strong> Verify that the content conflicts are successfully resolved after performing the corresponding actions</p>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Check for Status Conflict:</li>
+  <li>If there are conflicts in hook scripts across the servers in the cluster, click on "Resolve Conflicts". This will open a new window for conflict resolution.</li>
+  <li>Now resolve the Status Conflict by:
+    <ul>
+      <li>Changing the hook status to either "Disable" or "Enable" in the "Resolve Conflicts" pop-up</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>\1</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1. Verify that the status conflicts are successfully resolved&#x000A;</code></pre></div>
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Check for Content and Status Conflict:</li>
+  <li>If there are conflicts in hook scripts across the servers in the cluster, click on "Resolve Conflicts". This will open a new window for conflict resolution.</li>
+  <li>Now resolve the Content Conflict either by:
+    <ul>
+      <li>Applying the content of the hook from one of the servers '' OR ''</li>
+      <li>Applying the content of the hook from the engine copy</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Now resolve the Status Conflict either by:
+    <ul>
+      <li>Changing the hook status to either "Disable" or "Enable" in the "Resolve Conflicts" pop-up '' OR ''</li>
+      <li>Manually fixing it from the back-end by renaming the file with prefix "K" or "S" as required.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>\1</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1. Verify that the status conflicts are successfully resolved&#x000A;</code></pre></div>
+<p><em>' * Test case 8- Resolve Conflicts : Missing (Copy the hook to all the servers)</em>'</p>
+
+<ul>
+  <li>Check for Missing Conflict:</li>
+  <li>Select the hook having conflict and click on "Resolve Conflicts". This will open a new window for conflict resolution.</li>
+  <li>Now resolve the Missing Conflict by selecting:
+    <ul>
+      <li>Copy the hook to all the servers</li>
+    </ul>
+  </li>
+</ul>
+
+<p>'' Expected Results: ''</p>
+
+<ol>
+  <li>Verify that the Missing conflict is successfully resolved after performing the corresponding actions and the hook is copied to all the servers</li>
+</ol>
+
+<p><em>' * Test case 9:- Resolve Conflicts : Missing (Remove the missing hook)</em>'</p>
+
+<ul>
+  <li>Check for Missing Conflict:</li>
+  <li>Select the hook having conflict and click on "Resolve Conflicts". This will open a new window for conflict resolution.</li>
+  <li>Now resolve the Missing Conflict by selecting:
+    <ul>
+      <li>Remove the missing hook</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>\1</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1. Verify that the Missing conflict is successfully resolved and the hooks is removed from the Gluster Hooks tab&#x000A;</code></pre></div>
+<p><em>' * Test case 10:- Resolve all 3 Conflicts: Content + Status + Missing</em>'</p>
+
+<ul>
+  <li>Click on "Resolve Conflicts"</li>
+  <li>Select the appropriate Resolve Actions for all 3 types of conflicts and click on OK</li>
+</ul>
+
+<p><strong>\1</strong></p>
+
+<p>:#All the conflicts should be successfully resolved</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/gluster-hooks-management.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/gluster-hooks-management.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

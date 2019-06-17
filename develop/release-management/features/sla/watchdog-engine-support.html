@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Watchdog engine support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="watchdog-support-in-engine">Watchdog support in Engine</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature adds <a href="https://en.wikipedia.org/wiki/Watchdog_Card">watchdog</a> support to engine. The feature will be available in server VM's and especially useful when used with high availability.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Laszlo Hornyak (Lhornyak)</li>
+  <li>Email: <lhornyak at="" redhat="" dot="" com=""></lhornyak></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Status: implementation</li>
+  <li>Last updated: ,</li>
+  <li>patchset</li>
+</ul>
+
+<p><a href="http://gerrit.ovirt.org/13057">http://gerrit.ovirt.org/13057</a> - DB and entities changes, logic changes in BLL and vdsbroker</p>
+
+<p><a href="http://gerrit.ovirt.org/13059">http://gerrit.ovirt.org/13059</a> - frontend</p>
+
+<p><a href="http://gerrit.ovirt.org/13060">http://gerrit.ovirt.org/13060</a> - rest-api support</p>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Users will be able to add watchdog cards to their virtual machines. This will be especially important for highly available servers.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>This feature depends on the <a href="/documentation/sla/watchdog-device/">VDSM support for the watchdog cards</a> (merged) The related patches:</p>
+
+<ul>
+  <li><a href="http://gerrit.ovirt.org/7535">device support</a></li>
+  <li><a href="http://gerrit.ovirt.org/9429">watchdog events support</a></li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p>For libvirt support, please see <a href="http://libvirt.org/formatdomain.html#elementsWatchdog">libvirt's documentation on watchdog support</a>.</p>
+
+<h3 id="user-interface">User Interface</h3>
+
+<p>The watchdog support on the UI will be found on the new/edit VM/template window, on the high availablity tab, since mostly you need the watchdog in HA setups.</p>
+
+<p><img alt="" width="800" height="540" src="/images/wiki/Neweditserverhawatchdogenabled.png?1560777613" /> <img alt="" width="800" height="540" src="/images/wiki/Neweditserverhawatchdogdisabled.png?1560777613" /></p>
+
+<p>You can also find a user interface live demo on [<a href="https://www.youtube.com/watch?v">https://www.youtube.com/watch?v</a>=-dJLmLxXn4o youtube]</p>
+
+<h4 id="desktop">Desktop</h4>
+
+<p>The desktop will have the very same HA tab as the server. This is a somewhat unrelated change, but the difference between desktop and server VM's is about to be removed.</p>
+
+<h3 id="backend-changes">Backend changes</h3>
+
+<ul>
+  <li>Both Vm and Template will have support for watchdog cards</li>
+  <li>Watchdog card is represented by a VmDevice</li>
+</ul>
+
+<h3 id="watchdog-notifications">Watchdog notifications</h3>
+
+<ul>
+  <li>Since users must be aware of the watchdog operations, vdsm reports the last action taken by a watchdog for each VM in getVmStats.</li>
+  <li>
+    <p>This actions should be translated into system events</p>
+
+    <p> <em> An event will show up in the Web Admin.
+   </em> Users should be able to subscribe to watchdog event, so they will get a notification via the notification service.</p>
+  </li>
+</ul>
+
+<h3 id="database-changes">Database changes</h3>
+
+<ul>
+  <li>none</li>
+</ul>
+
+<h3 id="rest-api-changes">REST Api changes</h3>
+
+<p>In REST API the VM and template will get a new optional tag <strong>watchdog</strong> directly under te vm tag. Watchdog tag will have two mandatory attributes: model and action</p>
+
+<vm id="87cd09df-88af-4958-8aba-87b14b92ca39" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39">
+` `<name>`test`</name>
+` `<description>`123456`</description>
+` `<link rel="disks" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/disks" />
+` `<link rel="nics" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/nics" />
+` `<link rel="cdroms" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/cdroms" />
+` `<link rel="snapshots" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/snapshots" />
+` `<link rel="tags" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/tags" />
+` `<link rel="permissions" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/permissions" />
+` `<link rel="statistics" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/statistics" />
+` `<link rel="reporteddevices" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/reporteddevices" />
+` `<type>`server`</type>
+` `<status>
+` `<state>`down`</state>
+` `</status>
+` `<memory>`536870912`</memory>
+       ...
+**<link rel="watchdogs" href="/api/vms/87cd09df-88af-4958-8aba-87b14b92ca39/watchdogs" />**
+       ...
+</vm>
+
+<p>and then in the referenced watchdog url you will see something like this</p>
+
+<watchdogs>
+` `<watchdog>
+`   `<model>`i6300esb`</model>
+`   `<action>`reset`</action>
+` `</watchdog>
+<watchdogs>
+
+Note here that there can be only one watchdog.
+
+The watchdog cards and available actions will also get a list in the engine capabilities list (api/capabilities)
+
+<watchdog_models>
+` `<watchdog_model>`i6300esb`</watchdog_model>
+` `<watchdog_model>`ib700`</watchdog_model>
+</watchdog_models>
+
+<watchdog_actions>
+` `<watchdog_action>`dump`</watchdog_action>
+` `<watchdog_action>`reset`</watchdog_action>
+` `<watchdog_action>`none`</watchdog_action>
+       ....
+</watchdog_actions>
+
+### Watchdog behavior
+
+In any case when the watchdog event is triggered, users will receive a \*\*warning\*\* level audit log entry associated with the VM.
+
+*   poweroff - shuts down the VM immediately. Not that if the VM is HA, it will be started automatically by the engine - possibly on another host.
+*   reset - restarts the VM. The engine will also be notified about the VM rebooting.
+*   pause - pauses the VM. User can resume the VM.
+*   dump - dumps and the VM goes to pause state
+*   none - no action is taken, but the watchdog event appears in the audit log
+
+### VDSM support
+
+VDSM support for watchdog cards is already merged.
+
+
+
+## TODO
+
+New features requested by [User:Gchaplik](Gilad)
+
+*   Adding watchdog data in vm general subtab
+*   Enabling watchdog fields according to supported compatibility version (iirc Missing in add watchdog canDoAction)
+*   Watchdog filtered events sub-tab for VM main tab (visible when watchdog is enabled)
+*   Search vms by last_event != null (&gt; date (dream))
+*   Icon in VM grid (main tab) when watchdog is enabled or has event (in the last YYY time)
+
+## Test cases
+
+*   detecting the watchdog
+    -   i6300esb is a pci device, the command *\`lspci | grep watchdog -i\`* in a guest linux OS will show you the watchdog card if it is installed
+    -   ib700: TODO
+
+<!-- -->
+
+*   triggering the watchdog
+    -   to crash the kernel: <big>echo c &gt; /proc/sysrq-trigger</big>
+    -   to trigger watchdog: <big>kill -9 \`pgrep watchdog\`</big>
+
+### Create VM with watchdog (UI)
+
+1.  Create a server VM
+2.  set VM name
+3.  click on "High Availability"
+4.  set watchdog card to **'i6300esb** and watchdog action to **reset**
+5.  save VM
+6.  click on the new VM in the list
+7.  click **edit**
+8.  check if the watchdog device is set correctly
+9.  use the rest api to see if the VM has the watchdog card
+10. click cancel
+11. start the VM
+12. click on the console icon to open SPICE console
+13. boot any linux distribution on the VM
+14. see if watchdog card is installed
+
+### Remove watchdog from VM (UI)
+
+Depends on [Create VM with watchdog (UI)](#Create_VM_with_watchdog_(UI))
+
+1.  create vm with watchdog (see above)
+2.  edit vm
+3.  go to **high availablity** tab
+4.  set the watchdog model to empty
+5.  save VM
+6.  check on restapi, the watchdog tag must not appear now on the VM
+
+### Create template with watchdog (UI)
+
+Dependens on [#Create_VM_with_watchdog_(UI)](#Create_VM_with_watchdog_(UI))
+
+1.  Create a server VM
+2.  set VM name
+3.  click on "High Availability"
+4.  set watchdog card to **'i6300esb** and watchdog action to **reset**
+5.  save VM
+6.  create template from vm
+7.  go to the templates tab
+8.  click on the newly created template
+9.  click on **edit**
+10. click on **high availablity**
+11. check if watchdog is set correctly
+
+### Create vm with watchdog from template (UI)
+
+Depends: [Create vm with watchdog from template (UI)](#Create_template_with_watchdog_.28UI.29)
+
+1.  go to the **Virtual Machines** tab
+2.  click on the **new server** button
+3.  select the template with watchdog as template
+4.  save the VM
+5.  edit the newvly created VM
+6.  go to the **high availability** tab
+7.  check that the watchdog settings are the same as in the template
+
+### Create vm with watchdog (REST-API)
+
+1.  use the rest api to create a vm with a <watchdog> tag ([see above](#REST_Api_changes))
+2.  check on the rest api if the watchdog card is persisted
+
+### Add watchdog to existing VM (REST-API)
+
+1.  use the rest api to create a vm with a <watchdog> tag ([see above](#REST_Api_changes))
+2.  check on the rest api if the watchdog card is persisted
+
+### Remove watchdog from VM (REST-API)
+
+</watchdog></watchdog></watchdogs></watchdogs>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/watchdog-engine-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/watchdog-engine-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 9 Nov 2017 15:53 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Backing up and Restoring an EL-Based Self-Hosted Environment &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/self-hosted/">Self-hosted</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-7-backing-up-and-restoring-an-el-based-self-hosted-environment">Chapter 7: Backing up and Restoring an EL-Based Self-Hosted Environment</h1>
+
+<p>The nature of the self-hosted engine, and the relationship between the hosts and the hosted-engine virtual machine, means that backing up and restoring a self-hosted engine environment requires additional considerations to that of a standard oVirt environment. In particular, the hosted-engine hosts remain in the environment at the time of backup, which can result in a failure to synchronize the new host and hosted-engine virtual machine after the environment has been restored.</p>
+
+<p>To address this, it is recommended that one of the hosts be placed into maintenance mode prior to backup, thereby freeing it from a virtual load. This failover host can then be used to deploy the new self-hosted engine.</p>
+
+<p>If a hosted-engine host is carrying a virtual load at the time of backup, then a host with any of the matching identifiers - IP address, FQDN, or name - cannot be used to deploy a restored self-hosted engine. Conflicts in the database will prevent the host from synchronizing with the restored hosted-engine virtual machine. The failover host, however, can be removed from the restored hosted-engine virtual machine prior to synchronization.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** A failover host at the time of backup is not strictly necessary if a new host is used to deploy the self-hosted engine. The new host must have a unique IP address, FQDN, and name so that it does not conflict with any of the hosts present in the database backup.&#x000A;</code></pre></div>
+<p><strong>Workflow for Backing Up the Self-Hosted Engine Environment</strong></p>
+
+<p>This procedure provides an example of the workflow for backing up a self-hosted engine using a failover host. This host can then be used later to deploy the restored self-hosted engine environment. For more information on backing up the self-hosted engine, see the Backing up the Self-Hosted Engine Virtual Machine section below.</p>
+
+<ol>
+  <li>
+    <p>The engine virtual machine is running on <code>Host 2</code> and the six regular virtual machines in the environment are balanced across the three hosts.</p>
+
+    <p><img alt="" width="1024" height="535" src="/images/self-hosted/RHEV_SHE_bkup_00.png?1560777613" /></p>
+
+    <p>Place <code>Host 1</code> into maintenance mode. This will migrate the virtual machines on <code>Host 1</code> to the other hosts, freeing it of any virtual load and enabling it to be used as a failover host for the backup.</p>
+  </li>
+  <li>
+    <p><code>Host 1</code> is in maintenance mode. The two virtual machines it previously hosted have been migrated to Host 3.</p>
+
+    <p><img alt="" width="1024" height="535" src="/images/self-hosted/RHEV_SHE_bkup_01.png?1560777613" /></p>
+
+    <p>Use <code>engine-backup</code> to create backups of the environment. After the backup has been taken, <code>Host 1</code> can be activated again to host virtual machines, including the engine virtual machine.</p>
+  </li>
+</ol>
+
+<p><strong>Workflow for Restoring the Self-Hosted Engine Environment</strong></p>
+
+<p>This procedure provides an example of the workflow for restoring the self-hosted engine environment from a backup. The failover host deploys the new engine virtual machine, which then restores the backup. Directly after the backup has been restored, the failover host is still present in the oVirt Engine because it was in the environment when the backup was created. Removing the old failover host from the Engine enables the new host to synchronize with the engine virtual machine and finalize deployment.</p>
+
+<ol>
+  <li>
+    <p><code>Host 1</code> has been used to deploy a new self-hosted engine and has restored the backup taken in the previous example procedure. Deploying the restored environment involves additional steps to that of a regular self-hosted engine deployment:</p>
+
+    <ul>
+      <li>
+        <p>After oVirt Engine has been installed on the engine virtual machine, but before <code>engine-setup</code> is first run, restore the backup using the <code>engine-backup</code> tool.</p>
+      </li>
+      <li>
+        <p>After <code>engine-setup</code> has configured and restored the Engine, log in to the Administration Portal and remove <code>Host 1</code>, which will be present from the backup. If old <code>Host 1</code> is not removed, and is still present in the Engine when finalizing deployment on new <code>Host 1</code>, the engine virtual machine will not be able to synchronize with new <code>Host 1</code> and the deployment will fail.</p>
+      </li>
+    </ul>
+
+    <p><img alt="" width="1024" height="535" src="/images/self-hosted/RHEV_SHE_bkup_02.png?1560777613" /></p>
+
+    <p>After <code>Host 1</code> and the engine virtual machine have synchronized and the deployment has been finalized, the environment can be considered operational on a basic level. With only one hosted-engine host, the engine virtual machine is not highly available. However, if necessary, high-priority virtual machines can be started on <code>Host 1</code>.</p>
+
+    <p>Any standard RHEL-based hosts - hosts that are present in the environment but are not self-hosted engine hosts - that are operational will become active, and the virtual machines that were active at the time of backup will now be running on these hosts and available in the Engine.</p>
+  </li>
+  <li>
+    <p><code>Host 2</code> and <code>Host 3</code> are not recoverable in their current state. These hosts need to be removed from the environment, and then added again to the environment using the hosted-engine deployment script. For more information on these actions, see the Removing Non-Operational Hosts from a Restored Self-Hosted Engine Environment section below and <a href="chap-Installing_Additional_Hosts_to_a_Self-Hosted_Environment">Chapter 7: Installing Additional Hosts to a Self-Hosted Environment</a>.</p>
+
+    <p><img alt="" width="1024" height="535" src="/images/self-hosted/RHEV_SHE_bkup_03.png?1560777613" /></p>
+
+    <p><code>Host 2</code> and <code>Host 3</code> have been re-deployed into the restored environment. The environment is now as it was in the first image, before the backup was taken, with the exception that the engine virtual machine is hosted on <code>Host 1</code>.</p>
+  </li>
+</ol>
+
+<h3 id="backing-up-the-self-hosted-engine-virtual-machine">Backing up the Self-Hosted Engine Virtual Machine</h3>
+
+<p>It is recommended that you back up your self-hosted engine environment regularly. The supported backup method uses the <code>engine-backup</code> tool and can be performed without interrupting the <code>ovirt-engine</code> service. The <code>engine-backup</code> tool only allows you to back up the oVirt Engine virtual machine, but not the host that contains the Engine virtual machine or other virtual machines hosted in the environment.</p>
+
+<p><strong>Backing up the Original oVirt Engine</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Preparing the Failover Host</strong></p>
+
+    <p>A failover host, one of the hosted-engine hosts in the environment, must be placed into maintenance mode so that it has no virtual load at the time of the backup. This host can then later be used to deploy the restored self-hosted engine environment. Any of the hosted-engine hosts can be used as the failover host for this backup scenario, however the restore process is more straightforward if <code>Host 1</code> is used. The default name for the <code>Host 1</code> host is <code>hosted_engine_1</code>; this was set when the hosted-engine deployment script was initially run.</p>
+
+    <p>i. Log in to one of the hosted-engine hosts.</p>
+
+    <p>ii. Confirm that the <code>hosted_engine_1</code> host is <code>Host 1</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # hosted-engine --vm-status&#x000A;</code></pre></div>
+    <p>iii. Log in to the Administration Portal.</p>
+
+    <p>iv. Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+
+    <p>v. Select the <code>hosted_engine_1</code> host in the results list, and click <strong>Management</strong> → <strong>Maintenance</strong>.</p>
+
+    <p>vi. Click <strong>OK</strong>.</p>
+
+    <p>Depending on the virtual load of the host, it may take some time for all the virtual machines to be migrated. Proceed to the next step after the host status has changed to <code>Maintenance</code>.</p>
+  </li>
+  <li>
+    <p><strong>Creating a Backup of the Engine</strong></p>
+
+    <p>On the Engine virtual machine, back up the configuration settings and database content, replacing <code>[EngineBackupFile]</code> with the file name for the backup file, and <code>[LogFILE]</code> with the file name for the backup log.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --mode=backup --file=[EngineBackupFile] --log=[LogFILE]&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Backing up the Files to an External Server</strong></p>
+
+    <p>Back up the files to an external server. In the following example, <code>[Storage.example.com]</code> is the fully qualified domain name of a network storage server that will store the backup until it is needed, and <code>/backup/</code> is any designated folder or path. The backup files must be accessible to restore the configuration settings and database content.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp -p [EngineBackupFiles] [Storage.example.com:/backup/EngineBackupFiles]&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Activating the Failover Host</strong></p>
+
+    <p>Bring the <code>hosted_engine_1</code> host out of maintenance mode.</p>
+
+    <ol>
+      <li>
+        <p>Log in to the Administration Portal.</p>
+      </li>
+      <li>
+        <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+      </li>
+      <li>
+        <p>Select <code>hosted_engine_1</code> from the results list.</p>
+      </li>
+      <li>
+        <p>Click <strong>Management</strong> → <strong>Activate</strong>.</p>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<p>You have backed up the configuration settings and database content of the oVirt Engine virtual machine.</p>
+
+<h2 id="restoring-the-self-hosted-engine-environment">Restoring the Self-Hosted Engine Environment</h2>
+
+<p>This section explains how to restore a self-hosted engine environment from a backup on a newly installed host. The supported restore method uses the <code>engine-backup</code> tool.</p>
+
+<p>Restoring a self-hosted engine environment involves the following key actions:</p>
+
+<ol>
+  <li>
+    <p>Create a newly installed Enterprise Linux host and run the hosted-engine deployment script.</p>
+  </li>
+  <li>
+    <p>Restore the oVirt Engine configuration settings and database content in the new Engine virtual machine.</p>
+  </li>
+  <li>
+    <p>Remove hosted-engine hosts in a <guilabel>Non Operational</guilabel> state and re-install them into the restored self-hosted engine environment.</p>
+  </li>
+</ol>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>To restore a self-hosted engine environment, you must prepare a newly installed Enterprise Linux system on a physical host.</p>
+  </li>
+  <li>
+    <p>The operating system version of the new host and Engine must be the same as that of the original host and Engine.</p>
+  </li>
+  <li>
+    <p>The fully qualified domain name of the new Engine must be the same fully qualified domain name as that of the original Engine. Forward and reverse lookup records must both be set in DNS.</p>
+  </li>
+  <li>
+    <p>You must prepare storage for the new self-hosted engine environment to use as the Engine virtual machine’s shared storage domain. This domain must be at least 68 GB.</p>
+  </li>
+</ul>
+
+<h3 id="creating-a-new-self-hosted-engine-environment-to-be-used-as-the-restored-environment">Creating a New Self-Hosted Engine Environment to be Used as the Restored Environment</h3>
+
+<p>You can restore a self-hosted engine on hardware that was used in the backed-up environment. However, you must use the failover host for the restored deployment. The failover host, <code>Host 1</code>, used in Backing up the Self-Hosted Engine Virtual Machine section above uses the default hostname of <code>hosted_engine_1</code>, which is also used in this procedure. Due to the nature of the restore process for the self-hosted engine, before the final synchronization of the restored engine can take place, this failover host will need to be removed, and this can only be achieved if the host had no virtual load when the backup was taken. You can also restore the backup on a separate hardware which was not used in the backed up environment and this is not a concern.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** This procedure assumes that you have a freshly installed Enterprise Linux system on a physical host, have attached the host to the required subscriptions, and installed the ovirt-hosted-engine-setup package. S&#x000A;</code></pre></div>
+<p><strong>Creating a New Self-Hosted Environment to be Used as the Restored Environment</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Updating DNS</strong></p>
+
+    <p>Update your DNS so that the fully qualified domain name of the oVirt environment correlates to the IP address of the new Engine. In this procedure, fully qualified domain name was set as <code>Engine.example.com</code>. The fully qualified domain name provided for the engine must be identical to that given in the engine setup of the original engine that was backed up.</p>
+  </li>
+  <li>
+    <p><strong>Initiating Hosted Engine Deployment</strong></p>
+
+    <p>On the newly installed Red Hat Enterprise Linux host, run the <code>hosted-engine</code> deployment script with the '–noansible' option. To escape the script at any time, use the <strong>CTRL</strong> + <strong>D</strong> keyboard combination to abort deployment. If running the <code>hosted-engine</code> deployment script over a network, it is recommended to use the <code>screen</code> window manager to avoid losing the session in case of network or terminal disruption. Install the <code>screen</code> package first if not installed.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # screen&#x000A; # hosted-engine --deploy --noansible&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Preparing for Initialization</strong></p>
+
+    <p>The script begins by requesting confirmation to use the host as a hypervisor for use in a self-hosted engine environment.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Continuing will configure this host for serving as hypervisor and create a VM where you have to install oVirt Engine afterwards.&#x000A; Are you sure you want to continue? (Yes, No)[Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuring Storage</strong></p>
+
+    <p>Select the type of storage to use.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> During customization use CTRL-D to abort.&#x000A; Please specify the storage you would like to use (glusterfs, iscsi, fc, nfs3, nfs4)[nfs3]:&#x000A;</code></pre></div>
+    <ul>
+      <li>
+        <p>For NFS storage types, specify the full address, using either the FQDN or IP address, and path name of the shared storage domain.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Please specify the full shared storage connection path to use (example: host:/path): storage.example.com:/hosted_engine/nfs&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For iSCSI, specify the iSCSI portal IP address, port, user name and password, and select a target name from the auto-detected list. You can only select one iSCSI target during the deployment.</p>
+
+        <p><strong>Note:</strong> If you wish to specify more than one iSCSI target, you must enable multipathing before deploying the self-hosted engine. There is also a Multipath Helper tool that generates a script to install and configure multipath with different options.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Please specify the iSCSI portal IP address:&#x000A;  Please specify the iSCSI portal port [3260]:&#x000A;  Please specify the iSCSI portal user:&#x000A;  Please specify the iSCSI portal password:&#x000A;  Please specify the target name (auto-detected values) [default]:&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Gluster storage, specify the full address, using either the FQDN or IP address, and path name of the shared storage domain.</p>
+
+        <p><strong>Important:</strong> Only replica 3 Gluster storage is supported. Ensure the following configuration has been made:</p>
+
+        <ul>
+          <li>
+            <p>In the <code>/etc/glusterfs/glusterd.vol</code> file on all three Gluster servers, set <code>rpc-auth-allow-insecure</code> to <code>on</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  option rpc-auth-allow-insecure on&#x000A;</code></pre></div>          </li>
+          <li>
+            <p>Configure the volume as follows:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  gluster volume set volume cluster.quorum-type auto&#x000A;  gluster volume set volume network.ping-timeout 10&#x000A;  gluster volume set volume auth.allow \*&#x000A;  gluster volume set volume group virt&#x000A;  gluster volume set volume storage.owner-uid 36&#x000A;  gluster volume set volume storage.owner-gid 36&#x000A;  gluster volume set volume server.allow-insecure on&#x000A;</code></pre></div>          </li>
+        </ul>
+
+        <p><!-- comment ends list so next line is pre --></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Please specify the full shared storage connection path to use (example: host:/path): storage.example.com:/hosted_engine/gluster_volume&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Fibre Channel, the host bus adapters must be configured and connected, and the <code>hosted-engine</code> script will auto-detect the LUNs available. The LUNs must not contain any existing data.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  The following luns have been found on the requested target:&#x000A;  [1]     3514f0c5447600351       30GiB   XtremIO XtremApp&#x000A;                          status: used, paths: 2 active&#x000A;&#x000A;  [2]     3514f0c5447600352       30GiB   XtremIO XtremApp&#x000A;                          status: used, paths: 2 active&#x000A;&#x000A;  Please select the destination LUN (1, 2) [1]:&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Configuring the Network</strong></p>
+
+    <p>The script detects possible network interface controllers (NICs) to use as a management bridge for the environment. It then checks your firewall configuration and offers to modify it for console (SPICE or VNC) access the Engine virtual machine. Provide a pingable gateway IP address, to be used by the <code>ovirt-ha-agent</code>, to help determine a host's suitability for running a Engine virtual machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please indicate a nic to set ovirtmgmt bridge on: (eth1, eth0) [eth1]:&#x000A; iptables was detected on your computer, do you wish setup to configure it? (Yes, No)[Yes]:&#x000A; Please indicate a pingable gateway IP address [X.X.X.X]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuring the New Engine Virtual Machine</strong></p>
+
+    <p>The script creates a virtual machine to be configured as the new Engine virtual machine. Specify the boot device and, if applicable, the path name of the installation media, the image alias, the CPU type, the number of virtual CPUs, and the disk size. Specify a MAC address for the Engine virtual machine, or accept a randomly generated one. The MAC address can be used to update your DHCP server prior to installing the operating system on the Engine virtual machine. Specify memory size and console connection type for the creation of Engine virtual machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please specify the device to boot the VM from (cdrom, disk, pxe) [cdrom]:&#x000A; Please specify an alias for the Hosted Engine image [hosted_engine]:&#x000A; The following CPU types are supported by this host:&#x000A;           - model_Penryn: Intel Penryn Family&#x000A;           - model_Conroe: Intel Conroe Family&#x000A; Please specify the CPU type to be used by the VM [model_Penryn]:&#x000A; Please specify the number of virtual CPUs for the VM [Defaults to minimum requirement: 2]:&#x000A; Please specify the disk size of the VM in GB [Defaults to minimum requirement: 25]:&#x000A; You may specify a MAC address for the VM or accept a randomly generated default [00:16:3e:77:b2:a4]:&#x000A; Please specify the memory size of the VM in MB [Defaults to minimum requirement: 4096]:&#x000A; Please specify the console type you want to use to connect to the VM (vnc, spice) [vnc]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Identifying the Name of the Host</strong></p>
+
+    <p>Specify the password for the <code>admin@internal</code> user to access the Administration Portal.</p>
+
+    <p>A unique name must be provided for the name of the host, to ensure that it does not conflict with other resources that will be present when the engine has been restored from the backup. The name <code>hosted_engine_1</code> can be used in this procedure because this host was placed into maintenance mode before the environment was backed up, enabling removal of this host between the restoring of the engine and the final synchronization of the host and the engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Enter engine admin password:&#x000A; Confirm engine admin password:&#x000A; Enter the name which will be used to identify this host inside the Administration Portal [hosted_engine_1]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuring the Hosted Engine</strong></p>
+
+    <p>Provide the fully qualified domain name for the new Engine virtual machine. This procedure uses the fully qualified domain name <code>Engine.example.com</code>. Provide the name and TCP port number of the SMTP server, the email address used to send email notifications, and a comma-separated list of email addresses to receive these notifications.</p>
+
+    <p><strong>Important:</strong> The fully qualified domain name provided for the engine (<code>Engine.example.com</code>) must be the same fully qualified domain name provided when original Engine was initially set up.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please provide the FQDN for the engine you would like to use.&#x000A; This needs to match the FQDN that you will use for the engine installation within the VM.&#x000A;  Note: This will be the FQDN of the VM you are now going to create,&#x000A;  it should not point to the base host or to any other existing machine.&#x000A;  Engine FQDN: Engine.example.com&#x000A; Please provide the name of the SMTP server through which we will send notifications [localhost]:&#x000A; Please provide the TCP port number of the SMTP server [25]:&#x000A; Please provide the email address from which notifications will be sent [root@localhost]:&#x000A; Please provide a comma-separated list of email addresses which will get notifications [root@localhost]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuration Preview</strong></p>
+
+    <p>Before proceeding, the <code>hosted-engine</code> deployment script displays the configuration values you have entered, and prompts for confirmation to proceed with these values.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Bridge interface                   : eth1&#x000A; Engine FQDN                        : Engine.example.com&#x000A; Bridge name                        : ovirtmgmt&#x000A; SSH daemon port                    : 22&#x000A; Firewall manager                   : iptables&#x000A; Gateway address                    : X.X.X.X&#x000A; Host name for web application      : hosted_engine_1&#x000A; Host ID                            : 1&#x000A; Image alias                        : hosted_engine&#x000A; Image size GB                      : 25&#x000A; Storage connection                 : storage.example.com:/hosted_engine/nfs&#x000A; Console type                       : vnc&#x000A; Memory size MB                     : 4096&#x000A; MAC address                        : 00:16:3e:77:b2:a4&#x000A; Boot type                          : pxe&#x000A; Number of CPUs                     : 2&#x000A; CPU Type                           : model_Penryn&#x000A;&#x000A; Please confirm installation settings (Yes, No)[Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Creating the New Engine Virtual Machine</strong></p>
+
+    <p>The script creates the virtual machine to be configured as the Engine virtual machine and provides connection details. You must install an operating system on it before the <code>hosted-engine</code> deployment script can proceed on Hosted Engine configuration.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[ INFO  ] Stage: Transaction setup&#x000A;[ INFO  ] Stage: Misc configuration&#x000A;[ INFO  ] Stage: Package installation&#x000A;[ INFO  ] Stage: Misc configuration&#x000A;[ INFO  ] Configuring libvirt&#x000A;[ INFO  ] Configuring VDSM&#x000A;[ INFO  ] Starting vdsmd&#x000A;[ INFO  ] Waiting for VDSM hardware info&#x000A;[ INFO  ] Waiting for VDSM hardware info&#x000A;[ INFO  ] Configuring the management bridge&#x000A;[ INFO  ] Creating Storage Domain&#x000A;[ INFO  ] Creating Storage Pool&#x000A;[ INFO  ] Connecting Storage Pool&#x000A;[ INFO  ] Verifying sanlock lockspace initialization&#x000A;[ INFO  ] Creating VM Image&#x000A;[ INFO  ] Disconnecting Storage Pool&#x000A;[ INFO  ] Start monitoring domain&#x000A;[ INFO  ] Configuring VM&#x000A;[ INFO  ] Updating hosted-engine configuration&#x000A;[ INFO  ] Stage: Transaction commit&#x000A;[ INFO  ] Stage: Closing up&#x000A;[ INFO  ] Creating VM&#x000A;You can now connect to the VM with the following command:&#x000A;      /usr/bin/remote-viewer vnc://localhost:5900&#x000A;Use temporary password "3477XXAM" to connect to vnc console.&#x000A;Please note that in order to use remote-viewer you need to be able to run graphical applications.&#x000A;This means that if you are using ssh you have to supply the -Y flag (enables trusted X11 forwarding).&#x000A;Otherwise you can run the command from a terminal in your preferred desktop environment.&#x000A;If you cannot run graphical applications you can connect to the graphic console from another host or connect to the console using the following command:&#x000A;virsh -c qemu+tls://Test/system console HostedEngine&#x000A;If you need to reboot the VM you will need to start it manually using the command:&#x000A;hosted-engine --vm-start&#x000A;You can then set a temporary password using the command:&#x000A;hosted-engine --add-console-password&#x000A;The VM has been started.  Install the OS and shut down or reboot it.  To continue please make a selection:&#x000A;&#x000A;  (1) Continue setup - VM installation is complete&#x000A;  (2) Reboot the VM and restart installation&#x000A;  (3) Abort setup&#x000A;  (4) Destroy VM and abort setup&#x000A;&#x000A;  (1, 2, 3, 4)[1]:&#x000A;</code></pre></div>
+    <p>Using the naming convention of this procedure, connect to the virtual machine using VNC with the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/usr/bin/remote-viewer vnc://hosted_engine_1.example.com:5900&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Installing the Virtual Machine Operating System</strong></p>
+
+    <p>Connect to Engine virtual machine and install a Red Hat Enterprise Linux 7 operating system.</p>
+  </li>
+  <li>
+    <p><strong>Synchronizing the Host and the Engine</strong></p>
+
+    <p>Return to the host and continue the <code>hosted-engine</code> deployment script by selecting option 1:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>(1) Continue setup - VM installation is complete&#x000A;&#x000A;Waiting for VM to shut down...&#x000A;[ INFO  ] Creating VM&#x000A;You can now connect to the VM with the following command:&#x000A;      /usr/bin/remote-viewer vnc://localhost:5900&#x000A;Use temporary password "3477XXAM" to connect to vnc console.&#x000A;Please note that in order to use remote-viewer you need to be able to run graphical applications.&#x000A;This means that if you are using ssh you have to supply the -Y flag (enables trusted X11 forwarding).&#x000A;Otherwise you can run the command from a terminal in your preferred desktop environment.&#x000A;If you cannot run graphical applications you can connect to the graphic console from another host or connect to the console using the following command:&#x000A;virsh -c qemu+tls://Test/system console HostedEngine&#x000A;If you need to reboot the VM you will need to start it manually using the command:&#x000A;hosted-engine --vm-start&#x000A;You can then set a temporary password using the command:&#x000A;hosted-engine --add-console-password&#x000A;Please install and setup the engine in the VM.&#x000A;You may also be interested in subscribing to "agent" RHN/Satellite channel and installing ovirt-engine-guest-agent-common package in the VM.&#x000A;To continue make a selection from the options below:&#x000A;  (1) Continue setup - engine installation is complete&#x000A;  (2) Power off and restart the VM&#x000A;  (3) Abort setup&#x000A;  (4) Destroy VM and abort setup&#x000A;&#x000A;  (1, 2, 3, 4)[1]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Installing the Engine</strong></p>
+
+    <p>Connect to new Engine virtual machine, ensure the latest versions of all installed packages are in use, and install the <code>ovirt-engine</code> packages.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum update&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Reboot the machine if any kernel related packages have been updated.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install ovirt-engine&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>After the packages have completed installation, you will be able to continue with restoring the self-hosted engine Engine.</p>
+
+<h3 id="restoring-the-self-hosted-engine-engine">Restoring the Self-Hosted Engine Engine</h3>
+
+<p>The following procedure outlines how to use the <code>engine-backup</code> tool to automate the restore of the configuration settings and database content for a backed-up self-hosted engine Engine virtual machine and Data Warehouse. The procedure only applies to components that were configured automatically during the initial <code>engine-setup</code>. If you configured the database(s) manually during <code>engine-setup</code>, follow the instructions at Restoring the Self-Hosted Engine Engine Manually section below to restore the back-up environment manually.</p>
+
+<p><strong>Restoring the Self-Hosted Engine Engine</strong></p>
+
+<ol>
+  <li>
+    <p>Secure copy the backup files to the new Engine virtual machine. This example copies the files from a network storage server to which the files were copied in Backing up the Self-Hosted Engine Engine Virtual Machine section above. In this example, <code>Storage.example.com</code> is the fully qualified domain name of the storage server, <code>/backup/EngineBackupFiles</code> is the designated file path for the backup files on the storage server, and <code>/backup/</code> is the path to which the files will be copied on the new Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp -p Storage.example.com:/backup/EngineBackupFiles /backup/&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Use the <code>engine-backup</code> tool to restore a complete backup.</p>
+
+    <ul>
+      <li>
+        <p>If you are only restoring the Engine, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --provision-db --restore-permissions&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>If you are restoring the Engine and Data Warehouse, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --provision-db --provision-dwh-db --restore-permissions&#x000A;</code></pre></div>      </li>
+    </ul>
+
+    <p>If successful, the following output displays:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> You should now run engine-setup.&#x000A; Done.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Configure the restored Engine virtual machine. This process identifies the existing configuration settings and database content. Confirm the settings. Upon completion, the setup provides an SSH fingerprint and an internal Certificate Authority hash.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A; [ INFO  ] Stage: Initializing&#x000A; [ INFO  ] Stage: Environment setup&#x000A; Configuration files: ['/etc/ovirt-engine-setup.conf.d/10-packaging.conf', '/etc/ovirt-engine-setup.conf.d/20-setup-ovirt-post.conf']&#x000A; Log file: /var/log/ovirt-engine/setup/ovirt-engine-setup-20140304075238.log&#x000A; Version: otopi-1.1.2 (otopi-1.1.2-1.el6ev)&#x000A; [ INFO  ] Stage: Environment packages setup&#x000A; [ INFO  ] Yum Downloading: rhel-65-zstream/primary_db 2.8 M(70%)&#x000A; [ INFO  ] Stage: Programs detection&#x000A; [ INFO  ] Stage: Environment setup&#x000A; [ INFO  ] Stage: Environment customization&#x000A;&#x000A;           --== PACKAGES ==--&#x000A;&#x000A; [ INFO  ] Checking for product updates...&#x000A; [ INFO  ] No product updates found&#x000A;&#x000A;           --== NETWORK CONFIGURATION ==--&#x000A;&#x000A; Setup can automatically configure the firewall on this system.&#x000A; Note: automatic configuration of the firewall may overwrite current settings.&#x000A; Do you want Setup to configure the firewall? (Yes, No) [Yes]:&#x000A; [ INFO  ] iptables will be configured as firewall manager.&#x000A;&#x000A;           --== DATABASE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;           --== OVIRT ENGINE CONFIGURATION ==--&#x000A;&#x000A;           Skipping storing options as database already prepared&#x000A;&#x000A;           --== PKI CONFIGURATION ==--&#x000A;&#x000A;           PKI is already configured&#x000A;&#x000A;           --== APACHE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;           --== SYSTEM CONFIGURATION ==--&#x000A;&#x000A;&#x000A;           --== END OF CONFIGURATION ==--&#x000A;&#x000A; [ INFO  ] Stage: Setup validation&#x000A; [ INFO  ] Cleaning stale zombie tasks&#x000A;&#x000A;           --== CONFIGURATION PREVIEW ==--&#x000A;&#x000A;           Database name                      : engine&#x000A;           Database secured connection        : False&#x000A;           Database host                      : X.X.X.X&#x000A;           Database user name                 : engine&#x000A;           Database host name validation      : False&#x000A;           Database port                      : 5432&#x000A;           NFS setup                          : True&#x000A;           Firewall manager                   : iptables&#x000A;           Update Firewall                    : True&#x000A;           Configure WebSocket Proxy          : True&#x000A;           Host FQDN                          : Engine.example.com&#x000A;           NFS mount point                    : /var/lib/exports/iso&#x000A;           Set application as default page    : True&#x000A;           Configure Apache SSL               : True&#x000A;&#x000A;           Please confirm installation settings (OK, Cancel) [OK]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Removing the Host from the Restored Environment</strong></p>
+
+    <p>If the deployment of the restored self-hosted engine is on new hardware that has a unique name not present in the backed-up engine, skip this step. This step is only applicable to deployments occurring on the failover host, <code>hosted_engine_1</code>. Because this host was present in the environment at time the backup was created, it maintains a presence in the restored engine and must first be removed from the environment before final synchronization can take place.</p>
+
+    <p>i. Log in to the Administration Portal.</p>
+
+    <p>ii. Click <strong>Compute</strong> → <strong>Hosts</strong>. The failover host, <code>hosted_engine_1</code>, will be in maintenance mode and without a virtual load, as this was how it was prepared for the backup.</p>
+
+    <p>iii. Click <strong>Remove</strong>.</p>
+
+    <p>iv. Click <strong>Ok</strong>.</p>
+
+    <p><strong>Note:</strong> If the host you are trying to remove becomes non-operational, see the Removing Non-Operational Hosts from a Restored Self-Hosted Engine Environment for instructions on how to force the removal of a host.</p>
+  </li>
+  <li>
+    <p><strong>Synchronizing the Host and the Engine</strong></p>
+
+    <p>Return to the host and continue the <code>hosted-engine</code> deployment script by selecting option 1:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> (1) Continue setup - engine installation is complete&#x000A;&#x000A; [ INFO  ] Engine replied: DB Up!Welcome to Health Status!&#x000A; [ INFO  ] Waiting for the host to become operational in the engine. This may take several minutes...&#x000A; [ INFO  ] Still waiting for VDSM host to become operational...&#x000A;</code></pre></div>
+    <p>At this point, <code>hosted_engine_1</code> will become visible in the Administration Portal with <strong>Installing</strong> and <strong>Initializing</strong> states before entering a <strong>Non Operational</strong> state. The host will continue to wait for the VDSM host to become operational until it eventually times out. This happens because another host in the environment maintains the Storage Pool Engine (SPM) role and <code>hosted_engine_1</code> cannot interact with the storage domain because the SPM host is in a <strong>Non Responsive</strong> state. When this process times out, you are prompted to shut down the virtual machine to complete the deployment. When deployment is complete, the host can be manually placed into maintenance mode and activated through the Administration Portal.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [ INFO  ] Still waiting for VDSM host to become operational...&#x000A; [ ERROR ] Timed out while waiting for host to start. Please check the logs.&#x000A; [ ERROR ] Unable to add hosted_engine_2 to the manager&#x000A;           Please shutdown the VM allowing the system to launch it as a monitored service.&#x000A;           The system will wait until the VM is down.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Shut down the new Engine virtual machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # shutdown -h now&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Return to the host to confirm it has detected that the Engine virtual machine is down.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [ INFO  ] Enabling and starting HA services&#x000A;           Hosted Engine successfully set up&#x000A; [ INFO  ] Stage: Clean up&#x000A; [ INFO  ] Stage: Pre-termination&#x000A; [ INFO  ] Stage: Termination&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Activate the host.</p>
+
+    <p>i. Log in to the Administration Portal.</p>
+
+    <p>ii. Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+
+    <p>iii. Select <code>hosted_engine_1</code> and click the <strong>Management</strong> → <strong>Maintenance</strong> button. The host may take several minutes before it enters maintenance mode.</p>
+
+    <p>iv. Click <strong>Management</strong> → <strong>Activate</strong>.</p>
+
+    <p>Once active, <code>hosted_engine_1</code> immediately contends for SPM, and the storage domain and data center become active.</p>
+  </li>
+  <li>
+    <p>Migrate virtual machines to the active host by manually fencing the <strong>Non Responsive</strong> hosts. In the Administration Portal, right-click the hosts and select <strong>Confirm 'Host has been Rebooted'</strong>.</p>
+
+    <p>Any virtual machines that were running on that host at the time of the backup will now be removed from that host, and move from an <strong>Unknown</strong> state to a <strong>Down</strong> state. These virtual machines can now be run on <code>hosted_engine_1</code>. The host that was fenced can now be forcefully removed using the REST API.</p>
+  </li>
+</ol>
+
+<p>The environment has now been restored to a point where <code>hosted_engine_1</code> is active and is able to run virtual machines in the restored environment. The remaining hosted-engine hosts in <strong>Non Operational</strong> state can now be removed by following the steps in <a href="Removing_Non-Operational_Hosts_from_a_Restored_Self-Hosted_Engine_Environment">Removing Non-Operational Hosts from a Restored Self-Hosted Engine Environment</a> and then re-installed into the environment by following the steps in <a href="chap-Installing_Additional_Hosts_to_a_Self-Hosted_Environment">Installing Additional Hosts to a Self-Hosted Environment</a>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** If the Engine database is restored successfully, but the Engine virtual machine appears to be **Down** and cannot be migrated to another self-hosted engine host, you can enable a new Engine virtual machine and remove the dead Engine virtual machine from the environment.&#x000A;</code></pre></div>
+<h3 id="restoring-the-self-hosted-engine-engine-manually">Restoring the Self-Hosted Engine Engine Manually</h3>
+
+<p>This section shows you how to manually restore the configuration settings and database content for a backed-up self-hosted engine Engine virtual machine.</p>
+
+<p>The following procedures must be performed on the machine where the database is to be hosted.</p>
+
+<p><strong>Initializing the PostgreSQL Database</strong></p>
+
+<ol>
+  <li>
+    <p>Install the PostgreSQL server package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install rh-postgresql95&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Initialize the <code>postgresql</code> database, start the <code>postgresql</code> service, and ensure this service starts on boot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scl enable rh-postgresql95 -- postgresql-setup --initdb&#x000A; # systemctl enable rh-postgresql95-postgresql&#x000A; # systemctl start rh-postgresql95-postgresql&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Enter the <code>postgresql</code> command line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # su - postgres -c 'scl enable rh-postgresql95 -- psql'&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create the engine user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# create role engine with login encrypted password 'password';&#x000A;</code></pre></div>
+    <p>If you are also restoring Data Warehouse, create the <code>ovirt_engine_history</code> user on the relevant host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# create role ovirt_engine_history with login encrypted password 'password';&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create the new database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# create database database_name owner engine template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';&#x000A;</code></pre></div>
+    <p>If you are also restoring the Data Warehouse, create the database on the relevant host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# create database database_name owner ovirt_engine_history template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Exit the <code>postgresql</code> command line and log out of the postgres user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# \q&#x000A; $ exit&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For each local database, edit the <strong>/var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_hba.conf</strong> file, replacing the existing lines in the section starting with local at the bottom of the file with the following lines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> host    database_name    user_name    0.0.0.0/0    md5&#x000A; host    database_name    user_name    ::0/0        md5&#x000A; host    database_name    user_name    ::0/128      md5&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For each remote database:</p>
+  </li>
+</ol>
+
+<p>i. Edit the <strong>/var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_hba.conf</strong> file, adding the following line immediately underneath the line starting with <code>local</code> at the bottom of the file, replacing ::/32 or ::/128 with the IP address of the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      host    database_name    user_name    ::/32   md5&#x000A;      host    database_name    user_name    ::/128  md5&#x000A;</code></pre></div>
+<p>ii. Edit the <strong>/var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf</strong> file, adding the following line, to allow TCP/IP connections to the database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      listen_addresses='\*'&#x000A;&#x000A;  This example configures the postgresql service to listen for connections on all interfaces. You can specify an interface by giving its IP address.&#x000A;</code></pre></div>
+<p>iii. Update the firewall rules:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # firewall-cmd --zone=public --add-service=postgresql&#x000A;      # firewall-cmd --permanent --zone=public --add-service=postgresql&#x000A;</code></pre></div>
+<p>iv. Restart the <code>postgresql</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # systemctl rh-postgresql95-postgresql restart&#x000A;</code></pre></div>
+<h2 id="restoring-the-database">Restoring the Database</h2>
+
+<ol>
+  <li>
+    <p>Secure copy the backup files to the new Engine virtual machine. This example copies the files from a network storage server to which the files were copied in Section 7.1, “Backing up the Self-Hosted Engine Engine Virtual Machine”. In this example, Storage.example.com is the fully qualified domain name of the storage server, /backup/EngineBackupFiles is the designated file path for the backup files on the storage server, and /backup/ is the path to which the files will be copied on the new Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp -p Storage.example.com:/backup/EngineBackupFiles /backup/&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restore a complete backup or a database-only backup with the <code>--change-db-credentials</code> parameter to pass the credentials of the new database. The <code>database_location</code> for a database local to the Engine is <code>localhost</code>.</p>
+
+    <p><strong>Note:</strong> The following examples use a <code>--\*password</code> option for each database without specifying a password, which will prompt for a password for each database. Passwords can be supplied for these options in the command itself, however this is not recommended as the password will then be stored in the shell history. Alternatively, <code>--\*passfile=password_file</code> options can be used for each database to securely pass the passwords to the engine-backup tool without the need for interactive prompts.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>Restore a complete backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --change-db-credentials --db-host=database_location --db-name=database_name --db-user=engine --db-password&#x000A;</code></pre></div>
+    <p>If Data Warehouse is also being restored as part of the complete backup, include the revised credentials for the additional database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  engine-backup --mode=restore --file=file_name --log=log_file_name --change-db-credentials --db-host=database_location --db-name=database_name --db-user=engine --db-password --change-dwh-db-credentials --dwh-db-host=database_location --dwh-db-name=database_name --dwh-db-user=ovirt_engine_history --dwh-db-password&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restore a database-only backup restoring the configuration files and the database backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=db --file=file_name --log=file_name --change-db-credentials --db-host=database_location --db-name=database_name --db-user=engine --db-password&#x000A;</code></pre></div>
+    <p>The example above restores a backup of the Engine database.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=dwhdb --file=file_name --log=file_name --change-dwh-db-credentials --dwh-db-host=database_location --dwh-db-name=database_name --dwh-db-user=ovirt_engine_history --dwh-db-password&#x000A;</code></pre></div>
+    <p>The example above restores a backup of the Data Warehouse database.</p>
+
+    <p>If successful, the following output displays:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  You should now run engine-setup.&#x000A;  Done.&#x000A;</code></pre></div>  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Configure the restored Engine virtual machine. This process identifies the existing configuration settings and database content. Confirm the settings. Upon completion, the setup provides an SSH fingerprint and an internal Certificate Authority hash.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;&#x000A; [ INFO  ] Stage: Initializing&#x000A; [ INFO  ] Stage: Environment setup&#x000A; Configuration files: ['/etc/ovirt-engine-setup.conf.d/10-packaging.conf', '/etc/ovirt-engine-setup.conf.d/20-setup-ovirt-post.conf']&#x000A; Log file: /var/log/ovirt-engine/setup/ovirt-engine-setup-20140304075238.log&#x000A; Version: otopi-1.1.2 (otopi-1.1.2-1.el6ev)&#x000A; [ INFO  ] Stage: Environment packages setup&#x000A; [ INFO  ] Yum Downloading: rhel-65-zstream/primary_db 2.8 M(70%)&#x000A; [ INFO  ] Stage: Programs detection&#x000A; [ INFO  ] Stage: Environment setup&#x000A; [ INFO  ] Stage: Environment customization&#x000A;&#x000A;           --== PACKAGES ==--&#x000A;&#x000A; [ INFO  ] Checking for product updates...&#x000A; [ INFO  ] No product updates found&#x000A;&#x000A;           --== NETWORK CONFIGURATION ==--&#x000A;&#x000A; Setup can automatically configure the firewall on this system.&#x000A; Note: automatic configuration of the firewall may overwrite current settings.&#x000A; Do you want Setup to configure the firewall? (Yes, No) [Yes]:&#x000A; [ INFO  ] iptables will be configured as firewall manager.&#x000A;&#x000A;           --== DATABASE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;           --== OVIRT ENGINE CONFIGURATION ==--&#x000A;&#x000A;           Skipping storing options as database already prepared&#x000A;&#x000A;           --== PKI CONFIGURATION ==--&#x000A;&#x000A;           PKI is already configured&#x000A;&#x000A;           --== APACHE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;           --== SYSTEM CONFIGURATION ==--&#x000A;&#x000A;&#x000A;           --== END OF CONFIGURATION ==--&#x000A;&#x000A; [ INFO  ] Stage: Setup validation&#x000A; [ INFO  ] Cleaning stale zombie tasks&#x000A;&#x000A;           --== CONFIGURATION PREVIEW ==--&#x000A;&#x000A;           Database name                      : engine&#x000A;           Database secured connection        : False&#x000A;           Database host                      : X.X.X.X&#x000A;           Database user name                 : engine&#x000A;           Database host name validation      : False&#x000A;           Database port                      : 5432&#x000A;           NFS setup                          : True&#x000A;           Firewall manager                   : iptables&#x000A;           Update Firewall                    : True&#x000A;           Configure WebSocket Proxy          : True&#x000A;           Host FQDN                          : Engine.example.com&#x000A;           NFS mount point                    : /var/lib/exports/iso&#x000A;           Set application as default page    : True&#x000A;           Configure Apache SSL               : True&#x000A;&#x000A; Please confirm installation settings (OK, Cancel) [OK]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Removing the Host from the Restored Environment</p>
+
+    <p>If the deployment of the restored self-hosted engine is on new hardware that has a unique name not present in the backed-up engine, skip this step. This step is only applicable to deployments occurring on the failover host, <code>hosted_engine_1</code>. Because this host was present in the environment at time the backup was created, it maintains a presence in the restored engine and must first be removed from the environment before final synchronization can take place.</p>
+  </li>
+</ol>
+
+<p>i. Log in to the Administration Portal.</p>
+
+<p>ii. Click <strong>Compute</strong> → <strong>Hosts</strong>. The failover host, <code>hosted_engine_1</code>, will be in maintenance mode and without a virtual load, as this was how it was prepared for the backup.</p>
+
+<p>iii. Click <strong>Remove</strong>.</p>
+
+<p>iv. Click <strong>OK</strong>.</p>
+
+<ol>
+  <li>
+    <p>Synchronizing the Host and the Engine</p>
+
+    <p>Return to the host and continue the hosted-engine deployment script by selecting option 1:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> (1) Continue setup - engine installation is complete&#x000A; [ INFO  ] Engine replied: DB Up!Welcome to Health Status!&#x000A; [ INFO  ] Waiting for the host to become operational in the engine. This may take several minutes...&#x000A; [ INFO  ] Still waiting for VDSM host to become operational...&#x000A;</code></pre></div>
+    <p>At this point, <code>hosted_engine_1</code> will become visible in the Administration Portal with <strong>Installing</strong> and <strong>Initializing</strong> states before entering a <strong>Non Operational</strong> state. The host will continue to wait for the VDSM host to become operational until it eventually times out. This happens because another host in the environment maintains the Storage Pool Engine (SPM) role and <code>hosted_engine_1</code> cannot interact with the storage domain because the SPM host is in a <strong>Non Responsive</strong> state. When this process times out, you are prompted to shut down the virtual machine to complete the deployment. When deployment is complete, the host can be manually placed into maintenance mode and activated through the Administration Portal.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [ INFO  ] Still waiting for VDSM host to become operational...&#x000A; [ ERROR ] Timed out while waiting for host to start. Please check the logs.&#x000A; [ ERROR ] Unable to add hosted_engine_2 to the manager&#x000A;           Please shutdown the VM allowing the system to launch it as a monitored service.&#x000A; The system will wait until the VM is down.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Shut down the new Engine virtual machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # shutdown -h now&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Return to the host to confirm it has detected that the Engine virtual machine is down.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [ INFO  ] Enabling and starting HA services&#x000A;           Hosted Engine successfully set up&#x000A; [ INFO  ] Stage: Clean up&#x000A; [ INFO  ] Stage: Pre-termination&#x000A; [ INFO  ] Stage: Termination&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Activate the host.</p>
+  </li>
+</ol>
+
+<p>i. Log in to the Administration Portal.</p>
+
+<p>ii. Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+
+<p>iii. Select <code>hosted_engine_1</code> and click <strong>Management</strong> → <strong>Maintenance</strong>. The host may take several minutes before it enters maintenance mode.</p>
+
+<p>iv. Click <strong>Management</strong> → <strong>Activate</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Once active, hosted_engine_1 immediately contends for SPM, and the storage domain and data center become active.&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Migrate virtual machines to the active host by manually fencing the <strong>Non Responsive</strong> hosts. In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong>, select the hosts, and click <strong>More Actions</strong> → <strong>Confirm 'Host has been Rebooted'</strong>.</p>
+
+    <p>Any virtual machines that were running on that host at the time of the backup will now be removed from that host, and move from an <strong>Unknown</strong> state to a <strong>Down</strong> state. These virtual machines can now be run on <code>hosted_engine_1</code>. The host that was fenced can now be forcefully removed using the REST API.</p>
+  </li>
+</ol>
+
+<p>The environment has now been restored to a point where <code>hosted_engine_1</code> is active and is able to run virtual machines in the restored environment. The remaining self-hosted engine nodes in <strong>Non Operational</strong> state can now be removed by following the steps in Removing Non-Operational Hosts from a Restored Self-Hosted Engine Environment and then re-installed into the environment by following the steps in Section 5.4, “Installing Additional Self-Hosted Engine Nodes”.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** If the Engine database is restored successfully, but the Engine virtual machine appears to be Down and cannot be migrated to another self-hosted engine node, you can enable a new Engine virtual machine and remove the dead Engine virtual machine from the environment.&#x000A;</code></pre></div>
+<h3 id="removing-non-operational-hosts-from-a-restored-self-hosted-engine-environment">Removing Non-Operational Hosts from a Restored Self-Hosted Engine Environment</h3>
+
+<p>Once a host has been fenced in the Administration Portal, it can be forcefully removed with a REST API request. This procedure will use cURL, a command line interface for sending requests to HTTP servers. Most Linux distributions include cURL. This procedure will connect to the Engine virtual machine to perform the relevant requests.</p>
+
+<ol>
+  <li><strong>Fencing the Non-Operational Host</strong></li>
+</ol>
+
+<p>i. In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> and select the hosts.</p>
+
+<p>ii. Click <strong>More Actions</strong> → <strong>Confirm 'Host has been Rebooted'</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Any virtual machines that were running on that host at the time of the backup will now be removed from that host, and move from an **Unknown** state to a **Down** state. The host that was fenced can now be forcefully removed using the REST API.&#x000A;</code></pre></div>
+<ol>
+  <li><strong>Retrieving the Engine Certificate Authority</strong></li>
+</ol>
+
+<p>i. Connect to the Engine virtual machine and use the command line to perform the following requests with cURL.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Use a GET request to retrieve the Engine Certificate Authority (CA) certificate for use in all future API requests. In the following example, the `--output` option is used to designate the file hosted-engine.ca as the output for the Engine CA certificate. The `--insecure` option means that this initial request will be without a certificate.&#x000A;&#x000A;      # curl --output hosted-engine.ca --insecure https://[Engine.example.com]/ca.crt&#x000A;</code></pre></div>
+<p>ii. <strong>Retrieving the GUID of the Host to be Removed</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Use a `GET` request on the hosts collection to retrieve the Global Unique Identifier (GUID) for the host to be removed. The following example includes the Engine CA certificate file, and uses the `admin@internal` user for authentication, the password for which will be prompted once the command is executed.&#x000A;&#x000A;          # curl --request GET --cacert hosted-engine.ca --user admin@internal https://[Engine.example.com]/api/hosts&#x000A;&#x000A;  This request returns the details of all of the hosts in the environment. The host GUID is a hexadecimal string associated with the host name.&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p><strong>Removing the Fenced Host</strong></p>
+
+    <p>Use a <code>DELETE</code> request using the GUID of the fenced host to remove the host from the environment. In addition to the previously used options this example specifies headers to specify that the request is to be sent and returned using eXtensible Markup Language (XML), and the body in XML that sets the <code>force</code> action to be <code>true</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> curl --request DELETE --cacert hosted-engine.ca --user admin@internal --header "Content-Type: application/xml" --header "Accept: application/xml" --data "&amp;lt;action&amp;gt;&amp;lt;force&amp;gt;true&amp;lt;/force&amp;gt;&amp;lt;/action&amp;gt;" https://[Engine.example.com]/api/hosts/ecde42b0-de2f-48fe-aa23-1ebd5196b4a5&#x000A;</code></pre></div>
+    <p>This <code>DELETE</code> request can be used to remove every fenced host in the self-hosted engine environment, as long as the appropriate GUID is specified.</p>
+  </li>
+  <li>
+    <p><strong>Removing the Self-Hosted Engine Configuration from the Host</strong></p>
+
+    <p>Remove the host’s self-hosted engine configuration so it can be reconfigured when the host is re-installed to a self-hosted engine environment.</p>
+
+    <p>Log in to the host and remove the configuration file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # rm /etc/ovirt-hosted-engine/hosted-engine.conf&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The host can now be re-installed to the self-hosted engine environment.</p>
+
+<p><strong>Prev:</strong> <a href="chap-upgrading_the_self-hosted_engine">Chapter 6: Upgrading the Self-Hosted Engine</a><br />
+<strong>Next:</strong> <a href="chap-Migrating_Databases">Chapter 8: Migrating the Self-Hosted Engine Database to a Remote Server Database</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/self-hosted_engine_guide/chap-backing_up_and_restoring_a_rhel-based_self-hosted_environment">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/self-hosted/chap-Backing_up_and_Restoring_an_EL-Based_Self-Hosted_Environment.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/self-hosted/chap-Backing_up_and_Restoring_an_EL-Based_Self-Hosted_Environment.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

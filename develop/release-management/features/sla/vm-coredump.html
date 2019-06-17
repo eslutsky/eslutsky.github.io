@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+vm coredump &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vm-coredump">vm coredump</h1>
+
+<h2 id="coredump-support-in-vdsm">Coredump support in VDSM</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>This feature adds <a href="http://en.wikipedia.org/wiki/Core_dump">1</a> support to VDSM. The feature will dump the core of a domain on a given file for analysis. It will be especially useful when used with high availability.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: ShaoHe Feng (Shaohef)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#104;&#097;&#111;&#104;&#101;&#102;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#115;&#104;&#097;&#111;&#104;&#101;&#102;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Status: the patch was under review. <a href="http://gerrit.ovirt.org/#/c/7329">dump the core of a VM</a>.</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>Users will be able to dump the core of a VM on a given file when their VMs crash. This will be especially important for highly available servers.</p>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p>This feature depends on the libvirt (already support)</p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p>For libvirt support, please see <a href="http://libvirt.org/html/libvirt-libvirt.html#virDomainCoreDump">libvirt's documentation on virDomainCoreDump API</a>.</p>
+
+<h4 id="user-interface">User Interface</h4>
+
+<p>def coreDump(self, to, params):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     """  &#x000A;     dump a VM to a designated file.&#x000A;     :param to: a string designates the dump file &#x000A;     :param params: a dictionary containing:&#x000A;         *post-action* - The action taken after core dump, which is&#x000A;                         'crash', 'live', or 'reset'.&#x000A;                         crash: crash the VM after core dump.&#x000A;                         live: perform a live core dump.&#x000A;                         reset: reset the VM after core dump.&#x000A;         *bypass-cache* - avoid file system cache when saving.&#x000A;         *memory-only* - dump VM's memory only.&#x000A;     """  &#x000A;</code></pre></div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/vm-coredump.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/vm-coredump.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

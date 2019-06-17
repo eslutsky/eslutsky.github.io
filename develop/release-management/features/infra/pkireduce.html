@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+PKIReduce &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="pki-reduce">PKI Reduce</h1>
+
+<h2 id="current-implementation">Current Implementation</h2>
+
+<p><a href="/develop/release-management/features/infra/pki/">Features/PKI</a></p>
+
+<h2 id="problems-in-current-implementation">Problems in Current Implementation</h2>
+
+<p><a href="/develop/release-management/features/infra/pki/#caveats">Features/PKI#Caveats</a></p>
+
+<h2 id="mission">Mission</h2>
+
+<p>Remove PKI usage from Engine&lt;–&gt;VDSM communications.</p>
+
+<ol>
+  <li>Simpler implementation – No need to manage expiration/revocation, there is no point in doing so since as long as host is added to engine it is active.</li>
+  <li>Easier to rational the reason not to use 3rd party CA for communications.</li>
+</ol>
+
+<p>The mutual authentication method between engine&lt;–&gt;VDSM is internal implementation decision as no other component should access vdsm directly.</p>
+
+<h2 id="trying-to-solve">Trying to solve</h2>
+
+<ol>
+  <li>Remove the term PKI from engine-&gt;vdsm communication to avoid these kind of discussions in future, as we are not really need 3rd party trust for manager-&gt;agent communication.</li>
+  <li>Avoid implementing missing PKI feature into vdsm/engine, at least CRL, OCSP, name validation, expiration, key usage, enhanced key usage.</li>
+  <li>Do not need to manage host life cycle - renew, revocation when removed.</li>
+  <li>Do not abuse CRL - adding host to CRL each time it is removed.</li>
+  <li>Allow re-enroll external components' certificate post host-deploy using internal CA or 3rd party, without losing connectivity to our agents.</li>
+</ol>
+
+<h2 id="solution-1">Solution #1</h2>
+
+<p>As JSSE (Java) and Python SSL are only capable of using X.509 certificate for SSL key exchange, and due to export regulations implication of introducing a new encryption protocol, solution should not use own encryption algorithm nor encryption protocol.</p>
+
+<p>Instead of using PKI, the engine and vdsm will use self signed certificates. Instead of using PKI (Public Key Infrastructure), the trust will be established using PK (no Infrastructure). This means that each party holds the public key of the other party, and use it to validate the authenticity of the connection.</p>
+
+<p>The host-deployment is performed using SSH session, in which the engine initiate the connection and optionally check the SSH public key fingerprint of remote host. Once deployed the engine will store its public key within host and retrieve the public key of the host into the database.</p>
+
+<p>When SSL connection is established, each party will acquire other party's self signed certificate and validate it against the expected one.</p>
+
+<p>Implementation should support several keys at each side to allow flexibility of several managers / fail over.</p>
+
+<p>During migrationCreate engine will send the public key of the other side to each of the nodes, to enable status exchange.</p>
+
+<h3 id="optional-enhancement">Optional Enhancement</h3>
+
+<p>In order to support SSL termination proxy [Not supported right now, and unlikely that it will], another layer of authentication is required.</p>
+
+<p>One alternative is to use PK signature using both party's private keys.</p>
+
+<p>Another alternative is to use symmetric key authentication, a key that is generated and stored at host side and at engine database, by using symmetric key authentication sequence to authenticate, example Augmented PAKE.</p>
+
+<h2 id="solution-2">Solution #2</h2>
+
+<p>Have vdsm to connect using HTTPS to engine, and authenticate using PAKE based on symmetric key that is generated during host-deploy. This will remove the need to enroll certificate to all vdsms, and will enable us to issue engine certificate using 3rd party certificate with no complexity.</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<p>Move migrationCreate to engine, once sanlock is used all over, so that vdsm will not need to send migrationCreate to the other vdsm. Or File RFE against libvirt to allow sending generic messages between libvirt and libvirtd for vdsm to be able to communicate with other vdsm during migrationCreate.</p>
+
+<p>Complete vdsm PKI implementation - support CRL, OCSP, name validation etc..</p>
+
+<h2 id="vdsclient">vdsClient</h2>
+
+<p>Will be used only locally (remotely via ssh).</p>
+
+<h2 id="pki">PKI</h2>
+
+<p>The following component will will keep using PKI:</p>
+
+<ol>
+  <li>libvirt</li>
+  <li>spice/vnc</li>
+</ol>
+
+<p>Engine will be modified to be able to re-enroll these certificate without having to re-deploy vdsm, to allow renewal or transition between internal CA to 3rd party CA.</p>
+
+<h2 id="todo">TODO</h2>
+
+<p>Consider using libvirt with self-signed certificates as well, it should be possible as the migrationCreate can send the certificate for both side for vdsm to feed libvirt when communicating to the other party. Maybe it requires small change in libvirtd to be configured with certificate per connection, or have connection certificate validation callback.</p>
+
+<p>Author: –Alon Bar-Lev (Alonbl) (<a href="User talk:Alonbl">talk</a>) 02:24, 1 July 2014 (GMT)</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/pkireduce.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/pkireduce.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Build oVirt Reports Using Grafana &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='sradco,' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Build oVirt Reports Using Grafana' property='og:title'>
+<meta content='Grafana, The open platform for beautiful analytics and monitoring,
+recently added support for PostgreSQL.
+
+It in now possible to connect Grafana to oVirt DWH,
+in order to visualize and monitor the oVirt environment.
+
+Grafana dashboard example' property='og:description'>
+<meta content='http://ovirt.org/blog/2018/06/ovirt-report-using-grafana.html' property='og:url'>
+<meta content='2018-06-24T09:00:00Z' property='article:published_time'>
+<meta content='sradco,' property='article:author:username'>
+<meta content='dwh' property='article:tag'>
+<link href='/blog/tag/dwh.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='open source virtualization' property='article:tag'>
+<link href='/blog/tag/open source virtualization.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt 4.2' property='article:tag'>
+<link href='/blog/tag/ovirt 4.2.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='report' property='article:tag'>
+<link href='/blog/tag/report.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Build oVirt Reports Using Grafana' name='twitter:title'>
+<meta content='Grafana, The open platform for beautiful analytics and monitoring,
+recently added support for PostgreSQL.
+
+It in now possible to connect Grafana to oVirt DWH,
+in order to visualize and monitor the oVirt environment.
+
+Grafana dashboard example' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2018</li>
+<li class='active'>06</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Build oVirt Reports Using Grafana
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/sradco,.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/sradco/">sradco,</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2018-06-24T09:00:00Z'>
+Sunday 24 June 2018
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p><a href="https://grafana.com/">Grafana</a>, The open platform for beautiful analytics and monitoring,
+recently added support for <a href="http://docs.grafana.org/features/datasources/postgres/">PostgreSQL</a>.</p>
+
+<p>It in now possible to connect Grafana to <a href="https://www.ovirt.org/documentation/how-to/reports/dwh/">oVirt DWH</a>,
+in order to visualize and monitor the oVirt environment.</p>
+
+<p><strong>Grafana dashboard example</strong>
+<img alt="" width="1920" height="877" src="/images/grafana_dashboard_example.png?1560777613" /></p>
+
+<p></p>
+
+<p><strong>Adding a Read-Only User to the History Database</strong></p>
+
+<p>You may want to add a read only user to connect the history database :</p>
+
+<p><strong>Note:</strong> In oVirt 4.2 we ship postgres 9.5 through the Software Collection.</p>
+<ol>
+  <li>
+    <p>In order to run psql you will need to run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># su - postgres &#x000A;$ scl enable rh-postgresql95 -- psql ovirt_engine_history&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create the user to be granted read-only access to the history database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt_engine_history=# CREATE ROLE [user name] WITH LOGIN ENCRYPTED PASSWORD '[password]';&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Grant the newly created user permission to connect to the history database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt_engine_history=# GRANT CONNECT ON DATABASE ovirt_engine_history TO [user name];&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Grant the newly created user usage of the public schema:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt_engine_history=# GRANT USAGE ON SCHEMA public TO [user name];&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Exit the database</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt_engine_history=# \q&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Generate the rest of the permissions that will be granted to the newly created user and save them to a file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ scl enable rh-postgresql95 -- psql -U postgres -c "SELECT 'GRANT SELECT ON ' || relname || ' TO [user name];' FROM pg_class JOIN pg_namespace ON pg_namespace.oid = pg_class.relnamespace WHERE nspname = 'public' AND relkind IN ('r', 'v');" --pset=tuples_only=on  ovirt_engine_history &gt; grant.sql&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Use the file you created in the previous step to grant permissions to the newly created user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ scl enable rh-postgresql95 -- psql -U postgres -f grant.sql ovirt_engine_history&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Remove the file you used to grant permissions to the newly created user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ rm grant.sql&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure the database can be accessed remotely by enabling md5 client authentication. Edit the /var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_hba.conf file, and add the following line immediately underneath the line starting with local at the bottom of the file, replacing user_name with the new user you created:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>host    database_name    user_name    0.0.0.0/0   md5&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Allow TCP/IP connections to the database. Edit the /var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf file and add the following line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>listen_addresses='*'&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the postgresql service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># systemctl restart rh-postgresql95-postgresql&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Install Grafana</strong></p>
+
+<p>If you wish to create dashboards to monitor oVirt environment, you will need to <a href="http://docs.grafana.org/installation/rpm/">install Grafana</a>. Please follow the rest of the installation instructions to <a href="http://docs.grafana.org/installation/rpm/#start-the-server-via-systemd">start the Grafana server</a> and <a href="http://docs.grafana.org/installation/rpm/#enable-the-systemd-service-to-start-at-boot">enable it</a>.</p>
+
+<p><strong>Note:</strong> Please do not install Grafana on the engine machine.</p>
+
+<p>Grafana automatically creates an admin <a href="http://docs.grafana.org/installation/configuration/#admin-user">user</a> and <a href="http://docs.grafana.org/installation/configuration/#admin-password">password</a>.</p>
+
+<p><strong>Adding the  History Database data source</strong></p>
+
+<p>You will need to add a <a href="http://docs.grafana.org/features/datasources/graphite/#adding-the-data-source">PostgreSQL data source</a> that connects to the DWH database.</p>
+
+<p>For example:
+<img alt="" width="1064" height="848" src="/images/grafana_data_source_example.png?1560777613" /></p>
+
+<p>Now you can start creating your dashboard widgets.</p>
+
+<p><strong>Creating a Dashboard</strong></p>
+
+<p>Go to <code>Dashboards</code> -&gt; <code>+ New</code>.</p>
+
+<p>First create the variables required for building the different widgets:</p>
+
+<p>The graph example below uses the <a href="http://docs.grafana.org/reference/templating/">Variables</a>feature, to enable drop down input controls that allows taggling between different datacenters / clusters / hosts etc.</p>
+
+<p>You will need to <a href="https://www.ovirt.org/blog/2018/06/ovirt-report-using-grafana/">add the following variables</a>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable Name</th>
+      <th>Label</th>
+      <th>Type</th>
+      <th>Data source</th>
+      <th>Query</th>
+      <th>Hide</th>
+      <th>Multi-value</th>
+      <th>Include All option</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>userlocale</td>
+      <td>Language</td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT DISTINCT language_code from enum_translator</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>datacenter_name</td>
+      <td>Data Center</td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT DISTINCT datacenter_name FROM v4_2_configuration_history_datacenters</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>datacenter_id</td>
+      <td> </td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT DISTINCT datacenter_id FROM v4_2_configuration_history_datacenters WHERE datacenter_name='$datacenter_name'</td>
+      <td>Variable</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>cluster_name</td>
+      <td>Cluster</td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT cluster_name FROM v4_2_configuration_history_clusters WHERE datacenter_id = '$datacenter_id'</td>
+      <td> </td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>cluster_id</td>
+      <td> </td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT cluster_id FROM v4_2_configuration_history_clusters WHERE datacenter_id = '$datacenter_id'</td>
+      <td>Variable</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>hostname</td>
+      <td>Host</td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT host_name FROM v4_2_configuration_history_hosts WHERE cluster_id IN ('$cluster_id')</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>host_id</td>
+      <td> </td>
+      <td>Query</td>
+      <td><code>Choose your data source from the list</code></td>
+      <td>SELECT host_id FROM v4_2_configuration_history_hosts WHERE host_name = '$hostname'</td>
+      <td>Variable</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Note:</strong> All the queries are based on the DWH views that are supported also when upgrading to the next oVirt release.
+In order to use the latest views you please update the DWH v4_2 prefixes to the prefix of your setup version.</p>
+
+<p><strong>Graph panel example:</strong></p>
+
+<p>To add a <code>Graph</code> type panel, on the left side you have the <a href="http://docs.grafana.org/guides/getting_started/#dashboards-panels-rows-the-building-blocks-of-grafana">Row controls menu</a>.
+Go to the <code>+ Add Panel</code>, and pick <code>Graph</code>.</p>
+
+<p>Query example for the - Five Most Utilized Hosts by Memory / CPU:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>SELECT DISTINCT&#x000A;    min(time) AS time,&#x000A;    MEM_Usage,&#x000A;    host_name || 'MEM_Usage' as metric&#x000A;FROM (&#x000A;    SELECT&#x000A;        stats_hosts.host_id,&#x000A;        CASE&#x000A;            WHEN delete_date IS NULL&#x000A;                THEN host_name&#x000A;            ELSE&#x000A;                host_name&#x000A;                ||&#x000A;                ' (Removed on '&#x000A;                ||&#x000A;                CAST ( CAST ( delete_date AS date ) AS varchar )&#x000A;                ||&#x000A;                ')'&#x000A;        END AS host_name,&#x000A;        stats_hosts.history_datetime AS time,&#x000A;        SUM (&#x000A;            COALESCE (&#x000A;                stats_hosts.max_cpu_usage,&#x000A;                0&#x000A;            ) *&#x000A;            COALESCE (&#x000A;                stats_hosts.minutes_in_status,&#x000A;                0&#x000A;            )&#x000A;        ) /&#x000A;        SUM (&#x000A;            COALESCE (&#x000A;                stats_hosts.minutes_in_status,&#x000A;                0&#x000A;            )&#x000A;        ) AS CPU_Usage,&#x000A;        SUM (&#x000A;            COALESCE (&#x000A;                stats_hosts.max_memory_usage,&#x000A;                0&#x000A;            ) *&#x000A;            COALESCE (&#x000A;                stats_hosts.minutes_in_status,&#x000A;                0&#x000A;            )&#x000A;        ) /&#x000A;        SUM (&#x000A;            COALESCE (&#x000A;                stats_hosts.minutes_in_status,&#x000A;                0&#x000A;            )&#x000A;        ) AS MEM_Usage&#x000A;    FROM v4_2_statistics_hosts_resources_usage_hourly AS stats_hosts&#x000A;        INNER JOIN v4_2_configuration_history_hosts&#x000A;            ON (&#x000A;                v4_2_configuration_history_hosts.host_id =&#x000A;                stats_hosts.host_id&#x000A;            )&#x000A;    WHERE  stats_hosts.history_datetime &gt;= $__timeFrom()&#x000A;    AND stats_hosts.history_datetime &lt; $__timeTo()&#x000A;        -- Here we get the latest hosts configuration&#x000A;       AND  v4_2_configuration_history_hosts.history_id IN (&#x000A;            SELECT MAX ( a.history_id )&#x000A;            FROM v4_2_configuration_history_hosts AS a&#x000A;            GROUP BY a.host_id&#x000A;        )&#x000A;        AND stats_hosts.host_id IN (&#x000A;            SELECT a.host_id&#x000A;            FROM v4_2_statistics_hosts_resources_usage_hourly a&#x000A;                INNER JOIN v4_2_configuration_history_hosts b&#x000A;                    ON ( a.host_id = b.host_id )&#x000A;            WHERE&#x000A;                -- Here we filter by active hosts only&#x000A;                a.host_status = 1&#x000A;                -- Here we filter by the datacenter chosen by the user&#x000A;                 AND b.cluster_id IN (&#x000A;                    SELECT v4_2_configuration_history_clusters.cluster_id&#x000A;                    FROM v4_2_configuration_history_clusters&#x000A;                    WHERE&#x000A;                        v4_2_configuration_history_clusters.datacenter_id =&#x000A;                        '$datacenter_id'&#x000A;                )&#x000A;                -- Here we filter by the clusters chosen by the user&#x000A;                AND b.cluster_id IN ('$cluster_id')&#x000A;                AND a. history_datetime &gt;= $__timeFrom()&#x000A;                AND a.history_datetime &lt; $__timeTo()&#x000A;                -- Here we get the latest hosts configuration&#x000A;                AND b.history_id IN (&#x000A;                    SELECT MAX (g.history_id)&#x000A;                    FROM v4_2_configuration_history_hosts g&#x000A;                    GROUP BY g.host_id&#x000A;                )&#x000A;            GROUP BY a.host_id&#x000A;            ORDER BY&#x000A;                -- Hosts will be ordered according to the summery of&#x000A;                -- memory and CPU usage percent.&#x000A;                --This determines the busiest hosts.&#x000A;                SUM (&#x000A;                    COALESCE (&#x000A;                        a.max_memory_usage * a.minutes_in_status,&#x000A;                        0&#x000A;                    )&#x000A;                ) /&#x000A;                SUM (&#x000A;                    COALESCE (&#x000A;                        a.minutes_in_status,&#x000A;                        0&#x000A;                    )&#x000A;                ) +&#x000A;                SUM (&#x000A;                    COALESCE (&#x000A;                        a.max_cpu_usage * a.minutes_in_status,&#x000A;                        0&#x000A;                    )&#x000A;                ) /&#x000A;                SUM (&#x000A;                    COALESCE (&#x000A;                        a.minutes_in_status,&#x000A;                        0&#x000A;                    )&#x000A;                ) DESC&#x000A;            LIMIT 5&#x000A;        )&#x000A;GROUP BY&#x000A;    stats_hosts.host_id,&#x000A;    host_name,&#x000A;    delete_date,&#x000A;    history_datetime&#x000A;) AS a&#x000A;GROUP BY a.host_name, a.mem_usage&#x000A;ORDER BY time&#x000A;</code></pre></div>
+<p><strong>Note:</strong> In this example we dont use the <code>Host</code> variable, so you can not filter the results by it.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/dwh.html">dwh</a></li>
+<li><a href="../../tag/open-source-virtualization.html">open source virtualization</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/ovirt-4-2.html">oVirt 4.2</a></li>
+<li><a href="../../tag/report.html">report</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2018-06-24-ovirt-report-using-grafana.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2018-06-24-ovirt-report-using-grafana.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 3 Aug 2018 23:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+soft-host-to-vm-affinity-support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="soft-host-to-vm-affinity-support-and-rack-use-case">Soft host to VM affinity support and Rack use case</h1>
+
+<h2 id="summary">Summary</h2>
+<p>Certain set of VMs form a logical management unit and should run on a certain set of hosts for SLA or management (e.g. a separate rack for each customer). The VMs can run anywhere in case the dedicated rack needs to be turned off, but should return to their dedicated hosts once the rack is back up.</p>
+
+<p>This would be best implemented by enhancing the current VM to VM soft affinity rules to support hosts as well. The other piece that is needed is to add affinity based balancing operation to allow the VMs to return to the proper host when it becomes available.</p>
+
+<h3 id="owners">Owners</h3>
+
+<ul>
+  <li>Name: Yanir Quinn (yquinn)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#113;&#117;&#105;&#110;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#121;&#113;&#117;&#105;&#110;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Add additional affinity lists and relationships to the existing affinity object so it would contain:</p>
+
+<ul>
+  <li>Vms_affinity_enabled flag (true/false)</li>
+  <li>VM list</li>
+  <li>VM to VM affinity rule (positive weak, pos. strong, negative weak, neg. strong,disabled)</li>
+  <li>Host list</li>
+  <li>VM to Host affinity rule (positive weak, pos. strong, negative weak, neg. strong)</li>
+  <li>Any other additional resource</li>
+  <li>Rule for the additional resource (positive weak, pos. strong, negative weak, neg. strong)</li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+<p>Enhance affinity groups to support vm to host affinity.</p>
+
+<h3 id="database">Database</h3>
+
+<p>The plan is to add more resources like hosts to affinity groups.</p>
+
+<p>The table structure of <em>affinity_group_members</em> will be altered</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><em>From</em> :  affinity_group_id (foreign key to affinity_groups + delete cascade)</td>
+      <td>vm_id (foreign key to vm_static + delete cascade)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>To</em> :      affinity_group_id (foreign key to affinity_groups + delete cascade) | vm_id (foreign key to vm_static + delete cascade) - <strong>change modifier to enable null</strong>   | <strong>vds_id (foreign key to vds_static + delete cascade)</strong>
+(any additional future resource can be added here with an index and a foreign key)</p>
+
+<ul>
+  <li>Added a constraint to check that at least one column out of vm_id and vds_id is not null for each entry.</li>
+</ul>
+
+<p>The table structure of affinity_groups will altered by adding a new none column:</p>
+
+<p><em>affinity_groups</em>: id, name, cluster_id (foreign key to vds_groups + delete cascade), <strong>positive -&gt; vm_positive
+,enforcing -&gt; vm_enforcing ,vds_positive,vds_enforcing ,vms_affinity_enabled (true/false  - default false)</strong></p>
+
+<blockquote>
+  <p><strong>NOTE</strong> : The additional “vms_affinity_enabled”  flag is needed for affinity group to be able to express that VMs in an affinity group have no relationship to each other.</p>
+</blockquote>
+
+<blockquote>
+  <p><strong>NOTE</strong> : for each affinity group there must be at least one entry with a vm_id in affinity_group_members table (even only for a vm to host affinity).</p>
+</blockquote>
+
+<h3 id="scheduler">Scheduler</h3>
+<ul>
+  <li>Migration policy unit was altered to accept target hosts with the same id as the source host of the candidate VM for  migration (this was done for balancing purposes)</li>
+  <li>Vm affinity filter and weight policy units were modified to exclude affinity groups with vms_affinity_enabled = false;</li>
+  <li>Added new filter policy unit <strong>VmToHostAffinityFilterPolicyUnit</strong> which:
+Enables Affinity Groups hard enforcement for VMs to hosts; VMs in group are required to run either on one of the hosts in group (positive) or on independent hosts which are excluded from the hosts in group (negative).</li>
+  <li>
+    <p>Added new weight policy unit <strong>VmToHostAffinityWeightPolicyUnit</strong> which:
+Enables Affinity Groups soft enforcement for VMs to hosts; VMs in group are most likely to run either on one of the hosts in group (positive) or on independent hosts which are excluded from the hosts in group (negative)</p>
+
+    <p>The score of a host is calculated by the number of affinity group violations, when 1 is the default score
+and for each violation add + 1.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p><strong>NOTE</strong> : When load balancing is enabled and there are soft host affinity constraints then there might be a need to increase the factor of the VmToHostsAffinityGroups weight policy unit to ensure that affinity is stronger than other policies.The default factor is 10.</p>
+</blockquote>
+
+<h3 id="affinity-rules-enforcement-manager">Affinity Rules Enforcement Manager</h3>
+<p>The existing procedure for vm affinity procedure as shown in <a href="/develop/release-management/features/sla/affinity-rules-enforcement-manager/">Affinity Rules Enforcement Manager</a> 
+will be enhanced:</p>
+
+<ul>
+  <li><strong>chooseNextVmToMigrate</strong> will follow this order of selection:
+    <ol>
+      <li>select a VM to migrate if a VM to host affinity is violated</li>
+      <li>select a VM to migrate if a VM to VM affinity is violated</li>
+    </ol>
+  </li>
+  <li>VM to VM affinity groups will be selected as candidates only if VM affinity enabled flag is true.</li>
+  <li>Selection of a VM from VM to host affinity procedure:
+    <ol>
+      <li>
+        <p>Get all affinity groups with hosts list &gt; 0</p>
+      </li>
+      <li>Create a list of candidate VMs violating positive/negative enforcing affinity to hosts.</li>
+      <li>Sort the candidate VMs according to the number of violations (descending).</li>
+      <li>Loop over the sorted hard affinity VMs list:
+        <ol>
+          <li>If the VM can migrate with its associated hosts:</li>
+          <li>Return the VM for migration</li>
+        </ol>
+      </li>
+      <li>Create a list of candidate VMs violating positive/negative non enforcing affinity to hosts.</li>
+      <li>Loop over the sorted soft affinity VMs list:
+        <ol>
+          <li>If the VM can migrate with its associated hosts:</li>
+          <li>Return the VM for migration</li>
+        </ol>
+      </li>
+      <li>If no vm was found for migration - check candidates from VM to VM affinity.
+        <ul>
+          <li>The candidates for VM to VM affinity will be select from affinity groups where
+VM affinity is not disabled. (VM affinity enabled = true)</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>When choosing a VM from VM to VM affinity - check if the VM exists as a candidate in the VM to host lists 
+and issue a warning (subjected for change)</li>
+</ul>
+
+<h3 id="ui">UI</h3>
+<p>First stage - in order not to break the current vm to vm affinity functionality, an additional 
+check box will be added to the Affinity group panel : <strong>Vm Affinity Enabled</strong></p>
+
+<p>When checked - the original behavior of vm to vm affinity will be preserved.</p>
+
+<p>When unchecked - vm to vm affinity rules will not apply.</p>
+
+<p>Host to vm affinity settings will be provided currently only via the rest api.</p>
+
+<h3 id="rest-api">REST API</h3>
+<p>The current solution will be enhanced to support the additional hosts list and the new attributes
+for vms and hosts lists.</p>
+
+<p>A new type will be added - <strong>AffinityRule</strong> with two attributes of that type,
+one for virtual machines and another for hosts:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;vms_rule&gt;&#x000A;  &lt;positive&gt;true|false&lt;/positive&gt;&#x000A;  &lt;enforcing&gt;true|false&lt;/enforcing&gt;&#x000A;  &lt;enabled&gt;true|false&lt;/enabled&gt;&#x000A;&lt;/vms_rule&gt;&#x000A;&lt;hosts_rule&gt;&#x000A;  &lt;positive&gt;true|false&lt;/positive&gt;&#x000A;  &lt;enforcing&gt;true|false&lt;/enforcing&gt;&#x000A;  &lt;enabled&gt;true|false&lt;/enabled&gt;&#x000A;&lt;/hosts_rule&gt;&#x000A;</code></pre></div>
+<blockquote>
+  <p><strong>NOTE</strong> : The existing positive and enforcing attributes (for vms) will be preserved, and marked as deprecated.
+   They will have the same meaning that they had before.</p>
+</blockquote>
+
+<p>See example:</p>
+
+<p>GET /api/clusters/00000002-0002-0002-0002-000000000222/affinitygroups</p>
+
+<div class="highlight"><pre class="highlight xml"><code>&#x000A;<span class="nt">&lt;affinity_groups&gt;</span>&#x000A;  <span class="nt">&lt;affinity_group</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000222/affinitygroups/31ef70c1-e636-45a6-9492-aa4fad753e6f"</span> <span class="na">id=</span><span class="s">"31ef70c1-e636-45a6-9492-aa4fad753e6f"</span><span class="nt">&gt;</span>&#x000A;    <span class="nt">&lt;name&gt;</span>Test_aff_group<span class="nt">&lt;/name&gt;</span>&#x000A;    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000222/affinitygroups/31ef70c1-e636-45a6-9492-aa4fad753e6f/vms"</span> <span class="na">rel=</span><span class="s">"vms"</span><span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000222/affinitygroups/31ef70c1-e636-45a6-9492-aa4fad753e6f/vms"</span> <span class="na">rel=</span><span class="s">"hosts"</span><span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;cluster</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/clusters/00000002-0002-0002-0002-000000000222"</span> <span class="na">id=</span><span class="s">"00000002-0002-0002-0002-000000000222"</span><span class="nt">/&gt;</span>     &#x000A;    <span class="nt">&lt;positive&gt;</span>true<span class="nt">&lt;/positive&gt;</span>&#x000A;    <span class="nt">&lt;enforcing&gt;</span>true<span class="nt">&lt;/enforcing&gt;</span>&#x000A;    <span class="nt">&lt;vms_rule&gt;</span>&#x000A;      <span class="nt">&lt;positive&gt;</span>true<span class="nt">&lt;/positive&gt;</span>&#x000A;      <span class="nt">&lt;enforcing&gt;</span>true<span class="nt">&lt;/enforcing&gt;</span>&#x000A;      <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>&#x000A;    <span class="nt">&lt;/vms_rule&gt;</span>&#x000A;    <span class="nt">&lt;hosts_rule&gt;</span>&#x000A;      <span class="nt">&lt;positive&gt;</span>true<span class="nt">&lt;/positive&gt;</span>&#x000A;      <span class="nt">&lt;enforcing&gt;</span>false<span class="nt">&lt;/enforcing&gt;</span>&#x000A;      <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>&#x000A;    <span class="nt">&lt;/hosts_rule&gt;</span>&#x000A;  <span class="nt">&lt;/affinity_group&gt;</span>&#x000A;<span class="nt">&lt;/affinity_groups&gt;</span>&#x000A;</code></pre></div><p>GET /api/clusters/00000002-0002-0002-0002-000000000222/affinitygroups/31ef70c1-e636-45a6-9492-aa4fad753e6f/vms</p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;vms&gt;</span>&#x000A;  <span class="nt">&lt;vm</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/vms/d4532fce-787b-4e45-ab35-018a1df55e35"</span> <span class="na">id=</span><span class="s">"d4532fce-787b-4e45-ab35-018a1df55e35"</span><span class="nt">/&gt;</span>&#x000A;<span class="nt">&lt;/vms&gt;</span>&#x000A;</code></pre></div>
+<p>GET /api/clusters/00000002-0002-0002-0002-000000000222/affinitygroups/31ef70c1-e636-45a6-9492-aa4fad753e6f/hosts</p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;hosts&gt;</span>&#x000A;  <span class="nt">&lt;host</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/hosts/d4532fce-787b-4e45-ab35-018a1df55e35"</span> <span class="na">id=</span><span class="s">"d4532fce-787b-4e45-ab35-018a1df55e35"</span><span class="nt">/&gt;</span>&#x000A;<span class="nt">&lt;/hosts&gt;</span>&#x000A;</code></pre></div>
+<p>POST /api/clusters/00000002-0002-0002-0002-00000000017a/affinitygroups</p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;affinity_group&gt;</span>&#x000A;    <span class="nt">&lt;name&gt;</span>Affinity_Group_A<span class="nt">&lt;/name&gt;</span>&#x000A;    <span class="nt">&lt;vms&gt;</span>&#x000A;        <span class="nt">&lt;vm</span> <span class="na">id=</span><span class="s">"adf661d2-747e-4e74-a6bc-25fa2a457c5e"</span><span class="nt">/&gt;</span>&#x000A;        <span class="nt">&lt;vm</span> <span class="na">id=</span><span class="s">"1b0a1ceb-525c-4a12-afee-907c99fac106"</span><span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;/vms&gt;</span>&#x000A;    <span class="nt">&lt;hosts&gt;</span>&#x000A;        <span class="nt">&lt;host</span> <span class="na">id=</span><span class="s">"db8955c4-a167-4195-a072-a9ce01c55295"</span><span class="nt">/&gt;</span>&#x000A;        <span class="nt">&lt;host</span> <span class="na">id=</span><span class="s">"826ff73c-be2d-4c78-a2c5-af9125b6a008"</span><span class="nt">/&gt;</span>&gt;&#x000A;    <span class="nt">&lt;/hosts&gt;</span>&#x000A;    <span class="nt">&lt;positive&gt;</span>true<span class="nt">&lt;/positive&gt;</span>&#x000A;    <span class="nt">&lt;enforcing&gt;</span>true<span class="nt">&lt;/enforcing&gt;</span>&#x000A;    <span class="nt">&lt;hosts_rule&gt;</span>&#x000A;        <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>&#x000A;        <span class="nt">&lt;enforcing&gt;</span>false<span class="nt">&lt;/enforcing&gt;</span>&#x000A;        <span class="nt">&lt;positive&gt;</span>true<span class="nt">&lt;/positive&gt;</span>&#x000A;    <span class="nt">&lt;/hosts_rule&gt;</span>&#x000A;    <span class="nt">&lt;vms_rule&gt;</span>&#x000A;        <span class="nt">&lt;enabled&gt;</span>true<span class="nt">&lt;/enabled&gt;</span>&#x000A;        <span class="nt">&lt;enforcing&gt;</span>true<span class="nt">&lt;/enforcing&gt;</span>&#x000A;        <span class="nt">&lt;positive&gt;</span>true<span class="nt">&lt;/positive&gt;</span>&#x000A;    <span class="nt">&lt;/vms_rule&gt;</span>&#x000A;    <span class="nt">&lt;cluster</span> <span class="na">id=</span><span class="s">"00000002-0002-0002-0002-00000000017a"</span><span class="nt">/&gt;</span>&#x000A;<span class="nt">&lt;/affinity_group&gt;</span>&#x000A;</code></pre></div>
+<p>PUT /api/clusters/00000002-0002-0002-0002-00000000017a/affinitygroups/e7237677-ff5c-47a4-877c-194d525d5f92</p>
+
+<p>DELETE /api/clusters/00000002-0002-0002-0002-00000000017a/affinitygroups/e7237677-ff5c-47a4-877c-194d525d5f92</p>
+
+<p>For more information see the following Bugzilla link:
+<a href="https://bugzilla.redhat.com/show_bug.cgi?id=1392393">https://bugzilla.redhat.com/show_bug.cgi?id=1392393</a></p>
+
+<p>Deep dive:
+<a href="https://www.youtube.com/watch?v=rs_5BSqacWE">https://www.youtube.com/watch?v=rs_5BSqacWE</a></p>
+
+<p><a href="/develop/release-management/features/sla/affinity-rules-enforcement-manager/">Affinity Rules Enforcement Manager</a>
+<a href="/develop/release-management/features/sla/vm-affinity/">VM Affinity</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/soft-host-to-vm-affinity-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/soft-host-to-vm-affinity-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 19 Feb 2017 14:20 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

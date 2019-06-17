@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+GlusterGeoReplication &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-geo-replication">Gluster Geo Replication</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This document describes the design for geo replication feature under gluster. For overview of this feature, refer <a href="/develop/release-management/features/gluster/gluster-geo-replication/">Features/Gluster_Geo_Replication</a></p>
+
+<h2 id="design">Design</h2>
+
+<p>Geo-replication feature is designed to enable creation and maintenance of geo-replication sessions across clusters in GlusterFS. A geo-replication session can be setup between a GlusterFS managed source cluster and remote (destination) GlusterFS managed cluster.</p>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<h4 id="gluster-geo-replication-sessions">Gluster Geo Replication Sessions</h4>
+
+<p>This entity stores the details of geo-replication sessions that are set up for gluster volumes</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column name</th>
+      <th>Type</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>session_id</td>
+      <td>UUID</td>
+      <td>Primary Key</td>
+    </tr>
+    <tr>
+      <td>master_volume_id</td>
+      <td>UUID</td>
+      <td>Id of the master gluster volume</td>
+    </tr>
+    <tr>
+      <td>session_key</td>
+      <td>String</td>
+      <td>Session key of the form <masternode uuid="">:<ssh url="" for="" slave="" volume=""> For instance, 11ae7a03-e793-4270-8fc4-b42def8b3051:&lt;ssh://192.168.122.14&gt;::slave2</ssh></masternode></td>
+    </tr>
+    <tr>
+      <td>slave_host_uuid</td>
+      <td>UUID</td>
+      <td>UUID of VDS in destination cluster used to create session</td>
+    </tr>
+    <tr>
+      <td>slave_host_name</td>
+      <td>String</td>
+      <td>Hostname of host in destination cluster used to create session</td>
+    </tr>
+    <tr>
+      <td>slave_volume_id</td>
+      <td>UUID</td>
+      <td>Volume id of destination volume</td>
+    </tr>
+    <tr>
+      <td>slave_volume_name</td>
+      <td>String</td>
+      <td>Volume name of destination volume</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>String</td>
+      <td>Status of geo-replication session. One of INITIALIZING, NOTSTARTED, ACTIVE, PASSIVE, STOPPED, PARTIAL_FAULTY, UNKNOWN, FAULTY (in GeoRepSessionStatus)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="gluster-geo-replication-session-details">Gluster Geo Replication Session Details</h4>
+
+<p>This entity stores the details of the individual geo-replication sessions</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column name</th>
+      <th>Type</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>session_id</td>
+      <td>UUID</td>
+      <td>Ref to gluster_georep_session</td>
+    </tr>
+    <tr>
+      <td>master_brick_id</td>
+      <td>UUID</td>
+      <td>Ref to gluster_volume_bricks</td>
+    </tr>
+    <tr>
+      <td>slave_host_uuid</td>
+      <td>uuid</td>
+      <td>UUID of VDS host in destination cluster that brick is syncing to</td>
+    </tr>
+    <tr>
+      <td>slave_host_name</td>
+      <td>String</td>
+      <td>hostname of VDS host in destination cluster that brick is syncing to</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>String</td>
+      <td>status of brick connection. one of GeoRepSessionStatus</td>
+    </tr>
+    <tr>
+      <td>checkpoint_status</td>
+      <td>String</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>crawl_status</td>
+      <td>String</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>files_synced</td>
+      <td>bigint</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>files_pending</td>
+      <td>bigint</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>bytes_pending</td>
+      <td>bigint</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>deletes_pending</td>
+      <td>bigint</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>files_skipped</td>
+      <td>bigint</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="gluster-geo-replication-session-configuration">Gluster Geo Replication Session Configuration</h4>
+
+<p>This entity stores the configuration details of the individual geo-replication sessions</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column name</th>
+      <th>Type</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>config_key</td>
+      <td>String</td>
+      <td>Configuration key</td>
+    </tr>
+    <tr>
+      <td>config_value</td>
+      <td>String</td>
+      <td>Configuration value</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="rest-apis">REST APIs</h3>
+
+<p>The details of the REST for gluster geo-replication feature are as below -</p>
+
+<h4 id="listing-apis">Listing APIs</h4>
+
+<ul>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions - lists all the geo-replication sessions for a gluster volume</li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;georeplication-sessions&gt;&#x000A;  &lt;georeplication-session&gt;&#x000A;    &lt;id&gt;id&lt;/id&gt;&#x000A;    &lt;host&gt;Cluster Id&lt;/host&gt;&#x000A;    &lt;slavevolume&gt;Slave volume&lt;/slavevolume&gt;&#x000A;    &lt;status&gt;status&lt;/status&gt;&#x000A;  &lt;/georeplication-session&gt;&#x000A;  ...&#x000A;&lt;/georeplication-session&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions/{id} - lists the details of the individual geo-replication session</li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   &lt;georeplication-session&gt;&#x000A;    &lt;id&gt;id&lt;/id&gt;&#x000A;    &lt;host&gt;Cluster Id&lt;/host&gt;&#x000A;    &lt;slavevolume&gt;Slave volume&lt;/slavevolume&gt;&#x000A;    &lt;status&gt;status&lt;/status&gt;&#x000A;    &lt;session_details&gt;&#x000A;        &lt;session_detail&gt;&#x000A;             &lt;brick&gt;brick entity&lt;/brick&gt;&#x000A;             &lt;slaveNode&gt;host&lt;/slaveNode&gt;&#x000A;              &lt;status&gt;&#x000A;              &lt;checkpoint_status&gt;&lt;/checkpoint_status&gt;&#x000A;              &lt;crawl_status&gt;&lt;/crawl_status&gt;&#x000A;              &lt;filesSkipped&gt;Statistic&lt;/filesSkipped&gt;&#x000A;              &lt;filesPending&gt;Statistic&lt;/filesPending&gt;&#x000A;             &lt;filesSynced&gt;Statistic&lt;/filesSynced&gt;&#x000A;         &lt;session_detail&gt;&#x000A;...&#x000A;   &lt;/session_details&gt;&#x000A;  &lt;/georeplication-session&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions/{id}/options - lists all the configuration options for a geo-replication session</li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;georeplication_options&gt;&#x000A;  &lt;option&gt;&#x000A;    &lt;id&gt;Configuration Id&lt;/id&gt;&#x000A;    &lt;key&gt;Name of the configuration&lt;/key&gt;&#x000A;    &lt;value&gt;Value of the configuration&lt;/value&gt;&#x000A;  &lt;/option&gt;&#x000A;&lt;/georeplication_options&gt;&#x000A;</code></pre></div>
+<h4 id="actions-supported">Actions Supported</h4>
+
+<ul>
+  <li>POST api/clusters/{id}/glustervolumes/{id}/georeplication-sessions - creates a new geo-replication session for the cluster
+    <ul>
+      <li>Parameter GeoRepSession type</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions/{id}/start - starts the given geo-replication session</li>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions/{id}/stop - stops the given geo-replication session</li>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions/{id}/pause - pauses the given geo-replication session</li>
+  <li>api/clusters/{id}/glustervolumes/{id}/georeplication-sessions/{id}/resume - resumes the given geo-replication session</li>
+</ul>
+
+<p><a href="/develop/release-management/features/">Gluster Geo Replication</a> <a href="Category:oVirt 4.0 Proposed Feature">Gluster Geo Replication</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/glustergeoreplication.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/glustergeoreplication.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 10 Aug 2017 15:46 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

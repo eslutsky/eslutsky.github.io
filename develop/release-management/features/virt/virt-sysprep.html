@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+virt-sysprep &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="sealing-a-vm-template">Sealing a VM Template</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>'Sealing' is an operation that erases all machine-specific configurations from a filesystem: This includes SSH keys, UDEV rules, MAC addresses, system ID, hostname, etc. It is useful for when you want to create a template from a virtual machine. Subsequent virtual machines made from this template will avoid configuration inheritance.</p>
+
+<p><a href="http://libguestfs.org/virt-sysprep.1.html"><code>virt-sysprep</code></a> tool is used for sealing a VM template. Sealing operates directly on a VM's filesystem, and the list of images is passed to it in parameters. The objective is to add the ability to run <code>virt-sysprep</code> from oVirt on a specified set of disk images. The best timing for this action is when a VM template is created from a VM.</p>
+
+<p>The exact list of operations performed by <code>virt-sysprep</code> can be found on the tool's <a href="http://libguestfs.org/virt-sysprep.1.html">manual page</a>. oVirt runs <code>virt-sysprep</code> with a set of default operations. Currently, <code>virt-sysprep</code> only supports Linux guests and has only been tested on major distributions.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Shmuel Melamud (smelamud)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#109;&#101;&#108;&#097;&#109;&#117;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#109;&#101;&#108;&#097;&#109;&#117;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-design">Detailed Design</h2>
+
+<p>In UI, 'Seal template' checkbox will appear in 'New Template' dialog. If user checks this checkbox, the VM Template will be sealed just after creation.</p>
+
+<p>Disk images marked as SHARED cannot be modified. Therefore, you cannot run <code>virt-sysprep</code> after <code>AddVmTemplateCommand</code> is finished. Sealing must be performed directly after the VM template's disks have been created, but before the disks are marked as SHARED. Here is the correct sequence:</p>
+
+<ol>
+  <li>Create the template.</li>
+  <li>Create all template disks as regular (LEAF) disks.</li>
+  <li>Make the disks ILLEGAL.</li>
+  <li>Seal the template (run <code>virt-sysprep</code> on the disks).</li>
+  <li>Make the disks LEGAL and SHARED.</li>
+</ol>
+
+<p>In the event of a mid-process failure, the whole process will fail and the template will be removed. If the disks are not removed after failure, they will be left ILLEGAL and unusable.</p>
+
+<p>The <code>virt-sysprep</code> utility is executed on the VDSM side. The verb is <code>VM.seal</code>. The utility is executed asynchronously using host jobs mechanism. Storage jobs cannot be used for this, because <code>virt-sysprep</code> operates on all disks together, and not disk-by-disk. Therefore, another type of host jobs, named 'virt jobs', needs to be added. The engine will track the status of the job, using <code>VirtJobCallback</code>.</p>
+
+<h2 id="list-of-code-changes">List of code changes</h2>
+
+<h3 id="ui">UI</h3>
+
+<ul>
+  <li>Add a 'Seal template' checkbox to the 'New Template' dialog.</li>
+</ul>
+
+<h3 id="rest">REST</h3>
+
+<ul>
+  <li>Add a <code>seal</code> flag to the virtual machine template creation operation.</li>
+</ul>
+
+<h3 id="backend">Backend</h3>
+
+<ul>
+  <li>Create <code>VirtJobCallback</code>. Make <code>VirtJobCallback</code> and <code>StorageJobCallback</code> to be inherited from a common ancestor, <code>HostJobCallback</code>, that will contain the common functionality.</li>
+  <li>Create <code>UpdateVolumeCommand</code>, to change volume flags, making it ILLEGAL, LEGAL and SHARED.</li>
+  <li>Create <code>SealVmTemplateCommand</code> that invokes <code>VM.seal</code> verb on the VDSM side.</li>
+  <li>Modify <code>AddVmTemplateCommand</code> so that it can perform all the steps mentioned above.</li>
+</ul>
+
+<h3 id="vdsm">VDSM</h3>
+
+<ul>
+  <li>Add <code>SDM.update_volume</code> verb that changes volume attributes.</li>
+  <li>Add <code>VM.seal</code> verb that runs <code>virt-sysprep</code> on the given list of disk images.</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>engine: Released</li>
+  <li>vdsm: Released</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/virt-sysprep.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/virt-sysprep.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

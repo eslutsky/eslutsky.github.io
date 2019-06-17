@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 3.4.4 Release Notes &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/releases/">Releases</a></li>
+<li class='active'>oVirt 3.4.4 Release Notes</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-344-release-notes">oVirt 3.4.4 Release Notes</h1>
+
+<p>The oVirt Project is pleased to announce the availability of oVirt 3.4.4 release.</p>
+
+<p>oVirt is an open source alternative to VMware vSphere, and provides an awesome KVM management interface for multi-node virtualization.</p>
+
+<p>To find out more about features which were added in previous oVirt releases, check out the <a href="/develop/release-management/releases/3.4.3/">oVirt 3.4.3 Release Notes</a>, <a href="/develop/release-management/releases/3.4/">oVirt 3.4 Release Notes</a>, <a href="/develop/release-management/releases/3.3.5/">oVirt 3.3.5 release notes</a>, <a href="/develop/release-management/releases/3.2/">oVirt 3.2 release notes</a> and <a href="/develop/release-management/releases/3.1/">oVirt 3.1 release notes</a>. For a general overview of oVirt, read <a href="/develop/release-management/releases/3.0/feature-guide/">the oVirt 3.0 feature guide</a> and the <a href="../../../../community/about.html">about oVirt</a> page.</p>
+
+<ol id="markdown-toc">
+  <li><a id="markdown-toc-ovirt-344-release-notes" href="#ovirt-344-release-notes">oVirt 3.4.4 Release Notes</a>    <ol>
+      <li><a id="markdown-toc-install--upgrade-from-previous-versions" href="#install--upgrade-from-previous-versions">Install / Upgrade from previous versions</a>        <ol>
+          <li><a id="markdown-toc-fedora--centos--rhel" href="#fedora--centos--rhel">Fedora / CentOS / RHEL</a></li>
+          <li><a id="markdown-toc-ovirt-hosted-engine" href="#ovirt-hosted-engine">oVirt Hosted Engine</a></li>
+          <li><a id="markdown-toc-ovirt-live" href="#ovirt-live">oVirt Live</a></li>
+        </ol>
+      </li>
+      <li><a id="markdown-toc-whats-new-in-344" href="#whats-new-in-344">What's New in 3.4.4?</a></li>
+      <li><a id="markdown-toc-known-issues" href="#known-issues">Known issues</a></li>
+      <li><a id="markdown-toc-cve-fixed" href="#cve-fixed">CVE Fixed</a></li>
+      <li><a id="markdown-toc-bugs-fixed" href="#bugs-fixed">Bugs fixed</a>        <ol>
+          <li><a id="markdown-toc-ovirt-engine" href="#ovirt-engine">oVirt Engine</a></li>
+          <li><a id="markdown-toc-ovirt-log-collector" href="#ovirt-log-collector">oVirt Log Collector</a></li>
+          <li><a id="markdown-toc-ovirt-image-uploader" href="#ovirt-image-uploader">oVirt Image Uploader</a></li>
+          <li><a id="markdown-toc-ovirt-iso-uploader" href="#ovirt-iso-uploader">oVirt Iso Uploader</a></li>
+          <li><a id="markdown-toc-ovirt-hosted-engine-ha" href="#ovirt-hosted-engine-ha">oVirt Hosted Engine HA</a></li>
+          <li><a id="markdown-toc-vdsm" href="#vdsm">VDSM</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="install--upgrade-from-previous-versions">Install / Upgrade from previous versions</h2>
+
+<h3 id="fedora--centos--rhel">Fedora / CentOS / RHEL</h3>
+
+<p>In order to install it on a clean system, you need to install</p>
+
+<p><code># yum localinstall </code><a href="http://resources.ovirt.org/pub/yum-repo/ovirt-release34.rpm"><code>http://resources.ovirt.org/pub/yum-repo/ovirt-release34.rpm</code></a></p>
+
+<p>You should read then our <a href="/documentation/quickstart/quickstart-guide/">Quick Start Guide</a></p>
+
+<p>If you're upgrading from a previous version you should have ovirt-release package already installed on your system.</p>
+
+<p>You can then install ovirt-release34.rpm as in a clean install side-by-side.</p>
+
+<p>If you're upgrading from oVirt 3.4.0 you can now remove ovirt-release package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # yum remove ovirt-release&#x000A;</code></pre></div>
+<p>and then just execute:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # yum update "ovirt-engine-setup*"&#x000A;  # engine-setup&#x000A;</code></pre></div>
+<p>If you're upgrading from 3.3.2 or later, keep ovirt-release rpm in place until the upgrade is completed. See <a href="/develop/release-management/releases/3.4/">oVirt 3.4.0 release notes</a> for upgrading from previous versions.</p>
+
+<h3 id="ovirt-hosted-engine">oVirt Hosted Engine</h3>
+
+<p>If you're going to install oVirt as Hosted Engine on a clean system please follow <a href="/documentation/how-to/hosted-engine/#fresh-install">Hosted_Engine_Howto#Fresh_Install</a> guide.</p>
+
+<p>If you're upgrading an existing Hosted Engine setup, please follow <a href="/documentation/how-to/hosted-engine/#upgrade-hosted-engine">Hosted_Engine_Howto#Upgrade_Hosted_Engine</a> guide.</p>
+
+<h3 id="ovirt-live">oVirt Live</h3>
+
+<p>A new oVirt Live ISO is available:</p>
+
+<p><a href="http://resources.ovirt.org/pub/ovirt-3.4/iso/ovirt-live-el6-3.4.4.iso"><code>http://resources.ovirt.org/pub/ovirt-3.4/iso/ovirt-live-el6-3.4.4.iso</code></a></p>
+
+<h2 id="whats-new-in-344">What's New in 3.4.4?</h2>
+
+<h2 id="known-issues">Known issues</h2>
+
+<h2 id="cve-fixed">CVE Fixed</h2>
+
+<p><a href="https://access.redhat.com/security/cve/CVE-2014-3573">CVE-2014-3573</a> oVirt Engine: XML eXternal Entity (XXE) flaw in backend module</p>
+
+<h2 id="bugs-fixed">Bugs fixed</h2>
+
+<h3 id="ovirt-engine">oVirt Engine</h3>
+
+<ul>
+  <li>wrong boot order when trying to boot from CDROM while using cloud-init</li>
+  <li>Run vm with odd number of cores drop libvirt error</li>
+  <li>Duplicated CD device when creating VMs from the blank template</li>
+  <li>Executing multiple "template.delete" commands in parallel to "vm.delete" commands, creates a race condition which cause the Blank template to be removed from Data Center</li>
+  <li>[Neutron integration] Custom device properties are not passed to vdsm</li>
+  <li>[rhevm] unable to create template from Windows 2012 guest with SPICE videocard in RHEV 3.4</li>
+  <li>Disks imported from Export Domain to Data Domain are converted to Preallocated after upgrade from oVirt 3.4.1 to 3.4.2</li>
+  <li>Fail to update VM with any field, on missing domain name.</li>
+  <li>Cannot add AD group to a new VM from the user portal</li>
+  <li>Tracker: oVirt 3.4.4 release</li>
+  <li>engine serves only English docs when other locales are installed</li>
+  <li>ovirt-engine should not store long term files in "/var/tmp/ovirt-engine/"</li>
+  <li>Violating hard constraint positive Affinity rule can prevent fixing the violated rule forever</li>
+  <li></li>
+  <li>ovirt-engine currently sets the disk device to "lun" for all virtio-scsi direct LUN connections and disables read-only for these devices</li>
+  <li>[engine-backend] [iSCSI multipath] It's possible to remove a network from the setup even though it participates in an iSCSI multipath bond</li>
+  <li>[engine-backend] [iSCSI multipath] No indication that updating an iSCSI multipath bond doesn't trigger any operation from vdsm side</li>
+  <li>Odd vCPU topology dropped by libvirt</li>
+  <li>[engine-backend] [iscsi multipath] After networks replacement in an iSCSI multipath bond had failed, the bond's networks aren't being updated back</li>
+  <li>No link to VMs sub-collections under affinitygroups</li>
+  <li>engine-backup fails if bzip2 is not installed</li>
+  <li>Could not import a VM from export domain with raw sparse disks to a block storage domain</li>
+  <li>update supported PPC cpu to power8</li>
+  <li>Can't change a vm disk's storage domain from a file domain to a block domain when creating a template from a vm</li>
+  <li>Failed to remove host xxxxxxxx</li>
+  <li>Cannot export VM. Disk configuration (COW Preallocated) is incompatible with the storage domain type.</li>
+  <li>[Windows sysprep] Run Once: Special characters are not encoded in XML sysprep files for Windows 7, 8, 2008, 2012</li>
+  <li>Adding networks to an Iscsi Bond will remove all the other existing networks in this IscsiBond and replace them with the new added network</li>
+  <li>Fix operations of add,remove and list for StorageConnections in iSCSI Bond</li>
+  <li>RHEVM Backend : VM can be removed while in other state than down, like migrating and powering off</li>
+  <li>Default storage type is not Shared/local in rhevm-setup</li>
+  <li>CVE-2014-3573 ovirt-engine-backend: oVirt Engine: XML eXternal Entity (XXE) flaw in backend module</li>
+  <li>Automatic provisioning ignores db password supplied in answer file</li>
+  <li>[Network label] RHEV does not allow adding label for a network being used by VMs</li>
+  <li>SNMP trap notification has missing sysUptime field</li>
+</ul>
+
+<h3 id="ovirt-log-collector">oVirt Log Collector</h3>
+
+<ul>
+  <li>[log-collector] no engine.log in the final archive</li>
+  <li>/etc/rhevm is not collected</li>
+</ul>
+
+<h3 id="ovirt-image-uploader">oVirt Image Uploader</h3>
+
+<ul>
+  <li>rhevm-image-uploader ignores insecure option</li>
+</ul>
+
+<h3 id="ovirt-iso-uploader">oVirt Iso Uploader</h3>
+
+<ul>
+  <li>–insecure options still requires a valid CA cert</li>
+</ul>
+
+<h3 id="ovirt-hosted-engine-ha">oVirt Hosted Engine HA</h3>
+
+<ul>
+  <li>If two hosts have engine status 'vm not running on this host' ha agent not start vm automatically</li>
+</ul>
+
+<h3 id="vdsm">VDSM</h3>
+
+<ul>
+  <li>Pthreading is imported too late</li>
+  <li>[RFE] Host Self-Health Log: network connectivity information</li>
+  <li>RHEV-H 20140603.2 - new FC LUNs not visible</li>
+  <li>multipathd reload fails when installing running vdsm in the first time on a fresh install where multipath.conf is missing</li>
+  <li>Incorrect usage of logrotate leads to using two different settings</li>
+  <li>recovery of VMs after VDSM restart doesn't work on PPC</li>
+  <li>Vdsm sampling threads unexpectingly stops with IOError ENODEV</li>
+  <li>vdsm tests do not check for sudo availability</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/releases/3.4.4/index.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/releases/3.4.4/index.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 1 Mar 2019 23:15 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

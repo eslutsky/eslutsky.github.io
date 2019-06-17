@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hosted engine metadata &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="hosted-engine-metadata">Hosted engine metadata</h1>
+
+<p>Hosted engine agents communicate using a shared "whiteboard". Each agent can only write to a reserved section (protected by sanlock) and read the whole board.</p>
+
+<h2 id="files">Files</h2>
+
+<p>All hosted engine files related to the shared metadata are located in /rhev:</p>
+
+<ul>
+  <li>/rhev/data-center/mnt/<NFS>/<DOMAIN ID="">/ha_agent/hosted-engine.lockspace</DOMAIN></NFS></li>
+  <li>/rhev/data-center/mnt/<NFS>/<DOMAIN ID="">/ha_agent/hosted-engine.metadata</DOMAIN></NFS></li>
+</ul>
+
+<p>and the formats are described below.</p>
+
+<h3 id="ha_agentlockspace">ha_agent.lockspace</h3>
+
+<p>This file holds the sanlock lockspace used to protect the reserved sections from concurrent writes. The default capacity is 2000 nodes (disk size is 1 MB) and the lockspace is initialized using:</p>
+
+<div class="highlight"><pre class="highlight python"><code>  <span class="c">#!/usr/bin/env python</span>&#x000A;  <span class="k">import</span><span class="err"> </span><span class="n">sanlock</span>&#x000A;  <span class="n">sanlock</span><span class="o">.</span><span class="n">write_lockspace</span><span class="p">(</span><span class="n">lockspace</span><span class="o">=</span><span class="s">"hosted-engine"</span><span class="p">,</span><span class="err"> </span><span class="n">path</span><span class="o">=</span><span class="n">lockspace_file</span><span class="p">,</span><span class="err"> </span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>&#x000A;</code></pre></div>
+<h3 id="ha_agentmetadata">ha_agent.metadata</h3>
+
+<p>This file holds the metadata published by all hosted engine agents. It is organized into 2kiB blocks where the first 512B contains the machine readable format and the rest is used for human readable and auxiliary data. The machine readable block MUST be written and distributed across network atomically.</p>
+
+<p>The first block (index 0) is used for global cluster settings. Currently only the global maintenance flag is being saved there as:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  maintenance=1&#x000A;</code></pre></div>
+<table>
+  <tbody>
+    <tr>
+      <td>The additional blocks then contain the following fields separated by '</td>
+      <td>' character (the pipe):</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>expected value</th>
+      <th>description</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>parse version</td>
+      <td>1</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>feature version</td>
+      <td>1</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>collection started timestamp</td>
+      <td>seconds since start</td>
+      <td>start can be either epoch (1st of Jan 1970) or system start when relative time is used (default)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>host id</td>
+      <td>&lt;unique integer 1…2000&gt;</td>
+      <td>MUST match the block id (offset in the file modulo 2048)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>score</td>
+      <td>integer</td>
+      <td>usually 0 .. 2400</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>engine health report</td>
+      <td>{"reason": "vm not running on this host", "health": "bad", "vm": "down", "detail": "unknown"}</td>
+      <td>vm represent the state of the engine VM, health the state of the ovirt-engine service</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>hostname</td>
+      <td>the node's hostname</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>local maintenance</td>
+      <td>0</td>
+      <td>1</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>stopped</td>
+      <td>0</td>
+      <td>1</td>
+      <td>usually 0, but is set to 1 by the agent during proper ha_agent shutdown</td>
+    </tr>
+    <tr>
+      <td>crc32</td>
+      <td>8 hex characters</td>
+      <td>CRC32 checksum of the whole 512B block (without trailing zeros) with crc field set to 00000000</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/sla/hosted-engine-metadata.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/sla/hosted-engine-metadata.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

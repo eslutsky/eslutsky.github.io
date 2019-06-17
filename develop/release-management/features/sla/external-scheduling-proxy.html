@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt External Scheduling Proxy &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="external-scheduler-proxy">External Scheduler Proxy</h1>
+
+<h2 id="summary">Summary</h2>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Martin Sivak (msivak) –Martin Sivak (msivak) (<a href="User talk:msivak">talk</a>) 08:13, 17 June 2013 (GMT)</li>
+  <li>Email: <msivak at="" redhat="" dot="" com=""></msivak></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Specification phase</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>The external scheduler is a daemon and its purpose is for oVirt users to extend the scheduling process with custom python filters, scoring functions and load balancing functions. As mentioned above any plugin file {NAME}.py must implement at least one of the functions. The service will be started by the installer, and the engine will be able to communicate with it using XML-RPC.</p>
+
+<ul>
+  <li>
+    <p>Scheduler conf file (/etc/ovirt/scheduler/scheduler.conf), optional (defaults):</p>
+
+    <p>#listerning port=18781
+  #ssl=true
+  #plugins_path=$PYTHONPATH/ovirt_scheduler/plugins</p>
+  </li>
+  <li>
+    <p>Additionally for every python plugin an optional config file can be added (etc/ovirt/scheduler/plugins/{NAME}.conf).</p>
+  </li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>The external scheduler will allow system administrators to extend the scheduling logic by writing host selection filters in python.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>This feature is building on</p>
+
+<ul>
+  <li><a href="/develop/release-management/features/sla/ovirtschedulerapi/">oVirt scheduler API</a> feature.</li>
+</ul>
+
+<p>This feature will also allow new feaures to build on it.</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>All except discover function returns only UUID instead of a full business entity since there is no need for serialization.</li>
+  <li>Prior to invoking the remote procedure, the engine translates Host and VM business entities to their REST representations (rest mappers) and then convert it to XML string (using JAXB marshaling), then in the daemon it will be serialized back to python entity using ovirt-python-sdk (import ovirtsdk.xml.params.parseString auto generated module). This is similar to the way REST-API works.</li>
+</ul>
+
+<h3 id="discover">discover</h3>
+
+<p>Engine and external scheduler API:</p>
+
+<ul>
+  <li>Discover(void): returns a XML containing all available policy units and configurations (configuration is optional).</li>
+</ul>
+
+<p>Discover will iterate all plugins and config files and extract the data.</p>
+
+<p>Sample of data returned by the discover function:</p>
+
+<p><code>     </code><PolicyUnits>
+`       `<Filters>
+`         `<Filter>
+`           `<name>`Memory`</name>
+`           `<Properties>
+`             `<name>`Heat`</name>
+`             `<CustomProperties>`server_ip=\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b;threshold={0-99}`</CustomProperties>
+`             `<default_values>`127.0.0.1;70`</default_values>
+`           `</Properties>
+`         `</Filter>
+`       `</Filters>
+`       `<CostFunctions>
+`         `<CostFunction name="Memory"></CostFunction>
+`       `</CostFunctions>
+`       `<Balances>
+`         `<Balance name="Memory"></Balance>
+`       `<Balances>
+`     `&lt;/PolicyUnits&gt;
+         </Balances></Balances></PolicyUnits></p>
+
+<p>note: name is the file name and customProperties and defaultValues are fetched from plugin config file.</p>
+
+<p>The engine will call this method during initialization to expose all plugins. It will compare its persistent data (policy unit table) with returned plugins/configurations, and handle changes:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     * additional plugins: audit log.&#x000A;     * deleted plugins: need to make sure that the plugins isn't in use, if so disable the policy and audit log.&#x000A;     * edited plugins: save checksum?&#x000A;</code></pre></div>
+<h3 id="runfilters">runFilters</h3>
+
+<ul>
+  <li>List<UUID> runFilters(filtersList, Hosts(as xml), VM(as xml), properties_map)</UUID></li>
+</ul>
+
+<p>runFilters will execute a set of filters plugins sequentially (provided as a name list).</p>
+
+<h3 id="runcostfunctions">runCostFunctions</h3>
+
+<ul>
+  <li>Map&lt;UUID, int&gt; runCostFunctions(&lt;costFunction,Factor&gt;List, Hosts(as xml), VM(as xml), properties_map)</li>
+</ul>
+
+<p>runCostFunctions will execute a set of cost function plugins sequentially (provided as a name list), then calculate a cost table (using factors) and return it to the engine.</p>
+
+<h3 id="runloadbalancing">runLoadBalancing</h3>
+
+<ul>
+  <li>Map &lt;UUID, List<UUID>&gt; runLoadBalancing(balanceName, Hosts(as xml), properties_map)</UUID></li>
+</ul>
+
+<p>Will execute the balance plugin named balance name on the hosts and properties_map.</p>
+
+<h2 id="testing">Testing</h2>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/external-scheduling-proxy.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/external-scheduling-proxy.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

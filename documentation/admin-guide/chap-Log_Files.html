@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Log Files &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-19-log-files">Chapter 19: Log Files</h1>
+
+<h2 id="ovirt-engine-installation-log-files">oVirt Engine Installation Log Files</h2>
+
+<p><strong>Installation</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Log File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>/var/log/ovirt-engine/engine-cleanup_yyyy_mm_dd_hh_mm_ss.log</b></td>
+      <td>Log from the <code>engine-cleanup</code> command. This is the command used to reset an oVirt Engine installation. A log is generated each time the command is run. The date and time of the run is used in the filename to allow multiple logs to exist.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/ovirt-engine/engine-db-install-yyyy_mm_dd_hh_mm_ss.log</b></td>
+      <td>Log from the <code>engine-setup</code> command detailing the creation and configuration of the <b>engine</b> database.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/ovirt-engine/ovirt-engine-dwh-setup-yyyy_mm_dd_hh_mm_ss.log</b></td>
+      <td>Log from the <code>ovirt-engine-dwh-setup</code> command. This is the command used to create the <b>ovirt_engine_history</b> database for reporting. A log is generated each time the command is run. The date and time of the run is used in the filename to allow multiple logs to exist concurrently.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/ovirt-engine/setup/ovirt-engine-setup-yyyymmddhhmmss.log</b></td>
+      <td>Log from the <code>engine-setup</code> command. A log is generated each time the command is run. The date and time of the run is used in the filename to allow multiple logs to exist concurrently.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="ovirt-engine-log-files">oVirt Engine Log Files</h2>
+
+<p><strong>Service Activity</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Log File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>/var/log/ovirt-engine/engine.log</b></td>
+      <td>Reflects all oVirt Engine GUI crashes, Active Directory lookups, Database issues, and other events.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/ovirt-engine/host-deploy</b></td>
+      <td>Log files from hosts deployed from the oVirt Engine.</td>
+    </tr>
+    <tr>
+      <td><b>/var/lib/ovirt-engine/setup-history.txt</b></td>
+      <td>Tracks the installation and upgrade of packages associated with the oVirt Engine.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/httpd/ovirt-requests-log</b></td>
+      <td>Logs files from requests made to the oVirt Engine via HTTPS, including how long each request took. A <code>Correlation-Id</code> header is included to allow you to compare requests when comparing a log file with <b>/var/log/ovirt-engine/engine.log</b>.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/ovn-provider/ovirt-provider-ovn.log</b></td>
+      <td>Logs the activities of the OVN provider. For information about Open vSwitch logs, see the <a href="http://openvswitch.org/">Open vSwitch documentation</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="spice-log-files">SPICE Log Files</h2>
+
+<p>SPICE log files are useful when troubleshooting SPICE connection issues. To start SPICE debugging, change the log level to <code>debugging</code>. Then, identify the log location.</p>
+
+<p>Both the clients used to access the guest machines and the guest machines themselves have SPICE log files. For client side logs, if a SPICE client was launched using the native client, for which a <strong>console.vv</strong> file is downloaded, use the <code>remote-viewer</code> command to enable debugging and generate log output.</p>
+
+<h3 id="spice-logs-for-hypervisor-spice-servers">SPICE Logs for Hypervisor SPICE Servers</h3>
+
+<p><strong>SPICE Logs for Hypervisor SPICE Servers</strong></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Log Type</td>
+      <td>Log Location</td>
+      <td>To Change Log Level:</td>
+    </tr>
+    <tr>
+      <td>Host/Hypervisor SPICE Server</td>
+      <td><code>/var/log/libvirt/qemu/(guest_name).log</code></td>
+      <td>Run <code>export SPICE_DEBUG_LEVEL=5</code> on the host/hypervisor prior to launching the guest.  This variable is parsed by QEMU, and if run system-wide will print the debugging information of all virtual machines on the system. This command must be run on each host in the cluster. This command works only on a per-host/hypervisor basis, not a per-cluster basis.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="spice-logs-for-guest-machines">SPICE Logs for Guest Machines</h3>
+
+<p><strong>SPICE Logs for Guest Machines</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Log Type</td>
+   <td>Log Location</td>
+   <td>To Change Log Level:</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>Windows Guest</td>
+   <td>
+    <p>C:\Windows\Temp\vdagent.log</p>
+    <p>C:\Windows\Temp\vdservice.log</p>
+   </td>
+   <td>Not applicable</td>
+  </tr>
+  <tr>
+   <td>Enterprise Linux Guest</td>
+   <td>/var/log/spice-vdagent.log</td>
+   <td>
+    <p>To run the <tt>spice-vdagentd</tt> service in debug mode, as the root user create a <b>/etc/sysconfig/spice-vdagentd</b> file with this entry: <tt>SPICE_VDAGENTD_EXTRA_ARGS=”-d -d”</tt></p>
+    <p>To run <tt>spice-vdagent</tt> in debug mode, from the command line:<br />
+    <pre>$ killall - u $USER spice-vdagent&#x000A;$ spice-vdagent -x -d [-d] [ |&amp; tee spice-vdagent.log ]</pre></p>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="spice-logs-for-spice-clients-launched-using-consolevv-files">SPICE Logs for SPICE Clients Launched Using console.vv Files</h3>
+
+<p><strong>For Linux client machines:</strong></p>
+
+<ol>
+  <li>
+    <p>Enable SPICE debugging by running the <code>remote-viewer</code> command with the <code>--spice-debug</code> option. When prompted, enter the connection URL, for example, spice://[virtual_machine_IP]:[port].</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> #  remote-viewer --spice-debug&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>To view logs, download the <strong>console.vv</strong> file and run the <code>remote-viewer</code> command with the <code>--spice-debug</code> option and specify the full path to the <strong>console.vv</strong> file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # remote-viewer --spice-debug /path/to/console.vv&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>For Windows client machines:</strong></p>
+
+<ol>
+  <li>
+    <p>In versions of <code>virt-viewer</code> 2.0-11.el7ev and later, <strong>virt-viewer.msi</strong> installs <code>virt-viewer</code> and <code>debug-viewer.exe</code>.</p>
+  </li>
+  <li>
+    <p>Run the <code>remote-viewer</code> command with the <code>spice-debug</code> argument and direct the command at the path to the console:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> remote-viewer --spice-debug path\to\console.vv&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>To view logs, connect to the virtual machine, and you will see a command prompt running GDB that prints standard output and standard error of <code>remote-viewer</code>.</p>
+  </li>
+</ol>
+
+<h2 id="host-log-files">Host Log Files</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Log File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>/var/log/messages</b></td>
+      <td>The log file used by <code>libvirt</code>. Use <code>journalctl</code> to view the log. You must be a member of the <em>adm</em>, <em>systemd-journal</em>, or <em>wheel</em> groups to view the log.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/vdsm/spm-lock.log</b></td>
+      <td>Log file detailing the host's ability to obtain a lease on the Storage Pool Manager role. The log details when the host has acquired, released, renewed, or failed to renew the lease.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/vdsm/vdsm.log</b></td>
+      <td>Log file for VDSM, the Engine's agent on the host(s).</td>
+    </tr>
+    <tr>
+      <td><b>/tmp/ovirt-host-deploy-@DATE@.log</b></td>
+      <td>A host deployment log that is copied to the Engine as <b>/var/log/ovirt-engine/host-deploy/ovirt-_Date-Host-Correlation_ID.log_</b> after the host has been successfully deployed.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/vdsm/import/import-@UUID-Date@.log</b></td>
+      <td>Log file detailing virtual machine imports from a KVM host, a VMWare provider, or a Xen host, including import failure information. <code>UUID</code> is the UUID of the virtual machine that was imported and <code>Date</code> is the date and time that the import began.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/vdsm/supervdsm.log</b></td>
+      <td>Logs VDSM tasks that were executed with superuser permissions.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/vdsm/upgrade.log</b></td>
+      <td>VDSM uses this log file during host upgrades to log configuration changes.</td>
+    </tr>
+    <tr>
+      <td><b>/var/log/vdsm/mom.log</b></td>
+      <td>Logs the activities of the VDSM’s memory overcommitment manager.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="setting-up-a-host-logging-server">Setting Up a Host Logging Server</h2>
+
+<p>Hosts generate and update log files, recording their actions and problems. Collecting these log files centrally simplifies debugging.</p>
+
+<p>This procedure should be used on your centralized log server. You could use a separate logging server, or use this procedure to enable host logging on the oVirt Engine.</p>
+
+<p><strong>Setting up a Host Logging Server</strong></p>
+
+<ol>
+  <li>
+    <p>Configure SELinux to allow <code>rsyslog</code> traffic.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # semanage port -a -t syslogd_port_t -p udp 514&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Edit <code>/etc/rsyslog.conf</code> and add the following lines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> $template TmplAuth, "/var/log/%fromhost%/secure"&#x000A; $template TmplMsg, "/var/log/%fromhost%/messages"&#x000A;&#x000A; $RuleSet remote&#x000A; authpriv.*   ?TmplAuth&#x000A; \*.info,mail.none;authpriv.none,cron.none   ?TmplMsg&#x000A; $RuleSet RSYSLOG_DefaultRuleset&#x000A; $InputUDPServerBindRuleset remote&#x000A;</code></pre></div>
+    <p>Uncomment the following:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> #$ModLoad imudp&#x000A; #$UDPServerRun 514&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the rsyslog service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart rsyslog.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Your centralized log server is now configured to receive and store the <code>messages</code> and <code>secure</code> logs from your virtualization hosts.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Utilities">Chapter 18: Utilities</a><br />
+<strong>Next:</strong> <a href="chap-Proxies">Chapter 20: Proxies</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-log_files">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Log_Files.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Log_Files.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

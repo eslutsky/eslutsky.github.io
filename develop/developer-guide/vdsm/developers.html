@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Vdsm Developers &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="vdsm-developers">Vdsm Developers</h1>
+
+<h2 id="installing-the-required-repositories">Installing the required repositories</h2>
+
+<p>To build VDSM, enable the oVirt repositories by installing the ovirt-release rpm:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm&#x000A;</code></pre></div>
+<p>or if you are using Fedora</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  dnf install http://resources.ovirt.org/pub/yum-repo/ovirt-release-master.rpm&#x000A;</code></pre></div>
+<p>If you need a previous installation, use the corresponding repository instead:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release40.rpm &#x000A;  yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release36.rpm &#x000A;  yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm&#x000A;</code></pre></div>
+<p>for Fedora</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> dnf install http://resources.ovirt.org/pub/yum-repo/ovirt-release40.rpm &#x000A; dnf install http://resources.ovirt.org/pub/yum-repo/ovirt-release36.rpm &#x000A; dnf install http://resources.ovirt.org/pub/yum-repo/ovirt-release35.rpm&#x000A;</code></pre></div>
+<p>This adds all the required repositories for you, including:</p>
+
+<ul>
+  <li>EPEL repositories for Red Hat Enterprise Linux, CentOS or similar distributions</li>
+  <li>GlusterFS repositories</li>
+  <li>Fedora Virtualization Preview repositories for Fedora or similar distributions</li>
+  <li>All required GPG keys.</li>
+</ul>
+
+<p>VDSM requires Python 2 as your /usr/bin/python.</p>
+
+<h2 id="getting-the-source">Getting the source</h2>
+
+<p>Our public git repository is located at: <a href="http://gerrit.ovirt.org/gitweb?p=vdsm.git">oVirt.org</a></p>
+
+<p>You can clone this repository by running the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  git clone http://gerrit.ovirt.org/p/vdsm.git&#x000A;</code></pre></div>
+<h2 id="installing-the-required-packages">Installing the required packages</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  yum install `cat automation/check-patch.packages.el7`&#x000A;</code></pre></div>
+<p>or if you are using Fedora (use .fc28 for Fedora 28):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  dnf install `cat automation/check-patch.packages.fc28`&#x000A;</code></pre></div>
+<p>On any platform, you should also install tox, required for running the
+tests. The best way to install it is using pip:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>pip install --user tox&#x000A;</code></pre></div>
+<p>If pip is not available in your distribution, you can install it using
+easy_install:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>easy_install pip&#x000A;</code></pre></div>
+<p>Once you installed tox, tox will install the required development tools
+during the build inside a virtual environment, keeping your system
+clean.</p>
+
+<h2 id="configuring-the-source">Configuring the source</h2>
+
+<p>VDSM uses autoconf and automake as its build system.</p>
+
+<p>To configure a development build environment:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ./autogen.sh --system --enable-timestamp&#x000A;</code></pre></div>
+<p>To see available options:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ./configure --help&#x000A;</code></pre></div>
+<h2 id="testing">Testing</h2>
+
+<p>Running the tests except slow and stress tests:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  make check&#x000A;</code></pre></div>
+<p>Running all tests, including slow and stress tests:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  make check-all&#x000A;</code></pre></div>
+<p>This is very slow and consumes lot of resources; running hundreds of
+threads and child processes.</p>
+
+<p>To exclude a specific test (test_foo):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  make check NOSE_EXCLUDE=test_foo&#x000A;</code></pre></div>
+<p>Running code style and quality checks:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> make flake8&#x000A;</code></pre></div>
+<p>Running code style and quality checks for specific files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>.tox/flake8/bin/flake8 /path/to/module.py&#x000A;</code></pre></div>
+<p>The command above works only after running make flake8 in the first
+time. You may want to install flake8 on your system for convenience.</p>
+
+<h3 id="testing-specific-modules">Testing specific modules</h3>
+
+<p>Running all the tests is too slow during development. It is recommended
+to run the relevant module tests while making changes, and run the
+entire test suite before submitting a patch.</p>
+
+<p>Legacy tests use <code>nose</code>, newer tests use <code>pytest</code>.
+Following sub-sections provide a quick reference how to run either <code>nose</code> or <code>pytest</code> based tests.
+Please see <code>tests/README</code> for more details about the VDSM tests and how to run them.</p>
+
+<h4 id="running-specific-nose-tests">Running specific nose tests</h4>
+
+<p>Please note that <code>run_test*</code> scripts are legacy and can be removed in the future.
+Preffered way how to run tests is using <code>tox</code>.</p>
+
+<p>To run specific tests:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cd tests&#x000A;./run_tests_local.sh foo_test.py bar_test.py&#x000A;</code></pre></div>
+<p>To enable slow and stress tests:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>./run_tests_local.sh --enable-slow-tests --enable-stress-tests foo_test.py bar_test.py&#x000A;</code></pre></div>
+<p>To run using different python executable:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>PYTHON_EXE=python3 ./run_tests_local.sh foo_test.py bar_test.py&#x000A;</code></pre></div>
+<h4 id="running-specific-pytest-tests">Running specific pytest tests</h4>
+
+<p>To run specific module with <code>tox</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>tox -e storage-py27,storage-py36&#x000A;</code></pre></div>
+<p>To run specific test direcly via <code>pytest</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cd tests&#x000A;export PYTHONPATH=../lib/&#x000A;pytest storage/blocksd_test.py&#x000A;</code></pre></div>
+<h2 id="building-a-vdsm-rpm">Building a VDSM RPM</h2>
+
+<p>To create an RPM:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  make rpm&#x000A;</code></pre></div>
+<p>VDSM automatically builds using the latest tagged version. If you want to explicitly define a version, use:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  make rpmversion=4.9 rpmrelease=999.funkyBranch&#x000A;</code></pre></div>
+<h2 id="building-with-hooks-support">Building with hooks support</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ./autogen.sh --system  --enable-hooks &amp;&amp; make rpm&#x000A;</code></pre></div>
+<h2 id="basic-installation">Basic installation</h2>
+
+<p>The easiest way is to start with vdsm from ovirt-release repos. If you
+added a host to engine, your host already installed. If you want to
+install vdsm on a new host not added to engine, install vdsm and
+vdsm-client:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>dnf install vdsm vdsm-client&#x000A;</code></pre></div>
+<p>To install packages built using "make rpm" use dnf upgrade:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cd ~/rpmbuild/RPMS&#x000A;dnf upgrade */*.rpm&#x000A;</code></pre></div>
+<p>Before starting vdsmd service for the first time vdsm requires some configuration procedures for external services that being used by vdsmd. To ease this process vdsm provides a utility (vdsm-tool). To perform full reconfiguration of external services perform:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # vdsm-tool configure --force&#x000A;  (for more information read "vdsm-tool --help") &#x000A;</code></pre></div>
+<p>Finally start the vdsmd service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service vdsmd start&#x000A;</code></pre></div>
+<h2 id="code-style">Code Style</h2>
+
+<p>See <a href="/develop/developer-guide/vdsm/coding-guidelines/">Vdsm Coding Guidelines</a>.</p>
+
+<h2 id="sending-patches">Sending patches</h2>
+
+<p>Send them to <a href="http://gerrit.ovirt.org">our gerrit server</a> (<a href="/develop/dev-process/working-with-gerrit/">see how</a>). With your first major patch, do not forget to add yourself to the AUTHORS file. Do not be shy - it gives you well-deserved recognition, and it shows to the team that you stand behind your code.</p>
+
+<p>Please be verbose in your commit message. Explain the motivation for your patch, and the reasoning behind it. This information assists the reviewers of your code, before and after it is submitted to the master branch.</p>
+
+<p>The commit message should follow the guidelines in the DISCUSSION section of <a href="http://kernel.org/pub/software/scm/git/docs/git-commit.html">http://kernel.org/pub/software/scm/git/docs/git-commit.html</a> : short subject line, empty line, verbose paragraphs.</p>
+
+<p>General development discussions are in <a href="https://lists.fedorahosted.org/mailman/listinfo/vdsm-devel">vdsm-devel@lists.fedorahosted.org</a>.</p>
+
+<h3 id="reviewer-comments">Reviewer Comments</h3>
+
+<p>Sending a patch in the open-source world can be difficult. You code, your "baby", is scrutinized by people you do not know, who tend to find problems in it. The reviewer should comment on what's good in your patch, and what is to be improved, and rate your change accordingly.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Score</th>
+      <th>What it means</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>+2</td>
+      <td>Changed approved. If it breaks and the author is gone, I'll debug it.</td>
+    </tr>
+    <tr>
+      <td>+1</td>
+      <td>Looks good to me, I'm fine with the change going in as it is.</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>I did not review the patch, or otherwise do no have a solid opinion about it.</td>
+    </tr>
+    <tr>
+      <td>-1</td>
+      <td>The change should not be merged as it is. A little (or more) work is required.</td>
+    </tr>
+    <tr>
+      <td>-2</td>
+      <td>The change should not go in at all. It is badly designed or solves the wrong problem.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>One you tick the "Verified" checkbox, remember explaining how exactly you performed the verification. If it was a simple `make check` or `make rpm` – say so.</p>
+
+<h2 id="creating-a-local-yum-repository-to-test-changes-to-vdsm">Creating a local yum repository to test changes to VDSM</h2>
+
+<p>1) First, you must generate the rpm with your changes from the vdsm source directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  #vdsm&gt; ./autogen.sh --system&#x000A;  #vdsm&gt; make&#x000A;  #vdsm&gt; make rpm&#x000A;</code></pre></div>
+<p><strong>Note</strong>: all rpm files will be generated at rpmbuild dir, usually: /home/your-user/rpmbuild/RPMS</p>
+
+<p>2) Setting environment:</p>
+
+<ul>
+  <li>
+    <p>Install required package</p>
+
+    <p># yum install createrepo -y</p>
+  </li>
+  <li>
+    <p>Enable httpd service (if it's not installed, install it first with yum install httpd)</p>
+
+    <p># chkconfig httpd on</p>
+  </li>
+</ul>
+
+<p>or</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ln -s '/lib/systemd/system/httpd.service' '/etc/systemd/system/multi-user.target.wants/httpd.service'&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <p>Create the directory that will hold the rpm files (repo)</p>
+
+    <p># mkdir /var/www/html/my-vdsm-changes</p>
+  </li>
+  <li>
+    <p>Copy the vdsm packages to repo</p>
+
+    <p># cp ${HOME}/rpmbuild/RPMS/noarch/<em> /var/www/html/my-vdsm-changes
+  # cp ${HOME}/rpmbuild/RPMS/x86_64/</em> /var/www/html/my-vdsm-changes</p>
+  </li>
+  <li>
+    <p>Create the repo inside the yum.repos.d</p>
+
+    <p># vi /etc/yum.repos.d/my-vdsm-changes.repo
+  [my-vdsm-changes]
+  name = my vdsm changes
+  baseurl = http://127.0.0.1/my-vdsm-changes
+  enabled = 1
+  gpgcheck = 0</p>
+  </li>
+  <li>
+    <p>Execute createrepo tool</p>
+
+    <p># createrepo /var/www/html/my-vdsm-changes</p>
+  </li>
+  <li>
+    <p>Start httpd service</p>
+
+    <p># service httpd start</p>
+  </li>
+  <li>
+    <p>List all repos and see your new repo</p>
+
+    <p># yum repolist</p>
+  </li>
+</ul>
+
+<p><strong>Note</strong>: SELinux might throw permission denied to repo located at /var/www/html/</p>
+
+<h2 id="using-a-virtual-machine-console">Using a virtual machine console</h2>
+
+<p>If you want to use the console for a virtual machine using the Spice protocol (VNC is not supported right now), run the following command on the host running ovirt-engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># psql -U postgres engine -c "update vdc_options set option_value = 'false' &#x000A;where option_name = 'UseSecureConnectionWithServers';"&#x000A;</code></pre></div>
+<h2 id="fake-kvm-support">Fake KVM Support</h2>
+
+<p>As developer you might need to add many hosts into your environment for tests. VDSM provides a functionality called 'fake_kvm_support' for <strong>VDSM quality assurance/developers</strong> emulate a real host/kvm hardware without running real guests.</p>
+
+<ul>
+  <li>1) Create a guest as Fedora 17 (Tested on Fedora 17 but should work in higher versions as well)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <p>2) Install required packages</p>
+
+    <p># yum install vdsm-hook-faqemu -y </p>
+  </li>
+  <li>
+    <p>3) Change vdsm config file to enable this feature</p>
+
+    <p># vi /etc/vdsm/vdsm.conf 
+   [vars]</p>
+
+    <p> fake_kvm_support = true  </p>
+  </li>
+  <li>
+    <p>4) Restart the vdsmd daemon (<strong>Only required if you had previously VDSM installed</strong>)</p>
+
+    <p># systemctl restart vdsmd.service </p>
+  </li>
+  <li>
+    <p>5) Open the oVirt Engine portal and add the new 'Fake' Host</p>
+
+    <p> Login with your admin user -&gt; Hosts -&gt; New </p>
+  </li>
+  <li>
+    <p>6) The host should be UP</p>
+  </li>
+</ul>
+
+<h3 id="troubleshooting-fake-kvm-support">Troubleshooting Fake KVM Support</h3>
+
+<p><strong>Problems adding the fake Host in the engine</strong></p>
+
+<p>The vdsm bootstrapper was deprecated and replaced by ovirt-host-deploy, the /usr/share/doc/ovirt-host-deploy-1.1.0/README, file includes details about how to configure a fake host.</p>
+
+<p>See see <a href="http://gerrit.ovirt.org/gitweb?p=ovirt-host-deploy.git;a=blob;f=README;hb=HEAD">ovirt-host-deploy/README</a> for fake qemu support.</p>
+
+<p><strong>Failed: Server does not support virtualization</strong></p>
+
+<p>If during the installation of the host you received the message "Server does not support virtualization" from oVirt Engine, it's probably because your vdsm version doesn't include the patch: <a href="http://gerrit.ovirt.org/#/c/5611/3">http://gerrit.ovirt.org/#/c/5611/3</a> (might be a bug as well).
+ This patch add the 'fake kvm' support to vds_bootstrap.</p>
+
+<p>There are several ways to update your vds_bootstrap, for example:</p>
+
+<ul>
+  <li>
+    <p>Yum update in <strong>oVirt Engine</strong> machine (if the repo is not updated, use the others approaches)</p>
+
+    <p> # yum update vdsm-bootstrap </p>
+  </li>
+  <li>
+    <p>Clone vdsm tree and create an updated vdsm-bootstrap rpm and update the <strong>oVirt Engine</strong> system</p>
+
+    <p>  # git clone git://gerrit.ovirt.org/vdsm
+    # cd vdsm
+    (if required increase the Version/Release from vdsm.spec.in)
+    # ./autogen.sh –system &amp;&amp; make &amp;&amp; make rpm
+    # rpm -Uvh ~/rpmbuild/RPMS/noarch/vdsm-bootstrap* </p>
+  </li>
+  <li>
+    <p>Clone the vdsm tree, execute autogen/make and copy the vds_bootstrap/vds_bootstrap.py to /usr/share/vds_bootstrap</p>
+
+    <p>  # git clone git://gerrit.ovirt.org/vdsm
+    # cd vdsm
+    # ./autogen.sh –system &amp;&amp; make
+    # cp vds_bootstrap/vds_bootstrap.py /usr/share/vds_bootstrap 
+             </p>
+  </li>
+  <li>
+    <p>Manually backport the above <a href="http://gerrit.ovirt.org/5611">http://gerrit.ovirt.org/5611</a> patch to your current vds_bootstrap (/usr/share/vds_bootstrap)</p>
+
+    <p>  # vi /usr/share/vds_bootstrap/vds_bootstrap.py
+    Make the changes manually</p>
+  </li>
+</ul>
+
+<p><strong>Non Responsive status</strong></p>
+
+<ul>
+  <li>Check if vdsm and libvirt daemons are running</li>
+  <li>Firewall?</li>
+</ul>
+
+<p>'''Default networks, the following networks are missing on host 'ovirtmgmt' '''</p>
+
+<p>Something goes wrong setting the bridge ovirtmgmt, check the logs (/tmp/vds*.log) in the host side.
+If required, use the manual process to create the bridge and re-add the host: <a href="/develop/developer-guide/vdsm/installing-vdsm-from-rpm/#configuring-the-bridge-interface">Installing VDSM from rpm#Configuring the bridge Interface</a></p>
+
+<h2 id="running-node-as-guest---nested-kvm">Running Node as guest - Nested KVM</h2>
+
+<p>Following the below instructions you can use oVirt Node, Fedora Node and oVirt Engine as guests.</p>
+
+<p>Requires: Processors with <strong>Full Virtualization</strong> embedded</p>
+
+<p>Attention: The below steps were tested on Fedora 17 but should work in higher versions (maybe not even required in the future releases, hopefully virt-manager will handle that directly in the next versions)</p>
+
+<p>"Nested VMX" feature adds this missing capability - of running guest hypervisors (which use VMX) with their own nested guests. It does so by allowing a guest to use VMX instructions, and correctly
+ and efficiently emulating them using the single level of VMX available in the hardware.</p>
+
+<p>Finally, we are assuming you already have qemu-kvm/libvirt/virt-manager installed in your system</p>
+
+<h3 id="intel">Intel</h3>
+
+<ul>
+  <li>
+    <p>1) Check if nested KVM is enabled (should be <strong>Y</strong>)</p>
+
+    <p> # cat /sys/module/kvm_intel/parameters/nested
+    N</p>
+  </li>
+  <li>
+    <p>2) In that case, it's disabled, to enable (can be via modprobe conf as well, simply: echo "options kvm-intel nested=1" &gt; /etc/modprobe.d/kvm-intel.conf ):</p>
+
+    <p> # vi /etc/default/grub</p>
+  </li>
+</ul>
+
+<p>Add to the end of line <strong>GRUB_CMDLINE_LINUX kvm-intel.nested=1</strong></p>
+
+<p>Example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   GRUB_CMDLINE_LINUX="rd.md=0 rd.dm=0  KEYTABLE=us SYSFONT=True rd.lvm.lv=vg/lv_root rd.luks=0 rd.lvm.lv=vg/lv_swap LANG=en_US.UTF-8 rhgb quiet kvm-intel.nested=1"&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <p>3) Save the changes:</p>
+
+    <p> # grub2-mkconfig -o /boot/grub2/grub.cfg</p>
+  </li>
+  <li>
+    <p>4) Reboot the system:</p>
+
+    <p> # reboot</p>
+  </li>
+  <li>
+    <p>5) Install hook for nested virtualization on hypervisor/hypervisors. This will configure both the host and guest for nested KVM. With the nestedvt vdsm hook installed, every guest launched from your nested-enabled hosts will inherit its own KVM-hosting capability. <a href="http://community.redhat.com/blog/2013/08/testing-ovirt-3-3-with-nested-kvm">More details</a>:</p>
+
+    <p> # yum install -y vdsm-hook-nestedvt </p>
+  </li>
+  <li>
+    <p>6) Restart vdsmd on hypervisor</p>
+
+    <p> # service vdsmd restart </p>
+  </li>
+</ul>
+
+<p>After vdsm restarts, you can check to see that your hooks are installed in your host’s “Host Hooks” tab: <img alt="" width="911" height="204" src="/images/wiki/Nestedvt_hook.png?1560777613" /></p>
+
+<h3 id="amd">AMD</h3>
+
+<p>Works out of the box.</p>
+
+<ul>
+  <li>
+    <p>1) To check if nested KVM is enabled (should be <strong>1</strong>)</p>
+
+    <p> # cat /sys/module/kvm_amd/parameters/nested
+    1</p>
+  </li>
+  <li>
+    <p>2) Install oVirt Node as guest with virt-manager (or any other distro).</p>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <p>3) After virtual machine starts, check in the guest that svm flag in the /proc/cpuinfo.</p>
+
+    <p> # grep -m1 svm /proc/cpuinfo
+    flags           : fpu de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx lm up nopl pni cx16 popcnt hypervisor lahf_lm svm abm sse4a</p>
+  </li>
+</ul>
+
+<p>More info about nested-kvm: <a href="https://github.com/torvalds/linux/blob/master/Documentation/virtual/kvm/nested-vmx.txt">https://github.com/torvalds/linux/blob/master/Documentation/virtual/kvm/nested-vmx.txt</a></p>
+
+<h2 id="building-new-releases-for-fedora-or-epel-with-fedpkg">Building new releases for Fedora or EPEL with fedpkg</h2>
+
+<p>In the following example we will build vdsm-4.13.0 using patches for ovirt-3.3.2</p>
+
+<p>1) Clone vdsm package from Fedora git</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    $ mkdir ~/vdsm-fedora &amp;&amp; cd ~/vdsm-fedora&#x000A;    $ fedpkg clone vdsm &amp;&amp; cd vdsm&#x000A;</code></pre></div>
+<p>Switch the stable branches (at moment f21 is <strong>rawhide</strong>, not stable) and check the last patch added to the build from changelog:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    $ fedpkg switch-branch f20&#x000A;    $ vi vdsm.spec&#x000A;    &#x000A;    Example:&#x000A;    * Tue Nov 12 2013 Douglas Schilling Landgraf `&lt;xxx@xxx&gt;` - 4.13.0-11&#x000A;    - update from branch ovirt-3.3 which include:&#x000A;      upgrade-fix-v3ResetMetaVolSize-argument&#x000A;      lvm-Do-not-use-udev-cache-for-obtaining-device-list&#x000A;      Fix-ballooning-rules-for-computing-the-minimum-avail&#x000A;     Avoid-M2Crypto-races&#x000A;     spec-declare-we-provide-an-existing-python-cpopen&#x000A;     configuring-selinux-allowing-qemu-kvm-to-generate-co `  `&lt;snip&gt;&#x000A;</code></pre></div>
+<p>So, the last patch added to the build 3.3.1 was <strong>configuring-selinux-allowing-qemu-kvm-to-generate-co</strong>, based on that you can use <strong>git format-patch</strong> to generate the patches to be included into next build</p>
+
+<p>2) Clone the vdsm tree:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    $ mkdir ~/vdsm-upstream &amp;&amp; cd ~/vdsm-upstream `  $ git clone `[`git://gerrit.ovirt.org/vdsm`](git://gerrit.ovirt.org/vdsm)&#x000A;</code></pre></div>
+<p>3) Go to branch that hold the patches for 3.3.2, in this case <strong>ovirt-3.3</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    $ git checkout remotes/origin/ovirt-3.3 -b 3.3.2&#x000A;    Branch 3.3.2 set up to track remote branch ovirt-3.3 from origin.&#x000A;    Switched to a new branch '3.3.2'&#x000A;</code></pre></div>
+<p>3) Select the patches that you want to add to the build using <strong>format-patch</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    Examples:&#x000A;    * Last 3 patches: `    $ git format-patch `**`-3`**&#x000A;      0001-fuserTests-fix-for-f20-and-arch.patch&#x000A;      0002-Adding-debian-folder-makefile.patch&#x000A;      0003-Fix-Makefile.am-in-debian-folder.patch&#x000A;&#x000A;    * Specifying the commit:&#x000A;      $ git format-patch `**&lt;commit id&gt;**` -1&#x000A;      0001-fuserTests-fix-for-f20-and-arch.patch&#x000A;</code></pre></div>
+<p>In our case, the last patch is <strong>configuring-selinux-allowing-qemu-kvm-to-generate-co</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    $ git format-patch -19&#x000A;    0001-Invalidate-filters-on-HSMs-before-rescanning-extende.patch&#x000A;    0002-vm-refresh-raw-disk-before-live-extension.patch&#x000A;    0003-Renaming-etc-sysctl.d-vdsm-to-etc-sysctl.d-vdsm.conf.patch `  `&lt;snip&gt;&#x000A;</code></pre></div>
+<p>Again, why -19 ? Because we are 19 patches behind from version <strong>3.3.1</strong> You can use <strong>git log</strong> to check how many patches we do have after <strong>configuring-selinux-allowing-qemu-kvm-to-generate-co</strong></p>
+
+<p>Copy the 19 patches to the ~/vdsm-fedora dir</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     $ cp *.patch ~/vdsm-fedora/vdsm&#x000A;</code></pre></div>
+<p>4) Build new vdsm with the new patches</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     $ cd ~/vdsm-fedora/vdsm/&#x000A;     $ vi vdsm.spec&#x000A;</code></pre></div>
+<p>Example:</p>
+
+<p><code>  </code><snip>
+`  Url:            `[`http://www.ovirt.org/wiki/Vdsm`](/wiki/Vdsm)
+        # The source for this package was pulled from upstream's vcs.
+        # Use the following commands to generate the tarball:
+`  #  git clone `[`http://gerrit.ovirt.org/p/vdsm`](http://gerrit.ovirt.org/p/vdsm)
+        #  cd vdsm
+        #  git reset --hard {vdsm_release}
+        #  ./autogen.sh --system
+        #  make VERSION={version}-{vdsm_release} dist
+        Source0:        %{vdsm_name}-%{version}%{?vdsm_relttag}.tar.gz
+        # ovirt-3.3.2 patches
+        Patch0:         0001-Invalidate-filters-on-HSMs-before-rescanning-extende.patch
+        Patch1:         0002-vm-refresh-raw-disk-before-live-extension.patch
+        Patch2:         0003-Renaming-etc-sysctl.d-vdsm-to-etc-sysctl.d-vdsm.conf.patch
+        ...
+        Patch18:       0019-Fix-Makefile.am-in-debian-folder.patch
+`  `</snip></p>
+
+<p>…. continue until the last patch then add the patch macro in the spec for <strong>all patches</strong></p>
+
+<p><code> </code><snip>
+       %description gluster
+       Gluster plugin enables VDSM to serve Gluster functionalities.
+       %endif
+       %prep
+       %setup -q
+       # ovirt-3.3.2 patches
+       %patch0 -p1
+       %patch1 -p1
+       %patch2 -p1
+       ...
+       %patch23 -p1
+` `</snip></p>
+
+<p><strong>PLEASE NOTE</strong>: if changes/patches are being added to the upstream spec file you MUST manually update the FEDORA spec as well. You can manually verify the patches or use grep -i "vdsm.spec" in the patch generated.</p>
+
+<p>Time to increase the <strong>Release</strong> in the spec and <strong>changelog</strong></p>
+
+<p><code> </code><snip>
+       Release:        `**`12`**`%{?dist}%{?extra_release}
+` `</snip></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   %changelog&#x000A;   * Thu Nov 28 2013 PERSON_NAME `&lt;xxx@xxx.com&gt;` - 4.13.0-12&#x000A;   - lvm: Do not use udev cache for obtaining device list (BZ#1014942)&#x000A;   - Fix ballooning rules for computing the minimum available memory (BZ#1025845)&#x000A;   ....&#x000A;   - Fix Makefile.am in debian folder&#x000A;</code></pre></div>
+<p>Ok, build the new spec locally for initial test:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   $ fedpkg local  (or fedpkg srpm)&#x000A;</code></pre></div>
+<p>Hopefully it worked, now let's make a test build in Koji systems:</p>
+
+<p><code> $ fedpkg --dist f19 scratch-build --srpm ~/rpmbuild/SRPM/</code><vdsm-package.srpm>
+` $ fedpkg --dist f20 scratch-build --srpm ~/rpmbuild/SRPM/`<vdsm-package.srpm>
+` $ fedpkg --dist el6 scratch-build --srpm ~/rpmbuild/SRPM/`<vdsm-package.srpm></vdsm-package.srpm></vdsm-package.srpm></vdsm-package.srpm></p>
+
+<p>If it worked correctly, you can use fedpkg import ~/rpmbuild/SRPM/<vdsm-package.srpm> in each branch or use import into master and then git merge in the branches</vdsm-package.srpm></p>
+
+<p><strong>PLEASE NOTE</strong>: If it's a beta release, please only import to <strong>master</strong> branch which is rawhide.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   $ fedpkg switch-branch f19&#x000A;   $ fedpkg import  ~/rpmbuild/SRPM/`&lt;vdsm-package.srpm&gt;`  (you can import f20 build into f19 for example, it will be build again anyway)&#x000A;   $ fedpkg commit -p&#x000A;   $ fedpkg build&#x000A;   $ fepkg update&#x000A;</code></pre></div>
+<p>Which fedpkg build will generate a koji url that will provide the RPMs and can be shared to release engineers/testers.</p>
+
+<h2 id="ovirt-vmconsole-sources">ovirt-vmconsole sources</h2>
+
+<p>VDSM for ovirt-3.6 depends on ovirt-vmconsole package. To fetch the sources of ovirt-vmconsole, run</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  git clone http://gerrit.ovirt.org/p/ovirt-vmconsole.git&#x000A;</code></pre></div>
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="missing-dependencies-on-el">Missing dependencies on EL</h3>
+
+<p>Since c0729453573, vdsm requires newer libvirt and selinux-policy packages, which are not available yet in RHEL or Centos repositories, and is not kept in ovirt repositories (such as ovirt-nightly).</p>
+
+<h3 id="autogensh-fails-with-package-version-not-defined">autogen.sh fails with "package version not defined"</h3>
+
+<p>You have no tags in your repo. If you want to push your repo from another machine, you must also push the tags:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  git push --tags remote &#x000A;</code></pre></div>
+<h2 id="code-documentation">Code Documentation</h2>
+
+<p>We have a partial code walk through of the <a href="/develop/developer-guide/vdsm/vm-startup/">virt subsystem</a> (virtual machine life cycle, creation, migration) (more to come…)</p>
+
+<h2 id="performance-and-scalability">Performance and scalability</h2>
+
+<p>To analyse the performance and the scalability of the VDSM, you first need to <a href="/develop/developer-guide/vdsm/profiling-vdsm/">set up the tools</a>. Then you may want to <a href="/develop/developer-guide/vdsm/benchmarks/">run common scenarios</a>, or write your own using a <a href="/develop/developer-guide/vdsm/benchmarks/">template</a>, to make sure the results are easily shareable.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/developers.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/developers.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 24 Mar 2019 16:10 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

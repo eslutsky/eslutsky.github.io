@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+VmDevices rework &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vmdevices-rework">VmDevices rework</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature will track the refactoring and reworking of VmDevices inside VDSM.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Martin Polednik (Martin Polednik)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#112;&#111;&#108;&#101;&#100;&#110;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#112;&#111;&#108;&#101;&#100;&#110;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Last updated date: Thu Apr 28 2015</li>
+  <li><a href="https://gerrit.ovirt.org/#/q/status:open+project:vdsm+branch:master+topic:device_isolation">gerrit topic branch</a></li>
+</ul>
+
+<h2 id="what-is-wrong-with-current-state">What is wrong with current state</h2>
+
+<ul>
+  <li>Information duplication - the data is kept in device objects AND self.conf['devices'] dictionary</li>
+  <li>Most of the functionality is in the VM class itself (while device modules would be more suitable)</li>
+  <li>Above goes for legacy device configuration and getUnderlying* family of methods</li>
+  <li>The code is not well tested</li>
+  <li>libvirt XML parsing and processing is ineffective - it loops all device elements in libvirt XML for every device, leading to quadratic asymptotic time complexity</li>
+</ul>
+
+<h2 id="formal-naming-system">Formal naming system</h2>
+
+<p>Currently, there are multiple representations of a device in its lifetime inside VDSM. In order to work with them, it makes sense to formalize the naming of representations:</p>
+
+<ul>
+  <li><code>{'device': '...', 'type': '...', 'deviceId', ...}</code> is the format in which the device is specified in configuration sent from engine. We will call this a <i>device specification</i> <code>dev_spec</code>.</li>
+  <li><code>[device_spec]</code> denotes a list of device specifications. Let's call it <i>device specification list<i> <code>dev_spec_list</code>.</i></i></li>
+  <li>Legacy VM conf section will be called <i>legacy conf</i>.</li>
+  <li>And current VM conf section <i>conf</i>.</li>
+  <li><code>&lt;Sound object at...&gt;</code> is python object representing the device, <i>device object</i> <code>dev_object</code> and plural <i>device objects</i> <code>dev_objects</code>.</li>
+  <li><code>{device_type: [device_object]}</code> is an internal format of VM's _devices, that we will call <i>device mapping</i> <code>dev_map</code>.</li>
+  <li><code>{device_type: [device_spec]}</code> is a format used for transition from device specification list to device mapping - <i>device specification map</i> <code>dev_spec_map</code>.</li>
+  <li>When initializing an empty structure, prefix with <code>empty</code>.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Type of the device is <code>dev_type</code>. Examples: sound device, disk devices, host devices, …</li>
+  <li>Class of the device is <code>dev_class</code>. Examples: <code>Drive</code>, <code>NetworkInterfaceDevice</code>, <code>GraphicsDevice</code>, …</li>
+</ul>
+
+<p>The <code>dev_</code> prefix can be omitted if for each occurrence of function/method call there exists a *device* word in one of the namespaces accessed.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  PEP8: we're trying to make the code as consistent as possible while slowly converting everything to be pep8 compliant. Therefore, following rules can be used:&#x000A;</code></pre></div>
+<ul>
+  <li>use pep8 conventions in new modules,</li>
+  <li>use pep8 conventions in old module if the code is about to move,</li>
+  <li>stay consistent within the file.</li>
+</ul>
+
+<h2 id="phase-1---vmpy-diet">Phase 1 - vm.py diet</h2>
+
+<p>Using the names defined above, the first phase of devices rework will consist of removing device-specific code in vm.py and moving it to vmdevices/${device}.py, using consistent naming conventions. One of the first thing is isolating device object creation from _run method of VM class. This will allow us to work with multiple device objects in unit tests, possibly leading to better tests.</p>
+
+<h3 id="phase-11">Phase 1.1</h3>
+
+<p>VM class's _run method contains a code that, given a device mapping, generates device objects and stores them in VM._devices attribute. The first step is simply moving this code to a new method and naming it correctly: <code>devObjectsFromDevMap</code> (lowerCamelCase for the sake of consistency). This is also opportunity to rename <code>buildConfDevices</code> to something a bit more descriptive and accurate: <code>devSpecMapFromConf</code>. The flow inside VDSM will therefore be</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>def _run():&#x000A;    ...&#x000A;    dev_spec = devSpecMapFromConf()&#x000A;    ...&#x000A;    self._devices = devMapFromDevSpecMap(dev_spec)&#x000A;</code></pre></div>
+<h3 id="phase-12">Phase 1.2</h3>
+
+<p>Legacy configuration had lower number of devices than current conf has. There exists a code that, given legacy conf, returns correct specification list. These devices are Drive, NetworkInterfaceController, Sound, Video, Graphics and Controller. The legacy methods called getConf${device} are currently in VM class. One possible destination for these methods are the device modules (not the classes). Moving them and respecting pep8 yields module functions <code>spec_list_from_legacy_conf</code>. This also requires purification of the methods, which isn't exactly complex because each one of them contains reference to VM's conf and possibly arch. Therefore, to make them easily iterable, the final signature should be <code>spec_list_from_legacy_conf(conf, arch)</code>.</p>
+
+<h3 id="phase-13">Phase 1.3</h3>
+
+<p>Support for engine &lt;3.3 was removed in <a href="https://gerrit.ovirt.org/#/c/40104/">https://gerrit.ovirt.org/#/c/40104/</a> and therefore, legacy code for device creation shouldn't really exist. Complication is that there may be tests using this legacy configuration, therefore simple removal may not be the best solution. The methods used for legacy devices should therefore be marked as deprecated in the documentation (if they are documented at all) and should at least log some deprecation warning.</p>
+
+<h2 id="phase-2---reading-libvirt-xml">Phase 2 - Reading libvirt XML</h2>
+
+<p>Some (most?) of the device types have a code to parse the libvirt XML, find the device in device mapping and update it according to the real specification in libvirt's XML. The code is currently encapsulated in methods called <code>getUnderlying${device_class}DeviceInfo</code> in class VM (vm.py). There are multiple issues with the code and it's placement, therefore we will need few phases to get it somewhat correct.</p>
+
+<h3 id="phase-21">Phase 2.1</h3>
+
+<p>First, the code accesses internal VM attributes such as <code>_devices</code> and <code>conf['devices']</code>(possibly more) and cannot be moved as they are. To move them, we need to make them pure and then the move is possible - because it doesn't really change functionality or anything, this can be done in a single step. Two methods must be kept at this point: getUnderlyingDeviceInfo and getUnderlyingUnknownDeviceInfo. The former is entry point for the moved function while the later one, as the name suggests, parses the devices that aren't known to VDSM.</p>
+
+<h3 id="phase-22">Phase 2.2</h3>
+
+<h2 id="final-goal">Final Goal</h2>
+
+<p>The device classes and modules would hold all methods, data and classes necessary to fully maintain the device. vm.py file, with a bit of luck, can be reduced by up to ~700 lines. conf['devices'] and _devices would be merged into a single entity that provides interface for legacy access but internally keeps all the information in device objects.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/vmdevices-rework.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/vmdevices-rework.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

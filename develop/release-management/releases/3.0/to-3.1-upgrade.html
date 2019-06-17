@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 3.0 to 3.1 upgrade &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/releases/">Releases</a></li>
+<li><a href="/develop/release-management/releases/3.0/">oVirt 3.0 release notes</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-30-to-31-upgrade">oVirt 3.0 to 3.1 upgrade</h1>
+
+<h2 id="general-information">General Information</h2>
+
+<p>oVirt 3.0 was released as Fedora 16 package, and 3.1 is targeted to Fedora 17. Due to the nature of this upgrade, we DO NOT recommend it, users are advised to do a 3.1 clean installation, and to import all VM's and template into the new installation.</p>
+
+<h2 id="upgrade-instructions">Upgrade Instructions</h2>
+
+<ul>
+  <li>Remove all ovirt packages</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code> yum remove ovirt\* &#x000A;</code></pre></div>
+<p><strong>DO NOT run the engine-cleanup utility</strong></p>
+
+<ul>
+  <li>Upgrade the system the oVirt Engine was installed on to Fedora 17:
+    <ul>
+      <li><a href="http://fedoraproject.org/wiki/PreUpgrade">http://fedoraproject.org/wiki/PreUpgrade</a></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Install oVirt Engine rpms</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code> yum install ovirt-engine &#x000A;</code></pre></div>
+<ul>
+  <li>Restore previous keystore and preserve .sh scripts</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>cd /etc/pki&#x000A;mv ovirt-engine ovirt-engine.old&#x000A;mv ovirt-engine-backups/ovirt-engine-DATE_OF_BACKUP/ovirt-engine .&#x000A;find ovirt-engine -user jboss-as -exec chown ovirt:ovirt {} \;&#x000A;cp -f ovirt-engine.old/*.sh ovirt-engine/&#x000A;service nfs-server disable; service nfs-server enable&#x000A;service rpb-bind disable; service rpc-bind enable&#x000A;</code></pre></div>
+<ul>
+  <li>Execute oVirt Engine Setup utility</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code> engine-setup &#x000A;</code></pre></div>
+<h2 id="updating-ovirt-node">Updating oVirt Node</h2>
+
+<ul>
+  <li>Download the latest stable <a href="/releases/3.1/tools/">oVirt Node release</a></li>
+  <li>Use one of the supported (PXE, USB, …) medias to boot the to be updated machine running Node</li>
+  <li>The update is non destructive, that means all your configurations will be kept</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Select "Start Ovirt Node" in the boot menu</li>
+  <li>In the TUI you should be prompted to "Upgrade <current version=""> to <new version="">"
+</new></current>    <ul>
+      <li>Press ENTER to continue</li>
+    </ul>
+  </li>
+  <li>Select the keyboard layout</li>
+  <li>Enter - at least - the current admin password. This is a security check to ensure that not someone else overrides your installation.
+    <ul>
+      <li>You can also enter a new admin password in the additional fields</li>
+    </ul>
+  </li>
+  <li>(oVirt Node is beeing updated)</li>
+  <li>Press ENTER to reboot</li>
+  <li>The updated oVirt Node is started by default
+    <ul>
+      <li>A backup entry was added to the bootmenu, select this backup if the new version can not be booted or leads to problems</li>
+    </ul>
+  </li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/releases/3.0/to-3.1-upgrade.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/releases/3.0/to-3.1-upgrade.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

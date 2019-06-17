@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Supervdsm service &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="supervdsm-service">Supervdsm service</h1>
+
+<h2 id="general">General</h2>
+
+<p>Supervdsm is responsible for all privileged operations. Currently Supervdsm is managed (started and restarted) by unprivileged process 'vdsm' and vdsm starts up by init service manager. To perform that, Vdsm process runs privileged operations, manage process that runs as root, and communicate with it by external UDS. All that leads to races between new and old instances of the process. Aim of this feature is to get Vdsm to be a pure unprivileged daemon and simplify the handling of crashes and re-establish communication between Vdsm and Supervdsm after failures.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: lvroyce (Royce Lv)</li>
+  <li>Name: ybronhei (Yaniv Bronheim)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#108;&#118;&#114;&#111;&#121;&#099;&#101;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#108;&#118;&#114;&#111;&#121;&#099;&#101;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#098;&#114;&#111;&#110;&#104;&#101;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#121;&#098;&#114;&#111;&#110;&#104;&#101;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="background---history-until-33">Background - History until 3.3</h2>
+
+<ul>
+  <li>current solution</li>
+</ul>
+
+<ol>
+  <li>Vdsm daemon script starts vdsm with user “vdsm”</li>
+  <li>Vdsm process launches supervdsm process when it is not running by sudo command</li>
+  <li>Vdsm tries to send uds packets to supervdsm to establish communication</li>
+  <li>When authentication error is raised, vdsm tries to re-launch (kill old instance and initiate new one)</li>
+  <li>When vdsm crashes, supervdsm distinguish it and kill itself automatically, next vdsm instance starts new supervdsm process</li>
+</ol>
+
+<p><img alt="" width="573" height="404" src="/images/wiki/First_launch.png?1560777613" /><img alt="" width="582" height="526" src="/images/wiki/Normal_call.png?1560777613" /> <img alt="" width="582" height="572" src="/images/wiki/Auth_error.png?1560777613" /></p>
+
+<ul>
+  <li>Current flow errors</li>
+</ul>
+
+<ol>
+  <li>Unprivileged vdsm and proxy need to call previleged “sudo launch” and “sudo kill”</li>
+  <li>Redundant key between vdsm and supervdsm as they are parent and child</li>
+  <li>Error handling cause races between old and new instance of supervdsm and vdsm</li>
+</ol>
+
+<ul>
+  <li>Last updated: ,</li>
+</ul>
+
+<h2 id="proposed-changes">Proposed changes</h2>
+
+<ul>
+  <li>Proposal A:<a href="http://gerrit.ovirt.org/gitweb?p=vdsm.git;a=commit;h=976dbb13e6cd8136b12ed58ccd2a5176b730bddf">patch for proposal A</a></li>
+</ul>
+
+<ol>
+  <li>Vdsm init script starts vdsm as root</li>
+  <li>Vdsm forks supervdsm server and then drop privilege</li>
+  <li>When vdsm exits, supervdsm probe vdsm heart beat stop and exit</li>
+  <li>Vdsm call supervdsm may discover supervdsm server exit, vdsm will exit itself and restart</li>
+</ol>
+
+<ul>
+  <li>Proposal B:<a href="http://gerrit.ovirt.org/gitweb?p=vdsm.git;a=commit;h=033ef4bc73dbbb36dd8180049626e7f4cde56334">patch for proposal B</a></li>
+</ul>
+
+<ol>
+  <li>Vdsm init script starts supervdsm as root</li>
+  <li>Supervdsm forks vdsm as child process</li>
+  <li>When vdsm dies, supervdsm kill itself and start over again</li>
+  <li>When supervdsm, vdsm distinguish that and kill itself</li>
+</ol>
+
+<ul>
+  <li>proposal C:<a href="http://gerrit.ovirt.org/#/c/11051/">patch for proposal C</a> -&gt; <strong>Selected solution.</strong></li>
+</ul>
+
+<ol>
+  <li>Vdsmd.init starts vdsm as vdsm user</li>
+  <li>Supervdsmd.init starts supervdsm as root</li>
+  <li>Both services are managed by service manager and restart after a crash.</li>
+  <li>No need to handle broken connection. When supervdsm or vdsm fails to start an automatically restart takes care of establishing recommunication.</li>
+</ol>
+
+<h2 id="exception-flows-to-consider">Exception flows to consider</h2>
+
+<ul>
+  <li>Exception flows:</li>
+</ul>
+
+<ol>
+  <li>One of Supervdsm server export function raise error
+    <ul>
+      <li>Expected result: Raise to proxy caller, supervdsm restarts automatically without trying to call the same function again. The proxy caller should handle exceptions specifically.</li>
+    </ul>
+  </li>
+  <li>Supervdsm main thread died during a call or before call
+    <ul>
+      <li>Expected result: Raise to proxy caller related exception. Supervdsm proxy caller should handle exceptions specifically.</li>
+    </ul>
+  </li>
+  <li>Vdsm crash
+    <ul>
+      <li>supervdsm stays up and vdsm re-establish communication to supervdsm socket after restart.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="proposal-comparison">Proposal comparison</h2>
+
+<ul>
+  <li>Exception flows need attention：</li>
+</ul>
+
+<ol>
+  <li>First launch
+    <ul>
+      <li>A: Supervdsm server process lauched by priviledged vdsm, then vdsm drop priviledge</li>
+      <li>B: Supervdsm server process lauched by service manager</li>
+      <li>C: Supervdsm server process launched by service manager</li>
+    </ul>
+  </li>
+  <li>One of supervdsm server export function raise error
+    <ul>
+      <li>A: Raise to Proxy Caller</li>
+      <li>B: Raise to Proxy Calller</li>
+      <li>C: Raise to Proxy Calller</li>
+    </ul>
+  </li>
+  <li>Supervdsm main thread killed when calling
+    <ul>
+      <li>A: Discover when call return EOFError and then restart</li>
+      <li>B: Vdsmd as supervdsm's child should kill itself when receive EOFError</li>
+      <li>C: Services manager restarts supervdsm. Caller should handle the returned exception.</li>
+    </ul>
+  </li>
+  <li>Supervdsm main thread killed before call
+    <ul>
+      <li>A: Discover when "isRunning" raise error, then restart</li>
+      <li>B: Vdsmd as supervdsm's child should be killed when next time supervdsm start, or vdsmd also has a heart beat scheme for super vdsm</li>
+      <li>C: Supervdsmd restarts supervdsm</li>
+    </ul>
+  </li>
+  <li>Supervdsm server thread killed(not started) before call
+    <ul>
+      <li>A: Connect error, restart</li>
+      <li>B: Supervdsm restart itself</li>
+      <li>C: Service manager restarts Supervdsm.</li>
+    </ul>
+  </li>
+  <li>Vdsm process died
+    <ul>
+      <li>A: Supervdsm has heart beat for Vdsm to kill itself</li>
+      <li>B: Supervdsm joined Vdsm and restart all over</li>
+      <li>C: Service manager restarts Vdsm.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>As we can see from the above, proposal B will involve more complex logic when supervdsm died, vdsm will probe its heart beat or supervdsm should kill vdsm for next time, but vdsm still in the middle of some operations, possible inconsistent situation will happen. Proposal C is intuitive, easier, and less complex than both A and B proposals. The main odd is that every code update of vdsm we need restart both services, as they both share same code.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ol>
+  <li>Clean vdsm priviledge usage</li>
+  <li>Clean and stable vdsm/supervdsm exception flow and races</li>
+</ol>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/supervdsm-service.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/supervdsm-service.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 14:05 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

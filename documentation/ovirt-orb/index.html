@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Orb &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li class='active'>oVirt Orb</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-orb">oVirt Orb</h1>
+
+<p><code>oVirt Orb</code> lets you try out oVirt on your own laptop. You can
+test it and play with it, all without the need to manually
+install all the components or use multiple hosts or a storage
+server. <code>oVirt Orb</code> is based on the Lago framework and runs the
+whole oVirt environment on a single machine by creating a
+number of VMs. VMs that play as hypervisors can run nested VMs.</p>
+
+<p><code>oVirt Orb</code> ships pre-baked VM images and a <code>LagoInitFile</code> that
+tells Lago how to use them. The images are built by the
+<code>build-artifacts</code> job of the <a href="https://gerrit.ovirt.org/#/q/project:ovirt-demo-tool">ovirt-demo-tool</a>.</p>
+
+<ol id="markdown-toc">
+  <li><a id="markdown-toc-ovirt-orb" href="#ovirt-orb">oVirt Orb</a>    <ol>
+      <li><a id="markdown-toc-requirements" href="#requirements">Requirements</a></li>
+      <li><a id="markdown-toc-installing-requirements" href="#installing-requirements">Installing requirements</a></li>
+      <li><a id="markdown-toc-getting-ovirt-orb" href="#getting-ovirt-orb">Getting oVirt Orb</a></li>
+      <li><a id="markdown-toc-running-the-environment" href="#running-the-environment">Running the environment</a>        <ol>
+          <li><a id="markdown-toc-stopping-the-environment" href="#stopping-the-environment">Stopping the environment</a></li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li>
+    <p>Operating System:</p>
+
+    <p>Currently, Orb can run on either supported Fedora versions or Centos 7.</p>
+  </li>
+  <li>
+    <p>CPU:</p>
+
+    <p>Orb is currently supported on Intel's CPUs. The CPU model should be Sandy Bridge or newer.</p>
+  </li>
+  <li>
+    <p>Disk Space:</p>
+
+    <p>Orb requires that you have at least 7GB of free space wherever you are running it.</p>
+  </li>
+  <li>
+    <p>Memory:</p>
+
+    <p>Orb requires that your system will have at least 8GB of RAM.</p>
+  </li>
+</ul>
+
+<h2 id="installing-requirements">Installing requirements</h2>
+
+<p>In order to run the <code>oVirt Orb</code>, you will need first to install Lago and some more dependencies:</p>
+<ul>
+  <li>
+    <p><a href="http://lago.readthedocs.io/en/latest/Installation.html">Lago project</a>.</p>
+
+    <p>Lago is the framework that provides the basis for running all the required machines for our environment.
+We'll later feed it with the configuration and pre-built images of the machines, but first we need to install it.</p>
+  </li>
+  <li>
+    <p><a href="http://lago-ost-plugin.readthedocs.io/en/latest/Installation.html">oVirt Lago plugin</a>.</p>
+
+    <p>This Lago plugin makes Lago aware of oVirt specifics.</p>
+  </li>
+  <li>
+    <p><a href="https://pypi.python.org/pypi/ovirt-engine-sdk-python">oVirt Python SDK</a>.</p>
+
+    <p>The oVirt Python SDK allows code written in Python to easily work with oVirt Engine.
+This SDK is used extensively by oVirt Lago plugin</p>
+  </li>
+</ul>
+
+<h2 id="getting-ovirt-orb">Getting oVirt Orb</h2>
+<ul>
+  <li>
+    <p>Download <code>oVirt Orb</code>:</p>
+
+    <p>Current latest <code>oVirt Orb</code> images are based on latest oVirt 4.3 release and can be downloaded from <a href="http://resources.ovirt.org/pub/ovirt-4.3/ovirt-orb/">here</a>.
+You will need to download both the <code>ovirt-orb-*.tar.xz</code> and <code>ovirt-orb-*.tar.xz.md5</code></p>
+  </li>
+  <li>
+    <p>Verify that archive is not broken or tampered with:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ md5sum -c ovirt-orb-[oVirt Orb version].tar.xz.md5&#x000A;ovirt-orb-[oVirt Orb version].tar.xz: OK&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Extract the archive:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cd orb-dir&#x000A;$ tar xf ovirt-orb-[oVirt Orb version].tar.xz&#x000A;</code></pre></div>  </li>
+</ul>
+
+<h2 id="running-the-environment">Running the environment</h2>
+
+<p>Please note: All commands must be run from the inside of the directory created by the extraction of the oVirt Orb archive!</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ lago init          # bootstrap lago&#x000A;$ lago ovirt start   # start virtual hosts and Engine&#x000A;</code></pre></div>
+<p>After a few seconds, you should see oVirt engine's IP, username, and password:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>The environment is ready to be used.&#x000A;You can access the web UI with the following link and credentials:&#x000A;https://192.168.202.4&#x000A;Username: admin&#x000A;Password: 123&#x000A;</code></pre></div>
+<p>You can enter oVirt Engine's web UI by browsing to the supplied
+URL. You may need to add an exception for your browser to trust
+the self-signed certificate created by Lago.</p>
+
+<p>You can use Lago to save a snapshot of your environment and to revert to it later</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ lago snapshort nice_state&#x000A;... some possibly-destructive modifcation to your environment&#x000A;$ lago revert nice_state&#x000A;</code></pre></div>
+<p>As of version 4.2.2, the environment starts up three VMs; one
+for Engine and storage, and two others for virtual hypervisors,
+interconnected via several virtual networks. The precise make
+of the environment may change in the future.</p>
+
+<h3 id="stopping-the-environment">Stopping the environment</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>lago ovirt stop    # stop ovirt and the virtual hosts that run it&#x000A;lago destroy       # remove the environment created by lago&#x000A;</code></pre></div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/ovirt-orb/index.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/ovirt-orb/index.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 5 Jun 2019 19:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

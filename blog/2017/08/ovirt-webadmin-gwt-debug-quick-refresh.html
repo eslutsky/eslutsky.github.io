@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Webadmin GWT Debug Quick Refresh &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Greg Sheremeta' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='oVirt Webadmin GWT Debug Quick Refresh' property='og:title'>
+<meta content='As a developer, one drawback of using Google Web Toolkit (GWT) for the oVirt Administration Portal (aka webadmin) is that the GWT compile process takes an exceptionally long time. If you make a change in some code and rebuild the ovirt-engine project using make install-dev ..., you&#39;ll be waiting several minutes to test your change. In practice, such a long delay in the usual code-compile-refresh-test cycle would be unbearable.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/08/ovirt-webadmin-gwt-debug-quick-refresh.html' property='og:url'>
+<meta content='2017-08-04T15:00:00Z' property='article:published_time'>
+<meta content='gshereme' property='article:author:username'>
+<meta content='debugging' property='article:tag'>
+<link href='/blog/tag/debugging.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='GWT' property='article:tag'>
+<link href='/blog/tag/gwt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='webadmin' property='article:tag'>
+<link href='/blog/tag/webadmin.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='oVirt Webadmin GWT Debug Quick Refresh' name='twitter:title'>
+<meta content='As a developer, one drawback of using Google Web Toolkit (GWT) for the oVirt Administration Portal (aka webadmin) is that the GWT compile process takes an exceptionally long time. If you make a change in some code and rebuild the ovirt-engine project using make install-dev ..., you&#39;ll be waiting several minutes to test your change. In practice, such a long delay in the usual code-compile-refresh-test cycle would be unbearable.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>08</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+oVirt Webadmin GWT Debug Quick Refresh
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/gshereme.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/gshereme/">Greg Sheremeta</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-08-04T15:00:00Z'>
+Friday  4 August 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>As a developer, one drawback of using Google Web Toolkit (GWT) for the oVirt Administration Portal (aka webadmin) is that the GWT compile process takes an exceptionally long time. If you make a change in some code and rebuild the ovirt-engine project using <code>make install-dev ...</code>, you'll be waiting several minutes to test your change. In practice, such a long delay in the usual code-compile-refresh-test cycle would be unbearable.</p>
+
+<p></p>
+
+<p>Luckily, we can use GWT Super Dev Mode ("SDM") to start up a quick refresh-capable instance of the application. With SDM running, you can make a change in GWT and test the refreshed change within seconds.</p>
+
+<p>If you want to step through code and use the Chrome debugger, oVirt and SDM don't work well together for debugging due to the oVirt Administration Portal's code and source map size. Therefore, below we demonstrate how to disable source maps.</p>
+
+<h2 id="demo-40-seconds">Demo (40 seconds)</h2>
+
+<p><a href="http://www.youtube.com/watch?feature=player_embedded&amp;v=IRGxIrwfnlo     " target="_blank"><img src="http://img.youtube.com/vi/IRGxIrwfnlo/0.jpg" alt="demo" width="480" height="360" border="10" /></a></p>
+
+<h2 id="steps">Steps</h2>
+
+<ol>
+  <li>
+    <p>Open a terminal, build the engine normally, and start it.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> make clean install-dev PREFIX=$HOME/ovirt-engine DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.cssResourceStyle=pretty -Dgwt.userAgent=safari" BUILD_UT=0 DEV_EXTRA_BUILD_FLAGS="-Dgwt.compiler.localWorkers=1"&#x000A;&#x000A; ...&#x000A;&#x000A; $HOME/ovirt-engine/share/ovirt-engine/services/ovirt-engine/ovirt-engine.py start&#x000A;&#x000A;</code></pre></div>
+    <p><img alt="screen" width="905" height="702" src="/images/../images/blog/2017-08-04/1.png?1560777613" /></p>
+
+    <p><img alt="screen" width="977" height="702" src="/images/../images/blog/2017-08-04/2.png?1560777613" /></p>
+
+    <p><img alt="screen" width="1400" height="810" src="/images/../images/blog/2017-08-04/3.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>In a second terminal, run:</p>
+
+    <p>Chrome:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> make gwt-debug DEV_BUILD_GWT_SUPER_DEV_MODE=1 DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.userAgent=safari"&#x000A;</code></pre></div>
+    <p>or</p>
+
+    <p>Firefox:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> make gwt-debug DEV_BUILD_GWT_SUPER_DEV_MODE=1 DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.userAgent=gecko1_8"&#x000A;</code></pre></div>
+    <p><img alt="screen" width="977" height="702" src="/images/../images/blog/2017-08-04/4.png?1560777613" /></p>
+
+    <p>Wait about two minutes until "code server running at http://&lt;&gt;:9876/" displays, and then the GWT Dev Mode app will open.</p>
+
+    <p><img alt="screen" width="1217" height="745" src="/images/../images/blog/2017-08-04/5.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Open your browser and go to http://localhost:9876/ <em>*You must use localhost. The procedure breaks with IPs.</em></p>
+
+    <p>Now you'll see two buttons, Dev Mode On and Dev Mode Off.</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/6.png?1560777613" /></p>
+
+    <p>Drag those buttons to the browser bookmark bar, as it says on that page.</p>
+
+    <p><img alt="screen" width="524" height="105" src="/images/../images/blog/2017-08-04/7.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Ignore the link under the two buttons. Instead, open another browser window and enter http://localhost:8080 in the address bar to go to webadmin.</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/8.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Log in and navigate to the Administration Portal.</p>
+  </li>
+  <li>
+    <p>[Chrome only] Press F12 and click the hamburger menu, followed by Settings. Disable both JavaScript and CSS source maps. The Administration Portal is too large and the source maps crash Chrome.</p>
+
+    <p><img alt="screen" width="1920" height="1032" src="/images/../images/blog/2017-08-04/9.png?1560777613" /></p>
+
+    <p><img alt="screen" width="1920" height="1032" src="/images/../images/blog/2017-08-04/10.png?1560777613" /></p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/11.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Click Dev Mode On</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/12.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Drag the Compile button to your bookmarks bar</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/13.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Click Compile</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/14.png?1560777613" /></p>
+
+    <p>The first compilation is slow, taking up to two minutes.</p>
+  </li>
+  <li>
+    <p>Make a change to the GWT code. Here I am creating a new "About" dialog box that has an image as a background. I will tweak the font properties of the dialog's Close button to demonstrate the refresh.</p>
+
+    <p>Before:</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/15.png?1560777613" /></p>
+
+    <p><img alt="screen" width="1069" height="475" src="/images/../images/blog/2017-08-04/16.png?1560777613" /></p>
+
+    <p>Change:</p>
+
+    <p><img alt="screen" width="1069" height="475" src="/images/../images/blog/2017-08-04/17.png?1560777613" /></p>
+
+    <p>Let's test.</p>
+  </li>
+  <li>
+    <p>Click Compile. Make sure it says "On". If it doesn't, did you use localhost above?</p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/18.png?1560777613" /></p>
+
+    <p><img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/19.png?1560777613" /></p>
+
+    <p>In the second terminal, you will see:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Link succeeded&#x000A;  [INFO]          Linking succeeded -- 3.654s&#x000A;  [INFO]       7.537s total -- Compile completed&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The browser should refresh, and the app will now display the change.
+    <img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/20.png?1560777613" /></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/debugging.html">debugging</a></li>
+<li><a href="../../tag/gwt.html">GWT</a></li>
+<li><a href="../../tag/webadmin.html">webadmin</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-08-04-ovirt-webadmin-gwt-debug-quick-refresh.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-08-04-ovirt-webadmin-gwt-debug-quick-refresh.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 3 Aug 2017 23:11 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

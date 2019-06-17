@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Event Notifications &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-17-event-notifications">Chapter 17: Event Notifications</h1>
+
+<h2 id="configuring-event-notifications-in-the-administration-portal">Configuring Event Notifications in the Administration Portal</h2>
+
+<p>The oVirt Engine can notify designated users via email when specific events occur in the environment that the oVirt Engine manages. To use this functionality, you must set up a mail transfer agent to deliver messages. Only email notifications can be configured through the Administration Portal. SNMP traps must be configured on the Engine machine.</p>
+
+<p><strong>Configuring Event Notifications</strong></p>
+
+<ol>
+  <li>
+    <p>Ensure that you have access to an email server that can accept automated messages from oVirt Node and deliver them to a distribution list.</p>
+  </li>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Users</strong> and select a user.</p>
+  </li>
+  <li>
+    <p>Click the user’s <strong>User Name</strong> to go to the details page.</p>
+  </li>
+  <li>
+    <p>In the <strong>Event Notifier</strong> tab, click <strong>Manage Events</strong>.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Expand All</strong> button or the subject-specific expansion buttons to view the events.</p>
+  </li>
+  <li>
+    <p>Select the appropriate check boxes.</p>
+  </li>
+  <li>
+    <p>Enter an email address in the <strong>Mail Recipient</strong> field.</p>
+
+    <p><strong>Note:</strong> The email address can be a text message email address (for example, 1234567890@carrierdomainname.com) or an email group address that includes email addresses and text message email addresses.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>On the Engine machine, copy <code>ovirt-engine-notifier.conf</code> to a new file called <code>90-email-notify.conf</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp /usr/share/ovirt-engine/services/ovirt-engine-notifier/ovirt-engine-notifier.conf /etc/ovirt-engine/notifier/notifier.conf.d/90-email-notify.conf&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Edit <code>90-email-notify.conf</code>, deleting everything except the <code>EMAIL Notifications</code> section.</p>
+  </li>
+  <li>
+    <p>Enter the correct email variables, as in the example below. This file overrides the values in the original <code>ovirt-engine-notifier.conf</code> file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>---------------------&#x000A;# EMAIL Notifications #&#x000A;---------------------&#x000A;&#x000A;# The SMTP mail server address. Required.&#x000A;MAIL_SERVER=myemailserver.example.com&#x000A;&#x000A;# The SMTP port (usually 25 for plain SMTP, 465 for SMTP with SSL, 587 for SMTP with TLS)&#x000A;MAIL_PORT=25&#x000A;&#x000A;# Required if SSL or TLS enabled to authenticate the user. Used also to specify 'from' user address if mail server&#x000A;# supports, when MAIL_FROM is not set. Address is in RFC822 format&#x000A;MAIL_USER=&#x000A;&#x000A;# Required to authenticate the user if mail server requires authentication or if SSL or TLS is enabled&#x000A;SENSITIVE_KEYS="${SENSITIVE_KEYS},MAIL_PASSWORD"&#x000A;MAIL_PASSWORD=&#x000A;&#x000A;# Indicates type of encryption (none, ssl or tls) should be used to communicate with mail server.&#x000A;MAIL_SMTP_ENCRYPTION=none&#x000A;&#x000A;# If set to true, sends a message in HTML format.&#x000A;HTML_MESSAGE_FORMAT=false&#x000A;&#x000A;# Specifies 'from' address on sent mail in RFC822 format, if supported by mail server.&#x000A;MAIL_FROM=rhevm2017@example.com&#x000A;&#x000A;# Specifies 'reply-to' address on sent mail in RFC822 format.&#x000A;MAIL_REPLY_TO=&#x000A;&#x000A;# Interval to send smtp messages per # of IDLE_INTERVAL&#x000A;MAIL_SEND_INTERVAL=1&#x000A;&#x000A;# Amount of times to attempt sending an email before failing.&#x000A;MAIL_RETRIES=4&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Note:</strong> See <code>/etc/ovirt-engine/notifier/notifier.conf.d/README</code> for more options.</p>
+
+<ol>
+  <li>
+    <p>Enable and restart the ovirt-engine-notifier service to activate the changes you have made:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># systemctl daemon-reload&#x000A;# systemctl enable ovirt-engine-notifier.service&#x000A;# systemctl restart ovirt-engine-notifier.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The specified user now receives emails based on events in the oVirt environment. The selected events display on the <strong>Event Notifier</strong> tab for that user.</p>
+
+<h2 id="canceling-event-notifications-in-the-administration-portal">Canceling Event Notifications in the Administration Portal</h2>
+
+<p>A user has configured some unnecessary email notifications and wants them canceled.</p>
+
+<p><strong>Canceling Event Notifications</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Users</strong>.</p>
+  </li>
+  <li>
+    <p>Click the user’s <strong>User Name</strong> to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Event Notifier</strong> tab to list events for which the user receives email notifications.</p>
+  </li>
+  <li>
+    <p>Click <strong>Manage Events</strong>.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Expand All</strong> button, or the subject-specific expansion buttons, to view the events.</p>
+  </li>
+  <li>
+    <p>Clear the appropriate check boxes to remove notification for that event.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to save changes and close the window.</p>
+  </li>
+</ol>
+
+<h2 id="parameters-for-event-notifications-in-ovirt-engine-notifierconf">Parameters for Event Notifications in ovirt-engine-notifier.conf</h2>
+
+<p>The event notifier configuration file can be found in <strong>/usr/share/ovirt-engine/services/ovirt-engine-notifier/ovirt-engine-notifier.conf</strong>.</p>
+
+<p><strong>ovirt-engine-notifier.conf variables</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable Name</th>
+      <th>Default</th>
+      <th>Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SENSITIVE_KEYS</td>
+      <td>none</td>
+      <td>A comma-separated list of keys that will not be logged.</td>
+    </tr>
+    <tr>
+      <td>JBOSS_HOME</td>
+      <td>/usr/share/jbossas</td>
+      <td>The location of the JBoss application server used by the Engine.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_ETC</td>
+      <td>/etc/ovirt-engine</td>
+      <td>The location of the <code>etc</code> directory used by the Engine.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_LOG</td>
+      <td>/var/log/ovirt-engine</td>
+      <td>The location of the <code>logs</code> directory used by the Engine.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_USR</td>
+      <td>/usr/share/ovirt-engine</td>
+      <td>The location of the <code>usr</code> directory used by the Engine.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_JAVA_MODULEPATH</td>
+      <td>${ENGINE_USR}/modules</td>
+      <td>The file path to which the JBoss modules are appended.</td>
+    </tr>
+    <tr>
+      <td>NOTIFIER_DEBUG_ADDRESS</td>
+      <td>none</td>
+      <td>The address of a machine that can be used to perform remote debugging of the Java virtual machine that the notifier uses.</td>
+    </tr>
+    <tr>
+      <td>NOTIFIER_STOP_TIME</td>
+      <td>30</td>
+      <td>The time, in seconds, after which the service will time out.</td>
+    </tr>
+    <tr>
+      <td>NOTIFIER_STOP_INTERVAL</td>
+      <td>1</td>
+      <td>The time, in seconds, by which the timeout counter will be incremented.</td>
+    </tr>
+    <tr>
+      <td>INTERVAL_IN_SECONDS</td>
+      <td>120</td>
+      <td>The interval in seconds between instances of dispatching messages to subscribers.</td>
+    </tr>
+    <tr>
+      <td>IDLE_INTERVAL</td>
+      <td>30</td>
+      <td>The interval, in seconds, between which low-priority tasks will be performed.</td>
+    </tr>
+    <tr>
+      <td>DAYS_TO_KEEP_HISTORY</td>
+      <td>0</td>
+      <td>This variable sets the number of days dispatched events will be preserved in the history table. If this variable is not set, events remain on the history table indefinitely.</td>
+    </tr>
+    <tr>
+      <td>FAILED_QUERIES_NOTIFICATION_THRESHOLD</td>
+      <td>30</td>
+      <td>The number of failed queries after which a notification email is sent. A notification email is sent after the first failure to fetch notifications, and then once every time the number of failures specified by this variable is reached. If you specify a value of <code>0</code> or <code>1</code>, an email will be sent with each failure.</td>
+    </tr>
+    <tr>
+      <td>FAILED_QUERIES_NOTIFICATION_RECIPIENTS</td>
+      <td>none</td>
+      <td>The email addresses of the recipients to which notification emails will be sent. Email addresses must be separated by a comma. This entry has been deprecated by the <code>FILTER</code> variable.</td>
+    </tr>
+    <tr>
+      <td>DAYS_TO_SEND_ON_STARTUP</td>
+      <td>0</td>
+      <td>The number of days of old events that will be processed and sent when the notifier starts.</td>
+    </tr>
+    <tr>
+      <td>FILTER</td>
+      <td>exclude:*</td>
+      <td>The algorithm used to determine the triggers for and recipients of email notifications. The value for this variable comprises a combination of <code>include</code> or <code>exclude</code>, the event, and the recipient. For example, <code>include:VDC_START(smtp:mail@example.com) ${FILTER}</code></td>
+    </tr>
+    <tr>
+      <td>MAIL_SERVER</td>
+      <td>none</td>
+      <td>The SMTP mail server address. Required.</td>
+    </tr>
+    <tr>
+      <td>MAIL_PORT</td>
+      <td>25</td>
+      <td>The port used for communication. Possible values include <code>25</code> for plain SMTP, <code>465</code> for SMTP with SSL, and <code>587</code> for SMTP with TLS.</td>
+    </tr>
+    <tr>
+      <td>MAIL_USER</td>
+      <td>none</td>
+      <td>If SSL is enabled to authenticate the user, then this variable must be set. This variable is also used to specify the "from" user address when the MAIL_FROM variable is not set. Some mail servers do not support this functionality. The address is in RFC822 format.</td>
+    </tr>
+    <tr>
+      <td>SENSITIVE_KEYS</td>
+      <td>${SENSITIVE_KEYS},MAIL_PASSWORD</td>
+      <td>Required to authenticate the user if the mail server requires authentication or if SSL or TLS is enabled.</td>
+    </tr>
+    <tr>
+      <td>MAIL_PASSWORD</td>
+      <td>none</td>
+      <td>Required to authenticate the user if the mail server requires authentication or if SSL or TLS is enabled.</td>
+    </tr>
+    <tr>
+      <td>MAIL_SMTP_ENCRYPTION</td>
+      <td>none</td>
+      <td>The type of encryption to be used in communication. Possible values are <code>none</code>, <code>ssl</code>, <code>tls</code>.</td>
+    </tr>
+    <tr>
+      <td>HTML_MESSAGE_FORMAT</td>
+      <td>false</td>
+      <td>The mail server sends messages in HTML format if this variable is set to <code>true</code>.</td>
+    </tr>
+    <tr>
+      <td>MAIL_FROM</td>
+      <td>none</td>
+      <td>This variable specifies a sender address in RFC822 format, if supported by the mail server.</td>
+    </tr>
+    <tr>
+      <td>MAIL_REPLY_TO</td>
+      <td>none</td>
+      <td>This variable specifies reply-to addresses in RFC822 format on sent mail, if supported by the mail server.</td>
+    </tr>
+    <tr>
+      <td>MAIL_SEND_INTERVAL</td>
+      <td>1</td>
+      <td>The number of SMTP messages to be sent for each IDLE_INTERVAL</td>
+    </tr>
+    <tr>
+      <td>MAIL_RETRIES</td>
+      <td>4</td>
+      <td>The number of times to attempt to send an email before failing.</td>
+    </tr>
+    <tr>
+      <td>SNMP_MANAGER</td>
+      <td>none</td>
+      <td>The IP addresses or fully qualified domain names of machines that will act as the SNMP managers. Entries must be separated by a space and can contain a port number. For example, <code>manager1.example.com manager2.example.com:164</code></td>
+    </tr>
+    <tr>
+      <td>SNMP_COMMUNITY</td>
+      <td>public</td>
+      <td>The default SNMP community.</td>
+    </tr>
+    <tr>
+      <td>SNMP_OID</td>
+      <td>1.3.6.1.4.1.2312.13.1.1</td>
+      <td>The default trap object identifiers for alerts. All trap types are sent, appended with event information, to the SNMP manager when this OID is defined. Note that changing the default trap prevents generated traps from complying with the Engine's management information base.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_INTERVAL_IN_SECONDS</td>
+      <td>300</td>
+      <td>The interval, in seconds, between monitoring the machine on which the Engine is installed. The interval is measured from the time the monitoring is complete.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_MONITOR_RETRIES</td>
+      <td>3</td>
+      <td>The number of times the notifier attempts to monitor the status of the machine on which the Engine is installed in a given interval after a failure.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_TIMEOUT_IN_SECONDS</td>
+      <td>30</td>
+      <td>The time, in seconds, to wait before the notifier attempts to monitor the status of the machine on which the Engine is installed in a given interval after a failure.</td>
+    </tr>
+    <tr>
+      <td>IS_HTTPS_PROTOCOL</td>
+      <td>false</td>
+      <td>This entry must be set to <code>true</code> if JBoss is being run in secured mode.</td>
+    </tr>
+    <tr>
+      <td>SSL_PROTOCOL</td>
+      <td>TLS</td>
+      <td>The protocol used by JBoss configuration connector when SSL is enabled.</td>
+    </tr>
+    <tr>
+      <td>SSL_IGNORE_CERTIFICATE_ERRORS</td>
+      <td>false</td>
+      <td>This value must be set to <code>true</code> if JBoss is running in secure mode and SSL errors is to be ignored.</td>
+    </tr>
+    <tr>
+      <td>SSL_IGNORE_HOST_VERIFICATION</td>
+      <td>false</td>
+      <td>This value must be set to <code>true</code> if JBoss is running in secure mode and host name verification is to be ignored.</td>
+    </tr>
+    <tr>
+      <td>REPEAT_NON_RESPONSIVE_NOTIFICATION</td>
+      <td>false</td>
+      <td>This variable specifies whether repeated failure messages will be sent to subscribers if the machine on which the Engine is installed is non-responsive.</td>
+    </tr>
+    <tr>
+      <td>ENGINE_PID</td>
+      <td>/var/lib/ovirt-engine/ovirt-engine.pid</td>
+      <td>The path and file name of the PID of the Engine.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="configuring-the-ovirt-engine-to-send-snmp-traps">Configuring the oVirt Engine to Send SNMP Traps</h2>
+
+<p>Configure your oVirt Engine to send Simple Network Management Protocol traps to one or more external SNMP managers. SNMP traps contain system event information; they are used to monitor your oVirt environment. The number and type of traps sent to the SNMP manager can be defined within the oVirt Engine.</p>
+
+<p>This procedure assumes that you have configured one or more external SNMP managers to receive traps, and that you have the following details:</p>
+
+<ul>
+  <li>
+    <p>The IP addresses or fully qualified domain names of machines that will act as SNMP managers. Optionally, determine the port through which the manager receives trap notifications; by default, this is UDP port 162.</p>
+  </li>
+  <li>
+    <p>The SNMP community. Multiple SNMP managers can belong to a single community. Management systems and agents can communicate only if they are within the same community. The default community is <code>public</code>.</p>
+  </li>
+  <li>
+    <p>The trap object identifier for alerts. The oVirt Engine provides a default OID of 1.3.6.1.4.1.2312.13.1.1. All trap types are sent, appended with event information, to the SNMP manager when this OID is defined. Note that changing the default trap prevents generated traps from complying with the Engine's management information base.</p>
+
+    <p><strong>Note:</strong> The oVirt Engine provides management information bases at <code>/usr/share/doc/ovirt-engine/mibs/OVIRT-MIB.txt</code> and <code>/usr/share/doc/ovirt-engine/mibs/REDHAT-MIB.txt</code>. Load the MIBs in your SNMP manager before proceeding.</p>
+  </li>
+</ul>
+
+<p>Default SNMP configuration values exist on the Engine in the events notification daemon configuration file <code>/usr/share/ovirt-engine/services/ovirt-engine-notifier/ovirt-engine-notifier.conf</code>. The values outlined in the following procedure are based on the default or example values provided in that file. It is recommended that you define an override file, rather than edit the <code>ovirt-engine-notifier.conf </code> file, to persist your configuration options across system changes, like upgrades.</p>
+
+<p><strong>Configuring SNMP Traps on the Engine</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine, create the SNMP configuration file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/ovirt-engine/notifier/notifier.conf.d/20-snmp.conf&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Specify the SNMP manager(s), the SNMP community, and the OID in the following format:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> SNMP_MANAGERS="manager1.example.com manager2.example.com:162"&#x000A; SNMP_COMMUNITY=public&#x000A; SNMP_OID=1.3.6.1.4.1.2312.13.1.1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Define which events to send to the SNMP manager:</p>
+
+    <p><strong>Event Examples</strong></p>
+
+    <p>Send all events to the default SNMP profile:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> FILTER="include:\*(snmp:) ${FILTER}"&#x000A;</code></pre></div>
+    <p>Send all events with the severity <code>ERROR</code> or <code>ALERT</code> to the default SNMP profile:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> FILTER="include:\*:ERROR(snmp:) ${FILTER}"&#x000A; FILTER="include:\*:ALERT(snmp:) ${FILTER}"&#x000A;</code></pre></div>
+    <p>Send events for <code>VDC_START</code> to the specified email address:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> FILTER="include:VDC_START(snmp:mail@example.com) ${FILTER}"&#x000A;</code></pre></div>
+    <p>Send events for everything but <code>VDC_START</code> to the default SNMP profile:
+     FILTER="exclude:VDC_START include:*(snmp:) ${FILTER}"</p>
+
+    <p>This the default filter defined in <code>ovirt-engine-notifier.conf</code>; if you do not disable this filter or apply overriding filters, no notifications will be sent:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> FILTER="exclude:\*"&#x000A;</code></pre></div>
+    <p><code>VDC_START</code> is an example of the audit log messages available. A full list of audit log messages can be found in <code>/usr/share/doc/ovirt-engine/AuditLogMessages.properties</code>. Alternatively, filter results within your SNMP manager.</p>
+  </li>
+  <li>
+    <p>Save the file.</p>
+  </li>
+  <li>
+    <p>Start the <code>ovirt-engine-notifier</code> service, and ensure that this service starts on boot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl start ovirt-engine-notifier.service&#x000A; # systemctl enable ovirt-engine-notifier.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Check your SNMP manager to ensure that traps are being received.</p>
+
+<p><strong>Note:</strong> <code>SNMP_MANAGERS</code>, <code>MAIL_SERVER</code>, or both must be properly defined in <code>/usr/share/ovirt-engine/services/ovirt-engine-notifier/ovirt-engine-notifier.conf </code> or in an override file in order for the notifier service to run.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Quotas_and_Service_Level_Agreement_Policy">Chapter 16: Quotas and Service Level Agreement Policy</a><br />
+<strong>Next:</strong> <a href="chap-Utilities">Chapter 18: Utilities</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-event_notifications">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Event_Notifications.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Event_Notifications.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

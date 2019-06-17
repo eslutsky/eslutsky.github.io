@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+IsolatedNetworks &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="isolated-networks">Isolated Networks</h1>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Moti Asayag (masayag)</li>
+  <li>Email: masayag@redhat.com</li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>The current host networking api (up to ovirt-engine-3.6) requires a network to be configured on top of a network interface.
+In order to configure a local network on the host the user had to create a dummy interface to which the network was attached.
+The Isolated Networks feature aimed to configure a local host on the network which isn't connected to any network interface and allows vms which are connected to it to communicate with each other.
+Isolated Networks will be limited to VM networks only and only MTU should be relevant in that network definition for the created isolated network.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Local networks are desired for enabling a secured connectivity among vms, isolated from any other networks.</p>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>Based on <a href="/develop/release-management/features/network/hostnetworkingapi/">Host Networking API design</a>, removing the constraint of having a network interface configured for each network attachment will allow the user to create a network attachment which isn't bounded to any network interface.
+Isolated networks will be represented on host level to reflect not being tied to any network interface:
+* When network attachment entity on host level is associated with an interface - it will be referred to as network configured on a nic.</p>
+
+<ul>
+  <li>When network attachment entity on host level is <em>not</em> associated with any interface - it will be refereed to as an isolated network.</li>
+</ul>
+
+<h3 id="rest">REST</h3>
+
+<h4 id="network-attachment-statistics-sub-collection">Network attachment statistics sub-collection</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   /api/hosts/{host:id}/networkattachments/{networkattachment:id}/statistics&#x000A;</code></pre></div>
+<ul>
+  <li>Supported actions:
+*# <strong>GET</strong> returns a specific statistics for a network (if reported) which is attached to the host</li>
+</ul>
+
+<h4 id="host-network-label-resource">Host Network Label resource</h4>
+
+<p>A collection designed to specify network labels on host level which aren't bounded to a specific nic.
+Using this resource, an isolated networks could be configured on host, if a network is labelled with the same label.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   /api/hosts/{host:id}/networklabels/&#x000A;</code></pre></div>
+<ul>
+  <li><strong>GET</strong> - list host network labels</li>
+  <li>
+    <p><strong>POST</strong> - add a label to the host</p>
+
+    <p> /api/hosts/{host:id}/networklabels/{networklabel:id}</p>
+  </li>
+  <li><strong>GET</strong> - returns a specific host network label</li>
+  <li><strong>DELETE</strong> - removes a specific host network label</li>
+</ul>
+
+<p><strong>pros</strong>: Using host level network labels we can support auto-provision of isolated networks
+<strong>cons</strong>: The management of labels becomes more complex, cannot use same label for nics</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   /api/hosts/{host:id}/setupnetworks&#x000A;</code></pre></div>
+<p>No changes required. Without specifying the host_nic for the network_attachment element, an isolated will be configured on the host.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/isolatednetworks.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/isolatednetworks.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

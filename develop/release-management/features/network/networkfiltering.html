@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+NetworkFiltering &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="networking-filtering">Networking Filtering</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Network filtering provides to the host the capability to control the network traffic.
+The initial implementation is focused on preventing from a VM running on the host to impersonate other VMs by spoofing their MAC addresses.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Moti Asayag (Moti)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Status: Finalizing requirements.</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>In order to prevent mac spoofing, the Engine will use custom libvirt rules consist of the following filters:
+* no-mac-spoofing</p>
+
+<ul>
+  <li>no-arp-mac-spoofing</li>
+</ul>
+
+<p>The custom rule will be defined by vdsm on libvirt named <em>vdsm-no-mac-spoofing</em>. Once the system is configured for network filtering, that rule will be sent to VDSM upon running VMs, reported for each VM network interface.
+VDSM will extent the DOM network interface element sent to libvirt:</p>
+
+<p><code>  </code><interface type="bridge">
+`      `<mac address="aa:aa:aa:aa:aa:aa"></mac>
+`      `<model type="virtio"></model>
+            </interface></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>        ... `      `&lt;filterref filter='vdsm-no-mac-spoofing'/&gt; `   `&lt;/interface&gt;&#x000A;</code></pre></div>
+<p>libvirt will use the rule to configure the ebtables to prevent mac spoofing and arp mac spoofing.</p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>A new configuration value will be added:</p>
+
+<ul>
+  <li><strong>EnableMACAntiSpoofingFilterRules</strong> - a system level config to enable/disable this feature. It will be exposed via the engine-config tool.
+    <ul>
+      <li>Its default value will be set to 'true'.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="user-work-flows">User work-flows</h3>
+
+<p>The feature will be enabled for <strong>3.2 cluster level</strong> and above, as required VDSM API change.</p>
+
+<h3 id="engine">Engine</h3>
+
+<p>'Run VM' process will be changed as follow:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    For each VM network interface being sent to VDSM&#x000A;      If `*`EnableMACAntiSpoofingFilterRules`*` is enabled  and cluster level equals/greater than 3.2:&#x000A;        Add vdsm-no-mac-spoofing filter name for the VM interface&#x000A;</code></pre></div>
+<p>Changes will be made in <em>VmInfoBuilder.addNetworkInterfaceProperties()</em></p>
+
+<p><em>Hot Plug Nic</em> will also provide list of filter names, if system is configure to prevent mac-spoofing.</p>
+
+<h3 id="vdsm">VDSM</h3>
+
+<p>VDSM will define a custom nwfilter rule on libvirt - vdsm-no-mac-spoofing, consists of out-of-the-box rules no-mac-spoofing and no-arp-mac-spoofing.</p>
+
+<h4 id="create-vm-api">Create VM API</h4>
+
+<p>The VM creation API will be extended to support network filtering for VM nics.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    nicModel&#x000A;    device&#x000A;    network&#x000A;    type&#x000A;    macAddr&#x000A;    ....&#x000A;    filters&#x000A;</code></pre></div>
+<p>Where <em>filters</em> is a List of filters (as per libvirt-10-21 libvirt supports a single filter only).</p>
+
+<p>A new python tool named <em>define-filter.py</em> will be added under vdsm/vdsm-tool.
+It will be used to get a path of the filter file (xml) and define it on libvirt.</p>
+
+<p>The filer xml file <em>vdsm-no-mac-spoofing.xml</em> will be stored on vdsm/vdsm-tools/nwfilter</p>
+
+<h4 id="hotplug-nic-api">HotPlug Nic API</h4>
+
+<p>The device which reprenests the nic is extended with a list of filter.</p>
+
+<h2 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h2>
+
+<p>libvirt which includes no-arp-mac-spoofing rule.</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p><a href="http://libvirt.org/firewall.html">Firewall and network filtering in libvirt</a></p>
+
+<p><a href="http://berrange.com/posts/2011/10/03/guest-mac-spoofing-denial-of-service-and-preventing-it-with-libvirt-and-kvm/">Guest MAC Spoofing DoS and its preventation</a></p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<p>libvirt version to depend on.
+Do the rules being cleared by libvirt from ebtables once the VM is destroyed?</p>
+<ul>
+  <li>I assume it does otherwise we should report a bug on libvirt, same apply for migration</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/networkfiltering.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/networkfiltering.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

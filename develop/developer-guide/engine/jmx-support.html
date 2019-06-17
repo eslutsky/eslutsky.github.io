@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+JMX Support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/engine/">Engine</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="jmx-support">JMX Support</h1>
+
+<p>Starting from 3.6, we can interact with the application server JMX API using the internal ovirt credentials.
+By default its listening <strong>localhost:8706</strong> and every <strong>superuser</strong> such as <strong>admin@internal</strong> can login. To change the interface settings create a <code>/etc/ovirt-engine/engine.conf.d/20-setup-jmx-debug.conf</code> with:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   ENGINE_JMX_INTERFACE=public&#x000A;</code></pre></div>
+<p>Using the jboss-cli.sh you can interact with ovirt JMX console and its beans to do things such as:</p>
+
+<ul>
+  <li>add/change <strong>loggers</strong> and change <strong>logging level</strong></li>
+  <li>get statistics on <strong>transactions</strong>, connections, <strong>threading</strong></li>
+  <li><strong>redeploy</strong>, <strong>shutdown</strong> the instance</li>
+  <li>stats from exposed oVirt beans like <strong>LockManager</strong> (see what engine entities are locked for provisioning)</li>
+</ul>
+
+<p>This list is partial. JMX is an API and we can expose whatever management functionality is needed.</p>
+
+<h1 id="usage">Usage</h1>
+
+<p>First make sure <code>JBOSS_HOME</code> is set:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  export JBOSS_HOME=/usr/share/ovirt-engine-wildfly&#x000A;</code></pre></div>
+<h2 id="interactivecli-session">Interactive/cli session</h2>
+
+<p>Omitting a command from the argument list will open an interactive session</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  $JBOSS_HOME/bin/jboss-cli.sh --controller=127.0.0.1:8706 --connect --user=admin@internal&#x000A;</code></pre></div>
+<p>A Cli command to get the version of the app server and some info:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  $JBOSS_HOME/bin/jboss-cli.sh --controller=127.0.0.1:8706 --connect --user=admin@internal version&#x000A;  Password: &#x000A;  JBoss Admin Command-line Interface&#x000A;  JBOSS_HOME: /home/rgolan/jboss/current&#x000A;  JBoss AS release: 8.2.0.Final "Tweek"&#x000A;  JAVA_HOME: /usr/lib/jvm/java-1.8.0-openjdk/&#x000A;  java.version: 1.8.0_51&#x000A;  java.vm.vendor: Oracle Corporation&#x000A;  java.vm.version: 25.51-b03&#x000A;  os.name: Linux&#x000A;  os.version: 4.1.3-201.fc22.x86_64&#x000A;</code></pre></div>
+<h2 id="create-a-new-log-category">Create a new log category</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   /subsystem=logging/logger=org.ovirt.engine:add&#x000A;</code></pre></div>
+<h2 id="modify-log-level">Modify log level</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   /subsystem=logging/logger=org.ovirt.engine.core.bll:write-attribute(name=level,value=DEBUG)&#x000A;</code></pre></div>
+<h2 id="get-the-engine-data-source-statistics">Get the engine data-source statistics:</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ls /subsystem=datasources/data-source=ENGINEDataSource/statistics=jdbc&#x000A;</code></pre></div>
+<p>Author: Roy Golan <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#103;&#111;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#114;&#103;&#111;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></p>
+
+<h2 id="get-threading-info">Get Threading info:</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ls /core-service=platform-mbean/type=threading/&#x000A;</code></pre></div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/engine/jmx-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/engine/jmx-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

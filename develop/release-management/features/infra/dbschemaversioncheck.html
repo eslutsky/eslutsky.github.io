@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DBSchemaVersionCheck &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="db-schema-version-check">DB Schema version check</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature will allow checking if there is a parity between the DB schema version as calculated from code, and by the schema version that is obtained from the DB.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Yair Zaslavsky (Yair Zaslavsky)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#122;&#097;&#115;&#108;&#097;&#118;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#121;&#122;&#097;&#115;&#108;&#097;&#118;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Last updated date: Wed Jan 25 2012</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>The engine schema contains the <strong>schema_version</strong> table that holds information on upgrade scripts and their installation status.
+As both clean install and upgrade run these scripts, and any schema change is performed by adding another upgrade script it is crucial to keep
+version information about the upgrade scripts in order to make sure unchanged scripts will not be re-run when upgrade process is being re-run.
+In order to maintain the version for a given upgrade script, for each upgrade script the md5 calculation of its content is kept in the above mentioned DB.
+ The table description is as follows:
+| Column Name | Column Type | Null? | Definition | index/pk/fk |
+| id | int | No | Version ID | PK |
+| version | varchar(10) | No | The version of the schema the upgrade script tried to acieve | |
+| script | varchar(255) | No | The script file name | |
+| checksum | varchar(128) | No | md5 of the script file | |
+| installed_by | varchar(30) | No | The db user that runs the upgrade script | |
+| started_at | timestamp | No | Script start time | |
+| ended_at | timestamp | Yes | Script end time | |
+| state | varchar (15) | No | INSTALLED/FAILED | |
+| current | boolean | No | true only for last version installed successfully | |</p>
+
+<h3 id="1-storing-md5-information-per-installed-upgrade-scripts-in-db">1. Storing MD5 information per installed upgrade scripts in DB</h3>
+
+<p>When running upgrade script, the script runs all scriptsl ocated in the upgrade folder that follow the pattern of MAJOR_MINOR_SCRIPTINDEX_DESCRIPTION.sql (i.e - 03_01_0050_add_cancel_migration_to_action_version_map.sql).
+After each step an entry is kept to kept in version_schema , holding information on the md5 sum of the script and its state (there are other columns which are used for other issues which are out of this scope of this document, as this design is using a table that already exists in the db, and does not proprose a new one)</p>
+
+<h3 id="2-calculating-the-db-schema-md5-and-storing-it-for-db-schema-check">2. calculating the db schema MD5 and storing it for db schema check</h3>
+
+<p>A script called store_db_schema_checksum.sh will invoke a sciprt called calculate_db_schema_checksum.sh that calculates the db schema checksum the following way:
+It performs select of the checksum column from the checksum_version table for all the installed scripts, and runs md5 calculation on the result (a list of checksum values).
+The script store_db_schema_checksum.sh will store the information at the file $GIT_REPO/ovit-engine/ear/target/version.info
+This script will be run by the build system (or a developer during a development stage).
+During packaging a formal build, this file will be taken from the above location.
+The installer is already responsible for deploying this file to /etc/engine during installation, and should be responsible to upgrade its content during upgrade (see comment at open issues).
+It will also be possible to run this script via mvn clean install, by providing the -D skip.db.checksum.store=false flag&lt;BR<br /></p>
+
+<h3 id="3-service-for-starting-engine-core-and-performing-the-db_schema_check">3. Service for starting engine-core and performing the db_schema_check</h3>
+
+<p>A service called engine-cored (see open issues about the service name) will be developed for the following purposes:
+.a. Perform validity checks
+.b. If validity checks pass, the jboss service will start
+The service will run the script check_db_schema_checksum.sh that will compare the md5 values in DB by running calculate_db_schema.checksum.sh (see above) and compare the result with the value of the key DB_SCHEMA_CHECKSUM stored at /etc/engine/version.info.
+In case of success this validity check passes. In case of error an error message should be prompted.
+It will also be possible to run the script via mvn test at the DAL module or root pom level by providing the flag -D db.checksum.check=false</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>The benefit for oVirt from this feature is the ability to ensure at customers sites (and also for oVirt developers) that there is a parity between the schema version as reflected from the code, and the one that is calculated in the DB. Adding this check to a service that will start the jboss service will prevent the system from working with corrupted/mismatched DB.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>Dependencies on features:</p>
+
+<p>Affected oVirt projects:</p>
+
+<ul>
+  <li>Engine-core</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/dbschemaversioncheck.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/dbschemaversioncheck.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

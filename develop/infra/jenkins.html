@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Jenkins &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="jenkins-ovirt-server">Jenkins oVirt Server</h1>
+
+<p>oVirt Jenkins server is <a href="http://jenkins.ovirt.org/">jenkins.ovirt.org</a> (107.22.215.130)</p>
+
+<h1 id="recommended-server-specs">Recommended server specs</h1>
+
+<p>These are specs for servers to run Jenkins slaves for oVirt testing. One base configuration could be:</p>
+
+<ul>
+  <li>16 GB RAM each</li>
+  <li>4/8 cores each</li>
+  <li>200 GB disk each</li>
+  <li>32 GB swap</li>
+</ul>
+
+<h1 id="access">Access</h1>
+
+<ul>
+  <li>OS Level Access: Restricted to infra team only. (PKI)</li>
+  <li>Read UI Access: Anonymous read access is available to see all jobs/workspaces and build results. </li>
+  <li>Login UI Access: availialble only to infra team, and by request to <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#105;&#110;&#102;&#114;&#097;&#064;&#111;&#118;&#105;&#114;&#116;&#046;&#111;&#114;&#103;">&#105;&#110;&#102;&#114;&#097;&#064;&#111;&#118;&#105;&#114;&#116;&#046;&#111;&#114;&#103;</a>.</li>
+</ul>
+
+<p>Contact Infra team if you think you should have privileged access to the server.</p>
+
+<h2 id="troubleshooting-os-level-access">Troubleshooting OS level access:</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>restorecon -R -v /home/user&#x000A;restorecon -R -v /home/user/.ssh&#x000A;chmod 700 /home/user/.ssh&#x000A;chmod 600 /home/user/.ssh/authorized_keys&#x000A;passwd user&#x000A;</code></pre></div>
+<h1 id="installation">Installation</h1>
+
+<ol>
+  <li>Install LTS version from <a href="http://pkg.jenkins-ci.org/redhat-stable/">http://pkg.jenkins-ci.org/redhat-stable/</a></li>
+  <li>Run it behind Apache: <a href="https://wiki.jenkins-ci.org/display/JENKINS/Running+Jenkins+behind+Apache">https://wiki.jenkins-ci.org/display/JENKINS/Running+Jenkins+behind+Apache</a></li>
+  <li><code>chkconfig httpd on</code></li>
+  <li><code>yum install java-1.6.0-openjdk-devel git postgresql postgresql-server postgresql-contrib</code></li>
+  <li>Run <code>/etc/init.d/postgresql initdb</code></li>
+  <li>Set <code>postgresql</code> in <code>pg_hba.conf</code> to <code>trust</code></li>
+  <li>Restart PostgreSQL service</li>
+  <li>
+    <p>Add engine 'role' as superuser to PostgreSQL:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>psql -U postgres -c "CREATE ROLE engine WITH LOGIN SUPERUSER"&#x000A;</code></pre></div>  </li>
+  <li><code>service jenkins start</code></li>
+  <li>
+    <p>Install Jenkins plugins:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>wget http://localhost:8080/jnlpJars/jenkins-cli.jar&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin audit-trail&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin git&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin multiple-scms&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin analysis-collector&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin findbugs&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin Email-ext&#x000A;java -jar jenkins-cli.jar -s http://localhost:8080 install-plugin port-allocator&#x000A;</code></pre></div>  </li>
+  <li>Config <code>JAVA_HOME</code> in <a href="http://jenkins.ovirt.org/configure">http://jenkins.ovirt.org/configure</a></li>
+  <li>Config default maven in <a href="http://jenkins.ovirt.org/configure">http://jenkins.ovirt.org/configure</a></li>
+  <li>
+    <p>Edit <code>/etc/sysconfig/jenkins</code> (replace line):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>JENKINS_JAVA_OPTIONS="-Djava.awt.headless=true -Xms4g -Xmx4g -XX:MaxPermSize=1024M"&#x000A;</code></pre></div>  </li>
+  <li>increase limit of open file using <code>ulimit -n</code> (for persistent  change add to <code>/etc/sysctl.conf</code>): <code>fs.file-max = 2048</code></li>
+  <li>Amazon EC2 doesn't come with swap space, so create a swap file or swap partition.</li>
+</ol>
+
+<h2 id="create-swap-space">Create swap space</h2>
+
+<p>Check to see if you have the <code>/dev/xvdk</code> device available (<code>fdisk -cul</code>).</p>
+
+<p>If <code>/dev/xvdk</code> exists, follow these steps:</p>
+
+<ol>
+  <li>
+    <p>Edit the storage device:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>fdisk -cu /dev/xvdk&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create a new swap partition (type 82) and save changes.</p>
+  </li>
+  <li>
+    <p>Create swap:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>mkswap /dev/xvdk1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Activate swap:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>swapon /dev/xvdk1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add device to the filesystem list:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>echo "/dev/xvdk1       none    swap    sw      0       0" &gt;&gt; /etc/fstab&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>If <code>/dev/xvdk</code> does not exist, <a href="http://www.cyberciti.biz/faq/linux-add-a-swap-file-howto/">create a swapfile</a>.</p>
+
+<h2 id="add-temporary-space-for-workspace-deletes-data-after-reboot">Add temporary space for workspace (deletes data after reboot)</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>mkfs -t ext4 /dev/xvdj&#x000A;mkdir /ephemeral0&#x000A;echo "/dev/xvdj /ephemeral0 ext4 defaults 1 2" &gt;&gt; /etc/fstab&#x000A;mount /ephemeral0&#x000A;</code></pre></div>
+<h2 id="expand-default-root-partition">Expand default root partition</h2>
+
+<p>Amazon VM comes with a default 5GB / partition. but it actually has 50GB you can use. run this command to expand it</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>resize2fs /dev/xvde1&#x000A;</code></pre></div>
+<h2 id="change-open-files">Change open files</h2>
+
+<p>Jenkins slave might run out of openfiles. to change this you need to run:</p>
+
+<ol>
+  <li><code>ulimit -n 2048</code></li>
+  <li>
+    <p>Edit <code>/etc/sysctl.conf</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>fs.file-max = 2048&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Edit <code>/etc/security/limits.conf</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>jenkins  soft    nofiles    2048&#x000A;jenkins  hard    nofiles    2048&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h2 id="allows-sudo-access-for-jenkins-user">allows sudo access for jenkins user</h2>
+
+<p>Jenkins user needs sudo access to be able to run tests from jenkins jobs, do this on each jenkins slave: edit /etc/suders:</p>
+
+<ol>
+  <li>
+    <p>Comment out this line: </p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Defaults    requiretty&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>jenkins ALL=(ALL)       NOPASSWD: ALL&#x000A;</code></pre></div>  </li>
+</ol>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/jenkins.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/jenkins.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

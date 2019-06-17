@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Deploying oVirt and Gluster Single node Hyperconverged &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/gluster-hyperconverged/">Gluster-hyperconverged</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-6-deploying-a-single-node-ovirt-and-gluster-hyperconverged">Chapter 6: Deploying a Single Node oVirt and Gluster Hyperconverged</h1>
+
+<h2 id="pre-requisites">Pre-requisites</h2>
+
+<ul>
+  <li>
+    <p>A single host with  Enterprise Linux 7 or oVirt Node. Refer <a href="install-guide/chap-Enterprise_Linux_Hosts">Enterprise Linux Hosts</a> or <a href="install-guide/chap-oVirt_Nodes">oVirt Nodes</a></p>
+  </li>
+  <li>
+    <p>You must have at least 2 interfaces on the host, so that the frontend and backend traffic can be separated out. Having only one network will cause the engine monitoring, client traffic, gluster I/O traffic to all run together and interfere each other. To segregate the backend network, the gluster cluster is formed using the backend network addresses, and the nodes are added to the engine using the frontend network address.</p>
+  </li>
+  <li>
+    <p>You must have a fully qualified domain name prepared for your Engine and the host. Forward and reverse lookup records must both be set in the DNS. <strong>The Engine should use the same subnet as the management network.</strong></p>
+  </li>
+  <li>
+    <p>You must have configured passwordless ssh between the host to itself. gdeploy uses Ansible playbooks and the ability to remotely execute commands is a pre-requisite.
+Follow below steps to configure this.</p>
+<div class="highlight"><pre class="highlight plaintext"><code># ssh-keygen&#x000A;# ssh-copy-id root@&lt;host-address&gt;&#x000A;</code></pre></div>  </li>
+</ul>
+
+<h2 id="deploying-on-enterprise-linux-hosts">Deploying on Enterprise Linux Hosts</h2>
+
+<h3 id="installing-the-required-packages">Installing the Required Packages</h3>
+
+<p><strong>Installing the packages on the host</strong></p>
+
+<ol>
+  <li>
+    <p>Subscribe to ovirt repos from http://resources.ovirt.org/pub/yum-repo/
+For instance, to subscribe to oVirt 4.3 repo,</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install gdeploy and cockpit-ovirt that will provide a UI for the installation of Hosted Engine. gdeploy is a wrapper tool around Ansible that helps to setup gluster volumes. vdsm-gluster is used to manage gluster from oVirt, and pulls in all the required gluster dependencies. Install the oVirt Engine Virtual Appliance package for the Engine virtual machine installation.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install gdeploy cockpit-ovirt-dashboard vdsm-gluster ovirt-engine-appliance&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h2 id="deploying-on-ovirt-node-based-hosts">Deploying on oVirt Node based Hosts</h2>
+
+<p><strong>oVirt Node contains all the required packages to set up the hyperconverged environment.</strong>
+Refer to <a href="install-guide/chap-oVirt_Nodes">oVirt Nodes</a> for instructions on installing oVirt Node on the host. You can proceed to setting up the hyperconverged environment if you have an oVirt Node based host.</p>
+
+<h3 id="setting-up-the-hyperconverged-environment">Setting up the hyperconverged environment</h3>
+
+<h4 id="installing-and-setting-up-gluster-volume">Installing and setting up gluster volume</h4>
+
+<p>Gluster volumes need to be created first prior to the Hosted Engine installation flow. One of the volumes that's created is used to host the Hosted Engine VM. Use the below gdeploy configuration file as a template to create volumes and configure the host.
+Since the Cockpit UI only supports the 3 node deployment, we have to manually run a gdeploy config file to handle this currently.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[hosts]&#x000A;@HOSTNAME@&#x000A;&#x000A;[disktype]&#x000A;@RAIDTYPE@ #Possible values raid6, raid10, raid5, jbod&#x000A;&#x000A;[diskcount]&#x000A;@NUMBER_OF_DATA_DISKS@ #Ignored in case of jbod&#x000A;&#x000A;[stripesize]&#x000A;@STRIPE_SIZE@ #256 in case of jbod&#x000A;&#x000A;[script1]&#x000A;action=execute&#x000A;ignore_script_errors=no&#x000A;file=/usr/share/gdeploy/scripts/grafton-sanity-check.sh -d @DEVICE@&#x000A;&#x000A;#[vdo] # Note: Uncomment if dedupe &amp; compression needs to be enabled on device. Needs kmod-vdo module&#x000A;#action=create&#x000A;#names=@VDO_DEVICE_Name@&#x000A;#devices=@DEVICE@&#x000A;#logicalsize=@logical_size@T # Note:logicalsize is 10x physical space on disk&#x000A;##slabsize=32G               # Note: used only when the physical size is few TBs&#x000A;#blockmapcachesize=128M&#x000A;#readcache=enabled&#x000A;#readcachesize=20M&#x000A;#emulate512=enabled&#x000A;#writepolicy=auto&#x000A;&#x000A;[pv]&#x000A;action=create&#x000A;devices=@DEVICE@ # Change to @VDO_DEVICE_name@ if using vdo&#x000A;&#x000A;[vg1]&#x000A;action=create&#x000A;vgname=gluster_vg1&#x000A;pvname=@DEVICE@ # Change to @VDO_DEVICE_name@ if using vdo&#x000A;&#x000A;[lv1]&#x000A;action=create&#x000A;vgname=gluster_vg1&#x000A;lvname=engine_lv&#x000A;lvtype=thick&#x000A;size=100GB&#x000A;mount=/gluster_bricks/engine&#x000A;&#x000A;[lv2]&#x000A;action=create&#x000A;vgname=gluster_vg1&#x000A;poolname=lvthinpool&#x000A;lvtype=thinpool&#x000A;poolmetadatasize=16GB&#x000A;size=@SIZE@ #For example: 18000GB, depending on device capacity. Units to be specified.&#x000A;&#x000A;[lv3]&#x000A;action=create&#x000A;lvname=lv_vmdisks&#x000A;poolname=lvthinpool&#x000A;vgname=gluster_vg1&#x000A;lvtype=thinlv&#x000A;mount=/gluster_bricks/vmstore&#x000A;virtualsize=@SIZE@ # Units to be specified, for instance 5000GB&#x000A;&#x000A;[lv4]&#x000A;action=create&#x000A;lvname=lv_datadisks&#x000A;poolname=lvthinpool&#x000A;vgname=gluster_vg1&#x000A;lvtype=thinlv&#x000A;mount=/gluster_bricks/data&#x000A;virtualsize=@SIZE@ # Units to be specified, for instance 5000GB&#x000A;&#x000A;#[lv5]&#x000A;#action=setup-cache&#x000A;#ssd=@SSD_DEVICE@&#x000A;#vgname=gluster_vg1&#x000A;#poolname=lvthinpool&#x000A;#cache_lv=lvcache&#x000A;#cache_lvsize=5GB # Provide device size&#x000A;## cachemode=writeback&#x000A;&#x000A;[shell2]&#x000A;action=execute&#x000A;command=vdsm-tool configure --force&#x000A;&#x000A;[script3]&#x000A;action=execute&#x000A;file=/usr/share/gdeploy/scripts/blacklist_all_disks.sh&#x000A;ignore_script_errors=no&#x000A;&#x000A;[selinux]&#x000A;yes&#x000A;&#x000A;[service3]&#x000A;action=restart&#x000A;service=glusterd&#x000A;slice_setup=yes&#x000A;&#x000A;[firewalld]&#x000A;action=add&#x000A;ports=111/tcp,2049/tcp,54321/tcp,5900/tcp,5900-6923/tcp,5666/tcp,16514/tcp,54322/tcp&#x000A;services=glusterfs&#x000A;&#x000A;[script2]&#x000A;action=execute&#x000A;file=/usr/share/gdeploy/scripts/disable-gluster-hooks.sh&#x000A;&#x000A;[shell3]&#x000A;action=execute&#x000A;command=usermod -a -G gluster qemu&#x000A;&#x000A;[volume]&#x000A;action=create&#x000A;volname=engine&#x000A;transport=tcp&#x000A;key=storage.owner-uid,storage.owner-gid,features.shard,performance.low-prio-threads,performance.strict-o-direct,network.remote-dio,network.ping-timeout,user.cifs,nfs.disable,performance.quick-read,performance.read-ahead,performance.io-cache,cluster.eager-lock&#x000A;value=36,36,on,32,on,off,30,off,on,off,off,off,enable&#x000A;brick_dirs=/gluster_bricks/engine/engine&#x000A;ignore_volume_errors=no&#x000A;&#x000A;[volume2]&#x000A;action=create&#x000A;volname=vmstore&#x000A;transport=tcp&#x000A;key=storage.owner-uid,storage.owner-gid,features.shard,performance.low-prio-threads,performance.strict-o-direct,network.remote-dio,network.ping-timeout,user.cifs,nfs.disable,performance.quick-read,performance.read-ahead,performance.io-cache,cluster.eager-lock&#x000A;value=36,36,on,32,on,off,30,off,on,off,off,off,enable&#x000A;brick_dirs=/gluster_bricks/vmstore/vmstore&#x000A;ignore_volume_errors=no&#x000A;&#x000A;[volume3]&#x000A;action=create&#x000A;volname=data&#x000A;transport=tcp&#x000A;key=storage.owner-uid,storage.owner-gid,features.shard,performance.low-prio-threads,performance.strict-o-direct,network.remote-dio,network.ping-timeout,user.cifs,nfs.disable,performance.quick-read,performance.read-ahead,performance.io-cache,cluster.eager-lock&#x000A;value=36,36,on,32,on,off,30,off,on,off,off,off,enable&#x000A;brick_dirs=/gluster_bricks/data/data&#x000A;ignore_volume_errors=no&#x000A;</code></pre></div>
+<p>Once the configuration file is edited (the @ @ replaced), the gluster environment can be setup using</p>
+<div class="highlight"><pre class="highlight plaintext"><code>gdeploy -c gdeploy.conf&#x000A;&#x000A;</code></pre></div><h4 id="setting-up-hosted-engine">Setting up Hosted Engine</h4>
+
+<p>Use the Ansible based installation flow of Hosted Engine to set up oVirt within a virtual machine. The storage details should be provided as type: <code>glusterfs</code> and connection path as: <code>&lt;hostname&gt;:/engine</code> (Replace hostname with address of host on which installation is carried out)</p>
+
+<p><strong>Prev:</strong>  <a href="chap-Maintenance_and_Upgrading_Resources">Chapter: Maintenance and Upgrading Resources </a> <br /></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/gluster-hyperconverged/chap-Single_node_hyperconverged.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/gluster-hyperconverged/chap-Single_node_hyperconverged.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 4 Feb 2019 14:04 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

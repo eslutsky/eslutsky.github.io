@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Searchbackend &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/engine/">Engine</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="search-backend">Search backend</h1>
+
+<p>Search backend is part of the ovirt engine backend, it translates search queries to SQL, runs them against the database and returns the result.</p>
+
+<h2 id="query-syntax">Query syntax</h2>
+
+<p>Some example query:</p>
+
+<ul>
+  <li>Events : event_host = dev-164</li>
+  <li>Users : name = admin</li>
+  <li>Vms : ip = 127.0.0.1</li>
+</ul>
+
+<h2 id="autocompleters">Autocompleters</h2>
+
+<p>Autocompleters help the users to build a query, the logic is built into searchbackend. See org.ovirt.engine.core.searchbackend.IAutoCompleter interface and implementing classes.</p>
+
+<h2 id="generated-sql">Generated SQL</h2>
+
+<p>The generated SQL would need some optimization.</p>
+
+<p>The problems in general:</p>
+
+<ul>
+  <li>The operator `=` is interpreted as like, which is fine with string results, but no good with identifiers</li>
+  <li>
+    <p>The search query is wrapped with an outer query and mapped with id, so the primary key will be scanned even if it is not used in the result and not filtered</p>
+
+    <p>engine=# explain SELECT <em> FROM (SELECT </em> FROM audit_log WHERE ( audit_log_id IN (SELECT audit_log.audit_log_id FROM  audit_log   WHERE  audit_log.vds_id::varchar LIKE '78933a44-360c-11e1-8fec-2f707af25b44' ))  ORDER BY audit_log_id DESC ) as T1 OFFSET (1 -1) LIMIT 100;
+                                                        QUERY PLAN                                                        
+  ————————————————————————————————————————-
+  Limit  (cost=<code>**</code>592.60..593.13<code>**</code> rows=42 width=3163)
+    -&gt;  Sort  (cost=592.60..592.71 rows=42 width=826)
+          Sort Key: public.audit_log.audit_log_id
+          -&gt;  Nested Loop  (cost=335.25..591.47 rows=42 width=826)
+                -&gt;  HashAggregate  (cost=335.25..335.67 rows=42 width=8)
+                      -&gt;  Seq Scan on audit_log  (cost=0.00..335.14 rows=42 width=8)
+                            Filter: (((vds_id)::character varying)::text ~~ '78933a44-360c-11e1-8fec-2f707af25b44'::text)
+                -&gt;  Index Scan using pk_audit_log on audit_log  (cost=0.00..6.08 rows=1 width=826)
+                      Index Cond: (public.audit_log.audit_log_id = public.audit_log.audit_log_id)</p>
+  </li>
+</ul>
+
+<p>(9 rows)</p>
+
+<p>The first problem is that LIKE can not use indices. In this query, we could just use =.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  engine=# EXPLAIN SELECT * FROM (SELECT * FROM audit_log WHERE ( audit_log_id IN (SELECT audit_log.audit_log_id  FROM  audit_log   WHERE  audit_log.vds_id = '78933a44-360c-11e1-8fec-2f707af25b44' ))  ORDER BY audit_log_id DESC ) as T1 OFFSET (1 -1) LIMIT 100;                                            QUERY  PLAN                                            &#x000A;  --------------------------------------------------------------------------------------------------&#x000A;  Limit  (cost=`**`499.25..499.64`**` rows=31 width=3163)&#x000A;    -&gt;  Sort  (cost=499.25..499.33 rows=31 width=826)&#x000A;          Sort Key: public.audit_log.audit_log_id&#x000A;          -&gt;  Nested Loop  (cost=293.46..498.49 rows=31 width=826)&#x000A;                -&gt;  HashAggregate  (cost=293.46..293.77 rows=31 width=8)&#x000A;                      -&gt;  Seq Scan on audit_log  (cost=0.00..293.39 rows=31 width=8)&#x000A;                            Filter: (vds_id = '78933a44-360c-11e1-8fec-2f707af25b44'::uuid)&#x000A;                -&gt;  Index Scan using pk_audit_log on audit_log  (cost=0.00..6.59 rows=1 width=826)&#x000A;                      Index Cond: (public.audit_log.audit_log_id = public.audit_log.audit_log_id)&#x000A;</code></pre></div>
+<p>As a result of this simplification, the estimated query cost dropped from ~600 to ~500. Now let's introduce an index to support the query</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  engine=# CREATE INDEX idx_audit_log_vds_id on audit_log(vds_id);CREATE INDEX&#x000A;  engine=# EXPLAIN SELECT * FROM (SELECT * FROM audit_log WHERE (audit_log_id IN (SELECT audit_log.audit_log_id  FROM  audit_log   WHERE  audit_log.vds_id = '78933a44-360c-11e1-8fec-2f707af25b44' ))  ORDER BY audit_log_id DESC ) as T1 OFFSET (1 -1) LIMIT 100;&#x000A;                                                  QUERY PLAN                                                 &#x000A;  ------------------------------------------------------------------------------------------------------------&#x000A;  Limit  (cost=`**`292.67..293.05`**` rows=31 width=3163)&#x000A;    -&gt;  Sort  (cost=292.67..292.74 rows=31 width=826)&#x000A;          Sort Key: public.audit_log.audit_log_id&#x000A;          -&gt;  Nested Loop  (cost=86.88..291.90 rows=31 width=826)&#x000A;                -&gt;  HashAggregate  (cost=86.88..87.19 rows=31 width=8)&#x000A;                      -&gt;  Bitmap Heap Scan on audit_log  (cost=4.49..86.80 rows=31 width=8)&#x000A;                            Recheck Cond: (vds_id = '78933a44-360c-11e1-8fec-2f707af25b44'::uuid)&#x000A;                            -&gt;  Bitmap Index Scan on idx_audit_log_vds_id  (cost=0.00..4.48 rows=31 width=0)&#x000A;                                  Index Cond: (vds_id = '78933a44-360c-11e1-8fec-2f707af25b44'::uuid)&#x000A;                -&gt;  Index Scan using pk_audit_log on audit_log  (cost=0.00..6.59 rows=1 width=826)&#x000A;                      Index Cond: (public.audit_log.audit_log_id = public.audit_log.audit_log_id)&#x000A;</code></pre></div>
+<p>(11 rows)</p>
+
+<p>Note that the estimated cost dropped because it can check a relevant index. Now let's simplify the SQL statement to avoid index-scanning pk_audit_log, by removing the redundant outer query.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  engine=# EXPLAIN SELECT * FROM audit_log   WHERE  audit_log.vds_id = '78933a44-360c-11e1-8fec-2f707af25b44'  ORDER BY audit_log_id DESC OFFSET 0 LIMIT 100;&#x000A;                                            QUERY PLAN                                           &#x000A;  ------------------------------------------------------------------------------------------------&#x000A;  Limit  (cost=`**`87.57..87.65`**` rows=31 width=826)&#x000A;    -&gt;  Sort  (cost=87.57..87.65 rows=31 width=826)&#x000A;          Sort Key: audit_log_id&#x000A;          -&gt;  Bitmap Heap Scan on audit_log  (cost=4.49..86.80 rows=31 width=826)&#x000A;                Recheck Cond: (vds_id = '78933a44-360c-11e1-8fec-2f707af25b44'::uuid)&#x000A;                -&gt;  Bitmap Index Scan on idx_audit_log_vds_id  (cost=0.00..4.48 rows=31 width=0)&#x000A;                      Index Cond: (vds_id = '78933a44-360c-11e1-8fec-2f707af25b44'::uuid)&#x000A;</code></pre></div>
+<p>(7 rows)</p>
+
+<p>This refactoring dropped query cost estimation from ~500 to less than 100, therefore this simplification in the searchbackend could give results faster and generate less load on the database server.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/engine/searchbackend.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/engine/searchbackend.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

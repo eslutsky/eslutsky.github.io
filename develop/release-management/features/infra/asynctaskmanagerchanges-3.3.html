@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+AsyncTaskManagerChanges 3.3 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="async-task-manager-changes-for-ovirt-33">Async Task manager changes for oVirt 3.3</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The following feature page deals with improvements added to the engine async task manager mechanism.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Yair Zaslavsky (MyUser)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: yzaslavs@redhat.com</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Last updated date: May 25, 2013</li>
+</ul>
+
+<p>For oVirt 3.3 we would like to improve the current SPM tasks mechanism in the following areas:</p>
+
+<ul>
+  <li>Better handling of engine/vdsm crashes in cases of mismatch in the number of tasks (expected vs actual running tasks).</li>
+  <li>Providing better mechanism to query if an entity (i.e - StorageDomain, VM, Disk, etc…) has running tasks on.</li>
+  <li>Improving the mechanism for determining whether endAction (the last step of command invocation in case the command/its children created tasks) should be run.</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="better-handling-of-engine-crashes-in-cases-of-mismatch-in-the-number-of-tasks-expected-vs-actual-running-tasks"><strong>Better handling of engine crashes in cases of mismatch in the number of tasks (expected vs actual running tasks)</strong>.</h3>
+
+<ul>
+  <li>Problem: Engine can crash, causing a wrong successful completion of commands due to mismatch between expected tasks and created tasks.</li>
+  <li>Example:</li>
+</ul>
+
+<p>RemoveVM is run on a VM with 4 disks. After 2 out of the 4 disks are created at VDSM, and stored at engine, engine crashes. Engine restarts, the command ends successfully although 2 out of the 4 disks were not removed.</p>
+
+<ul>
+  <li>Detailed explanation of problem:</li>
+</ul>
+
+<p>A parent command (for example - RemoveVmCommand) may create child commands that each one of them in turn creates a task (for example - RemoveImageCommand is a child command that is responsible for creating a task at VDSM for removing one of the images associated with the VM). The tasks information is kept at database at async_tasks table, and is used if engine crashes in order to restore association between tasks and commands and coordinate the endAction execution when all the tasks for the parent command have ended.</p>
+
+<p>Currently, a new record is inserted into the async_tasks table only after the task is created at VDSM (TaskCreationInfo is returned from the VDSBroker with the vdsm tadk ID). The return tasked ID serves as a primary key for the table. If engine crashes- it may be that not all vdsm calls for creating all the tasks were issues, hence not all async_tasks records were added. Engine restarts and both vdsm and engine are aware only to a partial amount of the expected tasks , causing the parent command (for example, RemoveVm) to be successfully completed (for example - RemoveVm is successfully completed when only 2 out of 4 disks where removed).</p>
+
+<ul>
+  <li>Solution:</li>
+</ul>
+
+<p>The suggested fix will distinguish between the vdsm task ID and the DB task ID, in addition, it will add all the expected tasks at the parent command, in a single transaction - when a VDSM task ID is obtained from vds broker, it will be associated to the proper aync_tasks record. If engine crashes , and for some aysnc_tasks records there is no VDSM task ID (in the given example - for each one of the 4 disks, a async_tasks record is added to the DB, and for 2 out of 4, there is no VDSM taskd ID), the parent command (RemoveVm in the example) will be ended with "failure" state.</p>
+
+<h3 id="providing-better-mechanism-to-query-if-an-entity-ie---storagedomain-vm-disk-etc-has-running-tasks-on"><strong>Providing better mechanism to query if an entity (i.e - StorageDomain, VM, Disk, etc…) has running tasks on.</strong></h3>
+
+<ul>
+  <li>Problem: The mechanism of querying an entity for running task is limited</li>
+  <li>Example: It is impossible to query for disk entity if there are running tasks, if the command is VM related.</li>
+  <li>Detailed explanation of problem:</li>
+</ul>
+
+<p>Currently there are two mechanisms for querying whether a task is associated with a given entity - a. VdcActionParametersBase which is the base class for all commands parameters has a field that holds the entityID for which the task is created. There is no indication the entity type and in addition, only one entity ID can be associated with the task, so usually this is the top-most entity (VM, Template,Disk). b. async_task_entities table was introduced to overcome the issue - it contains an association between task id, and entity ID (and its type),</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>for example: 40fd52b-3400-4cdd-8d3f-c9d03704b0aa</td>
+      <td>72e3a666-89e1-4005-a7ca-f7548004a9ab</td>
+      <td>Storage Indicates that task 40fd52b-3400-4cdd-8d3f-c9d03704b0aa is associated with entity 72e3a666-89e1-4005-a7ca-f7548004a9ab which is a storage domain. The current mechanism (both at DAO and BLL ) is incomplete in a sense that only one entity type can be associated with the usage of async_tasks table to varying number of entity IDs.</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>Solution:</li>
+</ul>
+
+<p>The suggested fix will allow association of multiple entity types with multiple entity IDs. This mechanism can help in improving canDoAction checks, and behavior of compensation (for example - don't perform compensation to the initial state, if there are running tasks).</p>
+
+<h3 id="improving-the-mechanism-for-determining-whether-endaction-the-last-step-of-command-invocation-in-case-the-commandits-children-created-tasks-should-be-run"><strong>Improving the mechanism for determining whether endAction (the last step of command invocation in case the command/its children created tasks) should be run</strong></h3>
+
+<ul>
+  <li>Problem: Current mechanism of endAction mechanism is limiting</li>
+  <li>Example: Two READ-ONLY commands (tasks that perform READ ONLY storage-related operations) cannot run on the same entity in parallel (Engine will start polling tasks of a command only after the first command has finished).</li>
+  <li>Detailed explanation of problem:</li>
+</ul>
+
+<p>The current mechanism uses the combination of CommandType (i.e RemoveVm) and the entity ID (i.e the ID of the VM) in order to coordinate the execution of endAction when all tasks related for the command (i.e - all tasks created by the children of RemoveVm command are done). The current mechanism is problematic as it prevents the engine to start polling tasks for the same entity of different commands - for example, if there are two READ-ONLY asynchronous operations on the same entity (in case of read/write- this should be handled by canDoAction and the in-memory locking mechanism).</p>
+
+<ul>
+  <li>Solution:</li>
+</ul>
+
+<p>Reach the decision of whether endAction should be executed based on the parent command Id. Async Task Manager should not postpone polling of commands - for READ-ONLY asynchronous operations there is no point. For write operation - it is the responsibility of canDoAction and the locking mechanism to approve such commands.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>The benefit for oVirt from these changes is to have better usage of SPM tasks in the system - by giving better handling of cases of engine crashes , providing a better mechanism for execution validation of commands and and to give better association between tasks and the command execution flows.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>This feature is mostly code change and introduces changes that should be implemented by various commands. Currently, 3 commands/flows in the system use the new mechanism:</p>
+
+<ul>
+  <li>Hibernate VM</li>
+  <li>Create Template</li>
+  <li>Create snapshot</li>
+</ul>
+
+<p>The things that can be tested are: 1. Test case 1 (Check for regression) Make sure that the 3 commands are normally , as they did in oVirt 3.3 After each flow execution make sure that async_tasks table is clear.</p>
+
+<ol>
+  <li>Test case 2 (Restart ) Try to restart engine during execution of commands. The commands should not suceed, unless all tasks were executed on VDSM.</li>
+</ol>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>These fixes are a part of the on going effort around the Async Task Manager changes. See also <a href="/develop/release-management/features/infra/asynctaskmanagerchanges/">1</a></p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/asynctaskmanagerchanges-3.3.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/asynctaskmanagerchanges-3.3.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

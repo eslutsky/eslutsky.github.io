@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Metrics Store - Schema &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/metrics/">Metrics</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ovirt-metrics---schema">oVirt Metrics - Schema</h1>
+
+<p>Please use the following for constructing the metrics visualizations in the UI tool.</p>
+
+<p>General fields for metrics records:</p>
+
+<ul>
+  <li>hostname: host FQDN</li>
+  <li>collectd.interval: 10 (in seconds)</li>
+</ul>
+
+<h2 id="nfs-plugin">NFS Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: nfs</li>
+  <li>ovirt.entity: host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.nfs.nfs_procedure</td>
+      <td>nfs_procedure</td>
+      <td>NFS activities</td>
+      <td>fs_name + server or client (Example: v3client)</td>
+      <td>derive</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>NFS activities</strong></p>
+
+<p>null / getattr / lookup / access / readlink / read / write / create / mkdir / symlink / mknod / rename / readdir / remove / link / fsstat / fsinfo / readdirplus / pathconf / rmdir / commit / compound / reserved / access / close / delegpurge / delegreturn / getattr / getfh / lock / lockt / locku / lookupp / open_downgrade / putfh / putpubfh / putrootfh / renew / restorefh / savefh / secinfo / setattr / setclientid / setcltid_confirm / verify / open / openattr / open_confirm / exchange_id / create_session / destroy_session / bind_conn_to_session / nverify / release_lockowner / backchannel_ctl / free_stateid / get_dir_delegation / getdeviceinfo / getdevicelist / layoutcommit / layoutget / layoutreturn / secinfo_no_name / sequence / set_ssv / test_stateid / want_delegation / destroy_clientid / reclaim_complete</p>
+
+<h2 id="processes-plugin">Processes Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: processes</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.processes.ps_state</td>
+      <td>ps_state</td>
+      <td>running/ zombies/ stopped/ paging/ blocked/ sleeping</td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_ops.read</td>
+      <td>ps_disk_ops</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_ops.write</td>
+      <td>ps_disk_ops</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_vm</td>
+      <td>ps_vm</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_rss</td>
+      <td>ps_rss</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_data</td>
+      <td>ps_data</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_code</td>
+      <td>ps_code</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_stacksize</td>
+      <td>ps_stacksize</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_cputime.syst</td>
+      <td>ps_cputime</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_cputime.user</td>
+      <td>ps_cputime</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_count.processes</td>
+      <td>ps_count</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_count.threads</td>
+      <td>ps_count</td>
+      <td> </td>
+      <td>process name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_pagefaults.majfltadd</td>
+      <td>ps_pagefaults</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_pagefaults.minflt</td>
+      <td>ps_pagefaults</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_octets.write</td>
+      <td>ps_disk_octets</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_octets.read</td>
+      <td>ps_disk_octets</td>
+      <td> </td>
+      <td>process name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.fork_rate</td>
+      <td>fork_rate</td>
+      <td> </td>
+      <td> </td>
+      <td>derive</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="disk-plugin">Disk Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: disk</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.disk.disk_ops.read</td>
+      <td>disk_ops</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_ops.write</td>
+      <td>disk_ops</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_merged.read</td>
+      <td>disk_merged</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_merged.write</td>
+      <td>disk_merged</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_time.read</td>
+      <td>disk_time</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_time.write</td>
+      <td>disk_time</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.pending_operations</td>
+      <td>pending_operations</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_io_time.io_time</td>
+      <td>disk_io_time</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_io_time.weighted_io_time</td>
+      <td>disk_io_time</td>
+      <td> </td>
+      <td>disk name</td>
+      <td>derive</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="interface-plugin">Interface Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: interface</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.interface.if_octets.rx</td>
+      <td>if_octets</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_octets.tx</td>
+      <td>if_octets</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_packets.rx</td>
+      <td>if_packets</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_packets.tx</td>
+      <td>if_packets</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_errors.rx</td>
+      <td>if_errors</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_errors.tx</td>
+      <td>if_errors</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_dropped.rx</td>
+      <td>if_dropped</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.interface.if_dropped.tx</td>
+      <td>if_dropped</td>
+      <td> </td>
+      <td>Network Name</td>
+      <td>derive</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="cpu-plugin">CPU Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: cpu</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.cpu.percent</td>
+      <td>percent</td>
+      <td>interrupt / user / wait / nice / softirq / system / idle / steal</td>
+      <td>cpu number</td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="df-plugin">DF Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: df</li>
+  <li>ovirt.entity: host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.df.df_complex</td>
+      <td>df_complex</td>
+      <td>free / used / reserved</td>
+      <td>A mounted partition</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.df.percent_bytes</td>
+      <td>percent_bytes</td>
+      <td>free / used / reserved</td>
+      <td>A mounted partition</td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="entropy-plugin">Entropy Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: entropy</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.entropy.entropy</td>
+      <td>entropy</td>
+      <td> </td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="memory-plugin">Memory Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: memory</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.memory.memory</td>
+      <td>memory</td>
+      <td>used / cached / free / slab_unrecl / slab_recl / buffered</td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.memory.percent</td>
+      <td>percent</td>
+      <td>used / cached / free / slab_unrecl / slab_recl / buffered</td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="swap-plugin">Swap Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: swap</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.swap.swap</td>
+      <td>swap</td>
+      <td>used / free /  cached</td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.swap.swap_io</td>
+      <td>swap_io</td>
+      <td>in / out</td>
+      <td> </td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.swap.percent</td>
+      <td>percent</td>
+      <td>used / free /  cached</td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="load-plugin">Load Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: load</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.load.load.longterm</td>
+      <td>load</td>
+      <td> </td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.load.load.midterm</td>
+      <td>load</td>
+      <td> </td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.load.load.shortterm</td>
+      <td>load</td>
+      <td> </td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="aggregation-plugin">Aggregation Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: aggregation</li>
+  <li>ovirt.entity: engine or host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.aggregation.percent</td>
+      <td>"percent"</td>
+      <td>interrupt / user / wait / nice / softirq / system / idle / steal</td>
+      <td>cpu-average / cpu-sum</td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="statsd-plugin-vdsm-host-stats">Statsd Plugin (VDSM host stats)</h2>
+
+<ul>
+  <li>collectd.plugin: statsd</li>
+  <li>ovirt.entity: host</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.statsd.host_storage</td>
+      <td>host_storage</td>
+      <td>storage uuid</td>
+      <td> </td>
+      <td>gauge</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="virt-plugin">Virt Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: virt</li>
+  <li>ovirt.entity: vm</li>
+  <li>ovirt.engine_fqdn.raw: <em>FQDN of the engine</em></li>
+  <li>ovirt.cluster_name.raw: <em>Cluster name</em></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.virt.memory</td>
+      <td>memory</td>
+      <td>rss / total /actual_balloon / available / unused / usable / last_update / major_fault / minor_fault / swap_in / swap_out</td>
+      <td>vm name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_octets.read</td>
+      <td>disk_octets.read</td>
+      <td>disk name</td>
+      <td>vm name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_octets.write</td>
+      <td>disk_octets.write</td>
+      <td>disk name</td>
+      <td>vm name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_ops.read</td>
+      <td>disk_ops.read</td>
+      <td>disk name</td>
+      <td>vm name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_ops.write</td>
+      <td>disk_ops.write</td>
+      <td>disk name</td>
+      <td>vm name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_dropped.rx</td>
+      <td>if_dropped.rx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_dropped.tx</td>
+      <td>if_dropped.tx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_errors.rx</td>
+      <td>if_errors.rx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_errors.tx</td>
+      <td>if_errors.tx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_octets.rx</td>
+      <td>if_octets.rx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_octets.tx</td>
+      <td>if_octets.tx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_packets.rx</td>
+      <td>if_packets.rx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_packets.tx</td>
+      <td>if_packets.tx</td>
+      <td>network name</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.virt_cpu_total</td>
+      <td>virt_cpu_total</td>
+      <td>cpu number</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.virt_vcpu</td>
+      <td>virt_vcpu</td>
+      <td>cpu number</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.percent</td>
+      <td>percent</td>
+      <td>virt_cpu_total</td>
+      <td>vm name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.ps_cputime.user</td>
+      <td>ps_cputime.user</td>
+      <td> </td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.ps_cputime.syst</td>
+      <td>ps_cputime.syst</td>
+      <td> </td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.total_requests</td>
+      <td>total_requests</td>
+      <td>flush-DISK</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.total_time_in_ms</td>
+      <td>total_time_in_ms</td>
+      <td>flush-DISK</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.virt_vcpu</td>
+      <td>virt_vcpu</td>
+      <td>cpu number</td>
+      <td>vm name</td>
+      <td>derive</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="postgresql-plugin">Postgresql Plugin</h2>
+
+<ul>
+  <li>collectd.plugin: postgresql</li>
+  <li>ovirt.entity: engine</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric value field name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.plugin_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.postgresql.pg_numbackends</td>
+      <td>pg_numbackends</td>
+      <td> </td>
+      <td>db name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.postgresql.pg_n_tup_g</td>
+      <td>pg_n_tup_g</td>
+      <td>dead / live</td>
+      <td>db name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.postgresql.pg_n_tup_c</td>
+      <td>pg_n_tup_c</td>
+      <td>ins / upd / del / hot_upd</td>
+      <td>db name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.postgresql.pg_xact</td>
+      <td>pg_xact</td>
+      <td>num_deadlocks</td>
+      <td>db name</td>
+      <td>derive</td>
+    </tr>
+    <tr>
+      <td>collectd.postgresql.pg_db_size</td>
+      <td>pg_db_size</td>
+      <td> </td>
+      <td>db name</td>
+      <td>gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.postgresql.pg_blks</td>
+      <td>pg_blks</td>
+      <td>heap_read / heap_hit / idx_hit / toast_read / toast_hit / tidx_read / idx_read</td>
+      <td>db name</td>
+      <td>derive</td>
+    </tr>
+  </tbody>
+</table>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/metrics/metrics-store-schema.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/metrics/metrics-store-schema.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 17 Feb 2019 21:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

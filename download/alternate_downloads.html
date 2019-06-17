@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Download &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<style>
+.instructions li {
+    margin-top: 20px;
+}
+</style>
+
+<h1 id="alternate-installation-methods">Alternate Installation Methods</h1>
+
+<p>For production installations, we recommend installing oVirt using the graphical Cockpit installer in the
+<a href="/download">Self-Hosted Engine configuration</a>. In this configuration, oVirt Engine and a Host are installed
+together with the Engine running as a Virtual Machine on that Host. This configuration is
+preferred because the Engine Virtual Machine will be highly available (once a second Host is added).</p>
+
+<p>However, if you prefer to run oVirt Engine standalone on physical hardware or another virtualization provider, you can install oVirt Engine
+and Nodes / Hosts separately.</p>
+
+<p>oVirt 4.3.4 is intended for production use and is available for the following platforms:</p>
+
+<ul>
+  <li>Red Hat Enterprise Linux 7.6 or later</li>
+  <li>CentOS Linux 7.6 or later</li>
+  <li>Scientific Linux 7.6 or later</li>
+</ul>
+
+<div class="row"></div>
+
+<h2 id="install-ovirt-engine-using-rpm">Install oVirt Engine using RPM</h2>
+
+<p>oVirt Engine is installed using RPM packages on a supported Enterprise Linux 7 distribution,
+such as CentOS Linux or Red Hat Enterprise Linux.</p>
+
+<p class="alert alert-warning">Users can also compile from source, using the guides found under the <a href="/develop">Developers</a> section. This is not recommended
+unless you are a developer or need to customize the source code.</p>
+
+<p class="alert alert-warning"><strong>Important:</strong> You cannot skip a version when updating oVirt Engine. For example, if you are updating from
+3.6 to 4.3, you first need to update to 4.0, then to 4.1, 4.2 and finally to 4.3. (Host upgrades can use the
+<a href="https://github.com/oVirt/ovirt-fast-forward-upgrade">oVirt Fast Forward Upgrade tool</a>.)
+If you are updating from a previous version, be sure to have the latest release repository installed
+by running <br />
+<code>sudo yum install https://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm</code>.</p>
+
+<h4 id="red-hat-enterprise-linux-centos-linux">Red Hat Enterprise Linux, CentOS Linux</h4>
+
+<ol class="instructions">
+  <li>
+    <p>Enable the Base, Optional, and Extra repositories (Red Hat Enterprise Linux only):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># RHEL only -- they are enabled by default on CentOS&#x000A;subscription-manager repos --enable="rhel-7-server-rpms"&#x000A;subscription-manager repos --enable="rhel-7-server-optional-rpms"&#x000A;subscription-manager repos --enable="rhel-7-server-extras-rpms"&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the official oVirt repository.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>sudo yum install https://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install oVirt Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>sudo yum install -y ovirt-engine&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Set up oVirt Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>sudo engine-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Follow the prompts to configure and install the Engine.</p>
+  </li>
+  <li>
+    <p>Once the installation completes, oVirt's web UI management interface will start and the URL will be printed
+to the screen. Browse to this URL to begin using oVirt!</p>
+
+    <p>See <a href="browsers_and_mobile.html">Browsers and Mobile Clients</a> for supported browsers and
+mobile client information.</p>
+  </li>
+</ol>
+
+<h2 id="download-ovirt-node-or-setup-hosts">Download oVirt Node or Setup Hosts</h2>
+
+<p>You must now install at least one Node or Host to act as hypervisors. Enterprise features like migration and high availability
+require more than one Host.</p>
+
+<p>oVirt supports two types of <a href="../documentation/install-guide/chap-Introduction_to_Hosts.html">Hosts</a>:</p>
+
+<ul>
+  <li><a href="node.html">oVirt Node</a> and</li>
+  <li><a href="../documentation/install-guide/chap-Enterprise_Linux_Hosts.html">Enterprise Linux (such as CentOS or RHEL)</a></li>
+</ul>
+
+<p>Depending on your environment requirements, you may want to use only oVirt Nodes, only EL Hosts, or both.</p>
+
+<h4 id="download-ovirt-node">Download oVirt Node</h4>
+
+<p><a href="node.html">oVirt Node</a> is a minimal operating system based on CentOS that is designed to provide a simple method for setting up a
+physical machine to act as a hypervisor in an oVirt environment.</p>
+
+<ol class="instructions">
+  <li>
+    <p>Download the oVirt Node Installation ISO (current stable is <a href="https://resources.ovirt.org/pub/ovirt-4.3/iso/ovirt-node-ng-installer/">oVirt Node 4.3 - Stable Release - Installation ISO</a>)</p>
+  </li>
+  <li>
+    <p>Write the oVirt Node Installation ISO disk image to a USB, CD, or DVD.</p>
+  </li>
+  <li>
+    <p>Boot your physical machine from that media and install oVirt Node.</p>
+  </li>
+</ol>
+
+<h4 id="or-setup-a-host">Or Setup a Host</h4>
+
+<p>Instead of or in addition to oVirt Node, you can use a standard Enterprise Linux installation as a Host.</p>
+
+<p>An Enterprise Linux Host (such as CentOS or RHEL), also known as an EL-based hypervisor or EL-based Host, is a standard
+basic installation of an Enterprise Linux operating system on a physical server upon which the hypervisor
+packages are installed.</p>
+
+<ol class="instructions">
+  <li>
+    <p>Install one of the supported operating systems (CentOS, RHEL, or Scientific Linux) on your Host and update it:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>sudo yum update -y&#x000A;# reboot if the kernel was updated&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the official oVirt repository:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>sudo yum install https://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>See <a href="../documentation/install-guide/chap-Enterprise_Linux_Hosts.html">Chapter 7: Enterprise Linux Hosts</a> for full installation
+instructions.</p>
+
+<h4 id="attaching-your-hosts">Attaching your Hosts</h4>
+
+<p>Once you have installed additional oVirt Nodes or EL Hosts, use the oVirt Administration Portal to add them to the Engine.
+Navigate to Compute → Hosts → New and enter the Host details. See
+<a href="../documentation/install-guide/chap-Adding_a_Host_to_the_oVirt_Engine.html">Adding a Host to the oVirt Engine</a> for detailed instructions.</p>
+
+<h2 id="storage">Storage</h2>
+
+<p>oVirt uses a centralized storage system for Virtual Machine disk images, ISO files, and snapshots. Before you can install a Virtual Machine,
+storage must be attached.</p>
+
+<p>Storage can be implemented using:</p>
+
+<ul>
+  <li>
+    <p>Network File System (NFS)</p>
+  </li>
+  <li>
+    <p>GlusterFS exports</p>
+  </li>
+  <li>
+    <p>iSCSI (Internet Small Computer System Interface)</p>
+  </li>
+  <li>
+    <p>Local storage attached directly to the virtualization Hosts</p>
+  </li>
+  <li>
+    <p>Fibre Channel Protocol (FCP)</p>
+  </li>
+  <li>
+    <p>Parallel NFS (pNFS)</p>
+  </li>
+  <li>
+    <p>Other POSIX compliant file systems</p>
+  </li>
+</ul>
+
+<p>Using the oVirt Administration Portal, navigate to Storage → Domains → New and enter the Storage details.
+See <a href="../documentation/install-guide/chap-Configuring_Storage.html">Configuring Storage</a> and
+<a href="../documentation/admin-guide/chap-Storage.html">Storage Administration</a> for guidance on configuring storage for your
+environment.</p>
+
+<h2 id="install-virtual-machines">Install Virtual Machines</h2>
+
+<p>Once oVirt Engine is installed and you have added Hosts and <a href="../documentation/install-guide/chap-Configuring_Storage.html">configured storage</a>,
+you can now install Virtual Machines!</p>
+
+<p>See the <a href="../documentation/vmm-guide/Virtual_Machine_Management_Guide.html">Virtual Machine Management Guide</a> for complete
+instructions.</p>
+
+<p>For best Virtual Machine performance and accurate dashboard statistics, be sure to install the
+<a href="../documentation/vmm-guide/chap-Installing_Linux_Virtual_Machines.html#installing-the-guest-agents-and-drivers-on-enterprise-linux">oVirt Guest Agent and Drivers for Linux</a>
+[for <a href="../documentation/vmm-guide/chap-Installing_Windows_Virtual_Machines.html#installing-the-guest-agents-and-drivers-on-windows">Windows</a>]
+in each Virtual Machine.</p>
+
+<p>The following virtual machine guest operating systems are supported:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Operating System</th>
+      <th style="text-align: left">Architecture</th>
+      <th style="text-align: left">SPICE support [1]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Red Hat Enterprise Linux 3 - 6</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Red Hat Enterprise Linux 7+</td>
+      <td style="text-align: left">64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SUSE Linux Enterprise Server 10+ [2]</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">No</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Ubuntu 12.04 (Precise Pangolin LTS)+ [3]</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows XP Service Pack 3 and newer</td>
+      <td style="text-align: left">32-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows 7</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows 8</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">No</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows 10</td>
+      <td style="text-align: left">64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows Server 2003 Service Pack 2 and newer</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows Server 2008</td>
+      <td style="text-align: left">32-bit, 64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows Server 2008 R2</td>
+      <td style="text-align: left">64-bit</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows Server 2012 R2</td>
+      <td style="text-align: left">64-bit</td>
+      <td style="text-align: left">No</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Windows Server 2016</td>
+      <td style="text-align: left">64-bit</td>
+      <td style="text-align: left">No</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>[1] SPICE drivers (QXL) are not supplied by Red Hat. Distribution's vendor may provide SPICE drivers.<br />
+[2] select Other Linux for the guest type in the user interface<br />
+[3] not tested recently (?)<br /></p>
+
+<h2 id="consoles">Consoles</h2>
+
+<p>The console is a graphical window that allows you to view and interact with the screen of a Virtual Machine.
+In oVirt, you can use a web-based console viewer or a desktop application (we recommend 
+<a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-graphic_user_interface_tools_for_guest_virtual_machine_management-remote_viewer">Remote Viewer</a>).
+For Windows virtual machines, Remote Desktop Protocol is also available. See <a href="../documentation/vmm-guide/chap-Introduction.html#installing-console-components">Installing Console Components</a>,
+<a href="../documentation/vmm-guide/chap-Additional_Configuration.html#vnc-console-options">VNC Console Options</a>, and
+and <a href="browsers_and_mobile.html">Browser Support and Mobile Clients</a> for more information.</p>
+
+<hr />
+
+<h2 id="rpm-repositories-and-gpg-keys">RPM Repositories and GPG keys</h2>
+
+<p><a href="https://resources.ovirt.org/pub/ovirt-4.3/">RPM repository for oVirt 4.3 - Latest stable release</a></p>
+
+<p>See <a href="rpms_and_gpg.html">RPMs and GPG</a> for older releases, nightlies, mirrors, and GPG keys.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/download/alternate_downloads.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/download/alternate_downloads.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 10 Jun 2019 16:06 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

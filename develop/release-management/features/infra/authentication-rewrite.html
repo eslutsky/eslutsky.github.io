@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Authentication-Rewrite &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="authentication--directory-rewrite">Authentication &amp; Directory rewrite</h1>
+
+<p><span class="label label-warning"><big>ATTENTION: This page is obsoleted for &gt;=ovirt-engine-3.5 by <a href="/develop/release-management/features/infra/aaa/">Features/AAA</a></big></span></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>The feature deals with reimplementation of the Authentication and Directory support at oVirt, which is currently based on Kerberos and "internal" user for authentication, and on LDAP and the DB (for internal domain). The work is dividied into two phases -</p>
+
+<ul>
+  <li>Phase 1 - Redesign the implementation, introducing support for Authenticators and Directories, and implementation of Internal Authenticator and Directory to support the internal domain, and the Provisional Authenticator and Directory to support external. The Provisional directory gets the required configuration from the oVirt database, as it serves as a "bridge" to the existing implementation.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Phase 2 - Implementing Kerberos Authenticator and a new LDAP Directory. Supporting developing of new modules that contain authentication and directory code , not necessarily Kerberos and LDAP based. The configuration for the Authenticators and Directories will be read from a configuration file and will include query structure.</li>
+</ul>
+
+<h3 id="owners">Owners</h3>
+
+<ul>
+  <li>Name: Yair Zaslavsky (Yair Zaslavsky)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#122;&#097;&#115;&#108;&#097;&#118;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#121;&#122;&#097;&#115;&#108;&#097;&#118;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Name: Juan Hernandez (Juan Hernandez)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#104;&#101;&#114;&#110;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#106;&#104;&#101;&#114;&#110;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>status: Phase 1 - done. Phase 2 - in progress</li>
+  <li>Last updated: January 19, 2014</li>
+</ul>
+
+<h2 id="benefits-to-ovirt">Benefits to oVirt</h2>
+
+<ul>
+  <li>Allows to introduce new types of Authenticators(not just password based) and Directories - not necessarily Kerberos based and LDAP based - this can be done in external modules(using JBoss modules) and does not require recompilation of ovirt Engine and delivery of a new RPM for it.</li>
+  <li>Allows change of configuration to support new LDAP prvoiders or changes in LDAP schema (no code change is required).</li>
+</ul>
+
+<h3 id="terminology">Terminology</h3>
+
+<ul>
+  <li>Authenticator - Responsible for performing the authentication (given a set of credentials, the Authenticator performs authentication and returns a result object indicating whether authentication has succeeded or not) to oVirt engine.</li>
+  <li>AuthenticatorFactory - Responsible for creating an Authenticator. Each type of Authenticator should have its own factory.</li>
+  <li>Directory - responsible for querying information on users and groups.</li>
+  <li>DirectoryFactory - Responsible for creating a Directory. Each type of Directory should have its own factory.</li>
+  <li>Profile - a combination of Authenticator and Directory. Each profile has a name that identifies it uniquely. At Phase 2 - each configuration file must contain configuration for a profile (configuration for Authenticator and a Directory). Webadmin and UserPortal present the list of available profiles at the login screen under the domains list.</li>
+  <li>ExternalId - Not all Directories my contain users and groups that have a UUID identifier. ExternalId is an abstraction representing an ID of an external entity.</li>
+</ul>
+
+<h2 id="detailed-description-of-flows">Detailed description of flows</h2>
+
+<ol>
+  <li>Engine restart</li>
+</ol>
+
+<p>At oVirt Engine restart engine gets the list of domains from DB, and creates for each one of them a profile based on Provisional Directory and Authenticator. The profiles are then registered to later usage (the profile will be identified by the domain name). Engine scans a directory that holds configuration files, and for each one of them the configuration file is loaded and creates a profile for them. At Phase 1 the directory is empty and it's still under a debate the location under the filesystem that will hold the directory.</p>
+
+<ol>
+  <li>Login</li>
+</ol>
+
+<p>The login commands get the the profile by the domain name supplied by the parameters. The associated Authenticator is used to authenticate. The Authenticators have a mechanism to resolve error messages to allow oVirt Engine return the UI detailed information on why the authentication failed (for example - for a password based Authenticator such message may be that the password of the user has expired). The associated Directory will be used to query the user by its name. The returned user information will be used to get the user information from the database, and run the MLA check if the login action is authorized.</p>
+
+<ol>
+  <li>Search users &amp; groups</li>
+</ol>
+
+<p>Each Directory should contain in its configuration the required information in order to perform a search of users. For example, an LDAP directory may need to define the user (currently known as "domain user") to perform the search queries with, the authentication method for the user (may be SIMPLE, SASL or others). Bare in mind that this configuration, even if contains authentication details (for example -user, encrypted password, usage of SASL with GSSAPI as mechanism) is unrelated to the configuration of the Authenticator. The search queries for users and groups will be run against query methods at the Directory object.</p>
+
+<ol>
+  <li>Support different LDAP vendors via configuration (Phase-2)</li>
+</ol>
+
+<p>In order to achieve support for different LDAP vendors, the configuration should include the following information:</p>
+
+<ul>
+  <li>Root DSE handling -</li>
+</ul>
+
+<p>As ROOT DSE queries are used to collect information on the directory ("metadata") some vendors might hold different attributes in the ROOT DSE which may later on be utilized for further directory queries. It is required to add an ability to provide a custom handler if needed, and a default implementation. As the base DN under which the users and the groups will be queried for is also provided by the Root DSE, it is required to provide a mapping between an abstracted name of the attribute (for example - "namingContexts") to a vendor-specific name of the attribute (for example "defaultNamingContexts" in Active Directory.)</p>
+
+<ul>
+  <li>Queries templates - Each query (i.e - "GetUserByName") should have a "template" that defines the query structure and allows to include parameters in it.</li>
+</ul>
+
+<p>Before a query is executed, the proper template should be resolved into a query string, by substituting the parameter place holders to parameter values. Such a template may be - ((objectClass=Person)(uid=%1$s)) the parameter place holder in this example is the "%1$s" sub string.</p>
+
+<ul>
+  <li>Users and groups returning attributes mapping -</li>
+</ul>
+
+<p>Users and groups attributes may be defined differently in different LDAP vendors. A mapping between the vendor attribute name (for example - "sn" in Active Directory) to an abstracted attribute name used by the code (for example - "lastName" ) should be included.</p>
+
+<ul>
+  <li>Search attributes mapping -</li>
+</ul>
+
+<p>The generated query by the search mechanism is an abstract LDAP query in a sense it does not contain vendor specific attributes, but placeholders , for example - $ACCOUNTTYPE these attributes should be replaced to vendor specific ones.</p>
+
+<p>The following is an example (still work in progress) for the mapping part in configuration file for IPA - <a href="http://resources.ovirt.org/old-site-files/wiki/Ipa_configuration.odt">ODT</a></p>
+
+<h2 id="open-issues">Open issues</h2>
+
+<ol>
+  <li>
+    <p>Phase 2 - location of directory to hold configuration files - See BZ1049876</p>
+  </li>
+  <li>
+    <p>Phase-2 - Configuration structure for LDAP - patches are still under review, configuration structure may change</p>
+  </li>
+</ol>
+
+<h2 id="testing">Testing</h2>
+
+<p>As currently only Phase-1 is implemented , the tests should be done to see no regression were introduced -</p>
+
+<ol>
+  <li>Use manage-domains, add a domain with addPermissions option and perform a login</li>
+  <li>Use-manage-domain, add another domain with addPermissioons option and perform login (positive fow - check support for multiple domains)</li>
+  <li>Give permissions to a group to perform a login, login using a user from that group</li>
+  <li>Give permissions to a user , and login with that user</li>
+  <li>Try to login with a user that does not exist in the domain</li>
+  <li>Try to login with a user that does not have permissions to login</li>
+  <li>Try to login with an account that is either locked/disabled or that the user has expired password - see that a proper message appears at UI</li>
+  <li>Remove a domain , check that you cannot log in with users from that domain.</li>
+</ol>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/authentication-rewrite.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/authentication-rewrite.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

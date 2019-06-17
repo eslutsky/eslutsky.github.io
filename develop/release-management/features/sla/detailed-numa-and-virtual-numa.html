@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Detailed NUMA and Virtual NUMA &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="numa-and-virtual-numa">NUMA and Virtual NUMA</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allow Enterprise customers to provision large guests for their traditional scale-up enterprise workloads and expect low overhead due to visualization.</p>
+
+<ul>
+  <li>Query target host’s NUMA topology</li>
+  <li>NUMA bindings of guest resources (vCPUs &amp; memory)</li>
+  <li>Virtual NUMA topology</li>
+</ul>
+
+<p>You may also refer to the <a href="/develop/release-management/features/sla/numa-and-virtual-numa/">simple feature page</a>.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Jason Liao (JasonLiao), Bruce Shi (BruceShi)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#104;&#117;&#097;&#110;&#046;&#108;&#105;&#097;&#111;&#064;&#104;&#112;&#046;&#099;&#111;&#109;">&#099;&#104;&#117;&#097;&#110;&#046;&#108;&#105;&#097;&#111;&#064;&#104;&#112;&#046;&#099;&#111;&#109;</a>, <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#120;&#105;&#097;&#111;&#045;&#108;&#101;&#105;&#046;&#115;&#104;&#105;&#064;&#104;&#112;&#046;&#099;&#111;&#109;">&#120;&#105;&#097;&#111;&#045;&#108;&#101;&#105;&#046;&#115;&#104;&#105;&#064;&#104;&#112;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: jasonliao, bruceshi @ #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: oVirt 3.5</li>
+  <li>Status: design</li>
+  <li>Last updated: 25 Mar 2014</li>
+</ul>
+
+<p>This is the detailed design page for NUMA and Virtual NUMA</p>
+
+<h2 id="data-flow-diagram">Data flow diagram</h2>
+
+<p><img alt="" width="1499" height="1087" src="/images/wiki/Data_Flow_Diagram.png?1560777613" /></p>
+
+<h2 id="interface--data-structure">Interface &amp; data structure</h2>
+
+<h3 id="interface-between-vdsm-and-libvirt">Interface between VDSM and libvirt</h3>
+
+<ol>
+  <li>I-1.1 Host's NUMA node index and CPU id of each NUMA node</li>
+  <li>I-1.2 Host's NUMA node memory information, include total and free memory</li>
+  <li>I-1.5 Configuration of VM's memory allocation mode and memory comes from which NUMA nodes</li>
+  <li>I-1.6 Configuration of VM's virtual NUMA topology</li>
+</ol>
+
+<ul>
+  <li>I-1.1 Seek the host NUMA nodes information by using <code>getCapabilities</code> API in libvirt</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;capabilities&gt;&#x000A;    …&#x000A;    &lt;host&gt;&#x000A;        ...&#x000A;        &lt;topology&gt;&#x000A;            &lt;cells num='1'&gt;&#x000A;                &lt;cell id='0'&gt;&#x000A;                    &lt;cpus num='2'&gt;&#x000A;                        &lt;cpu id='0'/&gt;&#x000A;                        &lt;cpu id='1'/&gt;&#x000A;                    &lt;/cpus&gt;&#x000A;                &lt;/cell&gt;&#x000A;      &lt;/cells&gt;&#x000A;        &lt;/topology&gt;&#x000A;        …&#x000A;    &lt;/host&gt;&#x000A;    …&#x000A;&lt;/capabilities&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>I-1.2 Seek the host NUMA nodes memory information by using <code>getMemoryStats</code> API in libvirt, the below is the data format of API returned value</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>{ total: int, free: int }&#x000A;</code></pre></div>
+<ul>
+  <li>I-1.5 Create a new function <code>appendNumaTune</code> in VDSM vm module to write the VM numatune configuration into libvirt domain xml follow the below format</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;domain&gt;&#x000A;    ...&#x000A;    &lt;numatune&gt;&#x000A;        &lt;memory mode='interleave' nodeset='0-1'/&gt;&#x000A;    &lt;/numatune&gt;&#x000A;    …&#x000A;&lt;/domain&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>I-1.6 Modify function <code>appendCpu</code> in VDSM vm module to write the VM virtual NUMA topology configuration into libvirt domain xml follow the below format</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;cpu&gt;&#x000A;    ...&#x000A;    &lt;numa&gt;&#x000A;      &lt;cell cpus='0-7' memory='10485760'/&gt;&#x000A;      &lt;cell cpus='8-15' memory='10485760'/&gt;&#x000A;    &lt;/numa&gt;&#x000A;    ...&#x000A;&lt;/cpu&gt;&#x000A;</code></pre></div>
+<h3 id="interface-between-vdsm-and-host">Interface between VDSM and Host</h3>
+
+<ol>
+  <li>I-1.3 Statistics data of each host CPU core which include %usr (%usr+%nice), %sys and %idle.</li>
+  <li>I-1.4 Data structure to be provided to MOM component</li>
+  <li>I-1.7 NUMA distances capture from command</li>
+  <li>I-1.8 Automatic NUMA balancing on host</li>
+</ol>
+
+<ul>
+  <li>I-1.3 Sampling host CPU statistics data in <code>/proc/stat</code>, the whole data format is showing as below. We will use column 1 to 5 which include user, system, nice and idle CPU handlers to calculate CPU statistics data in engine side</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cat /proc/stat&#x000A;cpu  268492078 16093 132943706 6545294629 19023496 898 138160 0 57789592&#x000A;cpu0 62042038 3012 52198814 1638619972 2438624 4 12068 0 16721375&#x000A;cpu1 62779520 2733 25830756 1647361083 6001324 1 34617 0 16341547&#x000A;cpu2 77892630 5788 32963856 1610093241 8367287 889 80447 0 8205583&#x000A;cpu3 65777888 4559 21950279 1649220333 2216260 4 11027 0 16521086&#x000A;</code></pre></div>
+<ul>
+  <li>I-1.4 Data structure that provided to MOM component</li>
+</ul>
+
+<p>MOM use the VDSM HypervisorInterface using API.py <code>Global.getCapabilities</code> function to get host NUMA topology data</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>'autoNumaBalancing': int&#x000A;'numaNodeDistance': {'&lt;nodeIndex&gt;': [int], ...}&#x000A;'numaNodes': {'&lt;nodeIndex&gt;': {'cpus': [int], 'totalMemory': 'str'}, …}&#x000A;</code></pre></div>
+<p>using API.py <code>Global.getStats</code> function to get host NUMA statistics data</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>'numaNodeMemFree': {'&lt;nodeIndex&gt;': {'memFree': 'str', 'memPercent': int}, …}&#x000A;'cpuStatistics': {'&lt;cpuId&gt;': {'nodeIndex': int, 'cpuSys': 'str', 'cpuIdle': 'str', 'cpuUser': 'str'}, …}&#x000A;</code></pre></div>
+<ul>
+  <li>I-1.7 libivirt API do not support to get NUMA distances information, so we use command <code>numactl</code> to get the distances information</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ numactl -H&#x000A;node distances:&#x000A;node   0   1 &#x000A;  0:  10  20 &#x000A;  1:  20  10&#x000A;</code></pre></div>
+<ul>
+  <li>I-1.8 In kernels who having Automatic NUMA balancing feature, use command <code>sysctl -a |grep numa_balancing</code> to check the Automatic NUMA balancing value is turn on or off</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ sysctl -a | grep numa_balancing&#x000A;kernel.numa_balancing = 1&#x000A;</code></pre></div>
+<h3 id="interface-between-vdsm-and-engine-core">Interface between VDSM and engine core</h3>
+
+<ol>
+  <li>I-2.1 Report host support automatic NUMA balancing situation, NUMA node distances, NUMA nodes information, include NUMA node index, cpu ids and total memory, from VDSM to engine core</li>
+  <li>I-2.2 Report host NUMA nodes memory information (free memory and used memory percentage) and each cpu statistics (system, idle, user cpu percentage) from VDSM to engine core</li>
+  <li>I-2.3 Configuration of set VM's numatune and virtual NUMA topology from engine core to VDSM</li>
+</ol>
+
+<ul>
+  <li>I-2.1 Transfer data format of host NUMA nodes information</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>'autoNumaBalancing': int&#x000A;'numaDistances': {'&lt;nodeIndex&gt;': [int], ...}&#x000A;'numaNodes': {'&lt;nodeIndex&gt;': {'cpus': [int], 'totalMemory': 'str'}, …}&#x000A;</code></pre></div>
+<ul>
+  <li>I-2.2 Transfer data format of host CPU statistics and NUMA nodes memory information</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>'numaNodeMemFree': {'&lt;nodeIndex&gt;': {'memFree': 'str', 'memPercent': int}, …}&#x000A;'cpuStatistics': {'&lt;cpuId&gt;': {'numaNodeIndex': int, 'cpuSys': 'str', 'cpuIdle': 'str', 'cpuUser': 'str'}, …}&#x000A;</code></pre></div>
+<ul>
+  <li>I-2.3 Transfer data format of set VM numatune and virtual NUMA topology</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>'numaTune': {'mode': 'str', 'nodeset': 'str'}&#x000A;'guestNumaNodes': [{'cpus': 'str', 'memory': 'str'}, …]&#x000A;</code></pre></div>
+<h3 id="interface-between-engine-core-and-database-schema">Interface between engine core and database (schema)</h3>
+
+<ol>
+  <li>I-3.1 Schema modification of <code>vds_dynamic</code> table to include host's NUMA node count and automatic NUMA balancing status.</li>
+  <li>I-3.2 Add table <code>vds_cpu_statistics</code> to include host cpu statistics information (system, user, idle cpu time and used cpu percentage).</li>
+  <li>I-3.3 Schema modification of <code>vm_static</code> table to include numatune mode configuration and virtual NUMA node count.</li>
+  <li>I-3.4 Add table <code>numa_node</code> to include host/vm NUMA node information (node index, total memory, cpu count of each node) and statistics information (system, user, idle cpu time, used cpu percentage, free memory and used memory percentage).</li>
+  <li>I-3.5 Add table <code>vm_vds_numa_node_map</code> to include the configuration of vm virtual NUMA nodes pinning to host NUMA nodes (this is a nested relationship table, store the map relations between vm NUMA nodes and host NUMA nodes which are all in table numa_node).</li>
+  <li>I-3.6 Add table <code>numa_node_cpu_map</code> to include the cpu information that each host/vm NUMA node contains.</li>
+  <li>I-3.7 Add table <code>numa_node_distance</code> to include the distance information between the NUMA nodes.</li>
+</ol>
+
+<p>The above interfaces are defined with database design diagram <img alt="" width="1083" height="762" src="/images/wiki/Database_design_diagram.png?1560777613" /></p>
+
+<ul>
+  <li>Related database scripts change:
+    <ol>
+      <li>Add <code>numa_sp.sql</code> to include the store procedures which handle the operations in table <code>numa_node</code>, <code>numa_node_cpu_map</code>, <code>vm_vds_numa_node_map</code> and <code>numa_node_distance</code>. It will provide the store procedures to insert, update and delete data and kinds of query functions.</li>
+      <li>Modify <code>vds_sp.sql</code> to add some store procedures which handle the operations in table <code>vds_cpu_statistics</code>, including insert, update, delete and kinds of query functions.</li>
+      <li>Modify the function of <code>InsertVdsDynamic</code>, <code>UpdateVdsDynamic</code> in <code>vds_sp.sql</code> to add new columns <code>auto_numa_banlancing</code> and <code>vds_numa_node_count</code>.</li>
+      <li>Modify the function of <code>InsertVmStatic</code>, <code>UpdateVmStatic</code> in <code>vms_sp.sql</code> to add two new columns <code>numatune_mode</code> and <code>vm_numa_node_count</code>.</li>
+      <li>Modify <code>create_views.sql</code> to add new columns <code>numatune_mode</code> and <code>vm_numa_node_count</code> in view <code>vms</code> and <code>vms_with_tags</code>; add new columns <code>auto_numa_banlancing</code> and <code>vds_numa_node_count</code> in view <code>vds</code> and <code>vds_with_tags</code>.</li>
+      <li>Modify <code>create_views.sql</code> to add new views, including view <code>vds_numa_node_view</code> which joins <code>vds_dynamic</code> and <code>numa_node</code>; view <code>vm_numa_node_view</code> which joins <code>vm_static</code> and <code>numa_node</code>.</li>
+      <li>Modify <code>upgrade/post_upgrade/0010_add_object_column_white_list_table.sql</code> to add new columns <code>auto_numa_banlancing</code> and <code>vds_numa_node_count</code>.</li>
+      <li>Add one script under <code>upgrade/</code> to create tables - <code>numa_node</code>, <code>vds_cpu_statistics</code>, <code>vm_vds_numa_node_map</code>, <code>numa_node_cpu_map</code>, <code>numa_node_distance</code> and add columns in table <code>vds_dynamic</code> and <code>vm_static</code>.</li>
+      <li>Create the following indexes:
+        <ul>
+          <li>Index on column <code>vm_or_vds_guid</code> of table <code>numa_node</code></li>
+          <li>Index on column <code>vds_id</code> of table <code>vds_cpu_statistics</code></li>
+          <li>Index on column <code>numa_node_id</code> of table <code>numa_node_cpu_map</code></li>
+          <li>Index on column <code>numa_node_id</code> of table <code>numa_node_distance</code></li>
+          <li>Indexes on each of the columns <code>vm_numa_node_id</code> and <code>vds_numa_node_id</code> of table <code>vm_vds_numa_node_map</code></li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Related DAO change:
+    <ol>
+      <li>Add <code>NumaNodeDAO</code> and related implemention to provide data save, update, delete and kinds of queries in table <code>numa_node</code>, <code>numa_node_cpu_map</code>, <code>vm_vds_numa_node_map</code> and <code>numa_node_distance</code>. Add <code>NumaNodeDAOTest</code> for <code>NumaNodeDAO</code> meanwhile.</li>
+      <li>Add <code>VdsCpuStatisticsDao</code> and related implementation to provide data save, update, delete and kinds of queries in table <code>vds_cpu_statistics</code>. Add <code>VdsCpuStatisticsDAOTest</code> for <code>VdsCpuStatisticsDAO</code> meanwhile.</li>
+      <li>Modify <code>VdsDynamicDAODbFacadeImpl</code> and <code>VdsDAODbFacadeImpl</code> to add the map of new columns <code>auto_numa_banlancing</code> and <code>vds_numa_node_count</code>. Run <code>VdsDynamicDAOTest</code> to verify the modification.</li>
+      <li>Modify <code>VmStaticDAODbFacadeImpl</code> and <code>VmDAODbFacadeImpl</code> to add the map of new columns <code>numatune_mode</code> and <code>numa_node_count</code>. Run <code>VmStaticDAOTest</code> to verify the modification.</li>
+    </ol>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Related search engine change</li>
+</ul>
+
+<p>Currently, we plan to provide below search functions about NUMA feature, each field support the numeric relation of “&gt;”, “&lt;”, “&gt;=”, “&lt;=”, “=”, “!=”.</p>
+
+<ol>
+  <li>Search hosts with the below NUMA related fields:
+    <ul>
+      <li>NUMA node number</li>
+      <li>NUMA node cpu count</li>
+      <li>NUMA node total memory</li>
+      <li>NUMA node memory usage</li>
+      <li>NUMA node cpu usage</li>
+    </ul>
+  </li>
+  <li>Search vms with the below NUMA related fields:
+    <ul>
+      <li>NUMA tune mode</li>
+      <li>Virtual NUMA node number</li>
+      <li>Virtual NUMA node vcpu count</li>
+      <li>Virtual NUMA node total memory</li>
+    </ul>
+  </li>
+</ol>
+
+<p>NUMA tune mode support enum value relation, the others support the numeric relation.</p>
+
+<p>We will do the following modifications:</p>
+
+<ol>
+  <li>Modify <code>org.ovirt.engine.core.searchbackend.SearchObjects</code> to add new entry NUMANODES.</li>
+  <li>Add <code>org.ovirt.engine.core.searchbackend.NumaNodeConditionFieldAutoCompleter</code> to provide NUMA node related filters auto completion;</li>
+  <li>Modify <code>org.ovirt.engine.core.searchbackend.SearchObjectAutoCompleter</code> to add new joins, one is HOST joins NUMANODES on vds_id, the other is VM joins NUMANODES on vm_guid.</li>
+  <li>Add new entries in entitySearchInfo accordingly. NUMANODES will use new added view vds_numa_node_view and view vm_numa_node_view.</li>
+  <li>Modify <code>org.ovirt.engine.core.searchbackend.VdsCrossRefAutoCompleter</code> to add auto complete entry NUMANODES.</li>
+</ol>
+
+<ul>
+  <li>Cascade-delete
+    <ol>
+      <li>When user remove a virtual NUMA node, the related rows in table <code>numa_node_cpu_map</code>, <code>vm_vds_numa_node_map</code>, <code>numa_node_distance</code>(maybe in future, currently no distance information for virtual NUMA node) and <code>numa_node</code> should be removed meanwhile.</li>
+      <li>When user remove a vm, all the virtual NUMA nodes of this vm should be removed, follow above item to do the cascade-delete.</li>
+      <li>When user remove a host, the related rows in table <code>numa_node_cpu_map</code>, <code>vm_vds_numa_node_map</code>, <code>numa_node_distance</code>, <code>numa_node</code> and <code>vds_cpu_statistics</code> should be removed meanwhile.</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="interface-and-data-structure-in-engine-core">Interface and data structure in engine core</h3>
+
+<p><img alt="" width="1086" height="748" src="/images/wiki/ARCH_Class_Diagram.png?1560777613" /></p>
+
+<ul>
+  <li>Entities
+    <ul>
+      <li><code>VDS</code> has many <code>VdsNumaNode</code> objects in dynamic data (collect from vds capatibility)</li>
+      <li><code>VdsNumaNode</code> is core entity for host NUMA topology, it links one statistics object <code>VdsNumaNodeStatistics</code> which contains some real-time data (free memory, NUMA node cpu usage etc.)</li>
+      <li><code>VM</code> has many <code>VmNumaNode</code> object in dynamic data (configured by user)</li>
+      <li><code>VmNumaNode</code> is core entity for VM NUMA topology.</li>
+      <li><code>NumaTuneMode</code> is the memory tune mode (configured by user).</li>
+      <li><code>VdsNumaNode</code> has one-to-many relationship with <code>VmNumaNode</code>.</li>
+      <li><code>VdsNumaNode.cpuIds</code> links with <code>CpuStatistics.cpuId</code> to take a look inside NUMA node each CPU usage</li>
+    </ul>
+  </li>
+  <li>Action &amp; Query
+    <ul>
+      <li><code>GetVdsNumaNodeByVdsId, GetVmNumaNodeByVmId, GetVmNumaNodeByVdsNumaNodeId, GetCpuStatsByVdsId</code> use same parameters <code>IdQueryParameters</code></li>
+      <li><code>AddVmNumaNode, UpdateVmNuamNode, RemoveVmNuamNode</code> use same parameters <code>VmNumaNodeParameters</code> to manage Virtual NUMA node in VM</li>
+      <li><code>SetNumaTuneMode</code> use parameters <code>NumaTuneModeParameters</code> to set the NUMA tuning mode for VM</li>
+      <li><code>GetVdsNumaNodeByVdsId</code> will return List<VdsNumaNode></VdsNumaNode></li>
+      <li><code>GetVmNumaNodeByVmId, GetVmNumaNodeByVdsNumaNodeId</code> will return List<VmNumaNode></VmNumaNode></li>
+      <li><code>GetVmNumaNodeByVdsNumaNodeId</code> will query the <code>VmNumaNode</code>s under the <code>VdsNumaNode</code></li>
+      <li><code>GetCpuStatsByVdsId</code> will return List<CpuStatistics></CpuStatistics></li>
+      <li>When <code>VmNumaNodeParameters.vdsNumaNodeId</code> is set to null, the VmNumaNode is unsigned.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="interface-and-data-structure-in-ovirt-scheduler">Interface and data structure in ovirt scheduler</h3>
+
+<p>Add NUMA filter and weight module to oVirt's scheduler, and add those to all cluster policies (inc. user defined).</p>
+
+<ul>
+  <li>NUMA Filter
+    <ul>
+      <li>Fetches the (scheduled) VM virutal NUMA nodes.</li>
+      <li>Fetches all virtual NUMA nodes topology ( CPU count, total memory ).</li>
+      <li>Fetches all hosts NUMA nodes topology ( CPU count, total memory ).</li>
+      <li>Remove all hosts that doesn't meet the matched NUMA nodes topology
+        <ul>
+          <li>for positive, host NUMA node's CPU count &gt; virtual NUMA node's CPU count</li>
+          <li>for positive, host NUMA node's total memory &gt; virtual NUMA node's total memory</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>NUMA Weight Module
+    <ul>
+      <li>Fetches the (scheduled) VM virutal NUMA nodes.</li>
+      <li>Fetches all virtual NUMA nodes topology ( CPU count, total memory, NUMA distance ).</li>
+      <li>Fetches all hosts NUMA nodes topology and statistics ( CPU usage, free memory ).</li>
+      <li>Score the hosts according to each NUMA nodes score
+        <ul>
+          <li>for positive, in case a VM of the group is running on a certain host, give all other hosts a higher weight.</li>
+          <li>for positive, give the host higher weight if the host NUMA node's CPU usage use up.</li>
+          <li>for positive, give the host higher weight if the host NUMA node's memory use up.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Scheduler generate virtual NUMA topology To be continue …</p>
+
+<h3 id="interface-and-data-structure-in-restful-api">Interface and data structure in restful API</h3>
+
+<p>host NUMA sub-collection</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/api/hosts/{host:id}/numanodes/&#x000A;</code></pre></div>
+<ul>
+  <li>Supported actions - <strong>GET</strong> returns a list of host NUMA nodes. (using query GetVdsNumaNodeByVdsId)</li>
+</ul>
+
+<p>host NUMA resource</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/api/hosts/{host:id}/numanodes/{numa:id} &#x000A;</code></pre></div>
+<ul>
+  <li>Supported actions
+    <ul>
+      <li><strong>GET</strong> returns a specific NUMA node information: CPU list, total memory, map of distance with other nodes. (using VdsNumaNode properties)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>host NUMA statistics</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/api/hosts/{host:id}/numanodes/{numa:id}/statistics&#x000A;</code></pre></div>
+<ul>
+  <li>Supported actions
+    <ul>
+      <li><strong>GET</strong> returns a specific NUMA node statistics data: CPU usage, free memory. (using VdsNumaNode property NumaNodeStatistics)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>vm virtual NUMA sub-collection</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/api/vms/{vm:id}/numanodes &#x000A;</code></pre></div>
+<ul>
+  <li>Supported actions:
+    <ul>
+      <li><strong>GET</strong> returns a list of VM virtual NUMA nodes. (using query GetVmNumaNodeByVmId)</li>
+      <li><strong>POST</strong> attach a new virtual NUMA node on VM. (using action AddVmNumaNode)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>vm virtual NUMA resource</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/api/vms/{vm:id}/numanodes/{vnuma:id}&#x000A;</code></pre></div>
+<ul>
+  <li>Supported actions:
+    <ul>
+      <li><strong>GET</strong> returns a specific virtual NUMA node information, CPU list, total memory, pin to host NUMA nodes. (using VmNumaNode properties)</li>
+      <li><em>*PUT</em> a virtual NUMA node configured on the VM. (using action UpdateVmNumaNode)</li>
+      <li><strong>DELETE</strong> removes a virtual NUMA node from the VM. (using action DeleteVmNumaNode)</li>
+    </ul>
+  </li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/detailed-numa-and-virtual-numa.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/detailed-numa-and-virtual-numa.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

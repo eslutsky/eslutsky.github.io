@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+EntityHealthStatus &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="entity-health-status">Entity Health Status</h1>
+
+<h2 id="adding-external-health-status-to-ovirt-entities">Adding External Health Status to oVirt Entities</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Provide a mechanism to set entity health status which will be displayed in the UI as follows</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  OK `Info  `![`ExternalStatusInfo.png`](/images/wiki/ExternalStatusInfo.png) `Warning `![`ExternalStatusFailure.png`](/images/wiki/ExternalStatusFailure.png) `Error  `![`ExternalStatusWarning.png`](/images/wiki/ExternalStatusWarning.png) `Failure  `![`ExternalStatusError.png`](/images/wiki/ExternalStatusError.png)&#x000A;</code></pre></div>
+<p>The Health Status field will be returned as part of the retrieved entity when a call to display the entity is done using the REST API.</p>
+
+<p>The main use-case for this new status is to provide plugins / external systems the ability to trigger issues, and allow the administrator to clearly see there is an issue through the UI</p>
+
+<p>It will first be supported on hosts and storage domains.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Eli Mesika (MyUser)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: emesika@redhat.com</li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<p>Currently oVirt provides only an internal status of the host which is controlled internally by oVirt
+In order to see problems on an entity, the administrator should go and select each entity and then look in the relevant plug-in sub-tab for the entity. There is no visual marker for indicating problems on the entity that were reported by an external system</p>
+
+<h3 id="use-case">Use Case</h3>
+
+<p>An external system indicates a problem on an entity instance and wants to set its health status such that this status is displayed and visible immediately to the application administrator in the entity main view without any need to drill-down to each and every entity. The administrator will see in the main grid that there is an issue, and pressing on the specific entity he will either be able to look at the events sub-tab to understand what the issue is, or look at custom sub-tab provided by the plugin (if there is indeed a plugin in this specific use-case).</p>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>The goal is to enable to add each entity a Health Status field which can be set and retrieved using the REST API
+The UI should include this field for each such entity main view and displayed it graphically with the appropriate color according to the reported status</p>
+
+<p>This will be achieved by adding a Health Status field to each relevant entity which can be set by a command on the entity instance The command parameters should have parameters that enables oVirt to generate an implicit External Event for the status transition</p>
+
+<p>For the first phase the supported entities will be : Host and Storage Domain vds_dynamic and storage_domain_dynamic tables will have an addition health column DB Facade objects, BEs and tests will be updated accordingly</p>
+
+<p>on REST API those entities will retrieve the health as well , for example a GET on</p>
+
+<dir>
+/api/82d9f776-12cf-437a-b686-5958d09f9eb4
+results with :
+
+` `&lt;host id=................&gt;
+           ......
+           ......
+`     `<external_status>
+`       `<state>`ok`</state>
+`   `</external_status>
+`  `&lt;/host&gt;
+
+Setting the status for a entity will be done via the External Events mechanism with an additional external_status element from the Status API type under the entity For example
+
+` `<event>
+`   `<description>`The heat of the host is above 30 Oc`</description>
+`   `<severity>`warning`</severity>
+`   `<origin>`HP Openview`</origin>
+`   `<custom_id>`1`</custom_id>
+`   `<flood_rate>`30`</flood_rate>
+`  `<host id="50bf66ec-38df-47f1-a737-95d46e8d35fc">
+`  `<external_status>
+`       `<state>`warning`</state>
+`   `</external_status>
+`  `</host>
+` `</event>
+
+Another example for storage domains and when the external status and the event severity is different
+
+<event>
+`  `<description>`No space left on device`</description>
+`  `<severity>`error`</severity>
+`  `<origin>`XXX`</origin>
+`  `<custom_id>`11`</custom_id>
+`  `<flood_rate>`30`</flood_rate>
+`  `<storage_domain id="949c21d6-1e65-4f1a-9442-4def1ccaf11a">
+`   `<external_status>
+`      `<state>`failure`</state>
+`  `</external_status>
+`  `</storage_domain>
+</event>
+
+external_status field will be represented with a new seprate enum containing the values :
+
+       OK
+       INFO
+       WARNING
+       ERROR
+       FAILURE
+
+## Search Engine
+
+The new external_status field will be available as a search field for the entity main view
+
+### Benefit to oVirt
+
+Enabeling to see problems that were reported by external systems in the entity main view at the point in time those problems occur
+
+### Dependencies / Related Features
+
+See also [UI-Plugins](http://wiki.ovirt.org/wiki/Features/UIPlugins)
+
+### Documentation / External references
+
+
+
+</dir>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/entityhealthstatus.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/entityhealthstatus.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

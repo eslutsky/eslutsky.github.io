@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hosts &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-7-hosts">Chapter 7: Hosts</h1>
+
+<h2 id="introduction-to-hosts">Introduction to Hosts</h2>
+
+<p>Hosts, also known as hypervisors, are the physical servers on which virtual machines run. Full virtualization is provided by using a loadable Linux kernel module called Kernel-based Virtual Machine (KVM).</p>
+
+<p>KVM can concurrently host multiple virtual machines running either Windows or Linux operating systems. Virtual machines run as individual Linux processes and threads on the host machine and are managed remotely by the oVirt Engine. An oVirt environment has one or more hosts attached to it.</p>
+
+<p>oVirt supports two methods of installing hosts. You can use the oVirt Node installation media, or install hypervisor packages on a standard Enterprise Linux installation.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** You can identify the host type of an individual host in the oVirt Engine by selecting the host’s name to open the details view, and checking the **OS Description** under **Software**.&#x000A;</code></pre></div>
+<p>Hosts use <code>tuned</code> profiles, which provide virtualization optimizations.</p>
+
+<p>The oVirt Node has security features enabled. Security Enhanced Linux (SELinux) and the iptables firewall are fully configured and on by default. The status of SELinux on a selected host is reported under <strong>SELinux mode</strong> in the <strong>General</strong> tab of the details pane. The Engine can open required ports on Enterprise Linux hosts when it adds them to the environment.</p>
+
+<p>A host is a physical 64-bit server with the Intel VT or AMD-V extensions running Enterprise Linux 7 AMD64/Intel 64 version.</p>
+
+<p>A physical host on the oVirt platform:</p>
+
+<ul>
+  <li>
+    <p>Must belong to only one cluster in the system.</p>
+  </li>
+  <li>
+    <p>Must have CPUs that support the AMD-V or Intel VT hardware virtualization extensions.</p>
+  </li>
+  <li>
+    <p>Must have CPUs that support all functionality exposed by the virtual CPU type selected upon cluster creation.</p>
+  </li>
+  <li>
+    <p>Has a minimum of 2 GB RAM.</p>
+  </li>
+  <li>
+    <p>Can have an assigned system administrator with system permissions.</p>
+  </li>
+</ul>
+
+<p>Administrators can receive the latest security advisories from the oVirt watch list. Subscribe to the oVirt watch list to receive new security advisories for oVirt products by email. Subscribe by completing this form:</p>
+
+<p><a href="http://www.redhat.com/mailman/listinfo/rhev-watch-list/">http://www.redhat.com/mailman/listinfo/rhev-watch-list/</a></p>
+
+<h2 id="ovirt-node">oVirt Node</h2>
+
+<p>oVirt Node is installed using a special build of Enterprise Linux with only the packages required to host virtual machines. It uses an <code>Anaconda</code> installation interface based on the one used by Enterprise Linux hosts, and can be updated through the oVirt Engine or via <code>yum</code>. Using the <code>yum</code> command is the only way to install additional packages and have them persist after an upgrade.</p>
+
+<p>oVirt Node features a Cockpit user interface for monitoring the host's resources and performing administrative tasks. Direct access to oVirt Node via SSH or console is not supported, so the Cockpit user interface provides a graphical user interface for tasks that are performed before the host is added to the oVirt Engine, such as configuring networking and deploying a self-hosted engine, and can also be used to run terminal commands via the <strong>Terminal</strong> sub-tab.</p>
+
+<p>Access the Cockpit user interface at https://<em>HostFQDNorIP</em>:9090 in your web browser. Cockpit for oVirt Node includes a custom <strong>Virtualization</strong> dashboard that displays the host's health status, SSH Host Key, self-hosted engine status, virtual machines, and virtual machine statistics.</p>
+
+<p>oVirt Node uses the Automatic Bug Reporting Tool (ABRT) to collect meaningful debug information about application crashes. For more information, see the link:https://wiki.centos.org/TipsAndTricks/ABRT.</p>
+
+<p><strong>Note:</strong> Custom boot kernel arguments can be added to oVirt Node using the <code>grubby</code> tool. The <code>grubby</code> tool makes persistent changes to the <code>grub.cfg</code> file. Navigate to the <strong>Terminal</strong> sub-tab in the host's Cockpit user interface to use <code>grubby</code> commands.</p>
+
+<p><strong>Warning:</strong> The oVirt Project strongly recommends not creating untrusted users on oVirt Node, as this can lead to exploitation of local security vulnerabilities.</p>
+
+<h2 id="enterprise-linux-hosts">Enterprise Linux Hosts</h2>
+
+<p>You can use a Enterprise Linux 7 installation on capable hardware as a host. oVirt supports hosts running Enterprise Linux 7 Server AMD64/Intel 64 version with Intel VT or AMD-V extensions.</p>
+
+<p>Adding a host can take some time, as the following steps are completed by the platform: virtualization checks, installation of packages, creation of bridge, and a reboot of the host. Use the details pane to monitor the process as the host and management system establish a connection.</p>
+
+<p>Optionally, you can install a Cockpit user interface for monitoring the host’s resources and performing administrative tasks. The Cockpit user interface provides a graphical user interface for tasks that are performed before the host is added to the oVirt Engine, such as configuring networking and deploying a self-hosted engine, and can also be used to run terminal commands via the <strong>Terminal</strong> sub-tab.</p>
+
+<p><strong>Important:</strong> Third-party watchdogs should not be installed on Enterprise Linux hosts, as they can interfere with the watchdog daemon provided by VDSM.</p>
+
+<h2 id="foreman-host-provider-hosts">Foreman Host Provider Hosts</h2>
+
+<p>Hosts provided by a Foreman host provider can also be used as virtualization hosts by the oVirt Engine. After a Foreman host provider has been added to the Engine as an external provider, any hosts that it provides can be added to and used in oVirt in the same way as oVirt Nodes and Enterprise Linux hosts.</p>
+
+<h2 id="host-tasks">Host Tasks</h2>
+
+<h3 id="adding-a-host-to-the-ovirt-engine">Adding a Host to the oVirt Engine</h3>
+
+<p>Adding a host to your oVirt environment can take some time, as the following steps are completed by the platform: virtualization checks, installation of packages, creation of bridge, and a reboot of the host. Use the details pane to monitor the process as the host and the Engine establish a connection.</p>
+
+<p><strong>Adding a Host to the oVirt Engine</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Use the drop-down list to select the <strong>Data Center</strong> and <strong>Host Cluster</strong> for the new host.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> and the <strong>Hostname</strong> of the new host. The standard SSH port, port 22, is auto-filled in the <strong>SSH Port</strong> field.</p>
+  </li>
+  <li>
+    <p>Select an authentication method to use for the Engine to access the host.</p>
+
+    <ul>
+      <li>
+        <p>Enter the root user's password to use password authentication.</p>
+      </li>
+      <li>
+        <p>Alternatively, copy the key displayed in the <strong>SSH PublicKey</strong> field to <strong>/root/.ssh/authorized_keys</strong> on the host to use public key authentication.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click the <strong>Advanced Parameters</strong> button to expand the advanced host settings.</p>
+
+    <p>i. Optionally disable automatic firewall configuration.</p>
+
+    <p>ii. Optionally add a host SSH fingerprint to increase security. You can add it manually, or fetch it automatically.</p>
+  </li>
+  <li>
+    <p>Optionally configure <strong>Power Management</strong>, <strong>SPM</strong>, <strong>Console</strong>, <strong>Network Provider</strong>, and <strong>Kernel</strong>. See <a href="sect-Explanation_of_Settings_and_Controls_in_the_New_Host_and_Edit_Host_Windows">Explanation of Settings and Controls in the New Host and Edit Host Windows</a> for more information. <strong>Hosted Engine</strong> is used when deploying or undeploying a host for a self-hosted engine deployment.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new host displays in the list of hosts with a status of <code>Installing</code>, and you can view the progress of the installation in the details pane. After a brief delay the host status changes to <strong>Up</strong>.</p>
+
+<h3 id="adding-a-foreman-host-provider-host">Adding a Foreman Host Provider Host</h3>
+
+<p>The process for adding a Foreman host provider host is almost identical to that of adding a Enterprise Linux host except for the method by which the host is identified in the Engine. The following procedure outlines how to add a host provided by a Foreman host provider.</p>
+
+<p><strong>Adding a Foreman Host Provider Host</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Use the drop-down list to select the <strong>Host Cluster</strong> for the new host.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Foreman/Satellite</strong> check box to display the options for adding a Foreman host provider host and select the provider from which the host is to be added.</p>
+  </li>
+  <li>
+    <p>Select either <strong>Discovered Hosts</strong> or <strong>Provisioned Hosts</strong>.</p>
+
+    <ul>
+      <li>
+        <p><strong>Discovered Hosts</strong> (default option): Select the host, host group, and compute resources from the drop-down lists.</p>
+      </li>
+      <li>
+        <p><strong>Provisioned Hosts</strong>: Select a host from the <strong>Providers Hosts</strong> drop-down list.</p>
+      </li>
+    </ul>
+
+    <p>Any details regarding the host that can be retrieved from the external provider are automatically set, and can be edited as desired.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong>, <strong>Address</strong>, and <strong>SSH Port</strong> (Provisioned Hosts only) of the new host.</p>
+  </li>
+  <li>
+    <p>Select an authentication method to use with the host.</p>
+
+    <ul>
+      <li>
+        <p>Enter the root user's password to use password authentication.</p>
+      </li>
+      <li>
+        <p>Copy the key displayed in the <strong>SSH PublicKey</strong> field to <strong>/root/.ssh/authorized_hosts</strong> on the host to use public key authentication (Provisioned Hosts only).</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>You have now completed the mandatory steps to add a Enterprise Linux host. Click the <strong>Advanced Parameters</strong> drop-down button to show the advanced host settings.</p>
+
+    <p>i. Optionally disable automatic firewall configuration.</p>
+
+    <p>ii. Optionally add a host SSH fingerprint to increase security. You can add it manually, or fetch it automatically.</p>
+  </li>
+  <li>
+    <p>You can configure the <strong>Power Management</strong>, <strong>SPM</strong>, <strong>Console</strong>, and <strong>Network Provider</strong> using the applicable tabs now; however, as these are not fundamental to adding a Enterprise Linux host, they are not covered in this procedure.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to add the host and close the window.</p>
+  </li>
+</ol>
+
+<p>The new host displays in the list of hosts with a status of <code>Installing</code>, and you can view the progress of the installation in the details pane. After installation is complete, the status will update to <code>Reboot</code>. The host must be activated for the status to change to <code>Up</code>.</p>
+
+<h3 id="configuring-foreman-errata-management-for-a-host">Configuring Foreman Errata Management for a Host</h3>
+
+<p>oVirt can be configured to view errata from Foreman. This enables the host administrator to receive updates about available errata, and their importance, in the same dashboard used to manage host configuration.</p>
+
+<p>oVirt 4.2 supports errata management with Foreman 6.1.</p>
+
+<p><strong>Important:</strong> Hosts are identified in the Foreman server by their FQDN. Hosts added using an IP address will not be able to report errata. This ensures that an external content host ID does not need to be maintained in oVirt.</p>
+
+<p>The Foreman account used to manage the host must have Administrator permissions and a default organization set.</p>
+
+<p><strong>Configuring Foreman Errata Management for a Host</strong></p>
+
+<ol>
+  <li>
+    <p>Add the Foreman server as an external provider.</p>
+  </li>
+  <li>
+    <p>Associate the required host with the Foreman server.</p>
+
+    <p><strong>Note:</strong> The host must be registered to the Foreman server and have the katello-agent package installed.</p>
+
+    <p>i. Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+
+    <p>ii. Click <strong>Edit</strong>.</p>
+
+    <p>iii. Select the <strong>Use Foreman/Foreman</strong> check box.</p>
+
+    <p>iv. Select the required Foreman server from the drop-down list.</p>
+
+    <p>v. Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The host is now configured to show the available errata, and their importance, in the same dashboard used to manage host configuration.</p>
+
+<h3 id="host-general-settings-explained">Host General Settings Explained</h3>
+
+<p>These settings apply when editing the details of a host or adding new Enterprise Linux hosts and Foreman host provider hosts.</p>
+
+<p>The <strong>General</strong> settings table contains the information required on the <strong>General</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> window.</p>
+
+<p><strong>General settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Host Cluster</b></td>
+   <td>The cluster to which the host belongs.</td>
+  </tr>
+  <tr>
+   <td><b>Use Foreman/Satellite</b></td>
+   <td>
+    <p>Select or clear this check box to view or hide options for adding hosts provided by Foreman host providers. The following options are also available:</p>
+    <p><b>Discovered Hosts</b></p>
+    <ul>
+     <li><b>Discovered Hosts</b> - A drop-down list that is populated with the name of Foreman hosts discovered by the engine.</li>
+     <li><b>Host Groups</b> -A drop-down list of host groups available.</li>
+     <li><b>Compute Resources</b> - A drop-down list of hypervisors to provide compute resources.</li>
+    </ul>
+    <p><b>Provisioned Hosts</b></p>
+    <ul>
+     <li><b>Providers Hosts</b> - A drop-down list that is populated with the name of hosts provided by the selected external provider. The entries in this list are filtered in accordance with any search queries that have been input in the <b>Provider search filter</b>.</li>
+     <li><b>Provider search filter</b> - A text field that allows you to search for hosts provided by the selected external provider. This option is provider-specific; see provider documentation for details on forming search queries for specific providers. Leave this field blank to view all available hosts.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Name</b></td>
+   <td>The name of the cluster. This text field has a 40-character limit and must be a unique name with any combination of uppercase and lowercase letters, numbers, hyphens, and underscores.</td>
+  </tr>
+  <tr>
+   <td><b>Comment</b></td>
+   <td>A field for adding plain text, human-readable comments regarding the host.</td>
+  </tr>
+  <tr>
+   <td><b>Address</b></td>
+   <td>The IP address, or resolvable hostname of the host.</td>
+  </tr>
+  <tr>
+   <td><b>Password</b></td>
+   <td>The password of the host's root user. This can only be given when you add the host; it cannot be edited afterwards.</td>
+  </tr>
+  <tr>
+   <td><b>SSH PublicKey</b></td>
+   <td>Copy the contents in the text box to the <tt>/root/.known_hosts</tt> file on the host to use the Engine's ssh key instead of using a password to authenticate with the host.</td>
+  </tr>
+  <tr>
+   <td><b>Automatically configure host firewall</b></td>
+   <td>When adding a new host, the Engine can open the required ports on the host's firewall. This is enabled by default. This is an <b>Advanced Parameter</b>.</td>
+  </tr>
+  <tr>
+   <td><b>SSH Fingerprint</b></td>
+   <td>You can <b>fetch</b> the host's SSH fingerprint, and compare it with the fingerprint you expect the host to return, ensuring that they match. This is an <b>Advanced Parameter</b>.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="host-power-management-settings-explained">Host Power Management Settings Explained</h3>
+
+<p>The <strong>Power Management</strong> settings table contains the information required on the <strong>Power Management</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> windows. You can configure power management if the host has a supported power management card.</p>
+
+<p><strong>Power Management Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Enable Power Management</b></td>
+   <td>Enables power management on the host. Select this check box to enable the rest of the fields in the <b>Power Management</b> tab.</td>
+  </tr>
+  <tr>
+   <td><b>Kdump integration</b></td>
+   <td>Prevents the host from fencing while performing a kernel crash dump, so that the crash dump is not interrupted. From Enterprise Linux 7.1 onwards, kdump is available by default. If kdump is available on the host, but its configuration is not valid (the kdump service cannot be started), enabling <b>Kdump integration</b> will cause the host (re)installation to fail. If this is the case, see [fence kdump Advanced Configuration](sect-fence_kdump_Advanced_Configuration).</td>
+  </tr>
+  <tr>
+   <td><b>Disable policy control of power management</b></td>
+   <td>Power management is controlled by the <b>Scheduling Policy</b> of the host's <b>cluster</b>. If power management is enabled and the defined low utilization value is reached, the Engine will power down the host machine, and restart it again when load balancing requires or there are not enough free hosts in the cluster. Select this check box to disable policy control.</td>
+  </tr>
+  <tr>
+   <td><b>Agents by Sequential Order</b></td>
+   <td>
+    <p>Lists the host's fence agents. Fence agents can be sequential, concurrent, or a mix of both.</p>
+    <ul>
+     <li>If fence agents are used sequentially, the primary agent is used first to stop or start a host, and if it fails, the secondary agent is used.</li>
+     <li>If fence agents are used concurrently, both fence agents have to respond to the Stop command for the host to be stopped; if one agent responds to the Start command, the host will go up.</li>
+    </ul>
+    <p>Fence agents are sequential by default. Use the up and down buttons to change the sequence in which the fence agents are used.</p>
+    <p>To make two fence agents concurrent, select one fence agent from the <b>Concurrent with</b> drop-down list next to the other fence agent. Additional fence agents can be added to the group of concurrent fence agents by selecting the group from the <b>Concurrent with</b> drop-down list next to the additional fence agent.</p>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Add Fence Agent</b></td>
+   <td>Click the plus (<b>+</b>) button to add a new fence agent. The <b>Edit fence agent</b> window opens. See the table below for more information on the fields in this window.</td>
+  </tr>
+  <tr>
+   <td><b>Power Management Proxy Preference</b></td>
+   <td>By default, specifies that the Engine will search for a fencing proxy within the same <b>cluster</b> as the host, and if no fencing proxy is found, the Engine will search in the same <b>dc</b> (data center). Use the up and down buttons to change the sequence in which these resources are used. This field is available under <b>Advanced Parameters</b>.</td>
+  </tr>
+ </tbody>
+</table>
+
+<p>The following table contains the information required in the <strong>Edit fence agent</strong> window.</p>
+
+<p><strong>Edit fence agent Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Address</b></td>
+   <td>The address to access your host's power management device. Either a resolvable hostname or an IP address.</td>
+  </tr>
+  <tr>
+   <td><b>User Name</b></td>
+   <td>User account with which to access the power management device. You can set up a user on the device, or use the default user.</td>
+  </tr>
+  <tr>
+   <td><b>Password</b></td>
+   <td>Password for the user accessing the power management device.</td>
+  </tr>
+  <tr>
+   <td><b>Type</b></td>
+   <td>
+    <p>The type of power management device in your host.</p>
+    <p>Choose one of the following:</p>
+    <ul>
+     <li><b>apc</b> - APC MasterSwitch network power switch. Not for use with APC 5.x power switch devices.</li>
+     <li><b>apc_snmp</b> - Use with APC 5.x power switch devices.</li>
+     <li><b>bladecenter</b> - IBM Bladecenter Remote Supervisor Adapter.</li>
+     <li><b>cisco_ucs</b> - Cisco Unified Computing System.</li>
+     <li><b>drac5</b> - Dell Remote Access Controller for Dell computers.</li>
+     <li><b>drac7</b> - Dell Remote Access Controller for Dell computers.</li>
+     <li><b>eps</b> - ePowerSwitch 8M+ network power switch.</li>
+     <li><b>hpblade</b> - HP BladeSystem.</li>
+     <li><b>ilo</b>, <b>ilo2</b>, <b>ilo3</b>, <b>ilo4</b> - HP Integrated Lights-Out.</li>
+     <li><b>ipmilan</b> - Intelligent Platform Management Interface and Sun Integrated Lights Out Management devices.</li>
+     <li><b>rsa</b> - IBM Remote Supervisor Adapter.</li>
+     <li><b>rsb</b> - Fujitsu-Siemens RSB management interface.</li>
+     <li><b>wti</b> - WTI Network Power Switch.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Port</b></td>
+   <td>The port number used by the power management device to communicate with the host.</td>
+  </tr>
+  <tr>
+   <td><b>Slot</b></td>
+   <td>The number used to identify the blade of the power management device.</td>
+  </tr>
+  <tr>
+   <td><b>Service Profile</b></td>
+   <td>The service profile name used to identify the blade of the power management device. This field appears instead of <b>Slot</b> when the device type is <tt>cisco_ucs</tt>.</td>
+  </tr>
+  <tr>
+   <td><b>Options</b></td>
+   <td>
+    <p>Power management device specific options. Enter these as 'key=value'. See the documentation of your host's power management device for the options available.</p>
+    <p>For Enterprise Linux 7 hosts, if you are using cisco_ucs as the power management device, you also need to append <tt>ssl_insecure=1</tt> to the <b>Options</b> field.</p>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Secure</b></td>
+   <td>Select this check box to allow the power management device to connect securely to the host. This can be done via ssh, ssl, or other authentication protocols depending on the power management agent.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="spm-priority-settings-explained">SPM Priority Settings Explained</h3>
+
+<p>The <strong>SPM</strong> settings table details the information required on the <strong>SPM</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> window.</p>
+
+<p><strong>SPM settings</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>SPM Priority</strong></td>
+      <td>Defines the likelihood that the host will be given the role of Storage Pool Manager (SPM). The options are <strong>Low</strong>, <strong>Normal</strong>, and <strong>High</strong> priority. Low priority means that there is a reduced likelihood of the host being assigned the role of SPM, and High priority means there is an increased likelihood. The default setting is Normal.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="host-console-settings-explained">Host Console Settings Explained</h3>
+
+<p>The <strong>Console</strong> settings table details the information required on the <strong>Console</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> window.</p>
+
+<p><strong>Console settings</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Override display address</strong></td>
+      <td>Select this check box to override the display addresses of the host. This feature is useful in a case where the hosts are defined by internal IP and are behind a NAT firewall. When a user connects to a virtual machine from outside of the internal network, instead of returning the private address of the host on which the virtual machine is running, the machine returns a public IP or FQDN (which is resolved in the external network to the public IP).</td>
+    </tr>
+    <tr>
+      <td><strong>Display address</strong></td>
+      <td>The display address specified here will be used for all virtual machines running on this host. The address must be in the format of a fully qualified domain name or IP.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="network-provider-settings-explained">Network Provider Settings Explained</h3>
+
+<p>The <strong>Network Provider</strong> settings table details the information required on the <strong>Network Provider</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> window.</p>
+
+<p><strong>Network Provider settings</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>External Network Provider</strong></td>
+      <td>If you have added an external network provider and want the host's network to be provisioned by the external network provider, select one from the list.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="kernel-settings-explained">Kernel Settings Explained</h3>
+
+<p>The <strong>Kernel</strong> settings table details the information required on the <strong>Kernel</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> window. Common kernel boot parameter options are listed as check boxes so you can easily select them. For more complex changes, use the free text entry field next to <strong>Kernel command line</strong> to add in any additional parameters required.&lt;/para&gt;</p>
+
+<p><strong>Important:</strong> If the host is attached to the Engine already, ensure you place the host into maintenance mode before applying any changes. You will need to reinstall the host by clicking <strong>Reinstall</strong>, and then reboot the host after the reinstallation is complete for the changes to take effect.</p>
+
+<p><strong>Kernel Settings</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Hostdev Passthrough &amp; SR-IOV</strong></td>
+      <td>Enables the IOMMU flag in the kernel to allow a host device to be used by a virtual machine as if the device is a device attached directly to the virtual machine itself. The host hardware and firmware must also support IOMMU. The virtualization extension and IOMMU extension must be enabled on the hardware. See "Configuring a Host for PCI Passthrough" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>. IBM POWER8 has IOMMU enabled by default.</td>
+    </tr>
+    <tr>
+      <td><strong>Nested Virtualization</strong></td>
+      <td>Enables the vmx or svm flag to allow you to run virtual machines within virtual machines. This option is only intended for evaluation purposes and not supported for production purposes. The <code>vdsm-hook-nestedvt</code> hook must be installed on the host.</td>
+    </tr>
+    <tr>
+      <td><strong>Unsafe Interrupts</strong></td>
+      <td>If IOMMU is enabled but the passthrough fails because the hardware does not support interrupt remapping, you can consider enabling this option. Note that you should only enable this option if the virtual machines on the host are trusted; having the option enabled potentially exposes the host to MSI attacks from the virtual machines. This option is only intended to be used as a workaround when using uncertified hardware for evaluation purposes.</td>
+    </tr>
+    <tr>
+      <td><strong>PCI Reallocation</strong></td>
+      <td>If your SR-IOV NIC is unable to allocate virtual functions because of memory issues, consider enabling this option. The host hardware and firmware must also support PCI reallocation. This option is only intended to be used as a workaround when using uncertified hardware for evaluation purposes.</td>
+    </tr>
+    <tr>
+      <td><strong>Kernel command line</strong></td>
+      <td>This field allows you to append more kernel parameters to the default parameters.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** If the kernel boot parameters are grayed out, click the **reset** button and the options will be available.&#x000A;</code></pre></div>
+<h3 id="hosted-engine-settings-explained">Hosted Engine Settings Explained</h3>
+
+<p>The <strong>Hosted Engine</strong> settings table details the information required on the <strong>Hosted Engine</strong> tab of the <strong>New Host</strong> or <strong>Edit Host</strong> window.</p>
+
+<p><strong>Hosted Engine Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Choose hosted engine deployment action</b></td>
+   <td>
+    <p>Three options are available:</p>
+    <ul>
+     <li><b>None</b> - No actions required.</li>
+     <li><b>Deploy</b> - Select this option to deploy the host as a self-hosted engine host.</li>
+     <li><b>Undeploy</b> - For a self-hosted engine host, you can select this option to undeploy the host and remove self-hosted engine related configurations.</li>
+    </ul>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="configuring-host-power-management-settings">Configuring Host Power Management Settings</h3>
+
+<p>Configure your host power management device settings to perform host life-cycle operations (stop, start, restart) from the Administration Portal.</p>
+
+<p>You must configure host power management in order to utilize host high availability and virtual machine high availability.</p>
+
+<p><strong>Configuring Power Management Settings</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select a host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong>, and click <strong>OK</strong> to confirm.</p>
+  </li>
+  <li>
+    <p>When the host is in maintenance mode, click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Power Management</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Enable Power Management</strong> check box to enable the fields.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Kdump integration</strong> check box to prevent the host from fencing while performing a kernel crash dump.</p>
+
+    <p><strong>Important:</strong> When you enable <strong>Kdump integration</strong> on an existing host, the host must be reinstalled for kdump to be configured. See <a href="Reinstalling_Virtualization_Hosts">Reinstalling Virtualization Hosts</a>.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Disable policy control of power management</strong> check box if you do not want your host's power management to be controlled by the <strong>Scheduling Policy</strong> of the host's <strong>cluster</strong>.</p>
+  </li>
+  <li>
+    <p>Click the plus (<strong>+</strong>) button to add a new power management device. The <strong>Edit fence agent</strong> window opens.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>User Name</strong> and <strong>Password</strong> of the power management device into the appropriate fields.</p>
+  </li>
+  <li>
+    <p>Select the power management device <strong>Type</strong> from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter the IP address in the <strong>Address</strong> field.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>SSH Port</strong> number used by the power management device to communicate with the host.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Slot</strong> number used to identify the blade of the power management device.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Options</strong> for the power management device. Use a comma-separated list of <code>'key=value'</code> entries.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>If both IPv4 and IPv6 IP addresses can be used (default), leave the <strong>Options</strong> field blank.</p>
+  </li>
+  <li>
+    <p>If only IPv4 IP addresses can be used, enter <code>inet4_only=1</code>.</p>
+  </li>
+  <li>
+    <p>If only IPv6 IP addresses can be used, enter <code>inet6_only=1</code>.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Select the <strong>Secure</strong> check box to enable the power management device to connect securely to the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Test</strong> to ensure the settings are correct. <strong>Test Succeeded, Host Status is: on</strong> will display upon successful verification.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to close the <strong>Edit fence agent</strong> window.</p>
+  </li>
+  <li>
+    <p>In the <strong>Power Management</strong> tab, optionally expand the <strong>Advanced Parameters</strong> and use the up and down buttons to specify the order in which the Engine will search the host's <strong>cluster</strong> and <strong>dc</strong> (datacenter) for a fencing proxy.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The <strong>Management</strong> → <strong>Power Management</strong> drop-down menu is now enabled in the Administration Portal.</p>
+
+<h3 id="configuring-host-storage-pool-manager-settings">Configuring Host Storage Pool Manager Settings</h3>
+
+<p>The Storage Pool Manager (SPM) is a management role given to one of the hosts in a data center to maintain access control over the storage domains. The SPM must always be available, and the SPM role will be assigned to another host if the SPM host becomes unavailable. As the SPM role uses some of the host's available resources, it is important to prioritize hosts that can afford the resources.</p>
+
+<p>The Storage Pool Manager (SPM) priority setting of a host alters the likelihood of the host being assigned the SPM role: a host with high SPM priority will be assigned the SPM role before a host with low SPM priority.</p>
+
+<p><strong>Configuring SPM settings</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>SPM</strong> tab.</p>
+  </li>
+  <li>
+    <p>Use the radio buttons to select the appropriate SPM priority for the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have configured the SPM priority of the host.</p>
+
+<h3 id="moving-a-host-to-maintenance-mode">Moving a Host to Maintenance Mode</h3>
+
+<p>Many common maintenance tasks, including network configuration and deployment of software updates, require that hosts be placed into maintenance mode. Hosts should be placed into maintenance mode before any event that might cause VDSM to stop working properly, such as a reboot, or issues with networking or storage.</p>
+
+<p>When a host is placed into maintenance mode the oVirt Engine attempts to migrate all running virtual machines to alternative hosts. The standard prerequisites for live migration apply, in particular there must be at least one active host in the cluster with capacity to run the migrated virtual machines.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Virtual machines that are pinned to the host and cannot be migrated are shut down. You can check which virtual machines are pinned to the host by clicking Pinned to Host in the **Virtual Machines** tab of the host’s details view.&#x000A;</code></pre></div>
+<p><strong>Placing a Host into Maintenance Mode</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the desired host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong> to open the <strong>Maintenance Host(s)</strong> confirmation window.</p>
+  </li>
+  <li>
+    <p>Optionally, enter a <strong>Reason</strong> for moving the host into maintenance mode, which will appear in the logs and when the host is activated again.</p>
+
+    <p><strong>Note:</strong> The host maintenance <strong>Reason</strong> field will only appear if it has been enabled in the cluster settings. See <a href="Cluster_properties">Cluster properties</a> for more information.</p>
+  </li>
+  <li>
+    <p>Optionally, select the required options for hosts that support Gluster.</p>
+
+    <p>Select the <strong>Ignore Gluster Quorum</strong> and <strong>Self-Heal Validations</strong> option to avoid the default checks. By default, the Manager checks that the Gluster quorum is not lost when the host is moved to maintenance mode. The Manager also checks that there is no self-heal activity that will be affected by moving the host to maintenance mode. If the Gluster quorum will be lost or if there is self-heal activity that will be affected, the Manager prevents the host from being placed into maintenance mode. Only use this option if there is no other way to place the host in maintenance mode.</p>
+
+    <p>Select the <strong>Stop Gluster Service</strong> option to stop all Gluster services while moving the host to maintenance mode.</p>
+
+    <p><strong>Note:</strong> These fields will only appear in the host maintenance window when the selected host supports Gluster.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to initiate maintenance mode.</p>
+  </li>
+</ol>
+
+<p>All running virtual machines are migrated to alternative hosts. If the host is the Storage Pool Manager (SPM), the SPM role is migrated to another host. The <strong>Status</strong> field of the host changes to <code>Preparing for Maintenance</code>, and finally <code>Maintenance</code> when the operation completes successfully. VDSM does not stop while the host is in maintenance mode.</p>
+
+<p><strong>Note:</strong> If migration fails on any virtual machine, click <strong>Management</strong> → <strong>Activate</strong> on the host to stop the operation placing it into maintenance mode, then click <strong>Cancel Migration</strong> on the virtual machine to stop the migration.</p>
+
+<h3 id="activating-a-host-from-maintenance-mode">Activating a Host from Maintenance Mode</h3>
+
+<p>A host that has been placed into maintenance mode, or recently added to the environment, must be activated before it can be used. Activation may fail if the host is not ready; ensure that all tasks are complete before attempting to activate the host.</p>
+
+<p><strong>Activating a Host from Maintenance Mode</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Activate</strong>.</p>
+  </li>
+</ol>
+
+<p>The host status changes to <code>Unassigned</code>, and finally <code>Up</code> when the operation is complete. Virtual machines can now run on the host. Virtual machines that were migrated off the host when it was placed into maintenance mode are not automatically migrated back to the host when it is activated, but can be migrated manually. If the host was the Storage Pool Manager (SPM) before being placed into maintenance mode, the SPM role does not return automatically when the host is activated.</p>
+
+<h3 id="configuring-host-firewall-rules">Configuring Host Firewall Rules</h3>
+
+<p>You can configure the host firewall rules so that they are persistent, using Ansible. The cluster must be configured to use <code>firewalld</code>, not <code>iptables</code>.</p>
+
+<p><strong>Configuring Firewall Rules for Hosts</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine machine, edit <strong>ovirt-host-deploy-post-tasks.yml.example</strong> to add a custom firewall port:</p>
+
+    <p># vi /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml.example
+ —
+ #
+ # Any additional tasks required to be executing during host deploy process can
+ # be added below
+ #</p>
+    <ul>
+      <li>name: Enable additional port on firewalld
+ firewalld:
+port: "12345/tcp"
+permanent: yes
+immediate: yes
+state: enabled</li>
+    </ul>
+  </li>
+  <li>
+    <p>Save the file to another location as <strong>ovirt-host-deploy-post-tasks.yml</strong>.</p>
+  </li>
+</ol>
+
+<p>New or reinstalled hosts are configured with the updated firewall rules.</p>
+
+<p>Existing hosts must be reinstalled by clicking <strong>Installation</strong> → <strong>Reinstall</strong> and selecting Automatically configure host firewall.</p>
+
+<h3 id="removing-a-host">Removing a Host</h3>
+
+<p>Remove a host from your virtualized environment.</p>
+
+<p><strong>Removing a host</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong>.</p>
+  </li>
+  <li>
+    <p>When the host is in maintenance mode, click <strong>Remove</strong> to open the <strong>Remove Host(s)</strong> confirmation window.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Force Remove</strong> check box if the host is part of a Gluster Storage cluster and has volume bricks on it, or if the host is non-responsive.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>Your host has been removed from the environment and is no longer visible in the <strong>Hosts</strong> tab.</p>
+
+<h3 id="updating-a-host-between-minor-releases">Updating a Host Between Minor Releases</h3>
+
+<p>See the "Updates Between Minor Releases" chapter in the <a href="/documentation/upgrade-guide/upgrade-guide/">Upgrade Guide</a> for instructions on keeping your host current between minor releases.</p>
+
+<h3 id="reinstalling-hosts">Reinstalling Hosts</h3>
+
+<p>Reinstall oVirt Nodes and Enterprise Linux hosts from the Administration Portal. Use this procedure to reinstall oVirt Node from the same version of the oVirt Node ISO image from which it is currently installed; the procedure reinstalls VDSM on Enterprise Linux hosts. This includes stopping and restarting the host. If migration is enabled at cluster level, virtual machines are automatically migrated to another host in the cluster; as a result, it is recommended that host reinstalls are performed at a time when the host's usage is relatively low.</p>
+
+<p>The cluster to which the host belongs must have sufficient memory reserve in order for its hosts to perform maintenance. Moving a host with live virtual machines to maintenance in a cluster that lacks sufficient memory causes the virtual machine migration operation to hang and then fail. You can reduce the memory usage of this operation by shutting down some or all virtual machines before moving the host to maintenance.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Ensure that the cluster contains more than one host before performing a reinstall. Do not attempt to reinstall all the hosts at the same time, as one host must remain available to perform Storage Pool Manager (SPM) tasks.&#x000A;</code></pre></div>
+<p><strong>Reinstalling oVirt Node or Enterprise Linux hosts</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong>. If migration is enabled at cluster level, any virtual machines running on the host are migrated to other hosts. If the host is the SPM, this function is moved to another host. The status of the host changes as it enters maintenance mode.</p>
+  </li>
+  <li>
+    <p>Click <strong>Installation</strong> → <strong>Reinstall</strong> to open the <strong>Install Host</strong> window.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to reinstall the host.</p>
+  </li>
+</ol>
+
+<p>Once successfully reinstalled, the host displays a status of <strong>Up</strong>. Any virtual machines that were migrated off the host, are at this point able to be migrated back to it.</p>
+
+<p><strong>Important:</strong> After an oVirt Node is successfully registered to the oVirt Engine and then reinstalled, it may erroneously appear in the Administration Portal with the status of <strong>Install Failed</strong>. Click <strong>Management</strong> → <strong>Activate</strong>, and the Host will change to an <strong>Up</strong> status and be ready for use.</p>
+
+<h3 id="customizing-hosts-with-tags">Customizing Hosts with Tags</h3>
+
+<p>You can use tags to store information about your hosts. You can then search for hosts based on tags.</p>
+
+<p><strong>Customizing hosts with tags</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Assign Tags</strong>.</p>
+  </li>
+  <li>
+    <p>Select the check boxes of applicable tags.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have added extra, searchable information about your host as tags.</p>
+
+<h3 id="viewing-host-errata">Viewing Host Errata</h3>
+
+<p>Errata for each host can be viewed after the host has been configured to receive errata information from the Foreman server. For more information on configuring a host to receive errata information see <a href="Configuring_Satellite_Errata_Management_for_a_Host">Configuring Satellite Errata Management for a Host</a></p>
+
+<p><strong>Viewing Host Errata</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click the host’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Errata</strong> tab.</p>
+  </li>
+</ol>
+
+<h3 id="viewing-the-health-status-of-a-host">Viewing the Health Status of a Host</h3>
+
+<p>Hosts have an external health status in addition to their regular <strong>Status</strong>. The external health status is reported by plug-ins or external systems, or set by an administrator, and appears to the left of the host's <strong>Name</strong> as one of the following icons:</p>
+
+<ul>
+  <li>
+    <p><strong>OK</strong>: No icon</p>
+  </li>
+  <li>
+    <p><strong>Info</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Info.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><strong>Warning</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Warning.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><strong>Error</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Error.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><strong>Failure</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Failure.png?1560777613" /></p>
+  </li>
+</ul>
+
+<p>To view further details about the host's health status, select the host and click the <strong>Events</strong> tab.</p>
+
+<p>The host's health status can also be viewed using the REST API. A <code>GET</code> request on a host will include the <code>external_status</code> element, which contains the health status.</p>
+
+<p>You can set a host's health status in the REST API via the <code>events</code> collection.</p>
+
+<h3 id="viewing-host-devices">Viewing Host Devices</h3>
+
+<p>You can view the host devices for each host in the details pane. If the host has been configured for direct device assignment, these devices can be directly attached to virtual machines for improved performance.</p>
+
+<p>For more information on configuring the host for direct device assignment, see "Configuring a Host for PCI Passthrough" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>.</p>
+
+<p>For more information on attaching host devices to virtual machines, see "Host Devices" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+
+<p><strong>Viewing Host Devices</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click the host’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Host Devices</strong> tab.</p>
+  </li>
+</ol>
+
+<p>This tab lists the details of the host devices, including whether the device is attached to a virtual machine, and currently in use by that virtual machine.</p>
+
+<h3 id="preparing-host-and-guest-systems-for-gpu-passthrough">Preparing Host and Guest Systems for GPU Passthrough</h3>
+
+<p>The Graphics Processing Unit (GPU) device from a host can be directly assigned to a virtual machine. Before this can be achieved, both the host and the virtual machine require amendments to their <strong>grub</strong> configuration files. You can edit the host <strong>grub</strong> configuration file using the <strong>Kernel command line</strong> free text entry field in the Administration Portal. Both the host machine and the virtual machine require reboot for the changes to take effect.</p>
+
+<p>This procedure is relevant for hosts with either x86_64 or ppc64le architecture.</p>
+
+<p>For more information on the hardware requirements for direct device assignment, see "PCI Device Requirements" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** If the host is attached to the Engine already, ensure you place the host into maintenance mode before applying any changes.&#x000A;</code></pre></div>
+<p><strong>Preparing a Host for GPU Passthrough</strong></p>
+
+<ol>
+  <li>
+    <p>From the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click the host’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>General</strong> tab, and click <strong>Hardware</strong>. Locate the GPU device <code>vendor ID:product ID</code>. In this example, the IDs are <code>10de:13ba</code> and <code>10de:0fbc</code>.</p>
+  </li>
+  <li>
+    <p>Right-click the host and select <strong>Edit</strong>. Click the <strong>Kernel</strong> tab.</p>
+  </li>
+  <li>
+    <p>In the <strong>Kernel command line</strong> free text entry field, enter the IDs located in the previous steps.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> pci-stub.ids=10de:13ba,10de:0fbc&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Blacklist the corresponding drivers on the host. For example, to blacklist nVidia's nouveau driver, next to <code>pci-stub.ids=xxxx:xxxx</code>, enter <strong>rdblacklist=nouveau</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> pci-stub.ids=10de:13ba,10de:0fbc rdblacklist=nouveau&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Installation</strong> → <strong>Reinstall</strong> to commit the changes to the host.</p>
+  </li>
+  <li>
+    <p>Reboot the host after the reinstallation is complete.</p>
+
+    <p><strong>Note:</strong> To confirm the device is bound to the <code>pci-stub</code> driver, run the <code>lspci</code> command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # lspci -nnk&#x000A; ...&#x000A; 01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GM107GL [Quadro K2200] [10de:13ba] (rev a2)&#x000A;         Subsystem: NVIDIA Corporation Device [10de:1097]&#x000A;         Kernel driver in use: pci-stub&#x000A; 01:00.1 Audio device [0403]: NVIDIA Corporation Device [10de:0fbc] (rev a1)&#x000A;         Subsystem: NVIDIA Corporation Device [10de:1097]&#x000A;         Kernel driver in use: pci-stub&#x000A; ...&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Proceed to the next procedure to configure GPU passthrough on the guest system side.</p>
+
+<p><strong>Preparing a Guest Virtual Machine for GPU Passthrough</strong></p>
+
+<p><strong>For Linux</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1. Only proprietary GPU drivers are supported. Black list the corresponding open source driver in the **grub** configuration file. For example:&#x000A;&#x000A;        $ vi /etc/default/grub&#x000A;        ...&#x000A;        GRUB_CMDLINE_LINUX="nofb splash=quiet console=tty0 ... rdblacklist=nouveau"&#x000A;        ...&#x000A;&#x000A;2. Locate the GPU BusID. In this example, is BusID is `00:09.0`.&#x000A;&#x000A;        # lspci | grep VGA&#x000A;        00:09.0 VGA compatible controller: NVIDIA Corporation GK106GL [Quadro K4000] (rev a1)&#x000A;&#x000A;3. Edit the **/etc/X11/xorg.conf** file and append the following content:&#x000A;&#x000A;        Section "Device"&#x000A;        Identifier "Device0"&#x000A;        Driver "nvidia"&#x000A;        VendorName "NVIDIA Corporation"&#x000A;        BusID "PCI:0:9:0"&#x000A;        EndSection&#x000A;&#x000A;4. Restart the virtual machine.&#x000A;</code></pre></div>
+<p><strong>For Windows</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1. Download and install the corresponding drivers for the device. For example, for Nvidia drivers, go to [NVIDIA Driver Downloads](http://www.nvidia.com/Download/index.aspx?lang=en-us).&#x000A;&#x000A;2. Restart the virtual machine.&#x000A;</code></pre></div>
+<p>The host GPU can now be directly assigned to the prepared virtual machine. For more information on assigning host devices to virtual machines, see "Host Devices" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+
+<h3 id="accessing-cockpit-from-the-administration-portal">Accessing Cockpit from the Administration Portal</h3>
+
+<p>Cockpit is available by default on oVirt Nodes and Enterprise Linux hosts. You can access the Cockpit user interface by typing the address into a browser, or through the Administration Portal.</p>
+
+<p><strong>Accessing Cockpit from the Administration Portal</strong></p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> and select a host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Host Console</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The Cockpit login page opens in a new browser window.</p>
+
+<h2 id="host-resilience">Host Resilience</h2>
+
+<h3 id="host-high-availability">Host High Availability</h3>
+
+<p>The oVirt Engine uses fencing to keep the hosts in a cluster responsive. A <strong>Non Responsive</strong> host is different from a <strong>Non Operational</strong> host. <strong>Non Operational</strong> hosts can be communicated with by the Engine, but have an incorrect configuration, for example a missing logical network. <strong>Non Responsive</strong> hosts cannot be communicated with by the Engine.</p>
+
+<p>Fencing allows a cluster to react to unexpected host failures as well as enforce power saving, load balancing, and virtual machine availability policies. You should configure the fencing parameters for your host's power management device and test their correctness from time to time. In a fencing operation, a non-responsive host is rebooted, and if the host does not return to an active status within a prescribed time, it remains non-responsive pending manual intervention and troubleshooting.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** To automatically check the fencing parameters, you can configure the `PMHealthCheckEnabled` (false by default) and `PMHealthCheckIntervalInSec` (3600 sec by default) engine-config options.&#x000A;&#x000A;When set to true, `PMHealthCheckEnabled` will check all host agents at the interval specified by `PMHealthCheckIntervalInSec`, and raise warnings if it detects issues.&#x000A;</code></pre></div>
+<p>Power management operations can be performed by oVirt Engine after it reboots, by a proxy host, or manually in the Administration Portal. All the virtual machines running on the non-responsive host are stopped, and highly available virtual machines are started on a different host. At least two hosts are required for power management operations.</p>
+
+<p>After the Engine starts up, it automatically attempts to fence non-responsive hosts that have power management enabled after the quiet time (5 minutes by default) has elapsed. The quiet time can be configured by updating the <code>DisableFenceAtStartupInSec</code> engine-config option.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** If a host runs virtual machines that are highly available, power management must be enabled and configured.&#x000A;</code></pre></div>
+<h3 id="power-management-by-proxy-in-ovirt">Power Management by Proxy in oVirt</h3>
+
+<p>The oVirt Engine does not communicate directly with fence agents. Instead, the Engine uses a proxy to send power management commands to a host power management device. The Engine uses VDSM to execute power management device actions, so another host in the environment is used as a fencing proxy.</p>
+
+<p>You can select between:</p>
+
+<ul>
+  <li>
+    <p>Any host in the same cluster as the host requiring fencing.</p>
+  </li>
+  <li>
+    <p>Any host in the same data center as the host requiring fencing.</p>
+  </li>
+</ul>
+
+<p>A viable fencing proxy host has a status of either <strong>UP</strong> or <strong>Maintenance</strong>.</p>
+
+<h3 id="setting-fencing-parameters-on-a-host">Setting Fencing Parameters on a Host</h3>
+
+<p>The parameters for host fencing are set using the <strong>Power Management</strong> fields on the <strong>New Host</strong> or <strong>Edit Host</strong> windows. Power management enables the system to fence a troublesome host using an additional interface such as a Remote Access Card (RAC).</p>
+
+<p>All power management operations are done using a proxy host, as opposed to directly by the oVirt Engine. At least two hosts are required for power management operations.</p>
+
+<p><strong>Setting fencing parameters on a host</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Power Management</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Enable Power Management</strong> check box to enable the fields.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Kdump integration</strong> check box to prevent the host from fencing while performing a kernel crash dump.</p>
+
+    <p><strong>Important:</strong> When you enable <strong>Kdump integration</strong> on an existing host, the host must be reinstalled for kdump to be configured. See <a href="Reinstalling_Virtualization_Hosts&quot;">Reinstalling Virtualization Hosts</a>.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Disable policy control of power management</strong> check box if you do not want your host's power management to be controlled by the <strong>Scheduling Policy</strong> of the host's cluster.</p>
+  </li>
+  <li>
+    <p>Click the plus (<strong>+</strong>) button to add a new power management device. The <strong>Edit fence agent</strong> window opens.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Address</strong>, <strong>User Name</strong>, and <strong>Password</strong> of the power management device.</p>
+  </li>
+  <li>
+    <p>Select the power management device <strong>Type</strong> from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>SSH Port</strong> number used by the power management device to communicate with the host.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Slot</strong> number used to identify the blade of the power management device.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Options</strong> for the power management device. Use a comma-separated list of <code>'key=value'</code> entries.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Secure</strong> check box to enable the power management device to connect securely to the host.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Test</strong> button to ensure the settings are correct. <strong>Test Succeeded, Host Status is: on</strong> will display upon successful verification.</p>
+
+    <p><strong>Warning:</strong> Power management parameters (userid, password, options, etc) are tested by oVirt Engine only during setup and manually after that. If you choose to ignore alerts about incorrect parameters, or if the parameters are changed on the power management hardware without the corresponding change in oVirt Engine, fencing is likely to fail when most needed.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to close the <strong>Edit fence agent</strong> window.</p>
+  </li>
+  <li>
+    <p>In the <strong>Power Management</strong> tab, optionally expand the <strong>Advanced Parameters</strong> and use the up and down buttons to specify the order in which the Engine will search the host's <strong>cluster</strong> and <strong>dc</strong> (datacenter) for a fencing proxy.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You are returned to the list of hosts. Note that the exclamation mark next to the host's name has now disappeared, signifying that power management has been successfully configured.</p>
+
+<h3 id="fence_kdump-advanced-configuration">fence_kdump Advanced Configuration</h3>
+
+<p><strong>kdump</strong></p>
+
+<p>Select a host to view the status of the kdump service in the <strong>General</strong> tab of the details pane:</p>
+
+<ul>
+  <li>
+    <p><strong>Enabled</strong>: kdump is configured properly and the kdump service is running.</p>
+  </li>
+  <li>
+    <p><strong>Disabled</strong>: the kdump service is not running (in this case kdump integration will not work properly).</p>
+  </li>
+  <li>
+    <p><strong>Unknown</strong>: happens only for hosts with an older VDSM version that does not report kdump status.</p>
+  </li>
+</ul>
+
+<p><strong>fence_kdump</strong></p>
+
+<p>Enabling<strong>Kdump integration</strong> in the<strong>Power Management</strong> tab of the<strong>New Host</strong> or<strong>Edit Host</strong> window configures a standard fence_kdump setup. If the environment's network configuration is simple and the Engine's FQDN is resolvable on all hosts, the default fence_kdump settings are sufficient for use.</p>
+
+<p>However, there are some cases where advanced configuration of fence_kdump is necessary. Environments with more complex networking may require manual changes to the configuration of the Engine, fence_kdump listener, or both. For example, if the Engine's FQDN is not resolvable on all hosts with<strong>Kdump integration</strong> enabled, you can set a proper host name or IP address using <code>engine-config</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>engine-config -s FenceKdumpDestinationAddress=A.B.C.D&#x000A;</code></pre></div>
+<p>The following example cases may also require configuration changes:</p>
+
+<ul>
+  <li>
+    <p>The Engine has two NICs, where one of these is public-facing, and the second is the preferred destination for fence_kdump messages.</p>
+  </li>
+  <li>
+    <p>You need to execute the fence_kdump listener on a different IP or port.</p>
+  </li>
+  <li>
+    <p>You need to set a custom interval for fence_kdump notification messages, to prevent possible packet loss.</p>
+  </li>
+</ul>
+
+<p>Customized fence_kdump detection settings are recommended for advanced users only, as changes to the default configuration are only necessary in more complex networking setups. For configuration options for the fence_kdump listener see the "fence_kdump listener Configuration" section. For configuration of kdump on the Engine see the "Configuring fence_kdump on the Engine" section.</p>
+
+<h4 id="fence_kdump-listener-configuration">fence_kdump listener Configuration</h4>
+
+<p>Edit the configuration of the fence_kdump listener. This is only necessary in cases where the default configuration is not sufficient.</p>
+
+<p><strong>Manually Configuring the fence_kdump Listener</strong></p>
+
+<ol>
+  <li>
+    <p>Create a new file (for example, <strong>my-fence-kdump.conf</strong>) in <strong>/etc/ovirt-engine/ovirt-fence-kdump-listener.conf.d/</strong></p>
+  </li>
+  <li>
+    <p>Enter your customization with the syntax <code>OPTION=value</code> and save the file.</p>
+
+    <p><strong>Important:</strong> The edited values must also be changed in <code>engine-config</code> as outlined in the fence_kdump Listener Configuration Options table in the "Configuring fence kdump on the Engine" section.</p>
+  </li>
+  <li>
+    <p>Restart the fence_kdump listener:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-fence-kdump-listener.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The following options can be customized if required:</p>
+
+<p><strong>fence_kdump Listener Configuration Options</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+      <th>Note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LISTENER_ADDRESS</td>
+      <td>Defines the IP address to receive fence_kdump messages on.</td>
+      <td>0.0.0.0</td>
+      <td>If the value of this parameter is changed, it must match the value of <code>FenceKdumpDestinationAddress</code> in <code>engine-config</code>.</td>
+    </tr>
+    <tr>
+      <td>LISTENER_PORT</td>
+      <td>Defines the port to receive fence_kdump messages on.</td>
+      <td>7410</td>
+      <td>If the value of this parameter is changed, it must match the value of <code>FenceKdumpDestinationPort</code> in <code>engine-config</code>.</td>
+    </tr>
+    <tr>
+      <td>HEARTBEAT_INTERVAL</td>
+      <td>Defines the interval in seconds of the listener's heartbeat updates.</td>
+      <td>30</td>
+      <td>If the value of this parameter is changed, it must be half the size or smaller than the value of <code>FenceKdumpListenerTimeout</code> in <code>engine-config</code>.</td>
+    </tr>
+    <tr>
+      <td>SESSION_SYNC_INTERVAL</td>
+      <td>Defines the interval in seconds to synchronize the listener's host kdumping sessions in memory to the database.</td>
+      <td>5</td>
+      <td>If the value of this parameter is changed, it must be half the size or smaller than the value of <code>KdumpStartedTimeout</code> in <code>engine-config</code>.</td>
+    </tr>
+    <tr>
+      <td>REOPEN_DB_CONNECTION_INTERVAL</td>
+      <td>Defines the interval in seconds to reopen the database connection which was previously unavailable.</td>
+      <td>30</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>KDUMP_FINISHED_TIMEOUT</td>
+      <td>Defines the maximum timeout in seconds after the last received message from kdumping hosts after which the host kdump flow is marked as FINISHED.</td>
+      <td>60</td>
+      <td>If the value of this parameter is changed, it must be double the size or higher than the value of <code>FenceKdumpMessageInterval</code> in <code>engine-config</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="configuring-fence_kdump-on-the-engine">Configuring fence_kdump on the Engine</h4>
+
+<p>Edit the Engine's kdump configuration. This is only necessary in cases where the default configuration is not sufficient. The current configuration values can be found using:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-config -g OPTION&#x000A;</code></pre></div>
+<p><strong>Manually Configuring Kdump with engine-config</strong></p>
+
+<ol>
+  <li>
+    <p>Edit kdump's configuration using the <code>engine-config</code> command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s OPTION=value&#x000A;</code></pre></div>
+    <p><strong>Important:</strong> The edited values must also be changed in the fence_kdump listener configuration file as outlined in the <code>Kdump Configuration Options</code> table. See <a href="fence_kdump_listener_Configuration">fence kdump listener Configuration</a>.</p>
+  </li>
+  <li>
+    <p>Restart the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Reinstall all hosts with <strong>Kdump integration</strong> enabled, if required (see the table below).</p>
+  </li>
+</ol>
+
+<p>The following options can be configured using <code>engine-config</code>:</p>
+
+<p><strong>Kdump Configuration Options</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+      <th>Note</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FenceKdumpDestinationAddress</td>
+      <td>Defines the hostname(s) or IP address(es) to send fence_kdump messages to. If empty, the Engine's FQDN is used.</td>
+      <td>Empty string (Engine FQDN is used)</td>
+      <td>If the value of this parameter is changed, it must match the value of <code>LISTENER_ADDRESS</code> in the fence_kdump listener configuration file, and all hosts with <strong>Kdump integration</strong> enabled must be reinstalled.</td>
+    </tr>
+    <tr>
+      <td>FenceKdumpDestinationPort</td>
+      <td>Defines the port to send fence_kdump messages to.</td>
+      <td>7410</td>
+      <td>If the value of this parameter is changed, it must match the value of <code>LISTENER_PORT</code> in the fence_kdump listener configuration file, and all hosts with <strong>Kdump integration</strong> enabled must be reinstalled.</td>
+    </tr>
+    <tr>
+      <td>FenceKdumpMessageInterval</td>
+      <td>Defines the interval in seconds between messages sent by fence_kdump.</td>
+      <td>5</td>
+      <td>If the value of this parameter is changed, it must be half the size or smaller than the value of <code>KDUMP_FINISHED_TIMEOUT</code> in the fence_kdump listener configuration file, and all hosts with <strong>Kdump integration</strong> enabled must be reinstalled.</td>
+    </tr>
+    <tr>
+      <td>FenceKdumpListenerTimeout</td>
+      <td>Defines the maximum timeout in seconds since the last heartbeat to consider the fence_kdump listener alive.</td>
+      <td>90</td>
+      <td>If the value of this parameter is changed, it must be double the size or higher than the value of <code>HEARTBEAT_INTERVAL</code> in the fence_kdump listener configuration file.</td>
+    </tr>
+    <tr>
+      <td>KdumpStartedTimeout</td>
+      <td>Defines the maximum timeout in seconds to wait until the first message from the kdumping host is received (to detect that host kdump flow has started).</td>
+      <td>30</td>
+      <td>If the value of this parameter is changed, it must be double the size or higher than the value of <code>SESSION_SYNC_INTERVAL</code> in the fence_kdump listener configuration file, and <code>FenceKdumpMessageInterval</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="soft-fencing-hosts">Soft-Fencing Hosts</h3>
+
+<p>Hosts can sometimes become non-responsive due to an unexpected problem, and though VDSM is unable to respond to requests, the virtual machines that depend upon VDSM remain alive and accessible. In these situations, restarting VDSM returns VDSM to a responsive state and resolves this issue.</p>
+
+<p>"SSH Soft Fencing" is a process where the Engine attempts to restart VDSM via SSH on non-responsive hosts. If the Engine fails to restart VDSM via SSH, the responsibility for fencing falls to the external fencing agent if an external fencing agent has been configured.</p>
+
+<p>Soft-fencing over SSH works as follows. Fencing must be configured and enabled on the host, and a valid proxy host (a second host, in an UP state, in the data center) must exist. When the connection between the Engine and the host times out, the following happens:</p>
+
+<ol>
+  <li>
+    <p>On the first network failure, the status of the host changes to "connecting".</p>
+  </li>
+  <li>
+    <p>The Engine then makes three attempts to ask VDSM for its status, or it waits for an interval determined by the load on the host. The formula for determining the length of the interval is configured by the configuration values TimeoutToResetVdsInSeconds (the default is 60 seconds) + [DelayResetPerVmInSeconds (the default is 0.5 seconds)]<em>(the count of running virtual machines on host) + [DelayResetForSpmInSeconds (the default is 20 seconds)]</em> 1 (if host runs as SPM) or 0 (if the host does not run as SPM). To give VDSM the maximum amount of time to respond, the Engine chooses the longer of the two options mentioned above (three attempts to retrieve the status of VDSM or the interval determined by the above formula).</p>
+  </li>
+  <li>
+    <p>If the host does not respond when that interval has elapsed, <code>vdsm restart</code> is executed via SSH.</p>
+  </li>
+  <li>
+    <p>If <code>vdsm restart</code> does not succeed in re-establishing the connection between the host and the Engine, the status of the host changes to <code>Non Responsive</code> and, if power management is configured, fencing is handed off to the external fencing agent.</p>
+  </li>
+</ol>
+
+<p><strong>Note:</strong> Soft-fencing over SSH can be executed on hosts that have no power management configured. This is distinct from "fencing": fencing can be executed only on hosts that have power management configured.</p>
+
+<h3 id="using-host-power-management-functions">Using Host Power Management Functions</h3>
+
+<p>When power management has been configured for a host, you can access a number of options from the Administration Portal interface. While each power management device has its own customizable options, they all support the basic options to start, stop, and restart a host.</p>
+
+<p><strong>Using Host Power Management Functions</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Power Management</strong> and select one of the following options:</p>
+
+    <ul>
+      <li>
+        <p><strong>Restart</strong>: This option stops the host and waits until the host's status changes to <code>Down</code>. When the agent has verified that the host is down, the highly available virtual machines are restarted on another host in the cluster. The agent then restarts this host. When the host is ready for use its status displays as <code>Up</code>.</p>
+      </li>
+      <li>
+        <p><strong>Start</strong>: This option starts the host and lets it join a cluster. When it is ready for use its status displays as <code>Up</code>.</p>
+      </li>
+      <li>
+        <p><strong>Stop</strong>: This option powers off the host. Before using this option, ensure that the virtual machines running on the host have been migrated to other hosts in the cluster. Otherwise the virtual machines will crash and only the highly available virtual machines will be restarted on another host. When the host has been stopped its status displays as <code>Non-Operational</code>.</p>
+
+        <p><strong>Note:</strong> If Power Management is not enabled, you can restart or stop the host by selecting it, clicking the <strong>Management</strong> drop-down menu, and selecting <strong>SSH Management Restart</strong> or <strong>Stop</strong>.</p>
+
+        <p><strong>Important:</strong> When two fencing agents are defined on a host, they can be used concurrently or sequentially. For concurrent agents, both agents have to respond to the Stop command for the host to be stopped; and when one agent responds to the Start command, the host will go up. For sequential agents, to start or stop a host, the primary agent is used first; if it fails, the secondary agent is used.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="manually-fencing-or-isolating-a-non-responsive-host">Manually Fencing or Isolating a Non Responsive Host</h3>
+
+<p><strong>Summary</strong></p>
+
+<p>If a host unpredictably goes into a non-responsive state, for example, due to a hardware failure; it can significantly affect the performance of the environment. If you do not have a power management device, or it is incorrectly configured, you can reboot the host manually.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Warning:** Do not use the **Confirm host has been rebooted** option unless you have manually rebooted the host. Using this option while the host is still running can lead to a virtual machine image corruption.&#x000A;</code></pre></div>
+<p><strong>Manually fencing or isolating a non-responsive host</strong></p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> and confirm the host’s status is <code>Non Responsive</code>.</p>
+  </li>
+  <li>
+    <p>Manually reboot the host. This could mean physically entering the lab and rebooting the host.</p>
+  </li>
+  <li>
+    <p>In the Administration Portal, right-click the host entry and clicking <strong>More Actions</strong> → <strong>Confirm Host has been rebooted</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Approve Operation</strong> check box and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>If your hosts take an unusually long time to boot, you can set <code>ServerRebootTimeout</code> to specify how many seconds to wait before determining that the host is <code>Non Responsive</code>:</p>
+
+    <p># engine-config –set ServerRebootTimeout=integer</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Logical_Networks">Chapter 6: Logical Networks</a><br />
+<strong>Next:</strong> <a href="chap-Storage">Chapter 8: Storage</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-hosts">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Hosts.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Hosts.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 22 Mar 2019 10:06 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

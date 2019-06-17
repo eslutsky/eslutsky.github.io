@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+VDSM and Hooks &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="appendix-a-vdsm-and-hooks">Appendix A: VDSM and Hooks</h1>
+
+<h2 id="vdsm">VDSM</h2>
+
+<p>The VDSM service is used by the Red Hat Virtualization Manager to manage Red Hat Virtualization Hosts (RHVH) and Red Hat Enterprise Linux hosts. VDSM manages and monitors the host's storage, memory and network resources. It also co-ordinates virtual machine creation, statistics gathering, log collection and other host administration tasks. VDSM is run as a daemon on each host managed by Red Hat Virtualization Manager. It answers XML-RPC calls from clients. The Red Hat Virtualization Manager functions as a VDSM client.</p>
+
+<h2 id="vdsm-hooks">VDSM Hooks</h2>
+
+<p>VDSM is extensible via hooks. Hooks are scripts executed on the host when key events occur. When a supported event occurs VDSM runs any executable hook scripts in <strong>/usr/libexec/vdsm/hooks/nn_event-name/</strong> on the host in alphanumeric order. By convention each hook script is assigned a two digit number, included at the front of the file name, to ensure that the order in which the scripts will be run in is clear. You are able to create hook scripts in any programming language, Python will however be used for the examples contained in this chapter.</p>
+
+<p>Note that all scripts defined on the host for the event are executed. If you require that a given hook is only executed for a subset of the virtual machines which run on the host then you must ensure that the hook script itself handles this requirement by evaluating the <strong>Custom Properties</strong> associated with the virtual machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Warning:** VDSM hooks can interfere with the operation of Red Hat Virtualization. A bug in a VDSM hook has the potential to cause virtual machine crashes and loss of data. VDSM hooks should be implemented with caution and tested rigorously. The Hooks API is new and subject to significant change in the future.&#x000A;</code></pre></div>
+<h2 id="extending-vdsm-with-hooks">Extending VDSM with Hooks</h2>
+
+<p>This chapter describes how to extend VDSM with event-driven hooks. Extending VDSM with hooks is an experimental technology, and this chapter is intended for experienced developers. By setting custom properties on virtual machines it is possible to pass additional parameters, specific to a given virtual machine, to the hook scripts.</p>
+
+<h2 id="supported-vdsm-events">Supported VDSM Events</h2>
+
+<p><strong>Supported VDSM Events</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>before_vm_start</td>
+      <td>Before virtual machine starts.</td>
+    </tr>
+    <tr>
+      <td>after_vm_start</td>
+      <td>After virtual machine starts.</td>
+    </tr>
+    <tr>
+      <td>before_vm_cont</td>
+      <td>Before virtual machine continues.</td>
+    </tr>
+    <tr>
+      <td>after_vm_cont</td>
+      <td>After virtual machine continues.</td>
+    </tr>
+    <tr>
+      <td>before_vm_pause</td>
+      <td>Before virtual machine pauses.</td>
+    </tr>
+    <tr>
+      <td>after_vm_pause</td>
+      <td>After virtual machine pauses.</td>
+    </tr>
+    <tr>
+      <td>before_vm_hibernate</td>
+      <td>Before virtual machine hibernates.</td>
+    </tr>
+    <tr>
+      <td>after_vm_hibernate</td>
+      <td>After virtual machine hibernates.</td>
+    </tr>
+    <tr>
+      <td>before_vm_dehibernate</td>
+      <td>Before virtual machine dehibernates.</td>
+    </tr>
+    <tr>
+      <td>after_vm_dehibernate</td>
+      <td>After virtual machine dehibernates.</td>
+    </tr>
+    <tr>
+      <td>before_vm_migrate_source</td>
+      <td>Before virtual machine migration, run on the source host from which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>after_vm_migrate_source</td>
+      <td>After virtual machine migration, run on the source host from which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>before_vm_migrate_destination</td>
+      <td>Before virtual machine migration, run on the destination host to which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>after_vm_migrate_destination</td>
+      <td>After virtual machine migration, run on the destination host to which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>after_vm_destroy</td>
+      <td>After virtual machine destruction.</td>
+    </tr>
+    <tr>
+      <td>before_vdsm_start</td>
+      <td>Before VDSM is started on the host. <code>before_vdsm_start</code> hooks are executed as the user root, and do not inherit the environment of the VDSM process.</td>
+    </tr>
+    <tr>
+      <td>after_vdsm_stop</td>
+      <td>After VDSM is stopped on the host. <code>after_vdsm_stop</code> hooks are executed as the user root, and do not inherit the environment of the VDSM process.</td>
+    </tr>
+    <tr>
+      <td>before_nic_hotplug</td>
+      <td>Before the NIC is hot plugged into the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>after_nic_hotplug</td>
+      <td>After the NIC is hot plugged into the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>before_nic_hotunplug</td>
+      <td>Before the NIC is hot unplugged from the virtual machine</td>
+    </tr>
+    <tr>
+      <td>after_nic_hotunplug</td>
+      <td>After the NIC is hot unplugged from the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>after_nic_hotplug_fail</td>
+      <td>After hot plugging the NIC to the virtual machine fails.</td>
+    </tr>
+    <tr>
+      <td>after_nic_hotunplug_fail</td>
+      <td>After hot unplugging the NIC from the virtual machine fails.</td>
+    </tr>
+    <tr>
+      <td>before_disk_hotplug</td>
+      <td>Before the disk is hot plugged into the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>after_disk_hotplug</td>
+      <td>After the disk is hot plugged into the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>before_disk_hotunplug</td>
+      <td>Before the disk is hot unplugged from the virtual machine</td>
+    </tr>
+    <tr>
+      <td>after_disk_hotunplug</td>
+      <td>After the disk is hot unplugged from the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>after_disk_hotplug_fail</td>
+      <td>After hot plugging the disk to the virtual machine fails.</td>
+    </tr>
+    <tr>
+      <td>after_disk_hotunplug_fail</td>
+      <td>After hot unplugging the disk from the virtual machine fails.</td>
+    </tr>
+    <tr>
+      <td>before_device_create</td>
+      <td>Before creating a device that supports custom properties.</td>
+    </tr>
+    <tr>
+      <td>after_device_create</td>
+      <td>After creating a device that supports custom properties.</td>
+    </tr>
+    <tr>
+      <td>before_update_device</td>
+      <td>Before updating a device that supports custom properties.</td>
+    </tr>
+    <tr>
+      <td>after_update_device</td>
+      <td>After updating a device that supports custom properties.</td>
+    </tr>
+    <tr>
+      <td>before_device_destroy</td>
+      <td>Before destroying a device that supports custom properties.</td>
+    </tr>
+    <tr>
+      <td>after_device_destroy</td>
+      <td>After destroying a device that supports custom properties.</td>
+    </tr>
+    <tr>
+      <td>before_device_migrate_destination</td>
+      <td>Before device migration, run on the destination host to which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>after_device_migrate_destination</td>
+      <td>After device migration, run on the destination host to which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>before_device_migrate_source</td>
+      <td>Before device migration, run on the source host from which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>after_device_migrate_source</td>
+      <td>After device migration, run on the source host from which the migration is occurring.</td>
+    </tr>
+    <tr>
+      <td>after_network_setup</td>
+      <td>After setting up the network when starting a host machine.</td>
+    </tr>
+    <tr>
+      <td>before_network_setup</td>
+      <td>Before setting up the network when starting a host machine.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="the-vdsm-hook-environment">The VDSM Hook Environment</h2>
+
+<p>Most hook scripts are run as the <strong>vdsm</strong> user and inherit the environment of the VDSM process. The exceptions are hook scripts triggered by the <strong>before_vdsm_start</strong> and <strong>after_vdsm_stop</strong> events. Hook scripts triggered by these events run as the <strong>root</strong> user and do not inherit the environment of the VDSM process.</p>
+
+<h2 id="the-vdsm-hook-domain-xml-object">The VDSM Hook Domain XML Object</h2>
+
+<p>When hook scripts are started, the <code>_hook_domxml</code> variable is appended to the environment. This variable contains the path of the libvirt domain XML representation of the relevant virtual machine. Several hooks are an exception to this rule, as outlined below. The <code>_hook_domxml</code> variable of the following hooks contains the XML representation of the NIC and not the virtual machine.</p>
+
+<ul>
+  <li>
+    <p><code>*_nic_hotplug_*</code></p>
+  </li>
+  <li>
+    <p><code>*_nic_hotunplug_*</code></p>
+  </li>
+  <li>
+    <p><code>*_update_device</code></p>
+  </li>
+  <li>
+    <p><code>*_device_create</code></p>
+  </li>
+  <li>
+    <p><code>*_device_migrate_*</code></p>
+
+    <p><strong>Important:</strong> The <strong>before_migration_destination</strong> and <strong>before_dehibernation</strong> hooks currently receive the XML of the domain from the source host. The XML of the domain at the destination will have various differences.</p>
+  </li>
+</ul>
+
+<p>The libvirt domain XML format is used by VDSM to define virtual machines. Details on the libvirt domain XML format can be found at <a href="http://libvirt.org/formatdomain.html">http://libvirt.org/formatdomain.html</a>. The UUID of the virtual machine may be deduced from the domain XML, but it is also available as the environment variable <code>vmId</code>.</p>
+
+<h2 id="defining-custom-properties">Defining Custom Properties</h2>
+
+<p>The custom properties that are accepted by the Red Hat Virtualization Manager - and in turn passed to custom hooks - are defined using the <code>engine-config</code> command. Run this command as the <strong>root</strong> user on the host where oVirt Engine is installed.</p>
+
+<p>The <code>UserDefinedVMProperties</code> and <code>CustomDeviceProperties</code> configuration keys are used to store the names of the custom properties supported. Regular expressions defining the valid values for each named custom property are also contained in these configuration keys.</p>
+
+<p>Multiple custom properties are separated by a semi-colon. Note that when setting the configuration key, any existing value it contained is overwritten. When combining new and existing custom properties, all of the custom properties in the command used to set the key's value must be included.</p>
+
+<p>Once the configuration key has been updated, the <code>ovirt-engine</code> service must be restarted for the new values to take effect.</p>
+
+<p><strong>Virtual Machine Properties - Defining the <code>smartcard</code> Custom Property</strong></p>
+
+<ol>
+  <li>
+    <p>Check the existing custom properties defined by the <code>UserDefinedVMProperties</code> configuration key using the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -g UserDefinedVMProperties&#x000A;</code></pre></div>
+    <p>As shown by the output below, the custom property <code>memory</code> is already defined. The regular expression <code>^[0-9]+$</code> ensures that the custom property will only ever contain numeric characters.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -g UserDefinedVMProperties&#x000A; UserDefinedVMProperties:  version: 3.6&#x000A; UserDefinedVMProperties:  version: 4.0&#x000A; UserDefinedVMProperties : memory=^[0-9]+$ version: 4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Because the <code>memory</code> custom property is already defined in the <code>UserDefinedVMProperties</code> configuration key, the new custom property must be appended to it. The additional custom property, <code>smartcard</code>, is added to the configuration key's value. The new custom property is able to hold a value of <code>true</code> or <code>false</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s UserDefinedVMProperties='memory=^[0-9]+$;smartcard=^(true|false)$' --cver=4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Verify that the custom properties defined by the <code>UserDefinedVMProperties</code> configuration key have been updated correctly.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -g UserDefinedVMProperties&#x000A; UserDefinedVMProperties:  version: 3.6&#x000A; UserDefinedVMProperties:  version: 4.0&#x000A; UserDefinedVMProperties : memory=^[0-9]+$;smartcard=^(true|false)$ version: 4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Finally, the <code>ovirt-engine</code> service must be restarted for the configuration change to take effect.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Device Properties - Defining the <code>interface</code> Custom Property</strong></p>
+
+<ol>
+  <li>
+    <p>Check the existing custom properties defined by the <code>CustomDeviceProperties</code> configuration key using the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -g CustomDeviceProperties&#x000A;</code></pre></div>
+    <p>As shown by the output below, no custom properties have yet been defined.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -g CustomDeviceProperties&#x000A; CustomDeviceProperties:  version: 3.6&#x000A; CustomDeviceProperties:  version: 4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The <code>interface</code> custom property does not already exist, so it can be appended as is. In this example, the value of the <code>speed</code> sub-property is set to a range of 0 to 99999, and the value of the <code>duplex</code> sub-property is set to a selection of either <code>full</code> or <code>half</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s CustomDeviceProperties="{type=interface;prop={speed=^([0-9]{1,5})$;duplex=^(full|half)$}}" --cver=4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Verify that the custom properties defined by the <code>CustomDeviceProperties</code> configuration key have been updated correctly.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -g CustomDeviceProperties&#x000A; UserDefinedVMProperties:  version: 3.6&#x000A; UserDefinedVMProperties:  version: 4.0&#x000A; UserDefinedVMProperties : {type=interface;prop={speed=^([0-9]{1,5})$;duplex=^(full|half)$}} version: 4.0&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Finally, the <code>ovirt-engine</code> service must be restarted for the configuration change to take effect.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h2 id="setting-virtual-machine-custom-properties">Setting Virtual Machine Custom Properties</h2>
+
+<p>Once custom properties are defined in the oVirt Engine, you can begin setting them on virtual machines. Custom properties are set on the <strong>Custom Properties</strong> tab of the <strong>New Virtual Machine</strong> and <strong>Edit Virtual Machine</strong> windows in the Administration Portal.</p>
+
+<p>You can also set custom properties from the <strong>Run Virtual Machine(s)</strong> dialog box. Custom properties set from the <strong>Run Virtual Machine(s)</strong> dialog box will only apply to the virtual machine until it is next shutdown.</p>
+
+<p>The <strong>Custom Properties</strong> tab provides a facility for you to select from the list of defined custom properties. Once you select a custom property key an additional field will display allowing you to enter a value for that key. Add additional key/value pairs by clicking the <strong>+</strong> button and remove them by clicking the <strong>-</strong> button.</p>
+
+<h2 id="evaluating-virtual-machine-custom-properties-in-a-vdsm-hook">Evaluating Virtual Machine Custom Properties in a VDSM Hook</h2>
+
+<p>Each key set in the <strong>Custom Properties</strong> field for a virtual machine is appended as an environment variable when calling hook scripts. Although the regular expressions used to validate the <strong>Custom Properties</strong> field provide some protection you should ensure that your scripts also validate that the inputs provided match their expectations.</p>
+
+<p><strong>Evaluating Custom Properties</strong></p>
+
+<p>This short Python example checks for the existence of the custom property <code>key1</code>. If the custom property is set then the value is printed to standard error. If the custom property is not set then no action is taken.</p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="c">#!/usr/bin/python</span>&#x000A;&#x000A;<span class="kn">import</span> <span class="nn">os</span>&#x000A;<span class="kn">import</span> <span class="nn">sys</span>&#x000A;&#x000A;<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">'key1'</span><span class="p">):</span>&#x000A;<span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'key1 value was : </span><span class="si">%</span><span class="s">s</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'key1'</span><span class="p">])</span>&#x000A;<span class="k">else</span><span class="p">:</span>&#x000A;    <span class="n">sys</span><span class="o">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>&#x000A;</code></pre></div>
+<h2 id="using-the-vdsm-hooking-module">Using the VDSM Hooking Module</h2>
+
+<p>VDSM ships with a Python hooking module, providing helper functions for VDSM hook scripts. This module is provided as an example, and is only relevant to VDSM hooks written in Python.</p>
+
+<p>The hooking module supports reading of a virtual machine's libvirt XML into a DOM object. Hook scripts can then use Python's built in <code>xml.dom</code> library (<a href="http://docs.python.org/release/2.6/library/xml.dom.html">http://docs.python.org/release/2.6/library/xml.dom.html</a>) to manipulate the object.</p>
+
+<p>The modified object can then be saved back to libvirt XML using the hooking module. The hooking module provides the following functions to support hook development:</p>
+
+<p><strong>Hooking module functions</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Argument</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>tobool</code></td>
+      <td>string</td>
+      <td>Converts a string "true" or "false" to a Boolean value</td>
+    </tr>
+    <tr>
+      <td><code>read_domxml</code></td>
+      <td>-</td>
+      <td>Reads the virtual machine's libvirt XML into a DOM object</td>
+    </tr>
+    <tr>
+      <td><code>write_domxml</code></td>
+      <td>DOM object</td>
+      <td>Writes the virtual machine's libvirt XML from a DOM object</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="vdsm-hook-execution">VDSM Hook Execution</h2>
+
+<p><strong>before_vm_start</strong> scripts can edit the domain XML in order to change VDSM's definition of a virtual machine before it reaches libvirt. Caution must be exercised in doing so. Hook scripts have the potential to disrupt the operation of VDSM, and buggy scripts can result in outages to the Red Hat Virtualization environment. In particular, ensure you never change the UUID of the domain, and do not attempt to remove a device from the domain without sufficient background knowledge.</p>
+
+<p>Both <strong>before_vdsm_start</strong> and <strong>after_vdsm_stop</strong> hook scripts are run as the <strong>root</strong> user. Other hook scripts that require <strong>root</strong> access to the system must be written to use the <code>sudo</code> command for privilege escalation. To support this the <strong>/etc/sudoers</strong> must be updated to allow the <strong>vdsm</strong> user to use <code>sudo</code> without reentering a password. This is required as hook scripts are executed non-interactively.</p>
+
+<p><strong>Configuring <code>sudo</code> for VDSM Hooks</strong></p>
+
+<p>In this example the <code>sudo</code> command will be configured to allow the <strong>vdsm</strong> user to run the <code>/bin/chown</code> command as <strong>root</strong>.</p>
+
+<ol>
+  <li>
+    <p>Log into the virtualization host as <strong>root</strong>.</p>
+  </li>
+  <li>
+    <p>Open the <strong>/etc/sudoers</strong> file in a text editor.</p>
+  </li>
+  <li>
+    <p>Add this line to the file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> vdsm ALL=(ALL) NOPASSWD: /bin/chown&#x000A;</code></pre></div>
+    <p>This specifies that the <strong>vdsm</strong> user has the ability to run the <code>/bin/chown</code> command as the <strong>root</strong> user. The <code>NOPASSWD</code> parameter indicates that the user will not be prompted to enter their password when calling <code>sudo</code>.</p>
+  </li>
+</ol>
+
+<p>Once this configuration change has been made VDSM hooks are able to use the <code>sudo</code> command to run <code>/bin/chown</code> as <strong>root</strong>. This Python code uses <code>sudo</code> to execute <code>/bin/chown</code> as <strong>root</strong> on the file <strong>/my_file</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>retcode = subprocess.call( ["/usr/bin/sudo", "/bin/chown", "root", "/my_file"] )&#x000A;</code></pre></div>
+<p>The standard error stream of hook scripts is collected in VDSM's log. This information is used to debug hook scripts.</p>
+
+<h2 id="vdsm-hook-return-codes">VDSM Hook Return Codes</h2>
+
+<p>Hook scripts must return one of the return codes shown in <a href="hook-return-codes">hook-return-codes</a>. The return code will determine whether further hook scripts are processed by VDSM.</p>
+
+<p><strong>Hook Return Codes</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>The hook script ended successfully</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>The hook script failed, other hooks should be processed</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>The hook script failed, no further hooks should be processed</td>
+    </tr>
+    <tr>
+      <td>&gt;2</td>
+      <td>Reserved</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="vdsm-hook-examples">VDSM Hook Examples</h2>
+
+<p>The example hook scripts provided in this section are strictly not supported by the oVirt Project. You must ensure that any and all hook scripts that you install to your system, regardless of source, are thoroughly tested for your environment.</p>
+
+<p><strong>NUMA Node Tuning</strong></p>
+
+<p><strong>Purpose:</strong></p>
+
+<p>This hook script allows for tuning the allocation of memory on a NUMA host based on the <code>numaset</code> custom property. Where the custom property is not set no action is taken.</p>
+
+<p><strong>Configuration String:</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>numaset=^(interleave|strict|preferred):[\^]?\d+(-\d+)?(,[\^]?\d+(-\d+)?)\*$&#x000A;</code></pre></div>
+<p>The regular expression used allows the <code>numaset</code> custom property for a given virtual machine to specify both the allocation mode (<code>interleave</code>, <code>strict</code>, <code>preferred</code>) and the node to use. The two values are separated by a colon (<code>:</code>). The regular expression allows specification of the <code>nodeset</code> as:</p>
+
+<ul>
+  <li>that a specific node (<code>numaset=strict:1</code>, specifies that only node 1 be used), or</li>
+  <li>that a range of nodes be used (<code>numaset=strict:1-4</code>, specifies that nodes 1 through 4 be used), or</li>
+  <li>that a specific node not be used (<code>numaset=strict:^3</code>, specifies that node 3 not be used), or</li>
+  <li>any comma-separated combination of the above (<code>numaset=strict:1-4,6</code>, specifies that nodes 1 to 4, and 6 be used).</li>
+</ul>
+
+<p><strong>Script:</strong></p>
+
+<p><strong>/usr/libexec/vdsm/hooks/before_vm_start/50_numa</strong></p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="c">#!/usr/bin/python</span>&#x000A;&#x000A;<span class="kn">import</span> <span class="nn">os</span>&#x000A;<span class="kn">import</span> <span class="nn">sys</span>&#x000A;<span class="kn">import</span> <span class="nn">hooking</span>&#x000A;<span class="kn">import</span> <span class="nn">traceback</span>&#x000A;&#x000A;<span class="s">'''&#x000A;numa hook&#x000A;=========&#x000A;add numa support for domain xml:&#x000A;&#x000A;&lt;numatune&gt;&#x000A;    &lt;memory mode="strict" nodeset="1-4,^3" /&gt;&#x000A;&lt;/numatune&gt;&#x000A;&#x000A;memory=interleave|strict|preferred&#x000A;&#x000A;numaset="1" (use one NUMA node)&#x000A;numaset="1-4" (use 1-4 NUMA nodes)&#x000A;numaset="^3" (don't use NUMA node 3)&#x000A;numaset="1-4,^3,6" (or combinations)&#x000A;&#x000A;syntax:&#x000A;    numa=strict:1-4&#x000A;'''</span>&#x000A;&#x000A;<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">'numa'</span><span class="p">):</span>&#x000A;    <span class="k">try</span><span class="p">:</span>&#x000A;        <span class="n">mode</span><span class="p">,</span> <span class="n">nodeset</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">'numa'</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">':'</span><span class="p">)</span>&#x000A;&#x000A;        <span class="n">domxml</span> <span class="o">=</span> <span class="n">hooking</span><span class="o">.</span><span class="n">read_domxml</span><span class="p">()</span>&#x000A;&#x000A;        <span class="n">domain</span> <span class="o">=</span> <span class="n">domxml</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s">'domain'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>&#x000A;        <span class="n">numas</span> <span class="o">=</span> <span class="n">domxml</span><span class="o">.</span><span class="n">getElementsByTagName</span><span class="p">(</span><span class="s">'numatune'</span><span class="p">)</span>&#x000A;&#x000A;        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">numas</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>&#x000A;            <span class="n">numatune</span> <span class="o">=</span> <span class="n">domxml</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s">'numatune'</span><span class="p">)</span>&#x000A;            <span class="n">domain</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">numatune</span><span class="p">)</span>&#x000A;&#x000A;            <span class="n">memory</span> <span class="o">=</span> <span class="n">domxml</span><span class="o">.</span><span class="n">createElement</span><span class="p">(</span><span class="s">'memory'</span><span class="p">)</span>&#x000A;            <span class="n">memory</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">'mode'</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>&#x000A;            <span class="n">memory</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="s">'nodeset'</span><span class="p">,</span> <span class="n">nodeset</span><span class="p">)</span>&#x000A;            <span class="n">numatune</span><span class="o">.</span><span class="n">appendChild</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>&#x000A;&#x000A;            <span class="n">hooking</span><span class="o">.</span><span class="n">write_domxml</span><span class="p">(</span><span class="n">domxml</span><span class="p">)</span>&#x000A;        <span class="k">else</span><span class="p">:</span>&#x000A;            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'numa: numa already exists in domain xml'</span><span class="p">)</span>&#x000A;            <span class="n">sys</span><span class="o">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>&#x000A;    <span class="k">except</span><span class="p">:</span>&#x000A;        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">'numa: [unexpected error]: </span><span class="si">%</span><span class="s">s</span><span class="se">\n</span><span class="s">'</span> <span class="o">%</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>&#x000A;        <span class="n">sys</span><span class="o">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>&#x000A;</code></pre></div>
+<p><strong>Prev:</strong> <a href="chap-Proxies">Chapter 20: Proxies</a><br />
+<strong>Next:</strong> <a href="appe-Custom_Network_Properties">Appendix B: Custom Network Properties</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/appe-vdsm_and_hooks">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/appe-VDSM_and_Hooks.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/appe-VDSM_and_Hooks.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

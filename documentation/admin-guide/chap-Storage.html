@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Storage &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-8-storage">Chapter 8: Storage</h1>
+
+<p>oVirt uses a centralized storage system for virtual machine disk images, ISO files and snapshots. Storage networking can be implemented using:</p>
+
+<ul>
+  <li>
+    <p>Network File System (NFS)</p>
+  </li>
+  <li>
+    <p>GlusterFS exports</p>
+  </li>
+  <li>
+    <p>Other POSIX compliant file systems</p>
+  </li>
+  <li>
+    <p>Internet Small Computer System Interface (iSCSI)</p>
+  </li>
+  <li>
+    <p>Local storage attached directly to the virtualization hosts</p>
+  </li>
+  <li>
+    <p>Fibre Channel Protocol (FCP)</p>
+  </li>
+  <li>
+    <p>Parallel NFS (pNFS)</p>
+  </li>
+</ul>
+
+<p>Setting up storage is a prerequisite for a new data center because a data center cannot be initialized unless storage domains are attached and activated.</p>
+
+<p>As a oVirt system administrator, you need to create, configure, attach and maintain storage for the virtualized enterprise. You should be familiar with the storage types and their use. Read your storage array vendor's guides for more information on the concepts, protocols, requirements or general usage of storage.</p>
+
+<p>oVirt enables you to assign and manage storage using the Administration Portal's <strong>Storage</strong> tab. The <strong>Storage</strong> results list displays all the storage domains, and the details pane shows general information about the domain.</p>
+
+<p>To add storage domains you must be able to successfully access the Administration Portal, and there must be at least one host connected with a status of <strong>Up</strong>.</p>
+
+<p>oVirt has three types of storage domains:</p>
+
+<ul>
+  <li><strong>Data Domain:</strong> A data domain holds the virtual hard disks and OVF files of all the virtual machines and templates in a data center. In addition, snapshots of the virtual machines are also stored in the data domain.</li>
+</ul>
+
+<p>The data domain cannot be shared across data centers. Data domains of multiple types (iSCSI, NFS, FC, POSIX, and Gluster) can be added to the same data center, provided they are all shared, rather than local, domains.</p>
+
+<p>You must attach a data domain to a data center before you can attach domains of other types to it.</p>
+
+<ul>
+  <li>
+    <p><strong>ISO Domain:</strong> ISO domains store ISO files (or logical CDs) used to install and boot operating systems and applications for the virtual machines. An ISO domain removes the data center's need for physical media. An ISO domain can be shared across different data centers. ISO domains can only be NFS-based. Only one ISO domain can be added to a data center.</p>
+  </li>
+  <li>
+    <p><strong>Export Domain:</strong> Export domains are temporary storage repositories that are used to copy and move images between data centers and oVirt environments. Export domains can be used to backup virtual machines. An export domain can be moved between data centers, however, it can only be active in one data center at a time. Export domains can only be NFS-based. Only one export domain can be added to a data center.</p>
+
+    <p><strong>Note:</strong> The export storage domain is deprecated. Storage data domains can be unattached from a data center and imported to another data center in the same environment, or in a different environment. Virtual machines, floating virtual disk images, and templates can then be uploaded from the imported storage domain to the attached data center. See <a href="sect-Importing_Existing_Storage_Domains">Importing Existing Storage Domains</a> for information on importing storage domains.</p>
+
+    <p><strong>Important:</strong> Only commence configuring and attaching storage for your oVirt environment once you have determined the storage needs of your data center(s).</p>
+  </li>
+</ul>
+
+<h2 id="understanding-storage-domains">Understanding Storage Domains</h2>
+
+<p>A storage domain is a collection of images that have a common storage interface. A storage domain contains complete images of templates and virtual machines (including snapshots), or ISO files. A storage domain can be made of either block devices (SAN - iSCSI or FCP) or a file system (NAS - NFS, GlusterFS, or other POSIX compliant file systems).</p>
+
+<p>On NFS, all virtual disks, templates, and snapshots are files.</p>
+
+<p>On SAN (iSCSI/FCP), each virtual disk, template or snapshot is a logical volume. Block devices are aggregated into a logical entity called a volume group, and then divided by LVM (Logical Volume Manager) into logical volumes for use as virtual hard disks.</p>
+
+<p>Virtual disks can have one of two formats, either QCOW2 or RAW. The type of storage can be either Sparse or Preallocated. Snapshots are always sparse but can be taken for disks created either as RAW or sparse.</p>
+
+<p>Virtual machines that share the same storage domain can be migrated between hosts that belong to the same cluster.</p>
+
+<h2 id="preparing-and-adding-nfs-storage">Preparing and Adding NFS Storage</h2>
+
+<h3 id="preparing-nfs-storage">Preparing NFS Storage</h3>
+
+<p>Set up NFS shares that will serve as storage domains on an Enterprise Linux server.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The export storage domain is deprecated. Storage data domains can be unattached from a data center and imported to another data center in the same environment, or in a different environment. Virtual machines, floating virtual disks, and templates can then be uploaded from the imported storage domain to the attached data center. See [Importing Existing Storage Domains](sect-Importing_Existing_Storage_Domains) for information on importing storage domains.&#x000A;</code></pre></div>
+<p>Specific system user accounts and system user groups are required by oVirt so the Engine can store data in the storage domains represented by the exported directories.</p>
+
+<p><strong>Configuring the Required System User Accounts and System User Groups</strong></p>
+
+<ol>
+  <li>
+    <p>Create the group <code>kvm</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # groupadd kvm -g 36&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create the user <code>vdsm</code> in the group <code>kvm</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # useradd vdsm -u 36 -g 36&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Set the ownership of your exported directories to 36:36, which gives vdsm:kvm ownership:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # chown -R 36:36 /exports/data&#x000A; # chown -R 36:36 /exports/export&#x000A; # chown -R 36:36 /exports/iso&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Change the mode of the directories so that read and write access is granted to the owner, and so that read and execute access is granted to the group and other users:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # chmod 0755 /exports/data&#x000A; # chmod 0755 /exports/export&#x000A; # chmod 0755 /exports/iso&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>For more information on the required system users and groups see "<a href="appe-System_Accounts">Appendix F, System Accounts</a>".</p>
+
+<h3 id="attaching-nfs-storage">Attaching NFS Storage</h3>
+
+<p>Attach an NFS storage domain to the data center in your oVirt environment. These storage domains provide storage for virtual disks (data domain) and ISO boot media (ISO domain). This procedure assumes that you have already exported shares. You must create the data domain before creating the ISO and export domains. Use the same procedure to create the ISO and export domains, selecting <strong>ISO</strong> or <strong>Export</strong> from the <strong>Domain Function</strong> list.</p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> for the storage domain.</p>
+  </li>
+  <li>
+    <p>Accept the default values for the <strong>Data Center</strong>, <strong>Domain Function</strong>, <strong>Storage Type</strong>, <strong>Format</strong>, and <strong>Use Host</strong> lists.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Export Path</strong> to be used for the storage domain. The export path should be in the format of  <code>123.123.0.10:/data</code> (for IPv4), <code>[2001:0:0:0:0:0:0:5db1]:/data</code> (for IPv6), or <code>domain.example.com:/data</code>.</p>
+  </li>
+  <li>
+    <p>Optionally, you can configure the advanced parameters.</p>
+
+    <p>i. Click <strong>Advanced Parameters</strong>.</p>
+
+    <p>ii. Enter a percentage value into the <strong>Warning Low Space Indicator</strong> field. If the free space available on the storage domain is below this percentage, warning messages are displayed to the user and logged.</p>
+
+    <p>iii. Enter a GB value into the <strong>Critical Space Action Blocker</strong> field. If the free space available on the storage domain is below this value, error messages are displayed to the user and logged, and any new action that consumes space, even temporarily, will be blocked.</p>
+
+    <p>iv. Select the <strong>Wipe After Delete</strong> check box to enable the wipe after delete option. This option can be edited after the domain is created, but doing so will not change the wipe after delete property of disks that already exist.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new NFS data domain is displayed in the <strong>Storage</strong> tab with a status of <code>Locked</code> until the disk is prepared. The data domain is then automatically attached to the data center.</p>
+
+<h3 id="increasing-nfs-storage">Increasing NFS Storage</h3>
+
+<p>To increase the amount of NFS storage, you can either create a new storage domain and add it to an existing data center, or increase the available free space on the NFS server. For the former option, see <a href="Attaching_NFS_Storage1">Attaching NFS Storage</a>. The following procedure explains how to increase the available free space on the existing NFS server.</p>
+
+<p><strong>Increasing an Existing NFS Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the NFS storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Center</strong> tab and click the <strong>Maintenance</strong> to place the storage domain into maintenance mode. This unmounts the existing share and makes it possible to resize the storage domain.</p>
+  </li>
+  <li>
+    <p>On the NFS server, resize the storage.</p>
+  </li>
+  <li>
+    <p>In the details pane, click the <strong>Data Center</strong> tab and click <strong>Activate</strong> to mount the storage domain.</p>
+  </li>
+</ol>
+
+<h2 id="preparing-and-adding-local-storage">Preparing and Adding Local Storage</h2>
+
+<h3 id="preparing-local-storage">Preparing Local Storage</h3>
+
+<p>A local storage domain can be set up on a host. When you set up a host to use local storage, the host automatically gets added to a new data center and cluster that no other hosts can be added to. Multiple host clusters require that all hosts have access to all storage domains, which is not possible with local storage. Virtual machines created in a single host cluster cannot be migrated, fenced or scheduled. For more information on the required system users and groups see <a href="appe-System_Accounts">Appendix F: System Accounts</a>.</p>
+
+<p><strong>Important:</strong> On oVirt Node, the path used for local storage must be within the /var directory; create the storage directory in the following procedure within <code>/var</code>.</p>
+
+<p><strong>Preparing Local Storage for Enterprise Linux Hosts</strong></p>
+
+<ol>
+  <li>
+    <p>On the host, create the directory to be used for the local storage.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # mkdir -p /data/images&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure that the directory has permissions allowing read/write access to the <code>vdsm</code> user (UID 36) and <code>kvm</code> group (GID 36).</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # chown 36:36 /data /data/images&#x000A; # chmod 0755 /data /data/images&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Your local storage is ready to be added to the oVirt environment.</p>
+
+<p><strong>Preparing Local Storage for oVirt Nodes</strong></p>
+
+<p>The oVirt Project recommends creating the local storage on a logical volume as follows:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # mkdir /data&#x000A;    # lvcreate -L $SIZE rhvh -n data&#x000A;    # mkfs.ext4 /dev/mapper/rhvh-data&#x000A;    # echo "/dev/mapper/rhvh-data /data ext4 defaults,discard 1 2" &gt;&gt; /etc/fstab&#x000A;</code></pre></div>
+<p>Your local storage is ready to be added to the oVirt environment.</p>
+
+<h3 id="adding-local-storage">Adding Local Storage</h3>
+
+<p>Adding local storage to a host in this manner causes the host to be put in a new data center and cluster. The local storage configuration window combines the creation of a data center, a cluster, and storage into a single process.</p>
+
+<p><strong>Adding Local Storage</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong> and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Configure Local Storage</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Edit</strong> buttons next to the <strong>Data Center</strong>, <strong>Cluster</strong>, and <strong>Storage</strong> fields to configure and name the local storage domain.</p>
+  </li>
+  <li>
+    <p>Set the path to your local storage in the text entry field.</p>
+  </li>
+  <li>
+    <p>If applicable, select the <strong>Optimization</strong> tab to configure the memory optimization policy for the new local storage cluster.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>Your host comes online in a data center of its own.</p>
+
+<h2 id="adding-posix-compliant-file-system-storage">Adding POSIX Compliant File System Storage</h2>
+
+<h3 id="attaching-posix-compliant-file-system-storage">Attaching POSIX Compliant File System Storage</h3>
+
+<p>POSIX file system support allows you to mount file systems using the same mount options that you would normally use when mounting them manually from the command line. This functionality is intended to allow access to storage not exposed using NFS, iSCSI, or FCP.</p>
+
+<p>Any POSIX compliant file system used as a storage domain in oVirt must be a clustered file system, such as Global File System 2 (GFS2), and must support sparse files and direct I/O. The Common Internet File System (CIFS), for example, does not support direct I/O, making it incompatible with oVirt.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Do **not** mount NFS storage by creating a POSIX compliant file system Storage Domain. Always create an NFS Storage Domain instead.&#x000A;</code></pre></div>
+<p><strong>Attaching POSIX Compliant File System Storage</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> for the storage domain.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> to be associated with the storage domain. The Data Center selected must be of type <strong>POSIX (POSIX compliant FS)</strong>. Alternatively, select <code>(none)</code>.</p>
+  </li>
+  <li>
+    <p>Select <code>Data</code> from the <strong>Domain Function</strong> drop-down list, and <code>POSIX compliant FS</code> from the <strong>Storage Type</strong> drop-down list.</p>
+
+    <p>If applicable, select <strong>Format</strong> from the drop-down menu.</p>
+  </li>
+  <li>
+    <p>Select a host from the <strong>Use Host</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Path</strong> to the POSIX file system, as you would normally provide it to the <code>mount</code> command.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>VFS Type</strong>, as you would normally provide it to the <code>mount</code> command using the <code>-t</code> argument. See <code>man mount</code> for a list of valid VFS types.</p>
+  </li>
+  <li>
+    <p>Enter additional <strong>Mount Options</strong>, as you would normally provide them to the <code>mount</code> command using the <code>-o</code> argument. The mount options should be provided in a comma-separated list. See <code>man mount</code> for a list of valid mount options.</p>
+  </li>
+  <li>
+    <p>Optionally, you can configure the advanced parameters.</p>
+
+    <p>i. Click <strong>Advanced Parameters</strong>.</p>
+
+    <p>ii. Enter a percentage value into the <strong>Warning Low Space Indicator</strong> field. If the free space available on the storage domain is below this percentage, warning messages are displayed to the user and logged.</p>
+
+    <p>iii. Enter a GB value into the <strong>Critical Space Action Blocker</strong> field. If the free space available on the storage domain is below this value, error messages are displayed to the user and logged, and any new action that consumes space, even temporarily, will be blocked.</p>
+
+    <p>iv. Select the <strong>Wipe After Delete</strong> check box to enable the wipe after delete option. This option can be edited after the domain is created, but doing so will not change the wipe after delete property of disks that already exist.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="adding-block-storage">Adding Block Storage</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** If you are using block storage and you intend to deploy virtual machines on raw devices or direct LUNs and to manage them with the Logical Volume Manager, you must create a filter to hide the guest logical volumes. This will prevent guest logical volumes from being activated when the host is booted, a situation that could lead to stale logical volumes and cause data corruption.&#x000A;&#x000A;**Note:** oVirt currently does not support storage with a block size of 4K. You must configure block storage in legacy (512b block) mode.&#x000A;</code></pre></div>
+<h3 id="adding-iscsi-storage">Adding iSCSI Storage</h3>
+
+<p>oVirt supports iSCSI storage by creating a storage domain from a volume group made of pre-existing LUNs. Neither volume groups nor LUNs can be attached to more than one storage domain at a time.</p>
+
+<p><strong>Adding iSCSI Storage</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> for the storage domain.</p>
+  </li>
+  <li>
+    <p>Select a <strong>Data Center</strong> from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Domain Function</strong> and the <strong>Storage Type</strong> from the drop-down lists. The storage domain types that are not compatible with the chosen domain function are not available.</p>
+  </li>
+  <li>
+    <p>Select an active host in the <strong>Use Host</strong> field. If this is not the first data domain in a data center, you must select the data center's SPM host.</p>
+
+    <p><strong>Important:</strong> All communication to the storage domain is through the selected host and not directly from the oVirt Engine. At least one active host must exist in the system and be attached to the chosen data center. All hosts must have access to the storage device before the storage domain can be configured.</p>
+  </li>
+  <li>
+    <p>The oVirt Engine can map either iSCSI targets to LUNs, or LUNs to iSCSI targets. The <strong>New Domain</strong> window automatically displays known targets with unused LUNs when iSCSI is selected as the storage type. If the target that you are adding storage from is not listed then you can use target discovery to find it, otherwise proceed to the next step.</p>
+
+    <p>i. Click <strong>Discover Targets</strong> to enable target discovery options. When targets have been discovered and logged in to, the <strong>New Domain</strong> window automatically displays targets with LUNs unused by the environment.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> **Note:** LUNs used externally to the environment are also displayed.&#x000A;&#x000A; You can use the **Discover Targets** options to add LUNs on many targets, or multiple paths to the same LUNs.&#x000A;</code></pre></div>
+    <p>ii. Enter the fully qualified domain name or IP address of the iSCSI host in the <strong>Address</strong> field.</p>
+
+    <p>iii. Enter the port to connect to the host on when browsing for targets in the <strong>Port</strong> field. The default is <code>3260</code>.</p>
+
+    <p>iv. If the Challenge Handshake Authentication Protocol (CHAP) is being used to secure the storage, select the <strong>User Authentication</strong> check box. Enter the <strong>CHAP user name</strong> and <strong>CHAP password</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> **Note:** It is now possible to use the REST API to define specific credentials to each iSCSI target per host.&#x000A;</code></pre></div>
+    <p>v. Click <strong>Discover</strong>.</p>
+
+    <p>vi. Select the target to use from the discovery results and click the <strong>Login</strong> button.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Alternatively, click **Login All** to log in to all of the discovered targets.&#x000A;&#x000A; **Important:** If more than one path access is required, ensure to discover and log in to the target through all the required paths. Modifying a storage domain to add additional paths is currently not supported.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click the <strong>+</strong> button next to the desired target. This will expand the entry and display all unused LUNs attached to the target.</p>
+  </li>
+  <li>
+    <p>Select the check box for each LUN that you are using to create the storage domain.</p>
+  </li>
+  <li>
+    <p>Optionally, you can configure the advanced parameters.</p>
+
+    <p>i. Click <strong>Advanced Parameters</strong>.</p>
+
+    <p>ii. Enter a percentage value into the <strong>Warning Low Space Indicator</strong> field. If the free space available on the storage domain is below this percentage, warning messages are displayed to the user and logged.</p>
+
+    <p>iii. Enter a GB value into the <strong>Critical Space Action Blocker</strong> field. If the free space available on the storage domain is below this value, error messages are displayed to the user and logged, and any new action that consumes space, even temporarily, will be blocked.</p>
+
+    <p>iv. Select the <strong>Wipe After Delete</strong> check box to enable the wipe after delete option. This option can be edited after the domain is created, but doing so will not change the wipe after delete property of disks that already exist.</p>
+
+    <p>v. Select the <strong>Discard After Delete</strong> check box to enable the discard after delete option. This option can be edited after the domain is created. This option is only available to block storage domains.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>If you have configured multiple storage connection paths to the same target, follow the procedure in the next section, "Configuring iSCSI Multipathing," to complete iSCSI bonding.</p>
+
+<h3 id="configuring-iscsi-multipathing">Configuring iSCSI Multipathing</h3>
+
+<p>The <strong>iSCSI Multipathing</strong> enables you to create and manage groups of logical networks and iSCSI storage connections. To prevent host downtime due to network path failure, configure multiple network paths between hosts and iSCSI storage. Once configured, the Engine connects each host in the data center to each bonded target via NICs/VLANs related to logical networks of the same iSCSI Bond. You can also specify which networks to use for storage traffic, instead of allowing hosts to route traffic through a default network. This option is only available in the Administration Portal after at least one iSCSI storage domain has been attached to a data center.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>Ensure you have created an iSCSI storage domain and discovered and logged into all the paths to the iSCSI target(s).</p>
+  </li>
+  <li>
+    <p>Ensure you have created <strong>Non-Required</strong> logical networks to bond with the iSCSI storage connections. You can configure multiple logical networks or bond networks to allow network failover.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring iSCSI Multipathing</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click the data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>iSCSI Multipathing</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Add iSCSI Bond</strong> window, enter a <strong>Name</strong> and a <strong>Description</strong> for the bond.</p>
+  </li>
+  <li>
+    <p>Select the networks to be used for the bond from the <strong>Logical Networks</strong> list. The networks must be <strong>Non-Required</strong> networks.</p>
+
+    <p><strong>Note:</strong> To change a network's <strong>Required</strong> designation, from the Administration Portal, select a network, click the <strong>Cluster</strong> tab, and click the <strong>Manage Networks</strong> button.</p>
+  </li>
+  <li>
+    <p>Select the storage domain to be accessed via the chosen networks from the <strong>Storage Targets</strong> list. Ensure to select all paths to the same target.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>All hosts in the data center are connected to the selected iSCSI target through the selected logical networks.</p>
+
+<h3 id="adding-fcp-storage">Adding FCP Storage</h3>
+
+<p>oVirt supports SAN storage by creating a storage domain from a volume group made of pre-existing LUNs. Neither volume groups nor LUNs can be attached to more than one storage domain at a time.</p>
+
+<p>oVirt system administrators need a working knowledge of Storage Area Networks (SAN) concepts. SAN usually uses Fibre Channel Protocol (FCP) for traffic between hosts and shared external storage. For this reason, SAN may occasionally be referred to as FCP storage.</p>
+
+<p>The following procedure shows you how to attach existing FCP storage to your oVirt environment as a data domain.</p>
+
+<p><strong>Adding FCP Storage</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> of the storage domain.</p>
+  </li>
+  <li>
+    <p>Select an FCP <strong>Data Center</strong> from the drop-down list.</p>
+
+    <p>If you do not yet have an appropriate FCP data center, select <code>(none)</code>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Domain Function</strong> and the <strong>Storage Type</strong> from the drop-down lists. The storage domain types that are not compatible with the chosen data center are not available.</p>
+  </li>
+  <li>
+    <p>Select an active host in the <strong>Use Host</strong> field. If this is not the first data domain in a data center, you must select the data center's SPM host.</p>
+
+    <p><strong>Important:</strong> All communication to the storage domain is through the selected host and not directly from the oVirt Engine. At least one active host must exist in the system and be attached to the chosen data center. All hosts must have access to the storage device before the storage domain can be configured.</p>
+  </li>
+  <li>
+    <p>The <strong>New Domain</strong> window automatically displays known targets with unused LUNs when <strong>Data / Fibre Channel</strong> is selected as the storage type. Select the <strong>LUN ID</strong> check box to select all of the available LUNs.</p>
+  </li>
+  <li>
+    <p>Optionally, you can configure the advanced parameters.</p>
+
+    <p>i. Click <strong>Advanced Parameters</strong>.</p>
+
+    <p>ii. Enter a percentage value into the <strong>Warning Low Space Indicator</strong> field. If the free space available on the storage domain is below this percentage, warning messages are displayed to the user and logged.</p>
+
+    <p>iii. Enter a GB value into the <strong>Critical Space Action Blocker</strong> field. If the free space available on the storage domain is below this value, error messages are displayed to the user and logged, and any new action that consumes space, even temporarily, will be blocked.</p>
+
+    <p>iv. Select the <strong>Wipe After Delete</strong> check box to enable the wipe after delete option. This option can be edited after the domain is created, but doing so will not change the wipe after delete property of disks that already exist.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new FCP data domain displays on the <strong>Storage</strong> tab. It will remain with a <code>Locked</code> status while it is being prepared for use. When ready, it is automatically attached to the data center.</p>
+
+<h3 id="increasing-iscsi-or-fcp-storage">Increasing iSCSI or FCP Storage</h3>
+
+<p>There are multiple ways to increase iSCSI or FCP storage size:</p>
+
+<ul>
+  <li>
+    <p>Create a new storage domain with new LUNs and add it to an existing datacenter. See <a href="Adding_iSCSI_Storage1">Adding iSCSI Storage</a>.</p>
+  </li>
+  <li>
+    <p>Create new LUNs and add them to an existing storage domain.</p>
+  </li>
+  <li>
+    <p>Expand the storage domain by resizing the underlying LUNs.</p>
+  </li>
+</ul>
+
+<p>The following procedure explains how to expand storage area network (SAN) storage by adding a new LUN to an existing storage domain.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>The storage domain’s status must be <code>UP</code>.</p>
+  </li>
+  <li>
+    <p>The LUN must be accessible to all the hosts whose status is <code>UP</code>, or else the operation will fail and the LUN will not be added to the domain. The hosts themselves, however, will not be affected. If a newly added host, or a host that is coming out of maintenance or a <code>Non Operational</code> state, cannot access the LUN, the host’s state will be <code>Non Operational</code>.</p>
+  </li>
+</ul>
+
+<p><strong>Increasing an Existing iSCSI or FCP Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong> and select an iSCSI or FCP domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>Manage Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Targets &gt; LUNs</strong>, and click the <strong>Discover Targets</strong> expansion button.</p>
+  </li>
+  <li>
+    <p>Enter the connection information for the storage server and click <strong>Discover</strong> to initiate the connection.</p>
+  </li>
+  <li>
+    <p>Click <strong>LUNs &gt; Targets</strong> and select the check box of the newly available LUN.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to add the LUN to the selected storage domain.</p>
+  </li>
+</ol>
+
+<p>This will increase the storage domain by the size of the added LUN.</p>
+
+<p>When expanding the storage domain by resizing the underlying LUNs, the LUNs must also be refreshed in the oVirt Administration Portal.</p>
+
+<p><strong>Refreshing the LUN Size</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong> and select an iSCSI or FCP domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>Manage Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Click on <strong>LUNs &gt; Targets</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Additional Size</strong> column, click <strong>Add Additional_Storage_Size</strong> of the LUN to refresh.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to refresh the LUN to indicate the new storage size.</p>
+  </li>
+</ol>
+
+<h3 id="reusing-luns">Reusing LUNs</h3>
+
+<p>LUNs cannot be reused, as is, to create a storage domain or virtual disk. If you try to reuse the LUNs, the Administration Portal displays the following error message:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    Physical device initialization failed. Please check that the device is empty and accessible by the host.&#x000A;</code></pre></div>
+<p>A self-hosted engine shows the following error during installation:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    [ ERROR ] Error creating Volume Group: Failed to initialize physical device: ("[u'/dev/mapper/000000000000000000000000000000000']",)&#x000A;    [ ERROR ] Failed to execute stage 'Misc configuration': Failed to initialize physical device: ("[u'/dev/mapper/000000000000000000000000000000000']",)&#x000A;</code></pre></div>
+<p>Before the LUN can be reused, the old partitioning table must be cleared.</p>
+
+<p><strong>Clearing the Partition Table from a LUN</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** You must run this procedure on the correct LUN so that you do not inadvertently destroy data.&#x000A;</code></pre></div>
+<p>Run the <code>dd</code> command with the ID of the LUN that you want to reuse, the maximum number of bytes to read and write at a time, and the number of input blocks to copy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # dd if=/dev/zero of=/dev/mapper/LUN_ID bs=1M count=200 oflag=direct&#x000A;</code></pre></div>
+<h2 id="importing-existing-storage-domains">Importing Existing Storage Domains</h2>
+
+<h3 id="overview-of-importing-existing-storage-domains">Overview of Importing Existing Storage Domains</h3>
+
+<p>In addition to adding new storage domains that contain no data, you can also import existing storage domains and access the data they contain. The ability to import storage domains allows you to recover data in the event of a failure in the Engine database, and to migrate data from one data center or environment to another.</p>
+
+<p>The following is an overview of importing each storage domain type:</p>
+
+<dl>
+  <dt><strong>Data</strong></dt>
+  <dd>Importing an existing data storage domain allows you to access all of the virtual machines and templates that the data storage domain contains. After you import the storage domain, you must manually import virtual machines, floating disk images, and templates into the destination data center. The process for importing the virtual machines and templates that a data storage domain contains is similar to that for an export storage domain. However, because data storage domains contain all the virtual machines and templates in a given data center, importing data storage domains is recommended for data recovery or large-scale migration of virtual machines between data centers or environments.
+
+    <p><strong>Important:</strong> You can import existing data storage domains that were attached to data centers with a compatibility level of 3.5 or higher.</p>
+  </dd>
+  <dt><strong>ISO</strong></dt>
+  <dd>Importing an existing ISO storage domain allows you to access all of the ISO files and virtual diskettes that the ISO storage domain contains. No additional action is required after importing the storage domain to access these resources; you can attach them to virtual machines as required.</dd>
+  <dt><strong>Export</strong></dt>
+  <dd>Importing an existing export storage domain allows you to access all of the virtual machine images and templates that the export storage domain contains. Because export domains are designed for exporting and importing virtual machine images and templates, importing export storage domains is recommended method of migrating small numbers of virtual machines and templates inside an environment or between environments. For information on exporting and importing virtual machines and templates to and from export storage domains, see "Exporting and Importing Virtual Machines and Templates" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.
+
+    <p><strong>Note:</strong> The export storage domain is deprecated. Storage data domains can be unattached from a data center and imported to another data center in the same environment, or in a different environment. Virtual machines, floating virtual disk images, and templates can then be uploaded from the imported storage domain to the attached data center.</p>
+  </dd>
+</dl>
+
+<h3 id="importing-storage-domains">Importing Storage Domains</h3>
+
+<p>Import a storage domain that was previously attached to a data center in the same environment or in a different environment. This procedure assumes the storage domain is no longer attached to any data center in any environment, to avoid data corruption. To import and attach an existing data storage domain to a data center, the target data center must be initialized.</p>
+
+<p><strong>Importing a Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> to which to attach the storage domain.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> for the storage domain.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Domain Function</strong> and <strong>Storage Type</strong> from the drop-down lists.</p>
+  </li>
+  <li>
+    <p>Select a host from the <strong>Use host</strong> drop-down list.</p>
+
+    <p><strong>Important:</strong> All communication to the storage domain is through the selected host and not directly from the oVirt Engine. At least one active host must exist in the system and be attached to the chosen data center. All hosts must have access to the storage device before the storage domain can be configured.</p>
+  </li>
+  <li>
+    <p>Enter the details of the storage domain.</p>
+
+    <p><strong>Note:</strong> The fields for specifying the details of the storage domain change in accordance with the value you select in the <strong>Domain Function</strong> and <strong>Storage Type</strong> lists. These options are the same as those available for adding a new storage domain. For more information on these options, see <a href="Storage_properties">Storage properties</a>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Activate Domain in Data Center</strong> check box to activate the storage domain after attaching it to the selected data center.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You can now import virtual machines and templates from the storage domain to the data center.</p>
+
+<h3 id="migrating-storage-domains-between-data-centers-in-the-same-environment">Migrating Storage Domains between Data Centers in the Same Environment</h3>
+
+<p>Migrate a storage domain from one data center to another in the same oVirt environment to allow the destination data center to access the data contained in the storage domain. This procedure involves detaching the storage domain from one data center, and attaching it to a different data center.</p>
+
+<p><strong>Migrating a Storage Domain between Data Centers in the Same Environment</strong></p>
+
+<ol>
+  <li>
+    <p>Shut down all virtual machines running on the required storage domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Center</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Maintenance</strong>, then click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Detach</strong>, then click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Attach</strong>.</p>
+  </li>
+  <li>
+    <p>Select the destination data center and click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain is attached to the destination data center and is automatically activated. You can now import virtual machines and templates from the storage domain to the destination data center.</p>
+
+<h3 id="migrating-storage-domains-between-data-centers-in-different-environments">Migrating Storage Domains between Data Centers in Different Environments</h3>
+
+<p>Migrate a storage domain from one oVirt environment to another to allow the destination environment to access the data contained in the storage domain. This procedure involves removing the storage domain from one oVirt environment, and importing it into a different environment. To import and attach an existing data storage domain to a oVirt data center, the storage domain's source data center must have a compatibility level of 3.5 or higher.</p>
+
+<p><strong>Migrating a Storage Domain between Data Centers in Different Environments</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Administration Portal of the source environment.</p>
+  </li>
+  <li>
+    <p>Shut down all virtual machines running on the required storage domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Center</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Maintenance</strong>, then click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Detach</strong>, then click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Remove Storage(s)</strong> window, ensure the <strong>Format Domain, i.e. Storage Content will be lost!</strong> check box is not selected. This step preserves the data in the storage domain for later use.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to remove the storage domain from the source environment.</p>
+  </li>
+  <li>
+    <p>Log in to the Administration Portal of the destination environment.</p>
+  </li>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Select the destination data center from the <strong>Data Center</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter a name for the storage domain.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Domain Function</strong> and <strong>Storage Type</strong> from the drop-down lists.</p>
+  </li>
+  <li>
+    <p>Select a host from the <strong>Use Host</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter the details of the storage domain.</p>
+
+    <p><strong>Note:</strong> The fields for specifying the details of the storage domain change in accordance with the value you select in the <strong>Storage Type</strong> drop-down list. These options are the same as those available for adding a new storage domain. For more information on these options, see <a href="Storage_properties">Storage properties</a>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Activate Domain in Data Center</strong> check box to automatically activate the storage domain when it is attached.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain is attached to the destination data center in the new oVirt environment and is automatically activated. You can now import virtual machines and templates from the imported storage domain to the destination data center.</p>
+
+<h3 id="importing-virtual-machines-from-imported-data-storage-domains">Importing Virtual Machines from Imported Data Storage Domains</h3>
+
+<p>Import a virtual machine from a data storage domain you have imported into your oVirt environment. This procedure assumes that the imported data storage domain has been attached to a data center and has been activated.</p>
+
+<p><strong>Importing Virtual Machines from an Imported Data Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the imported storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>VM Import</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select one or more virtual machines to import.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import</strong>.</p>
+  </li>
+  <li>
+    <p>For each virtual machine in the <strong>Import Virtual Machine(s)</strong> window, ensure the correct target cluster is selected in the <strong>Cluster</strong> list.</p>
+  </li>
+  <li>
+    <p>Map external virtual machine vNIC profiles to profiles that are present on the target cluster(s):</p>
+
+    <p>i. Click <strong>vNic Profiles Mapping</strong>.</p>
+
+    <p>ii. Select the vNIC profile to use from the <strong>Target vNic Profile</strong> drop-down list.</p>
+
+    <p>iii. If multiple target clusters are selected in the <strong>Import Virtual Machine(s)</strong> window, select each target cluster in the <strong>Target Cluster</strong> drop-down list and ensure the mappings are correct.</p>
+
+    <p>iv. Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>If a MAC address conflict is detected, an exclamation mark appears next to the name of the virtual machine. Mouse over the icon to view a tooltip displaying the type of error that occurred.</p>
+
+    <p>Select the <strong>Reassign Bad MACs</strong> check box to reassign new MAC addresses to all problematic virtual machines. Alternatively, you can select the <strong>Reassign</strong> check box per virtual machine.</p>
+
+    <p><strong>Note:</strong> If there are no available addresses to assign, the import operation will fail. However, in the case of MAC addresses that are outside the cluster’s MAC address pool range, it is possible to import the virtual machine without reassigning a new MAC address.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The imported virtual machines no longer appear in the list under the <strong>VM Import</strong> tab.</p>
+
+<h3 id="importing-templates-from-imported-storage-domains">Importing Templates from Imported Storage Domains</h3>
+
+<p>Import a template from a data storage domain you have imported into your oVirt environment. This procedure assumes that the imported data storage domain has been attached to a data center and has been activated.</p>
+
+<p><strong>Importing Templates from an Imported Data Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the imported storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Template Import</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select one or more templates to import.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import</strong>.</p>
+  </li>
+  <li>
+    <p>For each virtual machine in the <strong>Import Template(s)</strong> window, ensure the correct target cluster is selected in the <strong>Cluster</strong> list.</p>
+  </li>
+  <li>
+    <p>Map external virtual machine vNIC profiles to profiles that are present on the target cluster(s):</p>
+
+    <p>i. Click <strong>vNic Profiles Mapping</strong>.</p>
+
+    <p>ii. Select the vNIC profile to use from the <strong>Target vNic Profile</strong> drop-down list.</p>
+
+    <p>iii. If multiple target clusters are selected in the <strong>Import Template(s)</strong> window, select each target cluster in the <strong>Target Cluster</strong> drop-down list and ensure the mappings are correct.</p>
+
+    <p>iv. Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="storage-tasks">Storage Tasks</h2>
+
+<h3 id="uploading-images-to-a-data-storage-domain">Uploading Images to a Data Storage Domain</h3>
+
+<p>You can upload virtual disk images and ISO images to your data storage domain in the Administration Portal or with the REST API.</p>
+
+<p>QEMU-compatible virtual disks can be attached to virtual machines. Virtual disk types must be either QCOW2 or raw. Disks created from a QCOW2 virtual disk cannot be shareable, and the QCOW2 virtual disk file must not have a backing file.</p>
+
+<p>ISO images can be attached to virtual machines as CDROMs or used to boot virtual machines.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<p>The upload function uses HTML 5 APIs, which requires your environment to have the following:</p>
+
+<ul>
+  <li>
+    <p>Image I/O Proxy (ovirt-imageio-proxy), configured with engine-setup.</p>
+  </li>
+  <li>
+    <p>Certificate authority, imported into the web browser used to access the Administration Portal.</p>
+  </li>
+  <li>
+    <p>To import the certificate authority, browse to https://engine_address/ovirt-engine/services/pki-resource?resource=ca-certificate&amp;format=X509-PEM-CA and enable all the trust settings.</p>
+  </li>
+  <li>
+    <p>Browser that supports HTML 5, such as Firefox 35, Internet Explorer 10, Chrome 13, or later.</p>
+  </li>
+</ul>
+
+<p><strong>Uploading an Image to a Data Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Disks</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>Start</strong> from the <strong>Upload</strong> menu.</p>
+  </li>
+  <li>
+    <p>Click <strong>Choose File</strong> and select the image to upload.</p>
+  </li>
+  <li>
+    <p>Fill in the <strong>Disk Options</strong> fields. See “Explanation of Settings in the New Virtual Disk Window” in Chapter 10. for descriptions of the relevant fields.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>A progress bar indicates the status of the upload. You can pause, cancel, or resume uploads from the Upload menu.</p>
+
+<p><strong>Increasing the Upload Timeout Value</strong></p>
+
+<ol>
+  <li>
+    <p>If the upload times out and you see the message, <strong>Reason: timeout due to transfer inactivity</strong>, increase the timeout value:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s TransferImageClientInactivityTimeoutInSeconds=6000&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="moving-storage-domains-to-maintenance-mode">Moving Storage Domains to Maintenance Mode</h3>
+
+<p>A storage domain must be in maintenance mode before it can be detached and removed. This is required to redesignate another data domain as the master data domain.</p>
+
+<p><strong>Moving storage domains to maintenance mode</strong></p>
+
+<ol>
+  <li>
+    <p>Shut down all the virtual machines running on the storage domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Centers</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Maintenance</strong>.</p>
+
+    <p><strong>Note:</strong> The <code>Ignore OVF update failure</code> check box allows the storage domain to go into maintenance mode even if the OVF update fails.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain is deactivated and has an <code>Inactive</code> status in the results list. You can now edit, detach, remove, or reactivate the inactive storage domains from the data center.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** You can also activate, detach and place domains into maintenance mode using the Storage tab on the details pane of the data center it is associated with.&#x000A;</code></pre></div>
+<h3 id="editing-storage-domains">Editing Storage Domains</h3>
+
+<p>You can edit storage domain parameters through the Administration Portal. Depending on the state of the storage domain, either active or inactive, different fields are available for editing. Fields such as <strong>Data Center</strong>, <strong>Domain Function</strong>, <strong>Storage Type</strong>, and <strong>Format</strong> cannot be changed.</p>
+
+<ul>
+  <li>
+    <p><strong>Active</strong>: When the storage domain is in an active state, the <strong>Name</strong>, <strong>Description</strong>, <strong>Comment</strong>, <strong>Warning Low Space Indicator (%)</strong>, <strong>Critical Space Action Blocker (GB)</strong>, and <strong>Wipe After Delete</strong> fields can be edited. The <strong>Name</strong> field can only be edited while the storage domain is active. All other fields can also be edited while the storage domain is inactive.</p>
+  </li>
+  <li>
+    <p><strong>Inactive</strong>: When the storage domain is in maintenance mode or unattached, thus in an inactive state, you can edit all fields except <strong>Name</strong>, <strong>Data Center</strong>, <strong>Domain Function</strong>, <strong>Storage Type</strong>, and <strong>Format</strong>. The storage domain must be inactive to edit storage connections, mount options, and other advanced parameters. This is only supported for NFS, POSIX, and Local storage types.</p>
+
+    <p><strong>Note:</strong> iSCSI storage connections cannot be edited via the Administration Portal, but can be edited via the REST API.</p>
+  </li>
+</ul>
+
+<p><strong>Editing an Active Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Manage Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Edit the available fields as required.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Editing an Inactive Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>If the storage domain is active, move it to maintenance mode:</p>
+
+    <p>i. Click the storage domain’s name to open the details view.</p>
+
+    <p>ii. Click the <strong>Data Center</strong> tab</p>
+
+    <p>iii. Click <strong>Maintenance</strong>.</p>
+
+    <p>iv. Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Manage Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Edit the storage path and other details as required. The new connection details must be of the same storage type as the original connection.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Activate the storage domain:</p>
+
+    <p>i. Click the storage domain’s name to open the details view.</p>
+
+    <p>ii. Click the <strong>Data Center</strong> tab.</p>
+
+    <p>iii. Click <strong>Activate</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="updating-ovfs">Updating OVFs</h3>
+
+<p><strong>Updating OVFs</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Select the storage domain and click <strong>More Actions</strong> → <strong>Update OVFs</strong>.</p>
+  </li>
+</ol>
+
+<p>The OVFs are updated and a message appears in <strong>Events</strong>.</p>
+
+<h3 id="activating-storage-domains-from-maintenance-mode">Activating Storage Domains from Maintenance Mode</h3>
+
+<p>If you have been making changes to a data center's storage, you have to put storage domains into maintenance mode. Activate a storage domain to resume using it.</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click an inactive storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Centers</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Activate</strong>.</p>
+
+    <p><strong>Important:</strong> If you attempt to activate the ISO domain before activating the data domain, an error message displays and the domain is not activated.</p>
+  </li>
+</ol>
+
+<p>jj</p>
+
+<h3 id="detaching-a-storage-domain-from-a-data-center">Detaching a Storage Domain from a Data Center</h3>
+
+<p>Detach a storage domain from one data center to migrate it to another data center.</p>
+
+<p><strong>Detaching a Storage Domain from the Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click a storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Centers</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Maintenance</strong> .</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to initiate maintenance mode.</p>
+  </li>
+  <li>
+    <p>Click <strong>Detach</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to detach the storage domain.</p>
+  </li>
+</ol>
+
+<p>The storage domain has been detached from the data center, ready to be attached to another data center.</p>
+
+<h3 id="attaching-a-storage-domain-to-a-data-center">Attaching a Storage Domain to a Data Center</h3>
+
+<p>Attach a storage domain to a data center.</p>
+
+<p><strong>Attaching a Storage Domain to a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click a storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Data Centers</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Attach</strong>.</p>
+  </li>
+  <li>
+    <p>Select the appropriate data center.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain is attached to the data center and is automatically activated.</p>
+
+<h3 id="removing-a-storage-domain">Removing a Storage Domain</h3>
+
+<p>You have a storage domain in your data center that you want to remove from the virtualized environment.</p>
+
+<p><strong>Removing a Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Move the domain into maintenance mode and detach it:</p>
+
+    <p>i. Click the storage domain’s name to open the details view.</p>
+
+    <p>ii. Click the <strong>Data Center</strong> tab.</p>
+
+    <p>iii. Click <strong>Maintenance</strong>, then click <strong>OK</strong>.</p>
+
+    <p>iv. Click <strong>Detach</strong>, then click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Optionally select the <strong>Format Domain</strong>, i.e. <strong>Storage Content will be lost!</strong> check box to erase the content of the domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain is permanently removed from the environment.</p>
+
+<h3 id="destroying-a-storage-domain">Destroying a Storage Domain</h3>
+
+<p>A storage domain encountering errors may not be able to be removed through the normal procedure. Destroying a storage domain forcibly removes the storage domain from the virtualized environment.</p>
+
+<p><strong>Destroying a Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Select the storage domain and click <strong>More Actions</strong> → <strong>Destroy</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Approve operation</strong> check box.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The storage domain has been destroyed. Manually clean the export directory for the storage domain to recycle it.</p>
+
+<h3 id="creating-a-disk-profile">Creating a Disk Profile</h3>
+
+<p>Disk profiles define the maximum level of throughput and the maximum level of input and output operations for a virtual disk in a storage domain. Disk profiles are created based on storage profiles defined under data centers, and must be manually assigned to individual virtual disks for the profile to take effect.</p>
+
+<p>This procedure assumes you have already defined one or more storage quality of service entries under the data center to which the storage domain belongs.</p>
+
+<p><strong>Creating a Disk Profile</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the data storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disk Profiles</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and a <strong>Description</strong> for the disk profile.</p>
+  </li>
+  <li>
+    <p>Select the quality of service to apply to the disk profile from the <strong>QoS</strong> list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have created a disk profile, and that disk profile can be applied to new virtual disks hosted in the data storage domain.</p>
+
+<h3 id="removing-a-disk-profile">Removing a Disk Profile</h3>
+
+<p>Remove an existing disk profile from your oVirt environment.</p>
+
+<p><strong>Removing a Disk Profile</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click the data storage domain’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disk Profiles</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the disk profile to remove.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>If the disk profile was assigned to any virtual disks, the disk profile is removed from those virtual disks.</p>
+
+<h3 id="viewing-the-health-status-of-a-storage-domain">Viewing the Health Status of a Storage Domain</h3>
+
+<p>Storage domains have an external health status in addition to their regular <strong>Status</strong>. The external health status is reported by plug-ins or external systems, or set by an administrator, and appears to the left of the storage domain's <strong>Name</strong> as one of the following icons:</p>
+
+<ul>
+  <li>
+    <p><strong>OK</strong>: No icon</p>
+  </li>
+  <li>
+    <p><strong>Info</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Info.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><strong>Warning</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Warning.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><strong>Error</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Error.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><strong>Failure</strong>: <img alt="" width="15" height="15" src="/images/admin-guide/Failure.png?1560777613" /></p>
+  </li>
+</ul>
+
+<p>To view further details about the storage domain's health status, select the storage domain and click the <strong>Events</strong> tab.</p>
+
+<p>The storage domain's health status can also be viewed using the REST API. A <code>GET</code> request on a storage domain will include the <code>external_status</code> element, which contains the health status.</p>
+
+<p>You can set a storage domain's health status in the REST API via the <code>events</code> collection.</p>
+
+<h3 id="managing-system-permissions-for-a-storage-domain">Managing System Permissions for a Storage Domain</h3>
+
+<p>When the <strong>Discard After Delete</strong> check box is selected, a <code>blkdiscard</code> command is called on a logical volume when it is removed and the underlying storage is notified that the blocks are free. The storage array can use the freed space and allocate it when requested. <strong>Discard After Delete</strong> only works on block storage. The flag is not available on the oVirt Engine for file storage, for example NFS.</p>
+
+<p><strong>Restrictions:</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Discard After Delete</strong> is only available on block storage domains, such as iSCSI or Fibre Channel.</p>
+  </li>
+  <li>
+    <p>The underlying storage must support <code>Discard</code>.</p>
+  </li>
+</ul>
+
+<p><strong>Discard After Delete</strong> can be enabled both when creating a block storage domain or when editing a block storage domain. See the “Adding Block Storage” and “Editing Storage Domains”. sections in this chapter.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Hosts">Chapter 7: Hosts</a><br />
+<strong>Next:</strong> <a href="chap-Pools">Chapter 9: Pools</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-storage">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Storage.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Storage.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

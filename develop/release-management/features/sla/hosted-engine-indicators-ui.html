@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hosted Engine related changes in the UI &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h2 id="hosted-engine-related-changes-in-the-ui">Hosted Engine related changes in the UI</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Several changes were made to the Webadmin UI to make it easier to see hosted engine related entities.</p>
+
+<ul>
+  <li>New icons showing:
+    <ul>
+      <li>which VM is the hosted engine</li>
+      <li>which storage domain contains disks used by the hosted engine</li>
+      <li>which hosts are configured to run the hosted engine VM</li>
+    </ul>
+  </li>
+  <li>The buttons for enabling and disabling hosted engine global maintenance mode were moved to the context menu of a host</li>
+  <li>Only one of the buttons is enabled, depending on the actual state.</li>
+  <li>Hosts can be filtered by hosted engine deployment.</li>
+</ul>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Andrej Krejcir (akrejcir)</li>
+  <li>Email: akrejcir@redhat.com</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h4 id="new-icons">New icons</h4>
+
+<p>Added icons make it easier to see hosted engine related entities in the webadmin.
+These icons were added to the webadmin UI:</p>
+
+<ul>
+  <li>
+    <p>Icon showing which VM is actually the hosted engine, regardless of its name.
+<img alt="" width="488" height="281" src="/images/wiki/he-vm-icon.png?1560777612" /></p>
+  </li>
+  <li>
+    <p>Icon showing which storage domain contains the disks used by the hosted engine.
+<img alt="" width="488" height="297" src="/images/wiki/he-storage-icon.png?1560777612" /></p>
+  </li>
+  <li>
+    <p>Icons showing which hosts are configured to run the hosted engine VM.
+<img alt="" width="488" height="300" src="/images/wiki/he-hosts-icon.png?1560777612" /></p>
+  </li>
+</ul>
+
+<h4 id="global-maintenance-buttons">Global maintenance buttons</h4>
+
+<p>The buttons for enabling and disabling hosted engine global maintenance mode
+were moved to the host context menu in the host tab, because it was easier to implement their state.</p>
+
+<h4 id="host-filtering">Host filtering</h4>
+
+<p>All hosts with hosted engine deployment can be filtered using the flag:
+<code>Host: he_deployed = true</code>.</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>It is now easily visible which entities are related to the hosted engine and
+they can be filtered out from the rest if needed.</p>
+
+<h3 id="implementation-details">Implementation details</h3>
+
+<p>Adding the icon for VM was simple, as the VM entity already has a field
+indicating if it is the hosted engine.
+Similarly for the hosts, the host entity has fields
+indicating if the hosted engine can run on it and the mode of the maintenance.</p>
+
+<p>The storage domain did not have such field, so it was added.
+A new view was added to the DB which contains the ids of storage domains
+with disks used by the hosted engine.</p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p>Bugzilla references:</p>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1392389">HE VM Icon</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1392412">HE storage domain icon</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1392418">Global maintenance buttons</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1392407">Host icons and filtering</a></li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/hosted-engine-indicators-ui.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/hosted-engine-indicators-ui.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 31 Aug 2017 12:41 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

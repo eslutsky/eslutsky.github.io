@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Self Hosted Engine iSCSI Support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="self-hosted-engine-iscsi-support">Self Hosted Engine iSCSI Support</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature enable the user to use iSCSI storage for Hosted Engine data domain.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Installation: <a href="https://github.com/sandrobonazzola">Sandro Bonazzola</a> e-mail: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>HA agent: Jiri Moskovcak (jmoskovc) e-mail: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#109;&#111;&#115;&#107;&#111;&#118;&#099;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#106;&#109;&#111;&#115;&#107;&#111;&#118;&#099;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Status: Completed</li>
+  <li>Last updated on – by (WIKI)</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="ux-changes">UX changes</h3>
+
+<p>Current:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>           --== STORAGE CONFIGURATION ==--&#x000A;          &#x000A;           During customization use CTRL-D to abort.&#x000A;           Please specify the storage you would like to use (nfs3, nfs4)[nfs3]:&#x000A;</code></pre></div>
+<p>Will become:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>           --== STORAGE CONFIGURATION ==--&#x000A;          &#x000A;           During customization use CTRL-D to abort.&#x000A;           Please specify the storage you would like to use (iscsi, nfs3, nfs4)[nfs3]:&#x000A;</code></pre></div>
+<p>if iscsi will be selected:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>           Please specify the iSCSI portal IP address:&#x000A;           Please specify the iSCSI portal port [3260]: &#x000A;           Please specify the iSCSI portal user:&#x000A;           Please specify the iSCSI portal password:&#x000A;           Please specify the target name (values) [default]:&#x000A;</code></pre></div>
+<p>The target name list can be obtained by the portal and a default can be set if only one is found or just the first of the list</p>
+
+<h3 id="config-files-changes">Config files changes</h3>
+
+<ul>
+  <li>hosted-engine.conf may need to store some of the above iSCSI portal / target parameters</li>
+  <li>answer file will need to store answers for all of the above questions except for portal password</li>
+</ul>
+
+<h3 id="vdsm-commands-involved">VDSM commands involved</h3>
+
+<p>If device is not already attached / known:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  discoverSendTargets(con={'connection': '192.168.1.105', 'password': '******', 'port': '3260', 'user': ''}, options=None)&#x000A;  discoverSendTargets, Return response: {'fullTargets': ['192.168.1.105:3260,1 iqn.2009-02.com.example:for.all'], 'targets': ['iqn.2009-02.com.example:for.all']}&#x000A;  connectStorageServer(domType=3, spUUID='00000000-0000-0000-0000-000000000000', conList=[{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '0', 'user': '', 'password': '******', 'id': '00000000-0000-0000-0000-000000000000', 'port': '3260'}], options=None)&#x000A;  connectStorageServer, Return response: {'statuslist': [{'status': 0, 'id': '00000000-0000-0000-0000-000000000000'}]}&#x000A;  getDeviceList(storageType=3, options={})&#x000A;  getDeviceList, Return response: {'devList': [{'status': 'free', 'vendorID': 'IET', 'capacity': '31457280000', 'fwrev': '0001', 'vgUUID': '', 'pathlist': [{'initiatorname': 'default', 'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'password': '******', 'port': '3260'}], 'logicalblocksize': '512', 'pathstatus': [{'physdev': 'sdb', 'type': 'iSCSI', 'state': 'active', 'lun': '1'}], 'devtype': 'iSCSI', 'physicalblocksize': '4096', 'pvUUID': '', 'serial': 'SIET_VIRTUAL-DISK', 'GUID': '33000000100000001', 'productID': 'VIRTUAL-DISK'}]}&#x000A;  repoStats(options=None)&#x000A;  repoStats, Return response: {}&#x000A;  createVG(vgname='c2584832-b153-4653-8406-563938021849', devlist=['33000000100000001'], force=False, options=None)&#x000A;  createVG, Return response: {'uuid': 'kBndaS-Or6z-v25k-Kq8e-Dfk2-sExp-CejaBF'}&#x000A;  createStorageDomain(storageType=3, sdUUID='c2584832-b153-4653-8406-563938021849', domainName='iscsi', typeSpecificArg='kBndaS-Or6z-v25k-Kq8e-Dfk2-sExp-CejaBF', domClass=1, domVersion='3', options=None)&#x000A;  createStorageDomain, Return response: None&#x000A;  getStorageDomainStats(sdUUID='c2584832-b153-4653-8406-563938021849', options=None)&#x000A;  getStorageDomainStats, Return response: {'stats': {'mdasize': '134217728', 'mdathreshold': False, 'mdavalid': True, 'diskfree': '26977763328', 'disktotal': '31138512896', 'mdafree': '0'}}&#x000A;  getVGInfo(vgUUID='kBndaS-Or6z-v25k-Kq8e-Dfk2-sExp-CejaBF', options=None)&#x000A;  getVGInfo, Return response: {'info': {'state': 'OK', 'vgsize': '31138512896', 'name': 'c2584832-b153-4653-8406-563938021849', 'vgfree': '26977763328', 'vgUUID': 'kBndaS-Or6z-v25k-Kq8e-Dfk2-sExp-CejaBF', 'pvlist': [{'vendorID': 'IET', 'capacity': '31138512896', 'fwrev': '0000', 'vgUUID': 'kBndaS-Or6z-v25k-Kq8e-Dfk2-sExp-CejaBF', 'pathlist': [{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'port': '3260', 'initiatorname': 'default'}], 'pathstatus': [{'physdev': 'sdb', 'type': 'iSCSI', 'state': 'active', 'lun': '1'}], 'devtype': 'iSCSI', 'pvUUID': 'XsT0GW-NfZ4-jomf-SfWy-7feS-IvmJ-uzA1tK', 'serial': 'SIET_VIRTUAL-DISK', 'GUID': '33000000100000001', 'devcapacity': '31457280000', 'productID': 'VIRTUAL-DISK'}], 'type': 3, 'attr': {'allocation': 'n', 'partial': '-', 'exported': '-', 'permission': 'w', 'clustered': '-', 'resizeable': 'z'}}}&#x000A;  connectStorageServer(domType=3, spUUID='9bfe34ee-444c-4171-a69b-4b99da61ea39', conList=[{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'user': '', 'password': '******', 'id': '40362546-4363-40e8-ae9d-29f519a94573', 'port': '3260'}], options=None)&#x000A;  connectStorageServer, Return response: {'statuslist': [{'status': 465, 'id': '40362546-4363-40e8-ae9d-29f519a94573'}]}&#x000A;  createStoragePool(poolType=None, spUUID='9bfe34ee-444c-4171-a69b-4b99da61ea39', poolName='iscsi', masterDom='c2584832-b153-4653-8406-563938021849', domList=['c2584832-b153-4653-8406-563938021849'], masterVersion=1, lockPolicy=None, lockRenewalIntervalSec=5, leaseTimeSec=60, ioOpTimeoutSec=10, leaseRetries=3, options=None)&#x000A;</code></pre></div>
+<p>If device is already attached / known</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  getDeviceList(storageType=3, options={})&#x000A;  getDeviceList, Return response: {'devList': [{'status': 'free', 'vendorID': 'IET', 'capacity': '33554432000', 'fwrev': '0001', 'vgUUID': '', 'pathlist': [{'initiatorname': 'default', 'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'password': '******', 'port': '3260'}], 'logicalblocksize': '512', 'pathstatus': [{'physdev': 'sdb', 'type': 'iSCSI', 'state': 'active', 'lun': '1'}], 'devtype': 'iSCSI', 'physicalblocksize': '512', 'pvUUID': '', 'serial': 'SIET_VIRTUAL-DISK', 'GUID': '1IET_00010001', 'productID': 'VIRTUAL-DISK'}]}&#x000A;  createVG(vgname='139ce2bb-e1dc-4757-add6-37ce8f410c4a', devlist=['1IET_00010001'], force=False, options=None)&#x000A;  createVG, Return response: {'uuid': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw'}&#x000A;  createStorageDomain(storageType=3, sdUUID='139ce2bb-e1dc-4757-add6-37ce8f410c4a', domainName='virtiscsi', typeSpecificArg='hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', domClass=1, domVersion='3', options=None)&#x000A;  createStorageDomain, Return response: None&#x000A;  getStorageDomainStats(sdUUID='139ce2bb-e1dc-4757-add6-37ce8f410c4a', options=None)&#x000A;  getStorageDomainStats, Return response: {'stats': {'mdasize': '134217728', 'mdathreshold': True, 'mdavalid': True, 'diskfree': '28991029248', 'disktotal': '33151778816', 'mdafree': '67104768'}}&#x000A;  getVGInfo(vgUUID='hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', options=None)&#x000A;  getVGInfo, Return response: {'info': {'state': 'OK', 'vgsize': '33151778816', 'name': '139ce2bb-e1dc-4757-add6-37ce8f410c4a', 'vgfree': '28991029248', 'vgUUID': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', 'pvlist': [{'vendorID': 'IET', 'capacity': '33151778816', 'fwrev': '0000', 'vgUUID': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', 'pathlist': [{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'port': '3260', 'initiatorname': 'default'}], 'pathstatus': [{'physdev': 'sdb', 'type': 'iSCSI', 'state': 'active', 'lun': '1'}], 'devtype': 'iSCSI', 'pvUUID': '9wnpis-e9qR-8yTx-SqcV-dqC1-tzCy-Yzc4Ug', 'serial': 'SIET_VIRTUAL-DISK', 'GUID': '1IET_00010001', 'devcapacity': '33554432000', 'productID': 'VIRTUAL-DISK'}], 'type': 3, 'attr': {'allocation': 'n', 'partial': '-', 'exported': '-', 'permission': 'w', 'clustered': '-', 'resizeable': 'z'}}}&#x000A;  connectStorageServer(domType=3, spUUID='00000002-0002-0002-0002-000000000251', conList=[{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'user': '', 'password': '******', 'id': 'febf9441-2745-456b-8362-87186a341258', 'port': '3260'}], options=None)&#x000A;  connectStorageServer, Return response: {'statuslist': [{'status': 0, 'id': 'febf9441-2745-456b-8362-87186a341258'}]}&#x000A;  getVGInfo(vgUUID='hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', options=None)&#x000A;  getVGInfo, Return response: {'info': {'state': 'OK', 'vgsize': '33151778816', 'name': '139ce2bb-e1dc-4757-add6-37ce8f410c4a', 'vgfree': '28991029248', 'vgUUID': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', 'pvlist': [{'vendorID': 'IET', 'capacity': '33151778816', 'fwrev': '0000', 'vgUUID': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', 'pathlist': [{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'port': '3260', 'initiatorname': 'default'}], 'pathstatus': [{'physdev': 'sdb', 'type': 'iSCSI', 'state': 'active', 'lun': '1'}], 'devtype': 'iSCSI', 'pvUUID': '9wnpis-e9qR-8yTx-SqcV-dqC1-tzCy-Yzc4Ug', 'serial': 'SIET_VIRTUAL-DISK', 'GUID': '1IET_00010001', 'devcapacity': '33554432000', 'productID': 'VIRTUAL-DISK'}], 'type': 3, 'attr': {'allocation': 'n', 'partial': '-', 'exported': '-', 'permission': 'w', 'clustered': '-', 'resizeable': 'z'}}}&#x000A;  createStoragePool(poolType=None, spUUID='00000002-0002-0002-0002-000000000251', poolName='Default', masterDom='139ce2bb-e1dc-4757-add6-37ce8f410c4a', domList=['139ce2bb-e1dc-4757-add6-37ce8f410c4a'], masterVersion=1, lockPolicy=None, lockRenewalIntervalSec=5, leaseTimeSec=60, ioOpTimeoutSec=10, leaseRetries=3, options=None)&#x000A;  createStoragePool, Return response: True&#x000A;  connectStorageServer(domType=3, spUUID='00000002-0002-0002-0002-000000000251', conList=[{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'user': '', 'password': '******', 'id': 'febf9441-2745-456b-8362-87186a341258', 'port': '3260'}], options=None)&#x000A;  connectStorageServer, Return response: {'statuslist': [{'status': 0, 'id': 'febf9441-2745-456b-8362-87186a341258'}]}&#x000A;  getVGInfo(vgUUID='hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', options=None)&#x000A;  getVGInfo, Return response: {'info': {'state': 'OK', 'vgsize': '33151778816', 'name': '139ce2bb-e1dc-4757-add6-37ce8f410c4a', 'vgfree': '28991029248', 'vgUUID': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', 'pvlist': [{'vendorID': 'IET', 'capacity': '33151778816', 'fwrev': '0000', 'vgUUID': 'hDcdS7-MkjM-oXm3-yP8M-KmqM-glYC-c9YoLw', 'pathlist': [{'connection': '192.168.1.105', 'iqn': 'iqn.2009-02.com.example:for.all', 'portal': '1', 'port': '3260', 'initiatorname': 'default'}], 'pathstatus': [{'physdev': 'sdb', 'type': 'iSCSI', 'state': 'active', 'lun': '1'}], 'devtype': 'iSCSI', 'pvUUID': '9wnpis-e9qR-8yTx-SqcV-dqC1-tzCy-Yzc4Ug', 'serial': 'SIET_VIRTUAL-DISK', 'GUID': '1IET_00010001', 'devcapacity': '33554432000', 'productID': 'VIRTUAL-DISK'}], 'type': 3, 'attr': {'allocation': 'n', 'partial': '-', 'exported': '-', 'permission': 'w', 'clustered': '-', 'resizeable': 'z'}}}&#x000A;  connectStoragePool(spUUID='00000002-0002-0002-0002-000000000251', hostID=1, msdUUID='139ce2bb-e1dc-4757-add6-37ce8f410c4a', masterVersion=1, domainsMap=None, options=None)&#x000A;  connectStoragePool, Return response: True&#x000A;  spmStart(spUUID='00000002-0002-0002-0002-000000000251', prevID=-1, prevLVER='-1', maxHostID=250, domVersion='3', options=None)&#x000A;  spmStart, Return response: None&#x000A;  clearTask(taskID='3ab8e451-e819-4c6c-8921-efaa66ecea9b', spUUID=None, options=None)&#x000A;  clearTask, Return response: None&#x000A;  activateStorageDomain(sdUUID='139ce2bb-e1dc-4757-add6-37ce8f410c4a', spUUID='00000002-0002-0002-0002-000000000251', options=None)&#x000A;  activateStorageDomain, Return response: None&#x000A;  connectStoragePool(spUUID='00000002-0002-0002-0002-000000000251', hostID=1, msdUUID='139ce2bb-e1dc-4757-add6-37ce8f410c4a', masterVersion=1, domainsMap=None, options=None)&#x000A;  connectStoragePool, Return response: True&#x000A;</code></pre></div>
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Users will be able to use iSCSI storage as data domain for Hosted Engine.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<ul>
+  <li>ovirt-hosted-engine-ha provides a new class <strong>FilesystemBackend</strong> which provides the API for all the storage actions specific for the hosted engine</li>
+  <li>the existing setup code has been ported to use this API</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>scsi-target-utils configuration:
+    <ul>
+      <li><a href="https://fedoraproject.org/wiki/Scsi-target-utils_Quickstart_Guide">https://fedoraproject.org/wiki/Scsi-target-utils_Quickstart_Guide</a></li>
+      <li><a href="https://fedorahosted.org/ovirt/wiki/ISCSISetup">https://fedorahosted.org/ovirt/wiki/ISCSISetup</a></li>
+      <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=738239">https://bugzilla.redhat.com/show_bug.cgi?id=738239</a></li>
+      <li><a href="http://www.linuxjournal.com/content/creating-software-backed-iscsi-targets-red-hat-enterprise-linux-6">http://www.linuxjournal.com/content/creating-software-backed-iscsi-targets-red-hat-enterprise-linux-6</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>You can use nightly builds, available from oVirt snapshots repositories:</p>
+
+<p><a href="http://resources.ovirt.org/pub/ovirt-3.5-snapshot-static/"><code>http://resources.ovirt.org/pub/ovirt-3.5-snapshot-static/</code></a>
+<a href="http://resources.ovirt.org/pub/ovirt-3.5-snapshot/"><code>http://resources.ovirt.org/pub/ovirt-3.5-snapshot/</code></a></p>
+
+<h3 id="test-cases">Test Cases</h3>
+
+<ul>
+  <li><a href="/develop/infra/testing/test-cases/-hosted-engine-iscsi-multiple-lun-support/">QA:TestCase Hosted Engine iSCSI Multiple LUN Support</a></li>
+</ul>
+
+<p><a href="/develop/release-management/features/">Self Hosted Engine iSCSI Support</a> <a href="/develop/release-management/releases/3.5/feature/">Self Hosted Engine iSCSI Support</a> <a href="category:Integration">Self Hosted Engine iSCSI Support</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/self-hosted-engine-iscsi-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/self-hosted-engine-iscsi-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 31 Aug 2017 12:41 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

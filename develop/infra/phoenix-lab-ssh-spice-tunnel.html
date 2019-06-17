@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Phoenix Lab Ssh Spice Tunnel &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="phoenix-lab-ssh-spice-tunnel">Phoenix Lab Ssh Spice Tunnel</h1>
+
+<p><strong>NOTE</strong>: for the latest version of this doc, see <a href="http://ovirt-infra-docs.readthedocs.org/en/latest/">http://ovirt-infra-docs.readthedocs.org/en/latest/</a></p>
+
+<p>Heres a <em>hacky</em> way to setup the tunnel for spice to be used when clicking the engine spice button on fedora based machines.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>You'll need the following extra packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ sudo yum install -y tsocks ssh remote-viewer&#x000A;</code></pre></div>
+<p><em>tsocks currently segfaults any application which requires encryption (ssh, ssl). You can also use proxychains</em></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>git clone https://github.com/rofl0r/proxychains-ng&#x000A;cd proxychains-ng&#x000A;./configure &amp;&amp; make &amp;&amp; sudo make install &amp;&amp; sudo make install-config&#x000A;</code></pre></div>
+<h2 id="tunnel-configuration">Tunnel Configuration</h2>
+
+<p>Then you must setup the stunnel configuration like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cat /etc/tsocks.conf&#x000A;server = 127.0.0.1&#x000A;server_port = 8181&#x000A;</code></pre></div>
+<p>Or, if using proxychains, edit /usr/local/etc/proxychains.conf and make sure the following stanza is set</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[ProxyList]&#x000A;socks4 127.0.0.1 8181&#x000A;</code></pre></div>
+<h2 id="getting-the-engine-certificate">Getting the Engine Certificate</h2>
+
+<p>Download the engine ssl certificate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ openssl s_client -connect monitoring.ovirt.org:443 \&#x000A;      2&gt;/dev/null &lt;/dev/null \&#x000A;  | openssl x509 &gt; engine.cert&#x000A;</code></pre></div>
+<h2 id="replace-the-remote-viewer">Replace the remote-viewer</h2>
+
+<p>Now replace the remote-viewer binary by the following custom script, substituting "proxychains4" for tsocks if you're using proxychains:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ remote_viewer_path="$(which remote-viewer)"&#x000A;$ mv "${remote_viewer_path}"{,.orig}&#x000A;$ cat &gt;&gt;"$remote_viewer_path" &lt;&lt;EOS&#x000A;#!/bin/bash&#x000A;tsocks \&#x000A;    "${remote_viewer_path}".orig \&#x000A;    --spice-ca-file=engine.cert \&#x000A;    "$@"&#x000A;EOS&#x000A;</code></pre></div>
+<p>Make sure that the certificate points to the certificate you downloaded previously.</p>
+
+<h2 id="starting-the-tunnel">Starting the Tunnel</h2>
+
+<p>Once done that, you'll have to start the ssh tunnel (you can do it automatically form bashrc or similar):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ ssh -fND 8181 youruser@foreman.ovirt.org&#x000A;</code></pre></div>
+<p>That will start the SSH tunnel in the background with a SOCKS proxy listening on 127.0.0.1:8181, where the tsocks connections will connect to.</p>
+
+<h2 id="bussines-as-usual">Bussines as Usual</h2>
+
+<p>So after all this hacky setup, you'll be able to connect to any vm in the phx engine using the spice link in the UI. Hopefully that will not be needed i the future once we have a better solution (vpn?).</p>
+
+<p><a href="/develop/infra/infrastructure/">oVirt Infrastructure</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/phoenix-lab-ssh-spice-tunnel.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/phoenix-lab-ssh-spice-tunnel.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

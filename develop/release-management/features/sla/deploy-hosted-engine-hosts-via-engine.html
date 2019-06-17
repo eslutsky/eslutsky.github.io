@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Deploy Hosted Engine Hosts via Engine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="overview">overview</h1>
+<p>In 4.0 onward adding more hosts to the hosted engine cluster is supported only via the engine.
+This has various advantages:</p>
+<ol>
+  <li>It's one place, that takes advantage of SDK, REST, UI. validations etc.</li>
+  <li>The hosts are now part of the cluster and datacenter with regards to host_id - there will be no collision/distinction between hosted engine or other
+host that try to monitor domains.</li>
+</ol>
+
+<h1 id="high-level">High level</h1>
+<p>To deploy hosted engine we extended the host-deploy subsystem API to support an action - <code>deploy/remove</code> and default <code>none</code>.</p>
+
+<p>The engine, when it invokes host-deploy that installs vdsm RPMs, will now also install the hosted engine RPMs.  In addition, it will take the hosted-engine.conf as an argument and will place it under /etc.
+This is enough to get a host into the HA cluster.</p>
+
+<p>To un-deploy or remove the hosted engine role of a host the engine passes action=remove and then host-deploy empties the configuration files so the HA agent is practically non-functional.</p>
+
+<h1 id="detailed-flow">Detailed flow</h1>
+<p>Supply detailed into on how to get the info from the disk, and what is the host-deploy enums we use</p>
+
+<h1 id="ui-side-dialog-tab">UI side dialog tab</h1>
+<p>The UI of 'Add' and 'Reinstall' host has a new side panel named 'Hosted-Engine'. It supplies 3 options for the deployment of a host:</p>
+<ul>
+  <li>'None' meaning don't touch the hosted-engine components</li>
+  <li>'Deploy' meaning install the ovirt-hosted-engine-ha rpms, place a custom hosted-engine.conf under /etc and start the service</li>
+  <li>'Undeploy' Remove the hosted-engine.conf and rpms. That action decomissions a host from the HA cluster of hosted engine.</li>
+</ul>
+
+<h1 id="rest-request-parameters">REST request parameters</h1>
+<p>The API exposes those URLs to implement the 3 proposed actions as the UI:</p>
+<ul>
+  <li>Add Host</li>
+  <li>None - done pass any argument</li>
+  <li>Deploy
+    <ul>
+      <li>POST …/hosts?deploy_hosted_engine</li>
+      <li>POST …/hosts?deploy_hosted_engine=true</li>
+    </ul>
+  </li>
+  <li>Undeploy
+    <ul>
+      <li>POST …/hosts?undeploy_hosted_engine</li>
+      <li>POST …/hosts?undeploy_hosted_engine=true</li>
+    </ul>
+  </li>
+  <li>Install Host</li>
+  <li>None - done pass any argument</li>
+  <li>Deploy
+    <ul>
+      <li>POST …/hosts/xxx/install?deploy_hosted_engine</li>
+      <li>POST …/hosts/xxx/install?deploy_hosted_engine=true</li>
+    </ul>
+  </li>
+  <li>Undeploy
+    <ul>
+      <li>POST …/hosts/xxx/install?undeploy_hosted_engine</li>
+      <li>POST …/hosts/xxx/install?undeploy_hosted_engine=true</li>
+    </ul>
+  </li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/deploy-hosted-engine-hosts-via-engine.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/deploy-hosted-engine-hosts-via-engine.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

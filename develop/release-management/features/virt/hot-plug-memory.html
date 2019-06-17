@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hot Plug Memory &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="hot-plug-memory">Hot plug memory</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Allow adding memory to VM while it is running</p>
+
+<h2 id="owners">Owners</h2>
+
+<ul>
+  <li>Name: Vitor de Lima (Vitordelima)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#118;&#100;&#101;&#108;&#105;&#109;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#118;&#100;&#101;&#108;&#105;&#109;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Name: Omer Frenkel (ofrenkel)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#111;&#102;&#114;&#101;&#110;&#107;&#101;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#111;&#102;&#114;&#101;&#110;&#107;&#101;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="description">Description</h2>
+
+<p>Until now, adding memory to a VM required it to be down, in order the change will take effect.
+with hot plug memory, user can add memory to a running VM and select to apply the change immediately,
+so the guest will see the new memory.
+Hot plugging memory is done using Update-VM for a running VM.
+just updating the amount of the VM memory to the new (higher) value will trigger hot plug,
+unless user request to apply the changes later.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>When memory is updated, the new value is saved for next run,&lt;br&gt;&#x000A;so next time the vm is started, the new memory value is used.&#x000A;user flow example:&#x000A; * VM started with 4gb memory.&#x000A; * User update memory to 6gb, memory is hot-plugged to the vm (2gb memory device created).&#x000A; * User stop the VM, and start it again.&#x000A; * VM now starts with 6gb, as its base memory (no memory devices are created).&#x000A;</code></pre></div>
+<h2 id="implementation-details">Implementation Details</h2>
+
+<ul>
+  <li>The new memory is added to the VM as a DIMM device:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;memory model='acpi-dimm'&gt;&#x000A;      &lt;source&gt;&#x000A;        &lt;node&gt;0&lt;/node&gt; &lt;-- source memory slot, if not provided, sane default  shall be used&#x000A;        &lt;pagesize unit='KiB'&gt;4096&lt;/pagesize&gt; &lt;--- size of the memory page to be used as source (to be able to specify hugepages), sane default shall be used if ommitted&#x000A;      &lt;/source&gt; &lt;- both source node and pagesize are optional, &lt;source&gt; can be ommited, defaults from the domain config will be used&#x000A;      &lt;target&gt;&#x000A;        &lt;node&gt;0&lt;/node&gt; &lt;--- guest memory node (mandatory)&#x000A;        &lt;size unit='KiB'&gt;12345&lt;/size&gt; &lt;- new module size (mandatory)&#x000A;      &lt;/target&gt;&#x000A;    &lt;/memory&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>Every memory device must be a multiplication of 256mb.
+    <ul>
+      <li>It doesn't matter what the base memory is, for example if vm started with 1003mb, it can be updated only to 1259mb,1515mb,…</li>
+      <li>note that this amount of memory is configurable but its not recommended to change, VM may fail to start, configuration value is 'HotPlugMemoryMultiplicationSizeMb'.</li>
+    </ul>
+  </li>
+  <li>There is a limit on the number of memory devices, which means limit the number of times user can do hotplug during run of vm.
+    <ul>
+      <li>The configuration value for this limit is 'MaxMemorySlots' and the default is 16.</li>
+    </ul>
+  </li>
+  <li>Number of max memory devices (slots) and maximum memory are sent to libvirt.xml:
+    <ul>
+      <li>
+        <maxMemory slots="16">4294967296</maxMemory>
+      </li>
+      <li>the maximum memory is configurable for 32 and 64 bit OS: VM32BitMaxMemorySizeInMB, VM64BitMaxMemorySizeInMB.</li>
+    </ul>
+  </li>
+  <li>The memory devices are attached to a guest numa node, so on 3.6 cluster, with 'HotPlugMemorySupported' configuration enabled (true by default), every VM has a default guest numa node.</li>
+  <li>VDSM hotplugMemory verb expect memory device with size in mb and guest numa node id to plug the memory to.</li>
+</ul>
+
+<h3 id="more-info">More Info</h3>
+
+<ul>
+  <li>libvirt docs:
+    <ul>
+      <li><a href="http://libvirt.org/formatdomain.html#elementsMemory">http://libvirt.org/formatdomain.html#elementsMemory</a></li>
+    </ul>
+  </li>
+  <li>Discussion about the libvirt API for memory hotplug:
+    <ul>
+      <li><a href="https://www.redhat.com/archives/libvir-list/2014-July/msg01265.html">https://www.redhat.com/archives/libvir-list/2014-July/msg01265.html</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="vdsm-hooks">VDSM Hooks</h2>
+
+<p>its possible to manipulate the libvirt xml in the following vdsm hooks</p>
+
+<ul>
+  <li>before_memory_hotplug</li>
+  <li>after_memory_hotplug</li>
+</ul>
+
+<h3 id="compatibility-issues">Compatibility issues</h3>
+
+<p>Not yet supported on PPC</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/hot-plug-memory.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/hot-plug-memory.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

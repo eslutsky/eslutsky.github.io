@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Additional Configuration &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/vmm-guide/">Vmm-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-4-additional-configuration">Chapter 4: Additional Configuration</h1>
+
+<h2 id="configuring-operating-systems-with-osinfo">Configuring Operating Systems with osinfo</h2>
+
+<p>oVirt stores operating system configurations for virtual machines in <strong>/etc/ovirt-engine/osinfo.conf.d/00-defaults.properties</strong>. This file contains default values such as <code>os.other.devices.display.protocols.value = spice/qxl,vnc/vga,vnc/qxl,vnc/cirrus</code>.</p>
+
+<p>There are only a limited number of scenarios in which you would change these values:</p>
+
+<ul>
+  <li>
+    <p>Adding an operating system that does not appear in the list of supported guest operating systems</p>
+  </li>
+  <li>
+    <p>Adding a product key (for example, <code>os.windows_10x64.productKey.value =</code>)</p>
+  </li>
+  <li>
+    <p>Configuring the sysprep path for a Windows virtual machine (for example, <code>os.windows_10x64.sysprepPath.value = ${ENGINE_USR}/conf/sysprep/sysprep.w10x64</code>)</p>
+
+    <p><strong>Important:</strong> Do not edit the actual <strong>00-defaults.properties</strong> file. Changes will be overwritten if you upgrade or restore the Engine.</p>
+
+    <p>Do not change values that come directly from the operating system or the Engine, such as maximum memory size.</p>
+  </li>
+</ul>
+
+<p>To change the operating system configurations, create an override file in <strong>/etc/ovirt-engine/osinfo.conf.d/</strong>. The file name must begin with a value greater than <code>00</code>, so that the file appears after <strong>/etc/ovirt-engine/osinfo.conf.d/00-defaults.properties</strong>, and ends with the extension, <strong>.properties</strong>.</p>
+
+<p>For example, <strong>10-productkeys.properties</strong> overrides the default file, <strong>00-defaults.properties</strong>. The last file in the file list has precedence over earlier files.</p>
+
+<h2 id="configuring-single-sign-on-for-virtual-machines">Configuring Single Sign-On for Virtual Machines</h2>
+
+<p>Configuring single sign-on, also known as password delegation, allows you to automatically log in to a virtual machine using the credentials you use to log in to the VM Portal. Single sign-on can be used on both Enterprise Linux and Windows virtual machines.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** If single sign-on to the VM Portal is enabled, single sign-on to virtual machines will not be possible. With single sign-on to the VM Portal enabled, the VM Portal does not need to accept a password, thus the password cannot be delegated to sign in to virtual machines.&#x000A;</code></pre></div>
+<h3 id="configuring-single-sign-on-for-enterprise-linux-virtual-machines-using-ipa-idm">Configuring Single Sign-On for Enterprise Linux Virtual Machines Using IPA (IdM)</h3>
+
+<p>To configure single sign-on for Enterprise Linux virtual machines using GNOME and KDE graphical desktop environments and IPA (IdM) servers, you must install the <code>ovirt-engine-guest-agent</code> package on the virtual machine and install the packages associated with your window manager.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** The following procedure assumes that you have a working IPA configuration and that the IPA domain is already joined to the Engine. You must also ensure that the clocks on the Engine, the virtual machine and the system on which IPA (IdM) is hosted are synchronized using NTP.&#x000A;</code></pre></div>
+<p><strong>Configuring Single Sign-On for Enterprise Linux Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Enterprise Linux virtual machine.</p>
+  </li>
+  <li>
+    <p>Enable the required repositories.</p>
+  </li>
+  <li>
+    <p>Download and install the guest agent packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-guest-agent-common&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the single sign-on packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-guest-agent-pam-module&#x000A; # yum install ovirt-engine-guest-agent-gdm-plugin&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the IPA packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ipa-client&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the following command and follow the prompts to configure <em>ipa-client</em> and join the virtual machine to the domain:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ipa-client-install --permit --mkhomedir&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> In environments that use DNS obfuscation, this command should be:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ipa-client-install --domain=FQDN --server==FQDN&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For Enterprise Linux 7.2 and later, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # authconfig --enablenis --update&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Enterprise Linux 7.2 has a new version of the System Security Services Daemon (SSSD), which introduces configuration that is incompatible with the oVirt Engine guest agent single sign-on implementation. The command will ensure that single sign-on works.</p>
+  </li>
+  <li>
+    <p>Fetch the details of an IPA user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # getent passwd IPA_user_name&#x000A;</code></pre></div>
+    <p>This will return something like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> some-ipa-user:\*:936600010:936600001::/home/some-ipa-user:/bin/sh&#x000A;</code></pre></div>
+    <p>You will need this information in the next step to create a home directory for <code>some-ipa-user</code>.</p>
+  </li>
+  <li>
+    <p>Set up a home directory for the IPA user:</p>
+
+    <p>i. Create the new user's home directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # mkdir /home/some-ipa-user&#x000A;</code></pre></div>
+    <p>ii. Give the new user ownership of the new user's home directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # chown 935500010:936600001 /home/some-ipa-user&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Log in to the VM Portal using the user name and password of a user configured to use single sign-on and connect to the console of the virtual machine. You will be logged in automatically.</p>
+
+<h3 id="configuring-single-sign-on-for-enterprise-linux-virtual-machines-using-active-directory">Configuring Single Sign-On for Enterprise Linux Virtual Machines Using Active Directory</h3>
+
+<p>To configure single sign-on for Enterprise Linux virtual machines using GNOME and KDE graphical desktop environments and Active Directory, you must install the <code>ovirt-engine-guest-agent</code> package on the virtual machine, install the packages associated with your window manager and join the virtual machine to the domain.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** The following procedure assumes that you have a working Active Directory configuration and that the Active Directory domain is already joined to the Engine. You must also ensure that the clocks on the Engine, the virtual machine and the system on which Active Directory is hosted are synchronized using NTP.&#x000A;</code></pre></div>
+<p><strong>Configuring Single Sign-On for Enterprise Linux Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Enterprise Linux virtual machine.</p>
+  </li>
+  <li>
+    <p>Enable the oVirt Agent channel.</p>
+  </li>
+  <li>
+    <p>Download and install the guest agent packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-guest-agent-common&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the single sign-on packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-agent-gdm-plugin-ovirtcred&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the Samba client packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install samba-client samba-winbind samba-winbind-clients&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>On the virtual machine, modify the <code>/etc/samba/smb.conf</code> file to contain the following, replacing <code>DOMAIN</code> with the short domain name and <code>REALM.LOCAL</code> with the Active Directory realm:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [global]&#x000A;    workgroup = DOMAIN&#x000A;    realm = REALM.LOCAL&#x000A;    log level = 2&#x000A;    syslog = 0&#x000A;    server string = Linux File Server&#x000A;    security = ads&#x000A;    log file = /var/log/samba/%m&#x000A;    max log size = 50&#x000A;    printcap name = cups&#x000A;    printing = cups&#x000A;    winbind enum users = Yes&#x000A;    winbind enum groups = Yes&#x000A;    winbind use default domain = true&#x000A;    winbind separator = +&#x000A;    idmap uid = 1000000-2000000&#x000A;    idmap gid = 1000000-2000000&#x000A;    template shell = /bin/bash&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Join the virtual machine to the domain:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> net ads join -U user_name&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Start the <code>winbind</code> service and ensure it starts on boot:</p>
+
+    <ul>
+      <li>
+        <p>For Enterprise Linux 6</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service winbind start&#x000A;  # chkconfig winbind on&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Enterprise Linux 7</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # systemctl start winbind.service&#x000A;  # systemctl enable winbind.service&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Verify that the system can communicate with Active Directory:</p>
+
+    <p>i. Verify that a trust relationship has been created:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # wbinfo -t&#x000A;</code></pre></div>
+    <p>ii. Verify that you can list users:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # wbinfo -u&#x000A;</code></pre></div>
+    <p>iii. Verify that you can list groups:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # wbinfo -g&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Configure the NSS and PAM stack:</p>
+
+    <p>i. Open the <strong>Authentication Configuration</strong> window:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # authconfig-tui&#x000A;</code></pre></div>
+    <p>ii. Select the <strong>Use Winbind</strong> check box, select <strong>Next</strong> and press <strong>Enter</strong>.</p>
+
+    <p>iii. Select the <strong>OK</strong> button and press <strong>Enter</strong>.</p>
+  </li>
+</ol>
+
+<p>Log in to the VM Portal using the user name and password of a user configured to use single sign-on and connect to the console of the virtual machine. You will be logged in automatically.</p>
+
+<h3 id="configuring-single-sign-on-for-windows-virtual-machines">Configuring Single Sign-On for Windows Virtual Machines</h3>
+
+<p>To configure single sign-on for Windows virtual machines, the Windows guest agent must be installed on the guest virtual machine. The <code>oVirt Guest Tools</code> ISO file provides this agent. If the <code>oVirt-toolsSetup.iso</code> image is not available in your ISO domain, contact your system administrator.</p>
+
+<p><strong>Configuring Single Sign-On for Windows Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Select the Windows virtual machine. Ensure the machine is powered up.</p>
+  </li>
+  <li>
+    <p>Click <strong>Change CD</strong>.</p>
+  </li>
+  <li>
+    <p>Select <code>oVirt-toolsSetup.iso</code> from the list of images.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Console</strong> icon and log in to the virtual machine.</p>
+  </li>
+  <li>
+    <p>On the virtual machine, locate the CD drive to access the contents of the guest tools ISO file and launch <code>oVirt-ToolsSetup.exe</code>. After the tools have been installed, you will be prompted to restart the machine to apply the changes.</p>
+  </li>
+</ol>
+
+<p>Log in to the VM Portal using the user name and password of a user configured to use single sign-on and connect to the console of the virtual machine. You will be logged in automatically.</p>
+
+<h3 id="disabling-single-sign-on-for-virtual-machines">Disabling Single Sign-on for Virtual Machines</h3>
+
+<p>The following procedure explains how to disable single sign-on for a virtual machine.</p>
+
+<p><strong>Disabling Single Sign-On for Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Select a virtual machine and click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Console</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Disable Single Sign On</strong> check box.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-usb-devices">Configuring USB Devices</h2>
+
+<p>A virtual machine connected with the SPICE protocol can be configured to connect directly to USB devices.</p>
+
+<p>The USB device will only be redirected if the virtual machine is active and in focus. USB redirection can be manually enabled each time a device is plugged in or set to automatically redirect to active virtual machines in the SPICE client menu.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Note the distinction between the client machine and guest machine. The client is the hardware from which you access a guest. The guest is the virtual desktop or virtual server which is accessed through the VM Portal or Administration Portal.&#x000A;</code></pre></div>
+<h3 id="using-usb-devices-on-virtual-machines">Using USB Devices on Virtual Machines</h3>
+
+<p>USB redirection <strong>Enabled</strong> mode allows KVM/SPICE USB redirection for Linux and Windows virtual machines. Virtual (guest) machines require no guest-installed agents or drivers for native USB. On Enterprise Linux clients, all packages required for USB redirection are provided by the <code>virt-viewer</code> package. On Windows clients, you must also install the <code>usbdk</code> package. Native USB mode is supported on the following clients and guests:</p>
+
+<ul>
+  <li>
+    <p>Client</p>
+
+    <ul>
+      <li>
+        <p>Enterprise Linux 7.1 and higher</p>
+      </li>
+      <li>
+        <p>Enterprise Linux 6.0 and higher</p>
+      </li>
+      <li>
+        <p>Windows 10</p>
+      </li>
+      <li>
+        <p>Windows 8</p>
+      </li>
+      <li>
+        <p>Windows 7</p>
+      </li>
+      <li>
+        <p>Windows 2008</p>
+      </li>
+      <li>
+        <p>Windows 2008 Server R2</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Guest</p>
+
+    <ul>
+      <li>
+        <p>Enterprise Linux 7.1 and higher</p>
+      </li>
+      <li>
+        <p>Enterprise Linux 6.0 and higher</p>
+      </li>
+      <li>
+        <p>Windows 7</p>
+      </li>
+      <li>
+        <p>Windows XP</p>
+      </li>
+      <li>
+        <p>Windows 2008</p>
+      </li>
+    </ul>
+
+    <p><strong>Note:</strong> If you have a 64-bit architecture PC, you must use the 64-bit version of Internet Explorer to install the 64-bit version of the USB driver. The USB redirection will not work if you install the 32-bit version on a 64-bit architecture. As long as you initially install the correct USB type, you then can access USB redirection from both 32 and 64-bit browsers.</p>
+  </li>
+</ul>
+
+<h3 id="using-usb-devices-on-a-windows-client">Using USB Devices on a Windows Client</h3>
+
+<p>The <code>usbdk</code> driver must be installed on the Windows client for the USB device to be redirected to the guest. Ensure the version of <code>usbdk</code> matches the architecture of the client machine. For example, the 64-bit version of <code>usbdk</code> must be installed on 64-bit Windows machines.</p>
+
+<p><strong>Using USB Devices on a Windows Client</strong></p>
+
+<ol>
+  <li>
+    <p>When the <code>usbdk</code> driver is installed, select a virtual machine that has been configured to use the SPICE protocol.</p>
+  </li>
+  <li>
+    <p>Ensure USB support is set to <strong>Enabled</strong>:</p>
+
+    <p>i. Click <strong>Edit</strong>.</p>
+
+    <p>ii. Click the <strong>Console</strong> tab.</p>
+
+    <p>iii. Select <strong>Enabled</strong> from the <strong>USB Support</strong> drop-down list.</p>
+
+    <p>iv. Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Console</strong> → <strong>Console Options</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Enable USB Auto-Share</strong> check box.</p>
+  </li>
+  <li>
+    <p>Start the virtual machine from the VM Portal and click the <strong>Console</strong> button to connect to that virtual machine.</p>
+  </li>
+  <li>
+    <p>Plug your USB device into the client machine to make it appear automatically on the guest machine.</p>
+  </li>
+</ol>
+
+<h3 id="using-usb-devices-on-an-enterprise-linux-client">Using USB Devices on an Enterprise Linux Client</h3>
+
+<p>The <code>usbredir</code> package enables USB redirection from Enterprise Linux clients to virtual machines. <code>usbredir</code> is a dependency of the <code>virt-viewer</code> package, and is automatically installed together with that package.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** USB redirection is only supported when you open the virtual machine from the VM Portal.&#x000A;</code></pre></div>
+<p><strong>Using USB devices on a Enterprise Linux client</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine that has been configured to use the SPICE protocol.</p>
+  </li>
+  <li>
+    <p>Ensure USB support is set to <strong>Enabled</strong>:</p>
+
+    <p>i. Click <strong>Edit</strong>.</p>
+
+    <p>ii. Click the <strong>Console</strong> tab.</p>
+
+    <p>iii. Select <strong>Enabled</strong> from the <strong>USB Support</strong> drop-down list.</p>
+
+    <p>iv. Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Console</strong> → <strong>Console Options</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Enable USB Auto-Share</strong> check box and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Start the virtual machine from the VM Portal and click <strong>Console</strong> to connect to that virtual machine.</p>
+  </li>
+  <li>
+    <p>Plug your USB device into the client machine to make it appear automatically on the guest machine.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-multiple-monitors">Configuring Multiple Monitors</h2>
+
+<h3 id="configuring-multiple-displays-for-enterprise-linux-virtual-machines">Configuring Multiple Displays for Enterprise Linux Virtual Machines</h3>
+
+<p>A maximum of four displays can be configured for a single Enterprise Linux virtual machine when connecting to the virtual machine using the SPICE protocol.</p>
+
+<ol>
+  <li>
+    <p>Start a SPICE session with the virtual machine.</p>
+  </li>
+  <li>
+    <p>Open the <strong>View</strong> drop-down menu at the top of the SPICE client window.</p>
+  </li>
+  <li>
+    <p>Open the <strong>Display</strong> menu.</p>
+  </li>
+  <li>
+    <p>Click the name of a display to enable or disable that display.</p>
+
+    <p><strong>Note:</strong> By default, <strong>Display 1</strong> is the only display that is enabled on starting a SPICE session with a virtual machine. If no other displays are enabled, disabling this display will close the session.</p>
+  </li>
+</ol>
+
+<h1 id="configuring-multiple-displays-for-windows-virtual-machines">Configuring Multiple Displays for Windows Virtual Machines</h1>
+
+<p>A maximum of four displays can be configured for a single Windows virtual machine when connecting to the virtual machine using the SPICE protocol.</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>With the virtual machine in a powered-down state, click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Console</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the number of displays from the <strong>Monitors</strong> drop-down list.</p>
+
+    <p><strong>Note:</strong> This setting controls the maximum number of displays that can be enabled for the virtual machine. While the virtual machine is running, additional displays can be enabled up to this number.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Start a SPICE session with the virtual machine.</p>
+  </li>
+  <li>
+    <p>Open the <strong>View</strong> drop-down menu at the top of the SPICE client window.</p>
+  </li>
+  <li>
+    <p>Open the <strong>Display</strong> menu.</p>
+  </li>
+  <li>
+    <p>Click the name of a display to enable or disable that display.</p>
+
+    <p><strong>Note:</strong> By default, <strong>Display 1</strong> is the only display that is enabled on starting a SPICE session with a virtual machine. If no other displays are enabled, disabling this display will close the session.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-console-options">Configuring Console Options</h2>
+
+<h3 id="console-options">Console Options</h3>
+
+<p>Connection protocols are the underlying technology used to provide graphical consoles for virtual machines and allow users to work with virtual machines in a similar way as they would with physical machines. oVirt currently supports the following connection protocols:</p>
+
+<p><strong>SPICE</strong></p>
+
+<p>Simple Protocol for Independent Computing Environments (SPICE) is the recommended connection protocol for both Linux virtual machines and Windows virtual machines. To open a console to a virtual machine using SPICE, use Remote Viewer.</p>
+
+<p><strong>VNC</strong></p>
+
+<p>Virtual Network Computing (VNC) can be used to open consoles to both Linux virtual machines and Windows virtual machines. To open a console to a virtual machine using VNC, use Remote Viewer or a VNC client.</p>
+
+<p><strong>RDP</strong></p>
+
+<p>Remote Desktop Protocol (RDP) can only be used to open consoles to Windows virtual machines, and is only available when you access a virtual machines from a Windows machine on which Remote Desktop has been installed. Before you can connect to a Windows virtual machine using RDP, you must set up remote sharing on the virtual machine and configure the firewall to allow remote desktop connections.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** SPICE is not currently supported on virtual machines running Windows 8. If a Windows 8 virtual machine is configured to use the SPICE protocol, it will detect the absence of the required SPICE drivers and automatically fall back to using RDP.&#x000A;</code></pre></div>
+<h4 id="configuring-spice-console-options">Configuring SPICE Console Options</h4>
+
+<p>You can configure several options for opening graphical consoles for virtual machines, such as the method of invocation and whether to enable or disable USB redirection.</p>
+
+<p><strong>Accessing Console Options</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a running virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Console</strong> → **Console Options.</p>
+
+    <p><strong>Note:</strong> You can configure the connection protocols and video type in the <strong>Console</strong> tab of the <strong>Edit Virtual Machine</strong> window in the Administration Portal. Additional options specific to each of the connection protocols, such as the keyboard layout when using the VNC connection protocol, can be configured.</p>
+  </li>
+</ol>
+
+<h4 id="spice-console-options">SPICE Console Options</h4>
+
+<p>When the SPICE connection protocol is selected, the following options are available in the <strong>Console Options</strong> window.</p>
+
+<p><strong>SPICE Options</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Map control-alt-del shortcut to ctrl+alt+end</strong>: Select this check box to map the <strong>Ctrl</strong> + <strong>Alt</strong> + <strong>Del</strong> key combination to <strong>Ctrl</strong> + <strong>Alt</strong> + <strong>End</strong> inside the virtual machine.</p>
+  </li>
+  <li>
+    <p><strong>Enable USB Auto-Share</strong>: Select this check box to automatically redirect USB devices to the virtual machine. If this option is not selected, USB devices will connect to the client machine instead of the guest virtual machine. To use the USB device on the guest machine, manually enable it in the SPICE client menu.</p>
+  </li>
+  <li>
+    <p><strong>Open in Full Screen</strong>: Select this check box for the virtual machine console to automatically open in full screen when you connect to the virtual machine. Press <strong>SHIFT</strong> + <strong>F11</strong> to toggle full screen mode on or off.</p>
+  </li>
+  <li>
+    <p><strong>Enable SPICE Proxy</strong>: Select this check box to enable the SPICE proxy.</p>
+  </li>
+</ul>
+
+<h4 id="vnc-console-options">VNC Console Options</h4>
+
+<p>When the VNC connection protocol is selected, the following options are available in the <strong>Console Options</strong> window.</p>
+
+<p><strong>Console Invocation</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Native Client</strong>: When you connect to the console of the virtual machine, a file download dialog provides you with a file that opens a console to the virtual machine via Remote Viewer.</p>
+  </li>
+  <li>
+    <p><strong>noVNC</strong>: When you connect to the console of the virtual machine, a browser tab is opened that acts as the console.</p>
+  </li>
+</ul>
+
+<p><strong>VNC Options</strong></p>
+
+<ul>
+  <li><strong>Map control-alt-delete shortcut to ctrl+alt+end</strong>: Select this check box to map the <strong>Ctrl</strong> + <strong>Alt</strong> + <strong>Del</strong> key combination to <strong>Ctrl</strong> + <strong>Alt</strong> + <strong>End</strong> inside the virtual machine.</li>
+</ul>
+
+<h4 id="rdp-console-options">RDP Console Options</h4>
+
+<p>When the RDP connection protocol is selected, the following options are available in the <strong>Console Options</strong> window.</p>
+
+<p><strong>Console Invocation</strong></p>
+
+<ul>
+  <li>
+    <p><strong>Auto</strong>: The Engine automatically selects the method for invoking the console.</p>
+  </li>
+  <li>
+    <p><strong>Native client</strong>: When you connect to the console of the virtual machine, a file download dialog provides you with a file that opens a console to the virtual machine via Remote Desktop.</p>
+  </li>
+</ul>
+
+<p><strong>RDP Options</strong></p>
+
+<ul>
+  <li><strong>Use Local Drives</strong>: Select this check box to make the drives on the client machine accessible on the guest virtual machine.</li>
+</ul>
+
+<h3 id="remote-viewer-options">Remote Viewer Options</h3>
+
+<h4 id="using-spice-connection-options">Using SPICE Connection Options</h4>
+
+<p>When you specify the <strong>Native client</strong> console invocation option, you will connect to virtual machines using Remote Viewer. The Remote Viewer window provides a number of options for interacting with the virtual machine to which it is connected.</p>
+
+<p><strong>Remote Viewer Options</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Option</td>
+   <td>Hotkey</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>File</td>
+   <td>
+    <ul>
+     <li><b>Screenshot</b>: Takes a screen capture of the active window and saves it in a location of your specification.</li>
+     <li><b>USB device selection</b>: If USB redirection has been enabled on your virtual machine, the USB device plugged into your client machine can be accessed from this menu.</li>
+     <li><b>Quit</b>: Closes the console. The hot key for this option is <b>Shift</b> + <b>Ctrl</b> + <b>Q</b>.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td>View</td>
+   <td>
+    <ul>
+     <li><b>Full screen</b>: Toggles full screen mode on or off. When enabled, full screen mode expands the virtual machine to fill the entire screen. When disabled, the virtual machine is displayed as a window. The hot key for enabling or disabling full screen is <b>SHIFT</b> + <b>F11</b>.</li>
+     <li><b>Zoom</b>: Zooms in and out of the console window. <b>Ctrl</b> + <b>+</b> zooms in, <b>Ctrl</b> + <b>-</b> zooms out, and <b>Ctrl</b> + <b>0</b> returns the screen to its original size.</li>
+     <li><b>Automatically resize</b>: Tick to enable the guest resolution to automatically scale according to the size of the console window.</li>
+     <li><b>Displays</b>: Allows users to enable and disable displays for the guest virtual machine.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td>Send key</td>
+   <td>
+    <ul>
+     <li> <b>Ctrl</b> + <b>Alt</b> + <b>Del</b>: On a Enterprise Linux virtual machine, it displays a dialog with options to suspend, shut down or restart the virtual machine. On a Windows virtual machine, it displays the task manager or Windows Security dialog.</li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>Backspace</b>: On a Enterprise Linux virtual machine, it restarts the X sever. On a Windows virtual machine, it does nothing.</li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F1</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F2</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F3</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F4</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F5</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F6</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F7</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F8</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F9</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F10</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F11</b></li>
+     <li><b>Ctrl</b> + <b>Alt</b> + <b>F12</b></li>
+     <li><b>Printscreen</b>: Passes the <b>Printscreen</b> keyboard option to the virtual machine.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td>Help</td>
+   <td>The <b>About</b> entry displays the version details of Virtual Machine Viewer that you are using.</td>
+  </tr>
+  <tr>
+   <td>Release Cursor from Virtual Machine</td>
+   <td><b>SHIFT</b> + <b>F12</b></td>
+  </tr>
+ </tbody>
+</table>
+
+<h4 id="remote-viewer-hotkeys">Remote Viewer Hotkeys</h4>
+
+<p>You can access the hotkeys for a virtual machine in both full screen mode and windowed mode. If you are using full screen mode, you can display the menu containing the button for hotkeys by moving the mouse pointer to the middle of the top of the screen. If you are using windowed mode, you can access the hotkeys via the <strong>Send key</strong> menu on the virtual machine window title bar.</p>
+
+<p><strong>Note:</strong> If <code>vdagent</code> is not running on the client machine, the mouse can become captured in a virtual machine window if it is used inside a virtual machine and the virtual machine is not in full screen. To unlock the mouse, press <strong>Shift</strong> + <strong>F12</strong>.</p>
+
+<h4 id="manually-associating-consolevv-files-with-remote-viewer">Manually Associating console.vv Files with Remote Viewer</h4>
+
+<p>If you are prompted to download a <code>console.vv</code> file when attempting to open a console to a virtual machine using the native client console option, and Remote Viewer is already installed, then you can manually associate <code>console.vv</code> files with Remote Viewer so that Remote Viewer can automatically use those files to open consoles.</p>
+
+<p><strong>Manually Associating console.vv Files with Remote Viewer</strong></p>
+
+<ol>
+  <li>
+    <p>Start the virtual machine.</p>
+  </li>
+  <li>
+    <p>Open the <strong>Console Options</strong> window.</p>
+
+    <ul>
+      <li>
+        <p>In the Administration Portal, click <strong>Console</strong> → <strong>Console Options</strong>.</p>
+      </li>
+      <li>
+        <p>In the VM Portal, click virtual machine name and click the pencil icon beside <strong>Console</strong>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Change the console invocation method to <strong>Native client</strong> and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Attempt to open a console to the virtual machine, then click <strong>Save</strong> when prompted to open or save the <strong>console.vv</strong> file.</p>
+  </li>
+  <li>
+    <p>Click the location on your local machine where you saved the file.</p>
+  </li>
+  <li>
+    <p>Double-click the <strong>console.vv</strong> file and select <strong>Select a program from a list of installed programs</strong> when prompted.</p>
+  </li>
+  <li>
+    <p>In the <strong>Open with</strong> window, select <strong>Always use the selected program to open this kind of file</strong> and click the <strong>Browse</strong> button.</p>
+  </li>
+  <li>
+    <p>Click the <strong>C:\Users[user name]\AppData\Local\virt-viewer\bin</strong> directory and select <strong>remote-viewer.exe</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Open</strong> and then click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>When you use the native client console invocation option to open a console to a virtual machine, Remote Viewer will automatically use the <strong>console.vv</strong> file that the oVirt Engine provides to open a console to that virtual machine without prompting you to select the application to use.</p>
+
+<h2 id="configuring-a-watchdog">Configuring a Watchdog</h2>
+
+<h3 id="adding-a-watchdog-card-to-a-virtual-machine">Adding a Watchdog Card to a Virtual Machine</h3>
+
+<p>You can add a watchdog card to a virtual machine to monitor the operating system's responsiveness.</p>
+
+<p><strong>Adding Watchdog Cards to Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> tab and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>High Availability</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the watchdog model to use from the <strong>Watchdog Model</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Select an action from the <strong>Watchdog Action</strong> drop-down list. This is the action that the virtual machine takes when the watchdog is triggered.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="installing-a-watchdog">Installing a Watchdog</h3>
+
+<p>To activate a watchdog card attached to a virtual machine, you must install the <code>watchdog</code> package on that virtual machine and start the <code>watchdog</code> service.</p>
+
+<p><strong>Installing Watchdogs</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the virtual machine on which the watchdog card is attached.</p>
+  </li>
+  <li>
+    <p>Install the <code>watchdog</code> package and dependencies:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install watchdog&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Edit the <strong>/etc/watchdog.conf</strong> file and uncomment the following line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> watchdog-device = /dev/watchdog&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Save the changes.</p>
+  </li>
+  <li>
+    <p>Start the <code>watchdog</code> service and ensure this service starts on boot:</p>
+
+    <ul>
+      <li>
+        <p>Enterprise Linux 6:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service watchdog start&#x000A;  # chkconfig watchdog on&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>Enterprise Linux 7:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # systemctl start watchdog.service&#x000A;  # systemctl enable watchdog.service&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="confirming-watchdog-functionality">Confirming Watchdog Functionality</h3>
+
+<p>Confirm that a watchdog card has been attached to a virtual machine and that the <code>watchdog</code> service is active.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Warning:** This procedure is provided for testing the functionality of watchdogs only and must not be run on production machines.&#x000A;</code></pre></div>
+<p><strong>Confirming Watchdog Functionality</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the virtual machine on which the watchdog card is attached.</p>
+  </li>
+  <li>
+    <p>Confirm that the watchdog card has been identified by the virtual machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # lspci | grep watchdog -i&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run one of the following commands to confirm that the watchdog is active:</p>
+
+    <ul>
+      <li>
+        <p>Trigger a kernel panic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # echo c &gt; /proc/sysrq-trigger&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>Terminate the <code>watchdog</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # kill -9 `pgrep watchdog`&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+</ol>
+
+<p>The watchdog timer can no longer be reset, so the watchdog counter reaches zero after a short period of time. When the watchdog counter reaches zero, the action specified in the <strong>Watchdog Action</strong> drop-down menu for that virtual machine is performed.</p>
+
+<h3 id="parameters-for-watchdogs-in-watchdogconf">Parameters for Watchdogs in watchdog.conf</h3>
+
+<p>The following is a list of options for configuring the <code>watchdog</code> service available in the <strong>/etc/watchdog.conf</strong> file. To configure an option, you must uncomment that option and restart the <code>watchdog</code> service after saving the changes.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** For a more detailed explanation of options for configuring the `watchdog` service and using the `watchdog` command, see the `watchdog` man page.&#x000A;</code></pre></div>
+<p><strong>watchdog.conf variables</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable name</th>
+      <th>Default Value</th>
+      <th>Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>ping</code></td>
+      <td>N/A</td>
+      <td>An IP address that the watchdog attempts to ping to verify whether that address is reachable. You can specify multiple IP addresses by adding additional <code>ping</code> lines.</td>
+    </tr>
+    <tr>
+      <td><code>interface</code></td>
+      <td>N/A</td>
+      <td>A network interface that the watchdog will monitor to verify the presence of network traffic. You can specify multiple network interfaces by adding additional <code>interface</code> lines.</td>
+    </tr>
+    <tr>
+      <td><code>file</code></td>
+      <td><code>/var/log/messages</code></td>
+      <td>A file on the local system that the watchdog will monitor for changes. You can specify multiple files by adding additional <code>file</code> lines.</td>
+    </tr>
+    <tr>
+      <td><code>change</code></td>
+      <td><code>1407</code></td>
+      <td>The number of watchdog intervals after which the watchdog checks for changes to files. A <code>change</code> line must be specified on the line directly after each <code>file</code> line, and applies to the <code>file</code> line directly above that <code>change</code> line.</td>
+    </tr>
+    <tr>
+      <td><code>max-load-1</code></td>
+      <td><code>24</code></td>
+      <td>The maximum average load that the virtual machine can sustain over a one-minute period. If this average is exceeded, then the watchdog is triggered. A value of <code>0</code> disables this feature.</td>
+    </tr>
+    <tr>
+      <td><code>max-load-5</code></td>
+      <td><code>18</code></td>
+      <td>The maximum average load that the virtual machine can sustain over a five-minute period. If this average is exceeded, then the watchdog is triggered. A value of <code>0</code> disables this feature. By default, the value of this variable is set to a value approximately three quarters that of <code>max-load-1</code>.</td>
+    </tr>
+    <tr>
+      <td><code>max-load-15</code></td>
+      <td><code>12</code></td>
+      <td>The maximum average load that the virtual machine can sustain over a fifteen-minute period. If this average is exceeded, then the watchdog is triggered. A value of <code>0</code> disables this feature. By default, the value of this variable is set to a value approximately one half that of <code>max-load-1</code>.</td>
+    </tr>
+    <tr>
+      <td><code>min-memory</code></td>
+      <td><code>1</code></td>
+      <td>The minimum amount of virtual memory that must remain free on the virtual machine. This value is measured in pages. A value of <code>0</code> disables this feature.</td>
+    </tr>
+    <tr>
+      <td><code>repair-binary</code></td>
+      <td><code>/usr/sbin/repair</code></td>
+      <td>The path and file name of a binary file on the local system that will be run when the watchdog is triggered. If the specified file resolves the issues preventing the watchdog from resetting the watchdog counter, then the watchdog action is not triggered.</td>
+    </tr>
+    <tr>
+      <td><code>test-binary</code></td>
+      <td>N/A</td>
+      <td>The path and file name of a binary file on the local system that the watchdog will attempt to run during each interval. A test binary allows you to specify a file for running user-defined tests.</td>
+    </tr>
+    <tr>
+      <td><code>test-timeout</code></td>
+      <td>N/A</td>
+      <td>The time limit, in seconds, for which user-defined tests can run. A value of <code>0</code> allows user-defined tests to continue for an unlimited duration.</td>
+    </tr>
+    <tr>
+      <td><code>temperature-device</code></td>
+      <td>N/A</td>
+      <td>The path to and name of a device for checking the temperature of the machine on which the <code>watchdog</code> service is running.</td>
+    </tr>
+    <tr>
+      <td><code>max-temperature</code></td>
+      <td><code>120</code></td>
+      <td>The maximum allowed temperature for the machine on which the <code>watchdog</code> service is running. The machine will be halted if this temperature is reached. Unit conversion is not taken into account, so you must specify a value that matches the watchdog card being used.</td>
+    </tr>
+    <tr>
+      <td><code>admin</code></td>
+      <td><code>root</code></td>
+      <td>The email address to which email notifications are sent.</td>
+    </tr>
+    <tr>
+      <td><code>interval</code></td>
+      <td><code>10</code></td>
+      <td>The interval, in seconds, between updates to the watchdog device. The watchdog device expects an update at least once every minute, and if there are no updates over a one-minute period, then the watchdog is triggered. This one-minute period is hard-coded into the drivers for the watchdog device, and cannot be configured.</td>
+    </tr>
+    <tr>
+      <td><code>logtick</code></td>
+      <td><code>1</code></td>
+      <td>When verbose logging is enabled for the <code>watchdog</code> service, the <code>watchdog</code> service periodically writes log messages to the local system. The <code>logtick</code> value represents the number of watchdog intervals after which a message is written.</td>
+    </tr>
+    <tr>
+      <td><code>realtime</code></td>
+      <td><code>yes</code></td>
+      <td>Specifies whether the watchdog is locked in memory. A value of <code>yes</code> locks the watchdog in memory so that it is not swapped out of memory, while a value of <code>no</code> allows the watchdog to be swapped out of memory. If the watchdog is swapped out of memory and is not swapped back in before the watchdog counter reaches zero, then the watchdog is triggered.</td>
+    </tr>
+    <tr>
+      <td><code>priority</code></td>
+      <td><code>1</code></td>
+      <td>The schedule priority when the value of <code>realtime</code> is set to <code>yes</code>.</td>
+    </tr>
+    <tr>
+      <td><code>pidfile</code></td>
+      <td><code>/var/run/syslogd.pid</code></td>
+      <td>The path and file name of a PID file that the watchdog monitors to see if the corresponding process is still active. If the corresponding process is not active, then the watchdog is triggered.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="configuring-virtual-numa">Configuring Virtual NUMA</h2>
+
+<p>In the Administration Portal, you can configure virtual NUMA nodes on a virtual machine and pin them to physical NUMA nodes on a host. The host’s default policy is to schedule and run virtual machines on any available resources on the host. As a result, the resources backing a large virtual machine that cannot fit within a single host socket could be spread out across multiple NUMA nodes, and over time may be moved around, leading to poor and unpredictable performance. Configure and pin virtual NUMA nodes to avoid this outcome and improve performance.</p>
+
+<p>Configuring virtual NUMA requires a NUMA-enabled host. To confirm whether NUMA is enabled on a host, log in to the host and run <code>numactl --hardware</code>. The output of this command should show at least two NUMA nodes. You can also view the host's NUMA topology in the Administration Portal by selecting the host from the <strong>Hosts</strong> tab and clicking <strong>NUMA Support</strong>. This button is only available when the selected host has at least two NUMA nodes.</p>
+
+<p><strong>Configuring Virtual NUMA</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Host</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Specific Host(s)</strong> radio button and select a host from the list. The selected host must have at least two NUMA nodes.</p>
+  </li>
+  <li>
+    <p>Select <strong>Do not allow migration</strong> from the <strong>Migration Options</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter a number into the <strong>NUMA Node Count</strong> field to assign virtual NUMA nodes to the virtual machine.</p>
+  </li>
+  <li>
+    <p>Select <strong>Strict</strong>, <strong>Preferred</strong>, or <strong>Interleave</strong> from the <strong>Tune Mode</strong> drop-down list. If the selected mode is <strong>Preferred</strong>, the <strong>NUMA Node Count</strong> must be set to <code>1</code>.</p>
+  </li>
+  <li>
+    <p>Click <strong>NUMA Pinning</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>NUMA Topology</strong> window, click and drag virtual NUMA nodes from the box on the right to host NUMA nodes on the left as required, and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p><strong>Note:</strong> If you do not pin the virtual NUMA node to a host NUMA node, the system defaults to the NUMA node that contains the host device’s memory-mapped I/O (MMIO), provided that there are one or more host devices and all of those devices are from a single NUMA node.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-foreman-errata-management-for-a-virtual-machine">Configuring Foreman Errata Management for a Virtual Machine</h2>
+
+<p>In the Administration Portal, you can configure a virtual machine to display the available errata. The virtual machine needs to be associated with a Foreman server to show available errata.</p>
+
+<p>oVirt 4.2 supports errata management with Foreman 6.1.</p>
+
+<p>The following prerequisites apply:</p>
+
+<ul>
+  <li>
+    <p>The host that the virtual machine runs on also needs to be configured to receive errata information from Foreman. See "Configuring Foreman Errata Management for a Host" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a> for more information.</p>
+  </li>
+  <li>
+    <p>The virtual machine must have the rhevm-guest-agent package installed. This package allows the virtual machine to report its host name to the oVirt Engine. This allows the Foreman server to identify the virtual machine as a content host and report the applicable errata. For more information on installing the ovirt-guest-agent package see the Installing the Guest Agents and Drivers on Enterprise Linux section above for Enterprise Linux virtual machines and the Installing the Guest Agents and Drivers on Windows section for Windows virtual machines.</p>
+  </li>
+</ul>
+
+<p><strong>Important:</strong> Virtual machines are identified in the Foreman server by their FQDN. This ensures that an external content host ID does not need to be maintained in oVirt.</p>
+
+<p><strong>Configuring Foreman Errata Management</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The virtual machine must be registered to the Foreman server as a content host and have the katello-agent package installed.&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Foreman/Satellite</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the required Foreman server from the <strong>Provider</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-headless-virtual-machines">Configuring Headless Virtual Machines</h2>
+
+<p>You can configure a headless virtual machine when it is not necessary to access the machine via a graphical console. This headless machine will run without graphical and video devices. This can be useful in situations where the host has limited resources, or to comply with virtual machine usage requirements such as real-time virtual machines.</p>
+
+<p>Headless virtual machines can be administered via a Serial Console, SSH, or any other service for command line access. Headless mode is applied via the <strong>Console</strong> tab when creating or editing virtual machines and machine pools, and when editing templates. It is also available when creating or editing instance types.</p>
+
+<p>If you are creating a new headless virtual machine, you can use the <strong>Run Once</strong> window to access the virtual machine via a graphical console for the first run only. See the “Explanation of Settings in the Run Once Window” in Appendix A for more details.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>If you are editing an existing virtual machine, and the oVirt guest agent has not been installed, note the machine’s IP prior to selecting <strong>Headless Mode</strong>.</p>
+  </li>
+  <li>
+    <p>Before running a virtual machine in headless mode, the GRUB configuration for this machine must be set to console mode otherwise the guest operating system’s boot process will hang. To set console mode, comment out the spashimage flag in the GRUB menu configuration file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # splashimage=(hd0,0)/grub/splash.xpm.gz serial --unit=0 --speed=9600 --parity=no --stop=1 terminal --timeout=2 serial&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Restart the virtual machine if it is running when selecting the <strong>Headless Mode</strong> option.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring a Headless Virtual Machine</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Console</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select <strong>Headless Mode</strong>. All other fields in the <strong>Graphical Console</strong> section are disabled.</p>
+  </li>
+  <li>
+    <p>Optionally, select <strong>Enable VirtIO serial console</strong> to enable communicating with the virtual machine via serial console. This is highly recommended.</p>
+  </li>
+  <li>
+    <p>Reboot the virtual machine if it is running.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-high-performance-virtual-machines-templates-and-pools">Configuring High Performance Virtual Machines, Templates, and Pools</h2>
+
+<p>You can configure a virtual machine for high performance, so that it runs with performance metrics as close to bare metal as possible. When you choose high performance optimization, the virtual machine is configured with a set of automatic, and recommended manual, settings for maximum efficiency.</p>
+
+<p>The high performance option is only accessible in the Administration Portal, by selecting <strong>High Performance</strong> from the <strong>Optimized for</strong> drop-down list in the <strong>Edit</strong> or <strong>New</strong> virtual machine, template, or pool window. This option is not available in the VM Portal.</p>
+
+<p>The high performance option is supported by oVirt 4.2 and later. Therefore, it is not available for earlier compatibility versions.</p>
+
+<p><strong>Virtual Machines</strong></p>
+
+<p>If you change the optimization mode of a running virtual machine to high performance, some configuration changes require restarting the virtual machine.</p>
+
+<p>To change the optimization mode of a new or existing virtual machine to high performance, you may need to make manual changes to the cluster and to the pinned host configuration first.</p>
+
+<p>A high performance virtual machine has certain limitations, because enhanced performance has a trade-off in decreased flexibility:</p>
+
+<ul>
+  <li>
+    <p>A high performance virtual machine cannot be migrated.</p>
+  </li>
+  <li>
+    <p>If pinning is set for CPU threads, IO threads, emulator threads, or NUMA nodes, according to the recommended settings, only a subset of cluster hosts can be assigned to the high performance virtual machine.
+Many devices are automatically disabled, which limits the virtual machine’s usability.</p>
+  </li>
+</ul>
+
+<p><strong>Templates and Pools</strong></p>
+
+<p>High performance templates and pools are created and edited in the same way as virtual machines. If a high performance template or pool is used to create new virtual machines, those virtual machines will inherit this property and its configurations. Certain settings, however, are not inherited and have the following limitations:</p>
+
+<ul>
+  <li>
+    <p>CPU pinning cannot be set for templates. CPU pinning must be manually set for virtual machines and for pools that are created from high performance virtual machines.</p>
+  </li>
+  <li>Virtual NUMA and NUMA pinning topology cannot be set for templates or pools. Virtual NUMA must be manually set when creating a virtual machine based on a high performance template.</li>
+  <li>IO and emulator threads pinning topology is not supported for pools.</li>
+</ul>
+
+<h3 id="creating-a-high-performance-virtual-machine-template-or-pool">Creating a High Performance Virtual Machine, Template, or Pool</h3>
+
+<p>To create a high performance virtual machine, template, or pool:</p>
+
+<ol>
+  <li>
+    <p>In the <strong>New</strong> or <strong>Edit</strong> window, select <strong>High Performance</strong> from the <strong>Optimized for</strong> drop-down menu.</p>
+
+    <p>Selecting this option automatically performs certain configuration changes to this virtual machine, which you can view by clicking different tabs. You can change them back to their original settings or override them. If you change a setting, its latest value is saved.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p>If you have not set any manual configurations, the <strong>High Performance Virtual Machine/Pool Settings</strong> screen describing the recommended manual configurations appears.</p>
+
+    <p>If you have set some of the manual configurations, the <strong>High Performance Virtual Machine/Pool Settings</strong> screen displays the settings you have not made.</p>
+
+    <p>If you have set all the recommended manual configurations, the <strong>High Performance Virtual Machine/Pool Settings</strong> screen does not appear.</p>
+  </li>
+  <li>
+    <p>If the <strong>High Performance Virtual Machine/Pool Settings</strong> screen appears, click <strong>Cancel</strong> to return to the <strong>New</strong> or <strong>Edit</strong> window to perform the manual configurations.</p>
+
+    <p>Alternatively, click <strong>OK</strong> to ignore the recommendations. The result may be a drop in the level of performance.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p>You can view the optimization type in the General tab of the details view of the virtual machine, pool, or template.</p>
+
+    <p><strong>Note:</strong> Certain configurations can override the high performance settings. For example, if you select an instance type for a virtual machine before selecting <strong>High Performance</strong> from the <strong>Optimized for</strong> drop-down menu and performing the manual configuration, the instance type configuration will not affect the high performance configuration. If, however, you select the instance type after the high performance configurations, you should verify the final configuration in the different tabs to ensure that the high performance configurations have not been overridden by the instance type.</p>
+
+    <p>The last-saved configuration usually takes priority.</p>
+  </li>
+</ol>
+
+<h4 id="automatic-high-performance-configuration-settings">Automatic High Performance Configuration Settings</h4>
+
+<p>The following table summarizes the automatic settings. The <strong>Enabled (Y/N)</strong> column indicates configurations that are enabled or disabled. The <strong>Applies to</strong> column indicates the relevant resources:</p>
+
+<p>VM - Virtual machine</p>
+
+<p>T - Template</p>
+
+<p>P - Pool</p>
+
+<p>C - Cluster</p>
+
+<table><colgroup><col style="width: 60%; " class="col_1" /><!--Empty-->&lt;/col&gt;<col style="width: 20%; " class="col_2" /><!--Empty-->&lt;/col&gt;<col style="width: 20%; " class="col_3" /><!--Empty-->&lt;/col&gt;</colgroup>
+<thead>
+<tr>
+<th align="left" valign="top" id="idm140207901275968" scope="col">Setting</th><th align="center" valign="top" id="idm140207901274880" scope="col">Enabled (Y/N)</th><th align="center" valign="top" id="idm140207901273792" scope="col">Applies to</th></tr></thead><tbody><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Headless Mode</strong></span> (Console tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>USB Support</strong></span> (Console tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Smartcard Enabled</strong></span> (Console tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Soundcard Enabled</strong></span> (Console tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Enable VirtIO serial console</strong></span> (Console tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Do not allow migration</strong></span> (Host tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Pass-Through Host CPU</strong></span> (Host tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Highly Available</strong></span> <a href="#ftn.idm140207901221120" class="footnote"><sup class="footnote" id="idm140207901221120">[a]</sup></a> (High Availability tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>No-Watchdog</strong></span> (High Availability tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>Memory Balloon Device</strong></span> (Resource Allocation tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										<span class="strong strong"><strong>IO Threads Enabled</strong></span> <a href="#ftn.idm140207901198736" class="footnote"><sup class="footnote" id="idm140207901198736">[b]</sup></a> (Resource Allocation tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										Paravirtualized Random Number Generator PCI (virtio-rng) device (Random Generator tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										IO and emulator threads pinning topology
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901275968"> <p>
+										CPU cache layer 3
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901274880"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901273792"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr></tbody><tbody class="footnotes"><tr><td colspan="3"><div id="ftn.idm140207901221120" class="footnote"><div class="para"><a href="#idm140207901221120" class="simpara"><sup class="simpara">[a] </sup></a>
+											<code class="literal">Highly Available</code> is not automatically enabled. If you select it manually, high availability should be enabled for pinned hosts only.
+										</div></div><div id="ftn.idm140207901198736" class="footnote"><div class="para"><a href="#idm140207901198736" class="simpara"><sup class="simpara">[b] </sup></a>
+											Number of IO threads = 1
+										</div></div></td></tr></tbody></table>
+
+<h4 id="io-and-emulator-threads-pinning-topology-automatic-settings">IO and Emulator Threads Pinning Topology (Automatic Settings)</h4>
+
+<p>The IO and emulator threads pinning topology is a new configuration setting for oVirt 4.2. It requires that IO threads, NUMA nodes, and NUMA pinning be enabled and set for the virtual machine. Otherwise, a warning will appear in the engine log.</p>
+
+<p>Pinning topology:</p>
+
+<ul>
+  <li>
+    <p>The first two CPUs of each NUMA node are pinned.</p>
+  </li>
+  <li>
+    <p>If all vCPUs fit into one NUMA node of the host:</p>
+
+    <ul>
+      <li>
+        <p>The first two vCPUs are automatically reserved/pinned</p>
+      </li>
+      <li>
+        <p>The remaining vCPUs are available for manual vCPU pinning</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>If the virtual machine spans more than one NUMA node:</p>
+
+    <ul>
+      <li>
+        <p>The first two CPUs of the NUMA node with the most pins are reserved/pinned</p>
+      </li>
+      <li>
+        <p>The remaining pinned NUMA node(s) are for vCPU pinning only</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Pools do not support IO and emulator threads pinning.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Warning:** If a host CPU is pinned to both a vCPU and IO/emulator threads, a warning will appear in the log and you will be asked to consider changing the CPU pinning topology to avoid this situation.&#x000A;</code></pre></div>
+<h4 id="high-performance-icons">High Performance Icons</h4>
+
+<p>The following icons indicate the states of a high performance virtual machine in the <strong>Compute</strong> → <strong>Virtual Machines</strong> screen.</p>
+
+<p><strong>High Performance Icons</strong></p>
+
+<table class="lt-4-cols lt-7-rows"><colgroup><col style="width: 17%; " class="col_1" /><!--Empty-->&lt;/col&gt;<col style="width: 83%; " class="col_2" /><!--Empty-->&lt;/col&gt;</colgroup><thead><tr><th align="left" valign="top" id="idm140207901153328" scope="col">Icon</th><th align="left" valign="top" id="idm140207901152240" scope="col">Description</th></tr></thead><tbody><tr><td align="left" valign="top" headers="idm140207901153328"> <p>
+										<span class="inlinemediaobject"><img src="../images/9273520988fa69c82e193ec06761c06d/hp_vm.png" alt="hp vm" /></span>
+
+									</p>
+									 </td><td align="left" valign="top" headers="idm140207901152240"> <p>
+										High performance virtual machine
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901153328"> <p>
+										<span class="inlinemediaobject"><img src="../images/hp_vm_next_run.png" alt="hp vm next run" /></span>
+
+									</p>
+									 </td><td align="left" valign="top" headers="idm140207901152240"> <p>
+										High performance virtual machine with Next Run configuration
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901153328"> <p>
+										<span class="inlinemediaobject"><img src="../images/stateless_hp_vm.png" alt="stateless hp vm" /></span>
+
+									</p>
+									 </td><td align="left" valign="top" headers="idm140207901152240"> <p>
+										Stateless, high performance virtual machine
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901153328"> <p>
+										<span class="inlinemediaobject"><img src="../images/stateless_hp_vm_next_run.png" alt="stateless hp vm next run" /></span>
+
+									</p>
+									 </td><td align="left" valign="top" headers="idm140207901152240"> <p>
+										Stateless, high performance virtual machine with Next Run configuration
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901153328"> <p>
+										<span class="inlinemediaobject"><img src="../images/vm_hp_pool.png" alt="vm hp pool" /></span>
+
+									</p>
+									 </td><td align="left" valign="top" headers="idm140207901152240"> <p>
+										Virtual machine in a high performance pool
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901153328"> <p>
+										<span class="inlinemediaobject"><img src="../images/vm_hp_pool_next_run.png" alt="vm hp pool next run" /></span>
+
+									</p>
+									 </td><td align="left" valign="top" headers="idm140207901152240"> <p>
+										Virtual machine in a high performance pool with Next Run configuration
+									</p>
+									 </td></tr></tbody></table>
+
+<h3 id="configuring-the-recommended-manual-settings">Configuring the Recommended Manual Settings</h3>
+
+<p>You can configure the recommended manual settings in either the <strong>New</strong> or the <strong>Edit</strong> windows.</p>
+
+<p>If a recommended setting is not performed, the <strong>High Performance Virtual Machine/Pool Settings</strong> screen displays the recommended setting when you save the resource.</p>
+
+<p>The recommended manual settings are:</p>
+
+<ul>
+  <li>
+    <p>Pinning the CPU</p>
+  </li>
+  <li>
+    <p>Setting the NUMA Nodes and Pinning Topology</p>
+  </li>
+  <li>
+    <p>Configuring Huge Pages</p>
+  </li>
+  <li>
+    <p>Disabling KSM</p>
+  </li>
+</ul>
+
+<h4 id="manual-high-performance-configuration-settings">Manual High Performance Configuration Settings</h4>
+
+<p>The following table summarizes the recommended manual settings. The <strong>Enabled (Y/N)</strong> column indicates configurations that should be enabled or disabled. The <strong>Applies to</strong> column indicates the relevant resources:</p>
+
+<ul>
+  <li>
+    <p>VM - Virtual machine</p>
+  </li>
+  <li>
+    <p>T - Template</p>
+  </li>
+  <li>
+    <p>P - Pool</p>
+  </li>
+  <li>
+    <p>C - Cluster</p>
+  </li>
+</ul>
+
+<p><strong>Manual High Performance Configuration Settings</strong></p>
+
+<table class="lt-4-cols lt-7-rows"><colgroup><col style="width: 60%; " class="col_1" /><!--Empty-->&lt;/col&gt;<col style="width: 20%; " class="col_2" /><!--Empty-->&lt;/col&gt;<col style="width: 20%; " class="col_3" /><!--Empty-->&lt;/col&gt;</colgroup><thead><tr><th align="left" valign="top" id="idm140207901082352" scope="col">Setting</th><th align="center" valign="top" id="idm140207901081264" scope="col">Enabled (Y/N)</th><th align="center" valign="top" id="idm140207901080176" scope="col">Applies to</th></tr></thead><tbody><tr><td align="left" valign="top" headers="idm140207901082352"> <p>
+										<span class="strong strong"><strong>NUMA Node Count</strong></span> (Host tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901081264"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901080176"> <p>
+										<code class="literal">VM</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901082352"> <p>
+										<span class="strong strong"><strong>Tune Mode</strong></span> (Host tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901081264"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901080176"> <p>
+										<code class="literal">VM</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901082352"> <p>
+										<span class="strong strong"><strong>NUMA Pinning</strong></span> (Host tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901081264"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901080176"> <p>
+										<code class="literal">VM</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901082352"> <p>
+										<span class="strong strong"><strong>CPU Pinning topology</strong></span> (Resource Allocation tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901081264"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901080176"> <p>
+										<code class="literal">VM, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901082352"> <p>
+										<span class="strong strong"><strong>hugepages</strong></span> (Custom Properties tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901081264"> <p>
+										<code class="literal">Y</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901080176"> <p>
+										<code class="literal">VM, T, P</code>
+									</p>
+									 </td></tr><tr><td align="left" valign="top" headers="idm140207901082352"> <p>
+										<span class="strong strong"><strong>KSM</strong></span> (Optimization tab)
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901081264"> <p>
+										<code class="literal">N</code>
+									</p>
+									 </td><td align="center" valign="top" headers="idm140207901080176"> <p>
+										<code class="literal">C</code>
+									</p>
+									 </td></tr></tbody></table>
+
+<h4 id="pinning-cpus">Pinning CPUs</h4>
+
+<p>To pin vCPUs to a specific host’s physical CPU:</p>
+
+<ol>
+  <li>
+    <p>In the <strong>Host</strong> tab, select the <strong>Specific Host(s)</strong> radio button.</p>
+  </li>
+  <li>
+    <p>In the <strong>Resource Allocation</strong> tab, enter the <strong>CPU Pinning Topology</strong>, verifying that the configuration fits the pinned host’s configuration.</p>
+  </li>
+  <li>
+    <p>Verify that the virtual machine configuration is compatible with the host configuration:</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>A virtual machine’s number of sockets must not be greater than the host’s number of sockets.</p>
+  </li>
+  <li>
+    <p>A virtual machine’s number of cores per virtual socket must not be greater than the host’s number of cores.</p>
+  </li>
+  <li>
+    <p>A virtual machine’s number of threads per core must not be greater than the host’s number of threads per core.</p>
+
+    <p><strong>Important:</strong> CPU pinning has the following requirements:</p>
+
+    <ul>
+      <li>
+        <p>If the host is NUMA-enabled, the host’s NUMA settings (memory and CPUs) must be considered because the virtual machine has to fit the host’s NUMA configuration.</p>
+      </li>
+      <li>
+        <p>The IO and emulator threads pinning topology must be considered.</p>
+      </li>
+      <li>
+        <p>CPU pinning can only be set for virtual machines and pools, but not for templates. Therefore, you must set CPU pinning manually whenever you create a high performance virtual machine or pool, even if they are based on a high performance template.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="setting-the-numa-nodes-and-pinning-topology">Setting the NUMA Nodes and Pinning Topology</h4>
+
+<p>To set the NUMA nodes and pinning topology, you need a NUMA-enabled pinned host with at least two NUMA nodes.</p>
+
+<ol>
+  <li>
+    <p>In the <strong>Host</strong> tab, select the <strong>NUMA Node Count</strong> and the <strong>Tune Mode</strong> from the drop-down lists.</p>
+  </li>
+  <li>
+    <p>Click <strong>NUMA Pinning</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>NUMA Topology</strong> window, click and drag virtual NUMA nodes from the box on the right to the host’s physical NUMA nodes on the left as required.</p>
+
+    <p><strong>Important:</strong>
+ The number of declared virtual NUMA nodes and the NUMA pinning policy must take into account:</p>
+
+    <ul>
+      <li>
+        <p>The host’s NUMA settings (memory and CPUs)</p>
+      </li>
+      <li>
+        <p>The NUMA node in which the host devices are declared</p>
+      </li>
+      <li>
+        <p>The CPU pinning topology</p>
+      </li>
+      <li>
+        <p>The IO and emulator threads pinning topology</p>
+      </li>
+      <li>
+        <p>Huge page sizes</p>
+      </li>
+      <li>
+        <p>NUMA pinning can only be set for virtual machines, but not for pools or templates. You must set NUMA pinning manually when you create a high performance virtual machine based on a template.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="configuring-huge-pages">Configuring Huge Pages</h4>
+
+<p>Support for huge pages is a new configuration setting for oVirt 4.2. Huge pages are pre-allocated when a virtual machine starts to run (dynamic allocation is disabled by default).</p>
+
+<p>To configure huge pages:</p>
+
+<ol>
+  <li>
+    <p>In the <strong>Custom Properties</strong> tab, select <strong>hugepages</strong> from the custom properties list, which displays <strong>Please select a key…</strong>​ by default.</p>
+  </li>
+  <li>
+    <p>Enter the huge page size in KB.</p>
+
+    <p>The oVirt Project recommends setting the huge page size to the largest size supported by the pinned host. The recommended size for x86_64 is 1 GB.</p>
+
+    <p>The huge page size has the following requirements:</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>The virtual machine’s huge page size must be the same size as the pinned host’s huge page size.</p>
+  </li>
+  <li>
+    <p>The virtual machine’s memory size must fit into the selected size of the pinned host’s free huge pages.</p>
+  </li>
+  <li>
+    <p>The NUMA node size must be a multiple of the huge page’s selected size.</p>
+
+    <p><strong>Important:</strong> The following limitations apply:</p>
+
+    <ul>
+      <li>
+        <p>Memory hotplug/unplug is disabled</p>
+      </li>
+      <li>
+        <p>Migration is disabled</p>
+      </li>
+      <li>
+        <p>The host’s memory resource is limited</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="disabling-ksm">Disabling KSM</h4>
+
+<p>To disable Kernel Same-page Merging (KSM) for the cluster:</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Clusters</strong> and select the cluster.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Optimization</strong> tab, uncheck the <strong>Enable KSM</strong> check box.</p>
+  </li>
+</ol>
+
+<h2 id="installing-a-vgpu-on-a-virtual-machine">Installing a vGPU on a Virtual Machine</h2>
+
+<p>You can use a host with a compatible graphics processing unit (GPU) to run virtual machines with virtual GPUs (vGPUs). A virtual machine with a vGPU is better suited for graphics-intensive tasks than a virtual machine without a vGPU. A virtual machine with a vGPU can also run software that cannot run without a GPU, such as CAD.</p>
+
+<p><strong>vGPU Requirements</strong></p>
+
+<p>If you plan to configure a host to allow virtual machines on that host to install a vGPU, the following requirements must be met:</p>
+
+<ul>
+  <li>
+    <p>vGPU-compatible GPU</p>
+  </li>
+  <li>
+    <p>GPU-enabled host kernel</p>
+  </li>
+  <li>
+    <p>Installed GPU with correct drivers</p>
+  </li>
+  <li>
+    <p>Predefined <strong>mdev_type</strong> set to correspond with one of the mdev types supported by the device</p>
+  </li>
+  <li>
+    <p>vGPU-capable drivers installed on each host in the cluster</p>
+  </li>
+  <li>
+    <p>vGPU-supported virtual machine operating system with vGPU drivers installed</p>
+  </li>
+</ul>
+
+<p><strong>Preparing a Host for vGPU Installation</strong></p>
+
+<ol>
+  <li>
+    <p>Install vGPU-capable drivers onto your host. Consult the documentation for your GPU card for more information.</p>
+  </li>
+  <li>
+    <p>Install <strong>vdsm-hook-vfio-mdev</strong>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install vdsm-hook-vfio-mdev&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>You can now install vGPUs on the virtual machines running on this host.</p>
+
+<p><strong>Installing a vGPU on a Virtual Machine</strong></p>
+
+<ol>
+  <li>Confirm the vGPU instance to use:</li>
+</ol>
+
+<ul>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>, click the required host’s name to go to the details view, and click the <strong>Host Devices</strong> tab. Available vGPU instances appear in the <strong>Mdev Types</strong> column.</p>
+  </li>
+  <li>
+    <p>Alternatively, run the following command on the host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # vdsm-client Host hostdevListByCaps&#x000A;</code></pre></div>
+    <p>Available vGPU instances appear in the <strong>mdev</strong> key <strong>available_instances</strong>.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Install the required virtual machine operating system.</p>
+  </li>
+  <li>
+    <p>Shut down the virtual machine.</p>
+  </li>
+  <li>
+    <p>Add the vGPU instance to the virtual machine:</p>
+  </li>
+</ol>
+
+<p>i. Select the virtual machine and click <strong>Edit</strong>.</p>
+
+<p>ii. Click <strong>Show Advanced Options</strong>, then click the <strong>Custom Properties</strong> tab.</p>
+
+<p>iii. Select <strong>mdev_type</strong> from the drop-down list and enter the vGPU instance in the text field.</p>
+
+<p>iv. Click <strong>OK</strong>.</p>
+
+<ol>
+  <li>
+    <p>Start the virtual machine and install the vGPU driver through the vendor’s installer. Consult the documentation for your GPU card for more information.</p>
+  </li>
+  <li>
+    <p>Restart the virtual machine.</p>
+  </li>
+  <li>
+    <p>Verify that the vGPU is recognized by checking the virtual machine operating system’s device manager.</p>
+
+    <p><strong>Important:</strong> You cannot migrate a virtual machine using a vGPU to a different host. When upgrading the virtual machine, verify the operating system and GPU vendor support in the vendor’s documentation.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Installing_Windows_Virtual_Machines">Chapter 3: Installing Windows Virtual Machines</a> <br />
+<strong>Next:</strong> <a href="chap-Editing_Virtual_Machines">Chapter 5: Editing Virtual Machines</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/virtual_machine_management_guide/chap-additional_configuration">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/vmm-guide/chap-Additional_Configuration.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/vmm-guide/chap-Additional_Configuration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

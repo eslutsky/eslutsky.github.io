@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Communication of Engine with Vdsm during migrations &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/architecture/">Architecture</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="communication-of-engine-with-vdsm-during-migrations">Communication of Engine with Vdsm during migrations</h1>
+
+<p>This document provides overview of communication between Engine and Vdsm on migrations.  It serves as a developer reference to the migration process coordination.</p>
+
+<p>The entities involved in the migration are Engine, Vdsm on the source host and Vdsm on the destination host.  At each phase of the migration some coordination between the involved entities happens.  The given migration phases are initiation of the migration, contingent switching to the post-copy mode, successful completion in the pre-copy or post-copy phases, failure in the pre-copy or post-copy phases.</p>
+
+<p>The status changes of the VMs are reported to Engine via events or Engine can detect them by polling (when the event is not emitted or it is lost for some reason).</p>
+
+<h2 id="source-host">Source Host</h2>
+
+<p>On migration initiation:</p>
+
+<ul>
+  <li><code>VM.migrate</code> call from Engine.</li>
+  <li>The VM status is changed to "migration source" and a status event is sent to Engine.</li>
+</ul>
+
+<p>On pre-copy success:</p>
+
+<ul>
+  <li>The VM status is changed to "down" status with exit status Normal (and with the reason: migration succeeded) attached and a status event is sent to Engine.</li>
+  <li><code>VM.destroy</code> call from Engine, once Engine detects the VM in "down" status.</li>
+  <li>VM cleanup is performed, including the Vdsm internal VM object, and the <code>VM.destroy</code> call is answered with a success/error response.</li>
+</ul>
+
+<p>On pre-copy failure:</p>
+
+<ul>
+  <li>The VM status is changed to "up" and a status event is sent to Engine.</li>
+  <li><code>VM.destroy</code> request is sent to the destination.</li>
+</ul>
+
+<p>On switch to post-copy:</p>
+
+<ul>
+  <li>The VM status remains "migration source" internally, but it is presented as "paused" with <code>POSTCOPY</code> paused-reason to Engine and a corresponding status event is sent to Engine.  Note that a VM may be in a "paused" status for completely different reasons, do not confuse those situations with <code>POSTCOPY</code> paused-reason.</li>
+</ul>
+
+<p>On post-copy success:</p>
+
+<ul>
+  <li>VM cleanup is performed automatically, including the Vdsm internal VM object.</li>
+</ul>
+
+<p>On post-copy failure:</p>
+
+<ul>
+  <li>The VM status is changed to "down" with exit status Error (and with the reason: post-copy failure) attached and a status event is sent to Engine.</li>
+  <li>The VM is destroyed immediately afterwards, including the Vdsm internal VM object.</li>
+</ul>
+
+<p>Summary of possible VM migration statuses as reported to Engine:</p>
+
+<ul>
+  <li>Migration source: pre-copy migration</li>
+  <li>Paused: post-copy migration</li>
+  <li>Down: migration completed, post-copy migration failure</li>
+  <li>Up: pre-copy migration failure</li>
+</ul>
+
+<h2 id="destination-host">Destination Host</h2>
+
+<p>On migration initation:</p>
+
+<ul>
+  <li>The VM is created with status "migration destination" and a status event is sent to Engine.</li>
+</ul>
+
+<p>On pre-copy success:</p>
+
+<ul>
+  <li>The VM status is changed to "up" and a status event is sent to Engine.</li>
+</ul>
+
+<p>On pre-copy failure:</p>
+
+<ul>
+  <li>The VM status is changed to "down" with exit status Error (and with the reason: migration failed) and a status event is sent to Engine.</li>
+  <li><code>VM.destroy</code> call from the source host.</li>
+</ul>
+
+<p>On switch to post-copy:</p>
+
+<ul>
+  <li>No action, the VM remains in "migration destination" status.</li>
+</ul>
+
+<p>On post-copy success:</p>
+
+<ul>
+  <li>The VM status is changed to "up" and a status event is sent to Engine.</li>
+</ul>
+
+<p>On post-copy failure:</p>
+
+<ul>
+  <li>The VM status is changed to "down" with exit status Error (and with the reason: post-copy failure) and a status event is sent to Engine.</li>
+  <li>The VM is destroyed immediately afterwards but the Vdsm internal VM object is retained.</li>
+  <li><code>VM.destroy</code> call from Engine, once the Engine detects the VM in down status.</li>
+  <li>VM cleanup is performed, including the Vdsm internal VM object, and the VM.destroy call is answered with a success/error response.</li>
+</ul>
+
+<p>Summary of possible VM migration statuses as reported to Engine:</p>
+
+<ul>
+  <li>Migration destination: during migration</li>
+  <li>Up: migration completed</li>
+  <li>Down: migration failed</li>
+</ul>
+
+<h2 id="engine">Engine</h2>
+
+<p>On migration initiation:</p>
+
+<ul>
+  <li>Migration request is sent to Vdsm.</li>
+  <li>If the request is answered positively, the VM is set to "migration source" status.</li>
+</ul>
+
+<p>During any migration:</p>
+
+<ul>
+  <li>Engine watches for events and status changes from the hosts.</li>
+  <li>Reports from the source with "paused" status and <code>POSTCOPY</code> paused-reason are ignored.</li>
+  <li>Reports from the destination with "migration destination" status are ignored.</li>
+</ul>
+
+<p>During pre-copy phase:</p>
+
+<ul>
+  <li>Engine gets stats from the source, they contain <code>postcopy</code> flag set to false.</li>
+</ul>
+
+<p>On switch to post-copy (detected, or "paused" status event with a <code>POSTCOPY</code> paused-reason from the source):</p>
+
+<ul>
+  <li>The VM is set to "migration destination" status.</li>
+  <li><code>run_on_vds</code> is set to the destination.</li>
+</ul>
+
+<p>During post-copy phase:</p>
+
+<ul>
+  <li>Engine gets stats from the destination, except for migration progress.</li>
+  <li>Engine receives migration progress events from the source, they contain <code>postcopy</code> flag set to true.</li>
+  <li>The migration may not be canceled.</li>
+</ul>
+
+<p>On pre-copy success (detected, or "down" status event from the source):</p>
+
+<ul>
+  <li><code>run_on_vds</code> is set to the destination.</li>
+  <li>Engine receives final migration stats (downtime) event from the source.</li>
+  <li>Engine sets the VM to running status ("up", "powering up" or "powering down").</li>
+  <li>Engine sends <code>VM.destroy</code> request to the source host.</li>
+</ul>
+
+<p>On pre-copy failure (detected, or running-status event from the source):</p>
+
+<ul>
+  <li>Engine sets the VM to running status ("up", "powering up" or "powering down").</li>
+</ul>
+
+<p>On post-copy success (detected, or running-status event from the destination):</p>
+
+<ul>
+  <li>Engine receives final migration stats (downtime) event from the source.  Note: post-copy downtime value has different meaning than pre-copy downtime value.</li>
+  <li>Engine sets the VM to the corresponding running status.</li>
+</ul>
+
+<p>On post-copy failure (detected, or "down" status event with <code>POSTCOPY</code> reason from the destination):</p>
+
+<ul>
+  <li>Engine sets the VM to "down" status.</li>
+</ul>
+
+<p>Regular status combinations (source / destination):</p>
+
+<ul>
+  <li>initial state: (up / down)</li>
+  <li>pre-copy: (migration source / migration destination)</li>
+  <li>post-copy: (paused / migration destination)</li>
+  <li>completed: (down / up)</li>
+  <li>pre-copy failure: (up / down)</li>
+  <li>post-copy failure: (down / down)</li>
+</ul>
+
+<p>Temporary interim status combinations are possible when one of the hosts changes the status while the other one not yet.  For example, "down / migration destination" status combination may occur when switching from "migration source / migration destination" to "down / up".</p>
+
+<h2 id="note-on-vdsm-recovery">Note on Vdsm recovery</h2>
+
+<p>If Vdsm is restarted during the migration, either on the source or on the destination host, the migration process may be disrupted in several ways.  Vdsm tries to keep just the basic sanity in such a case, that means it tries not to lie about the VM status to Engine.  But even that is not 100% guaranteed.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/architecture/migration-communication.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/architecture/migration-communication.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

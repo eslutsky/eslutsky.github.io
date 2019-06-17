@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Provider Physical Network &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="provider-physical-network">Provider Physical Network</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature extends <a href="https://www.ovirt.org/develop/release-management/features/network/ovirt-ovn-provider/">ovirt-ovn-provider</a> adding support for physical network access. It allows user to connect external OVN networks to a physical (oVirt native) network.</p>
+
+<p>Feature progress is tracked on <a href="https://trello.com/b/lxIBEn0A/ovn-localnet">ovn-localnet Trello</a>. Related patches can be found on <a href="https://gerrit.ovirt.org/#/q/topic:localnet">gerrit topic:localnet</a>.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Feature Owner: Petr Horáček (phoracek)</li>
+  <li>E-mail: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#112;&#104;&#111;&#114;&#097;&#099;&#101;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#112;&#104;&#111;&#114;&#097;&#099;&#101;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>This feature replaces OVS bridges networking in oVirt, later it will be extended with advanced OVN features. Physical network access will be required once NAT and routing are introduced to the OVN provider.</p>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="create-a-cluster-with-network-type-set-to-ovs">Create a cluster with Network Type set to OVS</h3>
+
+<p>This feature requires Cluster enabled with Open vSwitch networking. Create a new Cluster with <code>Switch Type</code> set to <code>OVS (experimental)</code>. Please note, that used Hosts must not have any pre-existing oVirt networks (e.g. ovirtmgmt bridge).</p>
+
+<h3 id="create-an-external-network-on-top-of-a-physical-network">Create an external network on top of a physical network</h3>
+
+<p>There are several ways to use this feature.</p>
+
+<ul>
+  <li>
+    <p><strong>Select physical network from data center networks.</strong> When creating a new external network, select <code>Data Center Network</code> in <code>Physical Network</code> section and pick the desired oVirt network from the drop down list. Note, that this network must be attached on all hosts in the cluster. Engine then uses the VDSM network name and VLAN ID from the selected network. This can also be done via REST API using <code>&lt;external_provider_physical_network id="123"/&gt;</code>, see <a href="http://ovirt.github.io/ovirt-engine-api-model/4.2/#types/network">ovirt-engine-api-model documentation</a>.</p>
+  </li>
+  <li>
+    <p><strong>Create external network implicitly with physical network.</strong> To make this feature more exposed, we implicitly create a matching external OVN network for each new OVS based oVirt network marked as <code>VM Network</code>. However, there is no connection between them afterwards, they behave as separate units.</p>
+  </li>
+  <li>
+    <p><strong>Attach external network via custom values in ManageIQ</strong>. This option is similar to the first one. In ManageIQ a user can set network type <code>flat</code> and specify physical network name (VDSM network name), in case physical network is on a VLAN, set type to <code>vlan</code> and specify VLAN ID as well.</p>
+  </li>
+</ul>
+
+<p><img alt="add an external network connected to a physical network ManageIQ dialog" width="1260" height="733" src="/images/features/network/provider-physical-network_new-network-dialog-miq.png?1560777613" /></p>
+
+<ul>
+  <li><strong>Select physical network via a custom physical network name and optional VLAN.</strong> This option is mostly for backward compatibility and for external providers that are not integrated with oVirt Data Center Networks as described in the first option. When creating a new external network, set <code>Physical Network</code> to physical network name, it will be passed to provider as <code>provider:physical_network</code>. If the physical network has VLAN tagging enabled, check <code>Enable VLAN tagging</code> and set the physical network's tag there, it will be passed to provider as <code>provider:segmentation_id</code>. When VLAN is specified, <code>provider:network_type</code> is set to <code>vlan</code>, <code>flat</code> otherwise. In case a network name is longer than 15 characters or contains special characters, this option will not work with the OVN implementation, and using the first option is advised.</li>
+</ul>
+
+<p><img alt="add an external network connected to a physical network Engine dialog" width="1260" height="733" src="/images/features/network/provider-physical-network_new-network-dialog-engine.png?1560777613" /></p>
+
+<h3 id="attach-vm-to-the-external-network">Attach VM to the external network</h3>
+
+<p>Finally add a new NIC to a VM and select a profile of an external network. L2 connectivity should be provided to the VM. In case there is a DHCP server running, the VM should obtain an IP.</p>
+
+<h2 id="caveat">Caveat</h2>
+
+<p>The user needs to make sure that the physical network used by the external network is available on the host used by the VM. There is currently now way for Engine to enforce it. The easiest way to accomplish this is to set physical provider network as required for the cluster.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="openstack-neutron-api">OpenStack Neutron API</h3>
+
+<p>OpenStack Neutron API used by Engine to control external providers already provides means to specify a physical network – attributes <code>provider:network_type</code>, <code>provider:physical_network</code> and <code>provider:segmentation_id</code>. The network types we use are <code>flat</code> and <code>vlan</code>. Physical network is matched by the VDSM network name. Segmentation ID is used with VLAN networks and matches the VLAN ID defined for the selected network.</p>
+
+<h3 id="ovirt-provider-ovn">oVirt Provider OVN</h3>
+
+<p>The provider reads the attributes described above. If the physical network is defined, the provider implicitly creates a <code>localnet</code> port on the given network and attaches it to the received physical network. In case a segmentation ID was passed, it uses it as the VLAN tag on the port.</p>
+
+<h3 id="vdsm">VDSM</h3>
+
+<p>Localnet port is attached to an abstract network name. This name is mapped to an OVS bridge name on each host via OVS DB attribute <code>external-ids:ovn-bridge-mappings</code>. This attribute is configured after each <code>setupNetworks</code> command and during upgrades (after reboot or upgrade of vdsm package).</p>
+
+<h3 id="engine">Engine</h3>
+
+<p>The <code>ProviderNetwork</code> object in Engine is extended with a link to its physical network (<code>Network</code>). In the database, <code>provider_physical_network_id</code> is added as a new column to <code>network</code> table.</p>
+
+<p>Physical network is used to find the VDSM network name and the VLAN ID. These values are then passed to the network provider.</p>
+
+<p>Engine also covers the validation:</p>
+
+<ul>
+  <li>Physical network must be on the same Data Center as the external network.</li>
+  <li>The custom values (physical network and VLAN ID) must not be specified a when provider physical network is set.</li>
+</ul>
+
+<h3 id="import-of-a-provider-physical-network">Import of a provider physical network</h3>
+<p>When importing a network with physical network access from an external network
+provider into Engine, Engine must map this physical network to the corresponding
+logical network in Engine.
+If no corresponding logical network is found, the physical network is ignored
+during import and synchronization.
+The <a href="https://developer.openstack.org/api-ref/network/v2/#provider-extended-attributes">external network provider</a> describes the physical network with three
+attributes <code>provider:physical_network</code>, <code>provider:network_type</code> and
+<code>provider:segmentation_id</code>.<br />
+The corresponding logical network is detected by matching the three attributes:</p>
+<ul>
+  <li><code>provider:physical_network</code> to <a href="https://www.ovirt.org/develop/release-management/features/network/unrestricted-network-names/">VDSM name</a> of the network</li>
+  <li><code>provider:network_type</code> to the type of the network</li>
+  <li><code>provider:segmentation_id</code> to the VLAN ID of the network</li>
+</ul>
+
+<h3 id="engine-ui">Engine UI</h3>
+
+<p>Even without this feature, it is already possible to set the physical network name and VLAN ID for an external network from <code>New Network</code> dialog. Physical network has a separate field, and the VLAN is obtained from the shared <code>Network Attributes</code> section. However, this way requires the user to know the VDSM name of the network and manually copy the VLAN ID of the network</p>
+
+<p>For better user experience, this feature exposes an option to select desired provider physical network from Data Center networks to UI.</p>
+
+<p><img alt="add an external network connected to a physical network dialog" width="586" height="291" src="/images/features/network/provider-physical-network_new-network-dialog.png?1560777613" /></p>
+
+<p>To expose this feature, an external OVN network is created implicitly when the user adds a new VM network on an OVS cluster. When selecting a network profile for a VM NIC, we list only external networks, not native oVirt networks that triggered their creation.</p>
+
+<h3 id="rest-api">REST API</h3>
+
+<p><code>Network</code> object in REST API is now extended with two new links:</p>
+
+<p><code>&lt;external_provider id="123"/&gt;</code> points to an <code>OpenStackNetworkProvider</code>. If this link is specified, new network is defined on the selected provider. This mimics Engine UI <code>New Network</code> dialog with <code>Create on external provider</code> checked.</p>
+
+<p><code>&lt;external_provider_physical_network id="123"/&gt;</code> points to a <code>Network</code>. This link is allowed only if <code>external_provider</code> is specified.</p>
+
+<h2 id="packaging-and-installation">Packaging and installation</h2>
+
+<p>This feature is integrated into 4.2 version of ovirt-provider-ovn, ovirt-engine and vdsm packages. The only extra requirement is to use Cluster with <code>Switch Type</code> set to <code>OVS</code>.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>Testing of this feature should cover:</p>
+
+<ul>
+  <li>Addition/removal of locally attached external network via all UI methods and via REST.</li>
+  <li>VM connectivity to physical network, with both VLAN tagged and untagged networks.</li>
+  <li>Live migration of VMs attached to external networks.</li>
+  <li>In case OVS cluster was configured on 4.1 and only then upgraded to 4.2 (without any <code>setupNetworks</code> calls after the upgrade was done), previous tests should also pass.</li>
+</ul>
+
+<h2 id="external-references">External references</h2>
+
+<p><a href="https://developer.openstack.org/api-ref/network/v2/#provider-extended-attributes">Provider Extended Attributes of Networks in OpenStack Networking API v2.0</a></p>
+
+<p><a href="https://www.ovirt.org/develop/release-management/features/network/unrestricted-network-names/">Unrestricted Network Names</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/provider-physical-network.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/provider-physical-network.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 27 Feb 2018 21:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Nodes &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-6-ovirt-nodes">Chapter 6: oVirt Nodes</h1>
+
+<h1 id="installing-ovirt-node">Installing oVirt Node</h1>
+
+<p>oVirt Node is a minimal operating system based on CentOS that is designed to provide a simple method for setting up a physical machine to act as a hypervisor in a oVirt environment. The minimal operating system contains only the packages required for the machine to act as a hypervisor, and features a Cockpit user interface for monitoring the host and performing administrative tasks. See <a href="http://cockpit-project.org/running.html">http://cockpit-project.org/running.html</a> for the minimum browser requirements.</p>
+
+<p>Before you proceed, make sure the machine on which you are installing oVirt Node meets the hardware requirements listed in <a href="chap-System_Requirements">Chapter 2: System Requirements</a>.</p>
+
+<p>Installing oVirt Node on a physical machine involves three key steps:</p>
+
+<ul>
+  <li>
+    <p>Download the oVirt Node disk image from the oVirt web site.</p>
+  </li>
+  <li>
+    <p>Write the oVirt Node disk image to a USB, CD, or DVD.</p>
+  </li>
+  <li>
+    <p>Install the oVirt Node minimal operating system.</p>
+  </li>
+</ul>
+
+<p><strong>Installing oVirt Node</strong></p>
+
+<ol>
+  <li>
+    <p>Download the oVirt Node 4.3 - Stable Release - Installation ISO disk image from the oVirt site:</p>
+
+    <p>i. Visit to the <a href="../../download/node.html">oVirt Node Download page</a>.</p>
+
+    <p>ii. Click <a href="https://resources.ovirt.org/pub/ovirt-4.3/iso/ovirt-node-ng-installer/4.3.4-2019061016/el7/ovirt-node-ng-installer-4.3.4-2019061016.el7.iso">oVirt Node 4.3 - Stable Release - Installation ISO (4.3.4 based on el7)</a></p>
+
+    <p>iii. Write the oVirt Node Installation ISO disk image to a USB, CD, or DVD.</p>
+  </li>
+  <li>
+    <p>Start the machine on which to install oVirt Node using the prepared installation media (i.e. boot from the media).</p>
+  </li>
+  <li>
+    <p>From the boot menu, select the <strong>Install</strong> option, and press <strong>Enter</strong>.</p>
+
+    <p><strong>Note:</strong> You can also press the <strong>Tab</strong> key to edit the kernel parameters. Kernel parameters must be separated by a space, and you can boot the system using the specified kernel parameters by pressing the <strong>Enter</strong> key. Press the <strong>Esc</strong> key to clear any changes to the kernel parameters and return to the boot menu.</p>
+  </li>
+  <li>
+    <p>Select a language, and click <strong>Continue</strong>.</p>
+  </li>
+  <li>
+    <p>Select a time zone from the <strong>Date &amp; Time</strong> screen and click <strong>Done</strong>.</p>
+  </li>
+  <li>
+    <p>Select a keyboard layout from the <strong>Keyboard</strong> screen and click <strong>Done</strong>.</p>
+  </li>
+  <li>
+    <p>Select the device on which to install oVirt Node from the <strong>Installation Destination</strong> screen. Optionally, enable encryption. Click <strong>Done</strong>.</p>
+
+    <p><strong>Important:</strong> The oVirt Project strongly recommends using the <strong>Automatically configure partitioning</strong> option.</p>
+  </li>
+  <li>
+    <p>Select a network from the <strong>Network &amp; Host Name</strong> screen and click <strong>Configure…</strong> to configure the connection details. Enter a host name in the <strong>Host name</strong> field, and click <strong>Done</strong>.</p>
+  </li>
+  <li>
+    <p>Optionally configure <strong>Language Support</strong>, <strong>Security Policy</strong>, and <strong>Kdump</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Begin Installation</strong>.</p>
+  </li>
+  <li>
+    <p>Set a root password and, optionally, create an additional user while oVirt Node installs.</p>
+
+    <p><strong>Warning:</strong> The oVirt Project strongly recommends not creating untrusted users on oVirt Node, as this can lead to exploitation of local security vulnerabilities.</p>
+  </li>
+  <li>
+    <p>Click <strong>Reboot</strong> to complete the installation.</p>
+
+    <p><strong>Note:</strong> When oVirt Node restarts, <code>imgbase-motd.service</code> performs a health check on the host and displays the result when you log in on the command line. The message <code>imgbase status: OK</code> or <code>imgbase status: DEGRADED</code> indicates the health status. Run <code>imgbase check</code> to get more information. The service is enabled by default.</p>
+  </li>
+</ol>
+
+<p>You can now add the host to your oVirt environment. See <a href="chap-Adding_a_Host_to_the_oVirt_Engine">Chapter 8: Adding a Host to the oVirt Engine</a>.</p>
+
+<h2 id="advanced-installation">Advanced Installation</h2>
+
+<h3 id="custom-partitioning">Custom Partitioning</h3>
+
+<p>Custom partitioning on oVirt Node is not recommended. The oVirt Project strongly recommends using the <strong>Automatically configure partitioning</strong> option in the <strong>Installation Destination</strong> window.</p>
+
+<p>If your installation requires custom partitioning, note that the following restrictions apply:</p>
+
+<ul>
+  <li>
+    <p>Ensure the default <strong>LVM Thin Provisioning</strong> option is selected in the <strong>Manual Partitioning</strong> window.</p>
+  </li>
+  <li>
+    <p>The following directories are required and must be on thin provisioned logical volumes:</p>
+
+    <ul>
+      <li>
+        <p>root (/)</p>
+      </li>
+      <li>
+        <p>/home</p>
+      </li>
+      <li>
+        <p>/tmp</p>
+      </li>
+      <li>
+        <p>/var</p>
+      </li>
+      <li>
+        <p>/var/log</p>
+      </li>
+      <li>
+        <p>/var/log/audit</p>
+
+        <p><strong>Important:</strong> Do not create a separate partition for /usr. Doing so will cause the installation to fail.</p>
+
+        <p>/usr must be on a logical volume that is able to change versions along with oVirt Node, and therefore should be left on root (/).</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>For information about the required storage sizes for each partition, see <a href="chap-System_Requirements">Chapter 2: System Requirements</a>.</p>
+
+<ul>
+  <li>
+    <p>The /boot directory should be defined as a standard partition.</p>
+  </li>
+  <li>
+    <p>The /var directory must be on a separate volume or disk.</p>
+  </li>
+  <li>
+    <p>Only XFS or Ext4 file systems are supported.</p>
+  </li>
+</ul>
+
+<p><strong>Prev:</strong> <a href="chap-Introduction_to_Hosts">Chapter 5: Introduction to Hosts</a> <br />
+<strong>Next:</strong> <a href="chap-Enterprise_Linux_Hosts">Chapter 7: Enterprise Linux Hosts</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/advanced_rhvh_install">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/chap-oVirt_Nodes.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/chap-oVirt_Nodes.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 11 Jun 2019 06:17 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Software Defined Networking, The OVN Network Provider &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Marcin Mirecki' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='oVirt Software Defined Networking, The OVN Network Provider' property='og:title'>
+<meta content='oVirt offers not only its own internal networking, but also an API for external network providers. This API enables using external network management software inside environments managed by oVirt and takes advantage of their extended capabilities.
+One of such solutions is OVN: Open Virtual Network. OVN is an OVS (Open vSwitch) extension that brings Software Defined Networking to OVS.
+
+OVN enables support for virtual networks abstraction by adding native OVS support for virtual L2 and L3 overlays.
+This allows the user to create as many VM networks as required, without troubling the adminstrator with vlan requests or infrastructure changes.' property='og:description'>
+<meta content='http://ovirt.org/blog/2016/11/ovirt-provider-ovn.html' property='og:url'>
+<meta content='2016-11-02T17:00:00Z' property='article:published_time'>
+<meta content='mmirecki' property='article:author:username'>
+<meta content='blog' property='article:tag'>
+<link href='/blog/tag/blog.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='howto' property='article:tag'>
+<link href='/blog/tag/howto.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='network' property='article:tag'>
+<link href='/blog/tag/network.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='oVirt Software Defined Networking, The OVN Network Provider' name='twitter:title'>
+<meta content='oVirt offers not only its own internal networking, but also an API for external network providers. This API enables using external network management software inside environments managed by oVirt and takes advantage of their extended capabilities.
+One of such solutions is OVN: Open Virtual Network. OVN is an OVS (Open vSwitch) extension that brings Software Defined Networking to OVS.
+
+OVN enables support for virtual networks abstraction by adding native OVS support for virtual L2 and L3 overlays.
+This allows the user to create as many VM networks as required, without troubling the adminstrator with vlan requests or infrastructure changes.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2016</li>
+<li class='active'>11</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+oVirt Software Defined Networking, The OVN Network Provider
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/mmirecki.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/mmirecki/">Marcin Mirecki</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2016-11-02T17:00:00Z'>
+Wednesday  2 November 2016
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>oVirt offers not only its own internal networking, but also an API for external network providers. This API enables using external network management software inside environments managed by oVirt and takes advantage of their extended capabilities.
+One of such solutions is OVN: Open Virtual Network. OVN is an OVS (Open vSwitch) extension that brings Software Defined Networking to <a href="http://openvswitch.github.io/support/dist-docs/README.rst.html">OVS</a>.</p>
+
+<p>OVN enables support for virtual networks abstraction by adding native OVS support for virtual L2 and L3 overlays.
+This allows the user to create as many VM networks as required, without troubling the adminstrator with vlan requests or infrastructure changes.</p>
+
+<p></p>
+
+<p>The oVirt provider for OVN consists of two parts:</p>
+<ul>
+  <li>The oVirt OVN driver</li>
+  <li>The oVirt OVN provider</li>
+</ul>
+
+<h2 id="ovirt-ovn-driver">oVirt OVN Driver</h2>
+
+<p>The oVirt OVN driver is the Virtual Interface Driver placed on oVirt hosts that handle the wiring of VM NICs to OVN networking.</p>
+
+<p>The driver allows Vdsm, libvirt, and OVN to interact whenever a NIC is plugged in such a way that the VM NIC is added to an appropriate OVN Logical Switch and the appropriate OVN overlays on all the hosts in the oVirt environment.</p>
+
+<p>The <a href="http://resources.ovirt.org/repos/mmirecki/ovirt-provider-ovn-driver-1.0-1.fc24.noarch.rpm">oVirt OVN driver rpm</a> is now available for testing. The latest version can always be downloaded and built from the repository (described later in this article). Once the rpm is downloaded, it can be installed in the following way:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install ovirt-provider-ovn-driver-1.0-1.fc24.noarch.rpm&#x000A;</code></pre></div>
+<p>OVN requires Vdsm and OVN (version 2.6 or later) to be installed on the host. The following OVN packages are required by the ovirt-provider-ovn-driver rpm:</p>
+
+<ul>
+  <li><code>openvswitch</code></li>
+  <li><code>openvswitch-ovn-common</code></li>
+  <li><code>openvswitch-ovn-host</code></li>
+  <li><code>python-openvswitch</code></li>
+</ul>
+
+<p>These are available from the <a href="http://openvswitch.org/download/">OVS website</a> or built using the code downloaded from the OVS repo (described below).</p>
+
+<p>The OVN-controller service can be started using the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl start ovn-controller&#x000A;</code></pre></div>
+<p>In order to make the service start automatically at boot, the service could be enabled using:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl enable ovn-controller&#x000A;</code></pre></div>
+<p>After installing the driver and OVN, the OVN-controller must be configured. This can be done either using the vdsm-tool:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>vdsm-tool ovn-config &lt;OVN central server IP&gt; &lt;local IP used for OVN tunneling&gt;&#x000A;</code></pre></div>
+<p>The second parameter (local IP used for OVN tunneling) can be the IP address of the ovirtmgmt interface on the host, and should be reachable by OVN hosts and central server.
+vdsm-tool will also configure ovn-controller with the PKI required to safely connect to the ovn central server.
+To add support for Transport Layer Security (TLS) connectivity with the OVN-controller, vdsm-tool will use the VDSM private and public keys, and configures OVN-controller to enable PKI encryption between the host and the OVN south db on the OVN central server. This provides privacy and data-integrity in the management connections to the south database</p>
+
+<p>The OVN-controller can also be set up by using the OVN command-line interface directly. For more information about OVN-controller setup, please check the
+<a href="http://openvswitch.org/support/dist-docs/">OVS documentation</a>.</p>
+
+<p>The command above should create OVN tunnels to other OVN controllers (if at least one other ovn-controller is present).
+Please verify that the tunnel has been created by issuing the following commands:</p>
+
+<p><code>ip link</code> - the result should include a link called <code>genev_sys_ ...</code></p>
+
+<p><code>ovs-vsctl show</code> - the bridge <code>br-int</code> should include a port looking somewhat like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Port "ovn-6b2d2f-0"&#x000A;   Interface "ovn-6b2d2f-0"&#x000A;        type: geneve&#x000A;        options: {csum="true", key=flow, remote_ip="10.35.128.14"}&#x000A;</code></pre></div>
+<p>Please check the OVN logs in case of problems. The relevant OVN logs are located in <code>/var/log/openvswitch/</code>.</p>
+
+<h2 id="ovirt-ovn-provider">oVirt OVN Provider</h2>
+
+<p>The oVirt OVN provider is a proxy that the oVirt Engine uses to interact with OVN. It is delivered as an rpm that is to be installed on the host where OVN central is installed.</p>
+
+<p>The <a href="http://resources.ovirt.org/repos/mmirecki/ovirt-provider-ovn-1.0-1.fc24.noarch.rpm">oVirt OVN provider RPM</a> is also available now. The latest version can always be downloaded and built from the repository as well. Once the rpm is downloaded, it can be installed with this command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install ovirt-provider-ovn-1.0-1.fc24.noarch.rpm&#x000A;</code></pre></div>
+<p>OVN requires OVN to be installed on the host (version 2.6 or later).
+The OVN provider requires the following OVS and OVN packages:</p>
+
+<ul>
+  <li><code>openvswitch</code></li>
+  <li><code>openvswitch-ovn-common</code></li>
+  <li><code>openvswitch-ovn-central</code></li>
+  <li><code>python-openvswitch</code></li>
+</ul>
+
+<p>These are also available from the <a href="http://openvswitch.org/download/">OVS website</a> or built using the code downloaded from the OVS repo (described below).</p>
+
+<p>After installing the oVirt OVN provider, the admin needs to open up port 9696 in the firewall.
+This can be done manually or by adding the ovirt-provider-ovn firewalld service to the appropriate firewalld zone with:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>firewall-cmd --zone=&lt;zone to add service to&gt; --add-service=ovirt-provider-ovn --permanent&#x000A;firewall-cmd --reload&#x000A;</code></pre></div>
+<p>The zone currently selected as default can be obtained by executing:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>firewall-cmd --get-default-zone&#x000A;</code></pre></div>
+<p>Firewalld also needs to be configured for OVN components. This will be handled by OVN in the near future (https://bugzilla.redhat.com/1390938).
+In the mean time the following commands open the required ports on the OVN central server:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" port protocol="tcp" port="6641" accept'&#x000A;&#x000A;firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" port protocol="tcp" port="6642" accept'&#x000A;</code></pre></div>
+<p>Stop iptables on the hosts (needed for OVN tunnels):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl stop iptables&#x000A;</code></pre></div>
+<p>After installation, the provider can be started as follows:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl start ovirt-provider-ovn&#x000A;</code></pre></div>
+<p>Enable the service in order to make it start at boot, use:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl enable ovirt-provider-ovn&#x000A;</code></pre></div>
+<p>Since OVS 2.7, OVN central must be configured to listen to requests on appropriate ports:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovn-sbctl set-connection ptcp:6642&#x000A;ovn-nbctl set-connection ptcp:6641&#x000A;</code></pre></div>
+<p>The provider can then be added to oVirt as an external network provider. In order to add a new provider, go to the External Providers section in the oVirt UI and click the Add button.</p>
+
+<p><img alt="adding a new provider" width="749" height="482" src="/images/new-ovirt-provider-ovn.png?1560777613" /></p>
+
+<p>When the provider is successfully added, existing OVN networks can be imported to oVirt.
+New OVN networks can be defined using oVirt by adding a network and specifying it to be added on an external provider (make sure you add the external provider in read-write mode, so that you can add external networks from oVirt).</p>
+
+<p>A vNIC can be attached to OVN network by simply choosing an external network during NIC provisioning.</p>
+
+<p>OVN based networking brings many advantages to oVirt:</p>
+<ul>
+  <li>More granular security - it brings complete network isolation without the need for defining VLANs.</li>
+  <li>Easier management - the management of the networking infrastructure should also become much easier, as instead of managing the network isolation on each of the networking components, it will be automatically taken care of by OVN.</li>
+  <li>Self service - the user can create many VM networks without troubling the network admin with vlan or infrastructure requests.</li>
+</ul>
+
+<h2 id="building-ovirt-ovn-provider-rpms-from-repository">Building oVirt OVN Provider rpms from repository</h2>
+
+<p>Clone the repository:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>git clone https://gerrit.ovirt.org/ovirt-provider-ovn&#x000A;</code></pre></div>
+<p>Build the rpms:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cd ovirt-provider-ovn&#x000A;make rpm&#x000A;</code></pre></div>
+<p>The built rpms can be found in: <code>~/rpmbuild/RPMS/noarch/</code></p>
+
+<h2 id="building-ovn-rpms-from-repository">Building OVN rpms from repository</h2>
+
+<p>Note: for the most up-to-date description of building OVS resources please refer to <a href="http://openvswitch.org">the OVS site</a></p>
+
+<p>Clone the repository:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>git clone https://github.com/openvswitch/ovs&#x000A;</code></pre></div>
+<p>Install the following packages, as they are need to build ovn:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum -y install gcc make python-devel openssl-devel kernel-devel graphviz kernel-debug-devel autoconf automake rpm-build redhat-rpm-config rpm-build rpmdevtools bash-completion autoconf automake libtool PyQt4 groff libcap-ng-devel python-twisted-core python-zope-interface graphviz openssl-devel selinux-policy-devel&#x000A;</code></pre></div>
+<p>Build the ovn rpms:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cd ovs&#x000A;./boot.sh&#x000A;./configure&#x000A;make dist&#x000A;cp openvswitch-&lt;version&gt;.tar.gz $HOME/rpmbuild/SOURCES&#x000A;cd $HOME/rpmbuild/SOURCES&#x000A;tar xzf openvswitch-&lt;version&gt;.tar.gz&#x000A;cd openvswitch-&lt;version&gt;&#x000A;rpmbuild -bb rhel/openvswitch-fedora.spec&#x000A;</code></pre></div>
+<p>The built rpms will reside here: <code>~/rpmbuild/RPMS/x86_64/</code></p>
+
+<h2 id="provider-setup-using-the-engine-setup-script">Provider setup using the engine-setup script</h2>
+
+<p>The provider can be set up on the engine host using the engine-setup tool.
+The engine-setup tool is part of oVirt engine installation and is located in:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/bin/engine-setup&#x000A;</code></pre></div>
+<p>During the setup process, engine-setup script will ask the user several questions related to OVN:</p>
+
+<ul>
+  <li><code>Install ovirt-provider-ovn(Yes, No) [Yes]?:</code>
+If 'Yes', engine-setup will install ovirt-provider-ovn.
+If engine-setup is used to update a system, this will only be asked if ovirt-provider-ovn has not been installed previously.
+If you reply 'No', you will not be asked again on the next run of engine-setup. If you do want to get asked again, run engine-setup with '–reconfigure-optional-components'.</li>
+  <li><code>Use default credentials (admin@internal) for ovirt-provider-ovn(Yes, No) [Yes]?:</code>
+If 'Yes', engine-setup will use the default engine user and password specified earlier in the setup process.
+This option is only available during new installations.</li>
+  <li><code>oVirt OVN provider user[admin]:</code>
+ If the default credentials are not chosen, the user name which to use to connect to the provider.</li>
+  <li><code>oVirt OVN provider password[empty]:</code>
+ If the default credentials are not chosen, the password to use to connect to the provider.</li>
+</ul>
+
+<p>If used to set up ovirt-provider-ovn, engine-setup will perform the following tasks:</p>
+
+<ul>
+  <li>install OVS and OVN packages on the engine</li>
+  <li>install ovirt-provider-ovn on the engine</li>
+  <li>add and configure a default External Network OVN provider. The engine provider will be configured to connect to provider on localhost. The provider will also be configured with the user and password specified during the setup process.</li>
+  <li>generate the PKI (public key infrastructure) for OVN north db, OVN southdb and ovirt-provider-ovn (shared key for serving https and comunicating with OVN north db)</li>
+  <li>configure the OVN north and south databases to use SSL</li>
+  <li>configure the provider to use https</li>
+  <li>configure the provider to connect to OVN north DB using SSL</li>
+</ul>
+
+<h3 id="configuring-pki-manually">Configuring PKI manually</h3>
+
+<p>The PKI (public key infrastructure) for the provider and driver are configured automatically by engine-setup and vdsm-tool.
+In case where the provider is not installed together with ovirt-engine, PKI will need to be created and configured manually.</p>
+
+<p>In such a case, key/certificate pair signed by a common authority will be needed for the provider, ovn north db, ovn south db, and each of the ovn controllers.</p>
+
+<p>Some of the possible ways to generate key/certificate pairs are using <a href="https://www.openssl.org/">OpenSSL</a> or openvswitch <a href="http://openvswitch.org/support/dist-docs/ovs-pki.8.txt">ovs-pki command</a>.</p>
+
+<p>The ovn north db must be configured using the following commands:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovn-nbctl set-ssl &lt;private key file&gt; &lt;certificate file&gt; &lt;ca certificate file&gt;&#x000A;ovn-nbctl set-connection pssl:6641&#x000A;</code></pre></div>
+<p>The ovn south db must be configured using the following commands:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovn-sbctl set-ssl &lt;private key file&gt; &lt;certificate file&gt; &lt;ca certificate file&gt;&#x000A;ovn-sbctl set-connection pssl:6642&#x000A;</code></pre></div>
+<p>The provider must be configured by setting the follwing values in the configuration file (/etc/ovirt-provider-ovn/ovirt-provider-ovn.conf):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[SSL]&#x000A;ssl_enabled=true # enables/disables https for the REST API&#x000A;key-file=&lt;private key file&gt;&#x000A;cert-file=&lt;certificate file&gt;&#x000A;cacert-file=&lt;ca certificate file&gt;&#x000A;</code></pre></div>
+<p>The PKI of the provider will be used to connect to the OVN north db, as well as for the https connection.
+The CA certificate must used for signing the certificate must be added to the external provider trust store on the engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>keytool -import -alias &lt;certificate alias&gt; -keystore &lt;key store file&gt; -file &lt;ca certificate file&gt; -noprompt -storepass &lt;store password&gt;&#x000A;</code></pre></div>
+<p>The key store file and the store password are defined in <code>/usr/share/ovirt-engine/services/ovirt-engine/ovirt-engine.conf</code>.</p>
+
+<p>The ovn-controller can be set up using the <code>setup_ovn_controller</code> script (/usr/libexec/ovirt-provider-ovn/setup_ovn_controller.sh):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>setup_ovn_controller.sh &lt;OVN central IP&gt; &lt;local tunneling IP&gt; &lt;private key file&gt; &lt;certificate file&gt; &lt;ca certificate file&gt;&#x000A;</code></pre></div>
+<h2 id="tested-environments">Tested environments</h2>
+
+<p>This guide has been tested on both Fedora24 and RHEL7 environments.</p>
+
+<p>Note: Currently a OVS spec file for Fedora is the only available in the OVS repo. We are however using the generated rpm's on RHEL7 and have not encountered any problems so far. Please consult the OVS team for more info.</p>
+
+<h2 id="useful-links">Useful Links</h2>
+
+<ul>
+  <li><a href="http://resources.ovirt.org/repos/mmirecki/ovirt-provider-ovn-1.0-1.fc24.noarch.rpm">ovirt-provider-ovn RPM</a></li>
+  <li><a href="http://resources.ovirt.org/repos/mmirecki/ovirt-provider-ovn-driver-1.0-1.fc24.noarch.rpm">ovirt-provider-ovn-driver RPMy</a></li>
+  <li>
+    <p><a href="http://jenkins.ovirt.org/job/ovirt-provider-ovn_master_build-artifacts-el7-x86_64/lastSuccessfulBuild/artifact/exported-artifacts/">Latest development build</a></p>
+  </li>
+  <li><a href="https://gerrit.ovirt.org/#/q/project:ovirt-provider-ovn">Project repository</a></li>
+  <li><a href="http://www.ovirt.org/develop/release-management/features/ovirt-ovn-provider/">oVirt provider for OVN</a></li>
+  <li>
+    <p><a href="http://www.ovirt.org/develop/release-management/features/external-network-provider/">External network providers</a></p>
+  </li>
+  <li><a href="http://openvswitch.org/support/dist-docs/">OVS ducumentation</a></li>
+  <li><a href="http://openvswitch.org/support/dist-docs/ovn-architecture.7.html">OVN architecture</a></li>
+</ul>
+
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/blog.html">blog</a></li>
+<li><a href="../../tag/community.html">community</a></li>
+<li><a href="../../tag/howto.html">howto</a></li>
+<li><a href="../../tag/network.html">network</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2016-11-02-ovirt-provider-ovn.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2016-11-02-ovirt-provider-ovn.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 16 May 2017 12:13 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

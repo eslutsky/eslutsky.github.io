@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Users and Roles &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-15-users-and-roles">Chapter 15: Users and Roles</h1>
+
+<h2 id="introduction-to-users">Introduction to Users</h2>
+
+<p>In oVirt, there are two types of user domains: local domain and external domain. A default local domain called the <strong>internal</strong> domain and a default user <strong>admin</strong> is created during the the Engine installation process.</p>
+
+<p>You can create additional users on the <strong>internal</strong> domain using <code>ovirt-aaa-jdbc-tool</code>. User accounts created on local domains are known as local users. You can also attach external directory servers such as Red Hat Directory Server, Active Directory, OpenLDAP, and many other supported options to your oVirt environment and use them as external domains. User accounts created on external domains are known as directory users.</p>
+
+<p>Both local users and directory users need to be assigned with appropriate roles and permissions through the Administration Portal before they can function in the environment. There are two main types of user roles: end user and administrator. An end user role uses and manages virtual resources from the VM Portal. An administrator role maintains the system infrastructure using the Administration Portal. The roles can be assigned to the users for individual resources like virtual machines and hosts, or on a hierarchy of objects like clusters and data centers.</p>
+
+<h2 id="introduction-to-directory-servers">Introduction to Directory Servers</h2>
+
+<p>During installation, oVirt Engine creates an <strong>admin</strong> user on the <strong>internal</strong> domain. The user is also referred to as <code>admin@internal</code>. This account is intended for use when initially configuring the environment and for troubleshooting. After you have attached an external directory server, added the directory users, and assigned them with appropriate roles and permissions, the <code>admin@internal</code> user can be disabled if it is not required.</p>
+
+<p>The directory servers supported are:</p>
+
+<ul>
+  <li>
+    <p>389ds</p>
+  </li>
+  <li>
+    <p>389ds RFC-2307 Schema</p>
+  </li>
+  <li>
+    <p>Active Directory</p>
+  </li>
+  <li>
+    <p>IBM Security Directory Server</p>
+  </li>
+  <li>
+    <p>IBM Security Directory Server RFC-2307 Schema</p>
+  </li>
+  <li>
+    <p>FreeIPA</p>
+  </li>
+  <li>
+    <p>iDM</p>
+  </li>
+  <li>
+    <p>Novell eDirectory RFC-2307 Schema</p>
+  </li>
+  <li>
+    <p>OpenLDAP RFC-2307 Schema</p>
+  </li>
+  <li>
+    <p>OpenLDAP Standard Schema</p>
+  </li>
+  <li>
+    <p>Oracle Unified Directory RFC-2307 Schema</p>
+  </li>
+  <li>
+    <p>RFC-2307 Schema (Generic)</p>
+  </li>
+  <li>
+    <p>Red Hat Directory Server (RHDS)</p>
+  </li>
+  <li>
+    <p>Red Hat Directory Server (RHDS) RFC-2307 Schema</p>
+  </li>
+  <li>
+    <p>iPlanet</p>
+
+    <p><strong>Important:</strong> It is not possible to install oVirt Engine (<code>rhevm</code>) and IdM (<code>ipa-server</code>) on the same system. IdM is incompatible with the <code>mod_ssl</code> package, which is required by oVirt Engine.</p>
+
+    <p><strong>Important:</strong> If you are using Active Directory as your directory server, and you want to use <code>sysprep</code> in the creation of templates and virtual machines, then the oVirt administrative user must be delegated control over the Domain to:</p>
+
+    <ul>
+      <li>
+        <p><strong>Join a computer to the domain</strong></p>
+      </li>
+      <li>
+        <p><strong>Modify the membership of a group</strong></p>
+      </li>
+    </ul>
+
+    <p>For information on creation of user accounts in Active Directory, see <a href="http://technet.microsoft.com/en-us/library/cc732336.aspx">http://technet.microsoft.com/en-us/library/cc732336.aspx</a>.</p>
+
+    <p>For information on delegation of control in Active Directory, see <a href="http://technet.microsoft.com/en-us/library/cc732524.aspx">http://technet.microsoft.com/en-us/library/cc732524.aspx</a>.</p>
+  </li>
+</ul>
+
+<h2 id="configuring-an-external-ldap-provider">Configuring an External LDAP Provider</h2>
+
+<h3 id="configuring-an-external-ldap-provider-interactive-setup">Configuring an External LDAP Provider (Interactive Setup)</h3>
+
+<p>The <code>ovirt-engine-extension-aaa-ldap</code> extension allows users to customize their external directory setup easily. The <code>ovirt-engine-extension-aaa-ldap</code> extension supports many different LDAP server types, and an interactive setup script is provided to assist you with the setup for most LDAP types.</p>
+
+<p>If the LDAP server type is not listed in the interactive setup script, or you want to do more customization, you can manually edit the configuration files. See <a href="Configuring_an_External_LDAP_Provider_ManualMethod">Configuring an External LDAP Provider ManualMethod</a> for more information.</p>
+
+<p>For an Active Directory example, see <a href="Attaching_an_Active_Directory">Attaching an Active Directory</a>.</p>
+
+<p><strong>Prerequisites:</strong></p>
+
+<ul>
+  <li>
+    <p>You need to know the domain name of the DNS or the LDAP server. Round-robin and failover policies are also supported.</p>
+  </li>
+  <li>
+    <p>To set up secure connection between the LDAP server and the Engine, ensure a PEM-encoded CA certificate has been prepared. See <a href="Setting_Up_SSL_or_TLS_Connections_between_the_Manager_and_an_LDAP_Server">Setting Up SSL or TLS Connections between the Manager and an LDAP Server</a> for more information.</p>
+  </li>
+  <li>
+    <p>Have at least one set of account name and password ready to perform search and login queries to the LDAP server.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring an External LDAP Provider</strong></p>
+
+<ol>
+  <li>
+    <p>On the oVirt Engine, install the LDAP extension package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-extension-aaa-ldap-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run <code>ovirt-engine-extension-aaa-ldap-setup</code> to start the interactive setup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-engine-extension-aaa-ldap-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Select an LDAP type by entering the corresponding number. If you are not sure which schema your LDAP server is, select the standard schema of your LDAP server type. For Active Directory, follow the procedure at <a href="Attaching_an_Active_Directory">Attaching an Active Directory</a>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Available LDAP implementations:&#x000A;  1 - 389ds&#x000A;  2 - 389ds RFC-2307 Schema&#x000A;  3 - Active Directory&#x000A;  4 - IBM Security Directory Server&#x000A;  5 - IBM Security Directory Server RFC-2307 Schema&#x000A;  6 - IPA&#x000A;  7 - Novell eDirectory RFC-2307 Schema&#x000A;  8 - OpenLDAP RFC-2307 Schema&#x000A;  9 - OpenLDAP Standard Schema&#x000A; 10 - Oracle Unified Directory RFC-2307 Schema&#x000A; 11 - RFC-2307 Schema (Generic)&#x000A; 12 - RHDS&#x000A; 13 - RHDS RFC-2307 Schema&#x000A; 14 - iPlanet&#x000A; Please select:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to accept the default and configure domain name resolution for your LDAP server name:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> It is highly recommended to use DNS resolution for LDAP server.&#x000A; If for some reason you intend to use hosts or plain address disable DNS usage.&#x000A; Use DNS (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Select a DNS policy method by entering the corresponding number:</p>
+
+    <ul>
+      <li>
+        <p>For option 1, the DNS servers listed in <strong>/etc/resolv.conf</strong> is used to resolve the IP address. Ensure the <strong>/etc/resolv.conf</strong> file is updated with the correct DNS servers.</p>
+      </li>
+      <li>
+        <p>For option 2, enter the fully qualified domain name (FQDN) or the IP address of the LDAP server. You can use the dig command with the SRV record to find out the domain name. An SRV record takes the following format:</p>
+
+        <p><i><em>service.</em> protocol.domain_name</i></p>
+
+        <p>Example: <code>dig _ldap._tcp.redhat.com SRV</code>.</p>
+      </li>
+      <li>
+        <p>For option 3, enter a space-separated list of LDAP servers. Use either the FQDN or IP address of the servers. This policy provides load-balancing between the LDAP servers. Queries are distributed among all LDAP servers according to the round-robin algorithm.</p>
+      </li>
+      <li>
+        <p>For option 4, enter a space-separated list of LDAP servers. Use either the FQDN or IP address of the servers. This policy defines the first LDAP server to be the default LDAP server to respond to queries. If the first server is not available, the query will go to the next LDAP server on the list.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1 - Single server&#x000A;2 - DNS domain LDAP SRV record&#x000A;3 - Round-robin between multiple hosts&#x000A;4 - Failover between multiple hosts&#x000A;Please select:&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Select the secure connection method your LDAP server supports and specify the method to obtain a PEM-encoded CA certificate.</p>
+
+    <ul>
+      <li>
+        <p><code>File</code> allows you to provide the full path to the certificate.</p>
+      </li>
+      <li>
+        <p><code>URL</code> allows you to specify a URL for the certificate.</p>
+      </li>
+      <li>
+        <p><code>Inline</code> allows you to paste the content of the certificate in the terminal.</p>
+      </li>
+      <li>
+        <p><code>System</code> allows you to specify the default location for all CA files.</p>
+      </li>
+      <li>
+        <p><code>Insecure</code> skips certificate validation, but the connection is still encrypted using TLS.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>NOTE:&#x000A;It is highly recommended to use secure protocol to access the LDAP server.&#x000A;Protocol startTLS is the standard recommended method to do so.&#x000A;Only in cases in which the startTLS is not supported, fallback to non standard ldaps protocol.&#x000A;Use plain for test environments only.&#x000A;Please select protocol to use (startTLS, ldaps, plain) [startTLS]: startTLS&#x000A;Please select method to obtain PEM encoded CA certificate (File, URL, Inline, System, Insecure): File&#x000A;Please enter the password:&#x000A;</code></pre></div>
+        <p><strong>Note:</strong> LDAPS stands for Lightweight Directory Access Protocol Over Secure Socket Links. For SSL connections, select the <code>ldaps</code> option.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Enter the search user distinguished name (DN). The user must have permissions to browse all users and groups on the directory server. The search user must be specified in LDAP annotation. If anonymous search is allowed, press <strong>Enter</strong> without any input.</p>
+
+    <p>Enter search user DN (for example uid=username,dc=example,dc=com or leave empty for anonymous): uid=user1,ou=Users,ou=department-1,dc=example,dc=com
+ Enter search user password:</p>
+  </li>
+  <li>
+    <p>Enter the base DN:</p>
+
+    <p>Please enter base DN (dc=redhat,dc=com) [dc=redhat,dc=com]: ou=department-1,dc=redhat,dc=com</p>
+  </li>
+  <li>
+    <p>Select <code>Yes</code> if you intend to configure single sign-on for virtual machines. Note that the feature cannot be used with single sign-on to the Administration Portal feature. The script reminds you that the profile name must match the domain name.</p>
+
+    <p>Are you going to use Single Sign-On for Virtual Machines (Yes, No) [Yes]:</p>
+  </li>
+  <li>
+    <p>Specify a profile name. The profile name is visible to users on the login page. This example uses <code>redhat.com</code>.</p>
+
+    <p><strong>Note:</strong> To rename the profile after the domain has been configured, edit the <code>ovirt.engine.aaa.authn.profile.name</code> attribute in the <code>/etc/ovirt-engine/extensions.d/redhat.com-authn.properties</code> file. Restart the engine service for the changes to take effect.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Please specify profile name that will be visible to users:redhat.com&#x000A;</code></pre></div>
+    <p><strong>The Administration Portal Login Page</strong></p>
+
+    <p><img alt="" width="822" height="417" src="/images/admin-guide/AAA_login_profile.png?1560777613" /></p>
+
+    <p><strong>Note:</strong> Users must select the desired profile from the drop-down list when logging in for the first time. The information is then stored in browser cookies and preselected the next time the user logs in.</p>
+  </li>
+  <li>
+    <p>Test the search and login function to ensure the your LDAP server is connected to your oVirt environment properly. For the login query, enter your <code>username</code> and <code>password</code>.</p>
+
+    <p>NOTE:
+It is highly recommended to test drive the configuration before applying it into engine.
+Login sequence is executed automatically, but it is recommended to also execute Search sequence manually after successful Login sequence.</p>
+
+    <p>Please provide credentials to test login flow:
+Enter user name:
+Enter user password:
+[ INFO  ] Executing login sequence…
+…
+[ INFO  ] Login sequence executed successfully</p>
+  </li>
+  <li>
+    <p>Check that the user details are correct. If the user details are incorrect, select <code>Abort</code>:</p>
+
+    <p>Please make sure that user details are correct and group membership meets expectations (search for PrincipalRecord and GroupRecord titles).
+Abort if output is incorrect.
+Select test sequence to execute (Done, Abort, Login, Search) [Abort]:</p>
+  </li>
+  <li>
+    <p>Manually testing the Search function is recommended. For the search query, select <code>Principal</code> for user accounts or <code>Group</code> for group accounts. Select <code>Yes</code> to <code>Resolve Groups</code> if you want the group account information for the user account to be returned. Three configuration files are created and displayed in the screen output.</p>
+
+    <p>Select test sequence to execute (Done, Abort, Login, Search) [Search]: Search
+Select entity to search (Principal, Group) [Principal]:
+Term to search, trailing '*' is allowed: testuser1
+Resolve Groups (Yes, No) [No]:</p>
+  </li>
+  <li>
+    <p>Select <code>Done</code> to complete the setup:</p>
+
+    <p>Select test sequence to execute (Done, Abort, Login, Search) [Abort]: Done
+[ INFO  ] Stage: Transaction setup
+[ INFO  ] Stage: Misc configuration
+[ INFO  ] Stage: Package installation
+[ INFO  ] Stage: Misc configuration
+[ INFO  ] Stage: Transaction commit
+[ INFO  ] Stage: Closing up
+CONFIGURATION SUMMARY
+Profile name is: redhat.com
+The following files were created:
+    /etc/ovirt-engine/aaa/redhat.com.properties
+    /etc/ovirt-engine/extensions.d/redhat.com.properties
+    /etc/ovirt-engine/extensions.d/redhat.com-authn.properties
+[ INFO  ] Stage: Clean up
+Log file is available at /tmp/ovirt-engine-extension-aaa-ldap-setup-20171004101225-mmneib.log:
+[ INFO  ] Stage: Pre-termination
+[ INFO  ] Stage: Termination</p>
+  </li>
+  <li>
+    <p>Restart the engine service. The profile you have created is now available on the Administration Portal and the VM Portal login pages. To assign the user accounts on the LDAP server appropriate roles and permissions, for example to log in to the VM Portal, see <a href="sect-Red_Hat_Enterprise_Virtualization_Manager_User_Tasks">Red Hat Enterprise Virtualization Manager User Tasks</a>.</p>
+
+    <h1 id="systemctl-restart-ovirt-engineservice">systemctl restart ovirt-engine.service</h1>
+  </li>
+</ol>
+
+<p><strong>Note:</strong> For more information, see the LDAP authentication and authorization extension README file at <strong>/usr/share/doc/ovirt-engine-extension-aaa-ldap-version</strong>.</p>
+
+<h3 id="attaching-an-active-directory">Attaching an Active Directory</h3>
+
+<p><strong>Prerequisites:</strong></p>
+
+<ul>
+  <li>
+    <p>You need to know the Active Directory forest name. The forest name is also known as the root domain name.</p>
+
+    <p><strong>Note:</strong> Examples of the most common Active Directory configurations, which cannot be configured using the ovirt-engine-extension-aaa-ldap-setup tool, are provided in /usr/share/ovirt-engine-extension-aaa-ldap/examples/README.md.</p>
+  </li>
+  <li>
+    <p>You need to either add the DNS server that can resolve the Active Directory forest name to the <strong>/etc/resolv.conf</strong> file on the Engine, or note down the Active Directory DNS servers and enter them when prompted by the interactive setup script.</p>
+  </li>
+  <li>
+    <p>To set up secure connection between the LDAP server and the Engine, ensure a PEM-encoded CA certificate has been prepared. See <a href="Setting_Up_SSL_or_TLS_Connections_between_the_Manager_and_an_LDAP_Server">Setting Up SSL or TLS Connections between the Manager and an LDAP Server</a> for more information.</p>
+  </li>
+  <li>
+    <p>Unless anonymous search is supported, a user with permissions to browse all users and groups must be available on the Active Directory to be used as the search user. Note down the search user's distinguished name (DN). Do not use the administrative user for the Active Directory.</p>
+  </li>
+  <li>
+    <p>You must have at least one set of account name and password ready to perform search and login queries to the Active Directory.</p>
+  </li>
+  <li>
+    <p>If your Active Directory deployment spans multiple domains, be aware of the limitation described in the <code>/usr/share/ovirt-engine-extension-aaa-ldap/profiles/ad.properties</code> file.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring an External LDAP Provider</strong></p>
+
+<ol>
+  <li>
+    <p>On the oVirt Engine, install the LDAP extension package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-extension-aaa-ldap-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run <code>ovirt-engine-extension-aaa-ldap-setup</code> to start the interactive setup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-engine-extension-aaa-ldap-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Select an LDAP type by entering the corresponding number. The LDAP related questions after this step is different for different LDAP types.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Available LDAP implementations:&#x000A;  1 - 389ds&#x000A;  2 - 389ds RFC-2307 Schema&#x000A;  3 - Active Directory&#x000A;  4 - IBM Security Directory Server&#x000A;  5 - IBM Security Directory Server RFC-2307 Schema&#x000A;  6 - IPA&#x000A;  7 - Novell eDirectory RFC-2307 Schema&#x000A;  8 - OpenLDAP RFC-2307 Schema&#x000A;  9 - OpenLDAP Standard Schema&#x000A; 10 - Oracle Unified Directory RFC-2307 Schema&#x000A; 11 - RFC-2307 Schema (Generic)&#x000A; 12 - RHDS&#x000A; 13 - RHDS RFC-2307 Schema&#x000A; 14 - iPlanet&#x000A; Please select: 3&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Enter the Active Directory forest name. If the forest name is not resolvable by your Engine's DNS, the script prompts you to enter a space-separated list of Active Directory DNS server names.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please enter Active Directory Forest name: ad-example.redhat.com&#x000A; [ INFO  ] Resolving Global Catalog SRV record for ad-example.redhat.com&#x000A; [ INFO  ] Resolving LDAP SRV record for ad-example.redhat.com&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Select the secure connection method your LDAP server supports and specify the method to obtain a PEM-encoded CA certificate. The file option allows you to provide the full path to the certificate. The URL option allows you to specify a URL to the certificate. Use the inline option to paste the content of the certificate in the terminal. The system option allows you to specify the location for all CA files. The insecure option allows you to use startTLS in insecure mode.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> NOTE:&#x000A; It is highly recommended to use secure protocol to access the LDAP server.&#x000A; Protocol startTLS is the standard recommended method to do so.&#x000A; Only in cases in which the startTLS is not supported, fallback to non standard ldaps protocol.&#x000A; Use plain for test environments only.&#x000A; Please select protocol to use (startTLS, ldaps, plain) [startTLS]: startTLS&#x000A; Please select method to obtain PEM encoded CA certificate (File, URL, Inline, System, Insecure): File&#x000A; Please enter the password:&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> LDAPS stands for Lightweight Directory Access Protocol Over Secure Socket Links. For SSL connections, select the <code>ldaps</code> option.</p>
+
+    <p>For more information on creating a PEM-encoded CA certificate, see <a href="Setting_Up_SSL_or_TLS_Connections_between_the_Manager_and_an_LDAP_Server">Setting Up SSL or TLS Connections between the Manager and an LDAP Server</a>.</p>
+  </li>
+  <li>
+    <p>Enter the search user distinguished name (DN). The user must have permissions to browse all users and groups on the directory server. The search user must be of LDAP annotation. If anonymous search is allowed, press <strong>Enter</strong> without any input.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Enter search user DN (empty for anonymous): uid=user1,ou=Users,dc=test,dc=redhat,dc=com&#x000A; Enter search user password:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Specify whether to use single sign-on for virtual machines. This feature is enabled by default, but cannot be used if single sign-on to the Administration Portal is enabled. The script reminds you that the profile name must match the domain name.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Are you going to use Single Sign-On for Virtual Machines (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Specify a profile name. The profile name is visible to users on the login page. This example uses <code>redhat.com</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please specify profile name that will be visible to users:redhat.com&#x000A;</code></pre></div>
+    <p><strong>The Administration Portal Login Page</strong></p>
+
+    <p><img alt="" width="822" height="417" src="/images/admin-guide/AAA_login_profile.png?1560777613" /></p>
+
+    <p><strong>Note:</strong> Users need to select the desired profile from the drop-down list when logging in for the first time. The information is then stored in browser cookies and preselected the next time the user logs in.</p>
+  </li>
+  <li>
+    <p>Test the search and login function to ensure your LDAP server is connected to your oVirt environment properly. For the login query, enter the account name and password. For the search query, select <code>Principal</code> for user accounts, and select <code>Group</code> for group accounts. Enter <code>Yes</code> to <code>Resolve Groups</code> if you want the group account information for the user account to be returned. Select <code>Done</code> to complete the setup. Three configuration files are created and displayed in the screen output.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> NOTE:&#x000A; It is highly recommended to test drive the configuration before applying it into engine.&#x000A; Perform at least one Login sequence and one Search sequence.&#x000A; Select test sequence to execute (Done, Abort, Login, Search) [Abort]: Login&#x000A; Enter search user name: testuser1&#x000A; Enter search user password:&#x000A; [ INFO  ] Executing login sequence...&#x000A; ...&#x000A; Select test sequence to execute (Done, Abort, Login, Search) [Abort]: Search&#x000A; Select entity to search (Principal, Group) [Principal]:&#x000A; Term to search, trailing '\*' is allowed: testuser1&#x000A; Resolve Groups (Yes, No) [No]:&#x000A; [ INFO  ] Executing login sequence...&#x000A; ...&#x000A; Select test sequence to execute (Done, Abort, Login, Search) [Abort]: Done&#x000A; [ INFO  ] Stage: Transaction setup&#x000A; [ INFO  ] Stage: Misc configuration&#x000A; [ INFO  ] Stage: Package installation&#x000A; [ INFO  ] Stage: Misc configuration&#x000A; [ INFO  ] Stage: Transaction commit&#x000A; [ INFO  ] Stage: Closing up&#x000A;           CONFIGURATION SUMMARY&#x000A;           Profile name is: redhat.com&#x000A;           The following files were created:&#x000A;               /etc/ovirt-engine/aaa/redhat.com.properties&#x000A;               /etc/ovirt-engine/extensions.d/redhat.com-authz.properties&#x000A;               /etc/ovirt-engine/extensions.d/redhat.com-authn.properties&#x000A; [ INFO  ] Stage: Clean up&#x000A;           Log file is available at /tmp/ovirt-engine-extension-aaa-ldap-setup-20160114064955-1yar9i.log:&#x000A; [ INFO  ] Stage: Pre-termination&#x000A; [ INFO  ] Stage: Termination&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The profile you have created is now available on the Administration Portal and the VM Portal login pages.</p>
+
+    <p><strong>Note:</strong> For more information, see the LDAP authentication and authorization extension README file at <code>/usr/share/doc/ovirt-engine-extension-aaa-ldap-version</code>.</p>
+  </li>
+</ol>
+
+<h3 id="configuring-an-external-ldap-provider-manual-method">Configuring an External LDAP Provider (Manual Method)</h3>
+
+<p>The <code>ovirt-engine-extension-aaa-ldap</code> extension uses the LDAP protocol to access directory servers and is fully customizable. Kerberos authentication is not required unless you want to enable the single sign-on to the VM Portal or the Administration Portal feature.</p>
+
+<p>If the interactive setup method in the previous section does not cover your use case, you can manually modify the configuration files to attach your LDAP server. The following procedure uses generic details. Specific values depend on your setup.</p>
+
+<p><strong>Configuring an External LDAP Provider Manually</strong></p>
+
+<ol>
+  <li>
+    <p>On the oVirt Engine, install the LDAP extension package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-extension-aaa-ldap&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Copy the LDAP configuration template file into the <code>/etc/ovirt-engine</code> directory. Template files are available for active directories (<code>ad</code>) and other directory types (<code>simple</code>). This example uses the simple configuration template.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp -r /usr/share/ovirt-engine-extension-aaa-ldap/examples/simple/. /etc/ovirt-engine&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Rename the configuration files to match the profile name you want visible to users on the Administration Portal and the VM Portal login pages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # mv /etc/ovirt-engine/aaa/profile1.properties /etc/ovirt-engine/aaa/example.properties&#x000A; # mv /etc/ovirt-engine/extensions.d/profile1-authn.properties /etc/ovirt-engine/extensions.d/example-authn.properties&#x000A; # mv /etc/ovirt-engine/extensions.d/profile1-authz.properties /etc/ovirt-engine/extensions.d/example-authz.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Edit the LDAP property configuration file by uncommenting an LDAP server type and updating the domain and passwords fields:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> #  vi /etc/ovirt-engine/aaa/example.properties&#x000A;</code></pre></div>
+    <p><strong>Example profile: LDAP server section</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # Select one&#x000A; #&#x000A; include = &lt;openldap.properties&gt;&#x000A; #include = &lt;389ds.properties&gt;&#x000A; #include = &lt;rhds.properties&gt;&#x000A; #include = &lt;ipa.properties&gt;&#x000A; #include = &lt;iplanet.properties&gt;&#x000A; #include = &lt;rfc2307-389ds.properties&gt;&#x000A; #include = &lt;rfc2307-rhds.properties&gt;&#x000A; #include = &lt;rfc2307-openldap.properties&gt;&#x000A; #include = &lt;rfc2307-edir.properties&gt;&#x000A; #include = &lt;rfc2307-generic.properties&gt;&#x000A;&#x000A; # Server&#x000A; #&#x000A; vars.server = ldap1.company.com&#x000A;&#x000A; # Search user and its password.&#x000A; #&#x000A; vars.user = uid=search,cn=users,cn=accounts,dc=company,dc=com&#x000A; vars.password = 123456&#x000A;&#x000A; pool.default.serverset.single.server = ${global:vars.server}&#x000A; pool.default.auth.simple.bindDN = ${global:vars.user}&#x000A; pool.default.auth.simple.password = ${global:vars.password}&#x000A;</code></pre></div>
+    <p>To use TLS or SSL protocol to interact with the LDAP server, obtain the root CA certificate for the LDAP server and use it to create a public keystore file. Uncomment the following lines and specify the full path to the public keystore file and the password to access the file.</p>
+
+    <p><strong>Note:</strong>  For more information on creating a public keystore file, see <a href="Setting_Up_SSL_or_TLS_Connections_between_the_Manager_and_an_LDAP_Server">Setting Up SSL or TLS Connections between the Manager and an LDAP Server</a>.</p>
+
+    <p><strong>Example profile: keystore section</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # Create keystore, import certificate chain and uncomment&#x000A; # if using tls.&#x000A; pool.default.ssl.startTLS = true&#x000A; pool.default.ssl.truststore.file = /full/path/to/myrootca.jks&#x000A; pool.default.ssl.truststore.password = password&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Review the authentication configuration file. The profile name visible to users on the Administration Portal and the VM Portal login pages is defined by <code>ovirt.engine.aaa.authn.profile.name</code>. The configuration profile location must match the LDAP configuration file location. All fields can be left as default.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/ovirt-engine/extensions.d/example-authn.properties&#x000A;</code></pre></div>
+    <p><strong>Example authentication configuration file</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ovirt.engine.extension.name = example-authn&#x000A; ovirt.engine.extension.bindings.method = jbossmodule&#x000A; ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap&#x000A; ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthnExtension&#x000A; ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn&#x000A; ovirt.engine.aaa.authn.profile.name = example&#x000A; ovirt.engine.aaa.authn.authz.plugin = example-authz&#x000A; config.profile.file.1 = ../aaa/example.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Review the authorization configuration file. The configuration profile location must match the LDAP configuration file location. All fields can be left as default.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/ovirt-engine/extensions.d/example-authz.properties&#x000A;</code></pre></div>
+    <p><strong>Example authorization configuration file</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ovirt.engine.extension.name = example-authz&#x000A; ovirt.engine.extension.bindings.method = jbossmodule&#x000A; ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap&#x000A; ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension&#x000A; ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz&#x000A; config.profile.file.1 = ../aaa/example.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure that the ownership and permissions of the configuration profile are appropriate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # chown ovirt:ovirt /etc/ovirt-engine/aaa/example.properties&#x000A; # chmod 600 /etc/ovirt-engine/aaa/example.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the engine service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The <code>example</code> profile you have created is now available on the Administration Portal and the VM Portal login pages. To give the user accounts on the LDAP server appropriate permissions, for example to log in to the VM Portal, see <a href="sect-Red_Hat_Enterprise_Virtualization_Manager_User_Tasks">Red Hat Enterprise Virtualization Manager User Tasks</a>.</p>
+
+    <p><strong>Note:</strong> For more information, see the LDAP authentication and authorization extension README file at <code>/usr/share/doc/ovirt-engine-extension-aaa-ldap-version</code>.</p>
+  </li>
+</ol>
+
+<h3 id="removing-an-external-ldap-provider">Removing an External LDAP Provider</h3>
+
+<p>This procedure shows you how to remove an external configured LDAP provider and its users.</p>
+
+<p><strong>Removing an External LDAP Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Remove the LDAP provider configuration files, replacing the default name <em>profile1</em>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # rm /etc/ovirt-engine/extensions.d/profile1-authn.properties&#x000A; # rm /etc/ovirt-engine/extensions.d/profile1-authz.properties&#x000A; # rm /etc/ovirt-engine/aaa/profile1.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>In the Administration Portal, in the <strong>Users</strong> resource tab, select the users of this provider (those whose <code>Authorization provider</code> is <code>profile1-authz</code>) and click <strong>Remove</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-ldap-and-kerberos-for-single-sign-on">Configuring LDAP and Kerberos for Single Sign-on</h2>
+
+<p>Single sign-on allows users to log in to the VM Portal or the Administration Portal without re-typing their passwords. Authentication credentials are obtained from the Kerberos server. To configure single sign-on to the Administration Portal and the VM Portal, you need to configure two extensions: <code>ovirt-engine-extension-aaa-misc</code> and <code>ovirt-engine-extension-aaa-ldap</code>; and two Apache modules: <code>mod_auth_gssapi</code> and <code>mod_session</code>. You can configure single sign-on that does not involve Kerberos, however this is outside the scope of this documentation.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** If single sign-on to the VM Portal is enabled, single sign-on to virtual machines will not be possible. With single sign-on to the VM Portal enabled, the VM Portal does not need to accept a password, thus the password cannot be delegated to sign in to virtual machines.&#x000A;</code></pre></div>
+<p>This example assumes the following:</p>
+
+<ul>
+  <li>
+    <p>The existing Key Distribution Center (KDC) server uses the MIT version of Kerberos 5.</p>
+  </li>
+  <li>
+    <p>You have administrative rights to the KDC server.</p>
+  </li>
+  <li>
+    <p>The Kerberos client is installed on the oVirt Engine and user machines.</p>
+  </li>
+  <li>
+    <p>The <code>kadmin</code> utility is used to create Kerberos service principals and <strong>keytab</strong> files.</p>
+  </li>
+</ul>
+
+<p>This procedure involves the following components:</p>
+
+<p><strong>On the KDC server</strong></p>
+
+<ul>
+  <li>Create a service principal and a <strong>keytab</strong> file for the Apache service on the oVirt Engine.</li>
+</ul>
+
+<p><strong>On the oVirt Engine</strong></p>
+
+<ul>
+  <li>
+    <p>Install the authentication and authorization extension packages and the Apache Kerberos authentication module.</p>
+  </li>
+  <li>
+    <p>Configure the extension files.</p>
+  </li>
+  <li>
+    <p>Note: The files <code>/etc/httpd/http.keytab</code> and <code>/etc/httpd/conf.d/ovirt-sso.conf</code> do not exist by default, and are created by this procedure. As such, they are examples, and other names can be used just as well. However, for users following this procedure, engine-backup was patched (since <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1693816">4.3.4</a>) to include these files in backups, and restore them on restore. If you use other names, it is up to you to make sure you backup and restore them as needed.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring Kerberos for the Apache Service</strong></p>
+
+<ol>
+  <li>
+    <p>On the KDC server, use the <code>kadmin</code> utility to create a service principal for the Apache service on the oVirt Engine. The service principal is a reference ID to the KDC for the Apache service.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # kadmin&#x000A; kadmin&gt; addprinc -randkey HTTP/fqdn-of-rhevm@REALM.COM&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Generate a <strong>keytab</strong> file for the Apache service. The <strong>keytab</strong> file stores the shared secret key.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> kadmin&gt; ktadd -k /tmp/http.keytab HTTP/fqdn-of-rhevm@REALM.COM&#x000A; kadmin&gt; quit&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Copy the <strong>keytab</strong> file from the KDC server to the oVirt Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp /tmp/http.keytab root@rhevm.example.com:/etc/httpd&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Configuring Single Sign-on to the VM Portal or Administration Portal</strong></p>
+
+<ol>
+  <li>
+    <p>On the oVirt Engine, ensure that the ownership and permissions for the keytab are appropriate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # chown apache /etc/httpd/http.keytab&#x000A; # chmod 400 /etc/httpd/http.keytab&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the authentication extension package, LDAP extension package, and the <code>mod_auth_gssapi</code> and  <code>mod_session</code> Apache modules:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-extension-aaa-misc ovirt-engine-extension-aaa-ldap mod_auth_gssapi mod_session&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Copy the SSO configuration template file into the <code>/etc/ovirt-engine</code> directory. Template files are available for Active Directory (<code>ad-sso</code>) and other directory types (<code>simple-sso</code>). This example uses the simple SSO configuration template.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp -r /usr/share/ovirt-engine-extension-aaa-ldap/examples/simple-sso/. /etc/ovirt-engine&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Move <strong>ovirt-sso.conf</strong> into the Apache configuration directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # mv /etc/ovirt-engine/aaa/ovirt-sso.conf /etc/httpd/conf.d&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Review the authentication method file. You do not need to edit this file, as the realm is automatically fetched from the <strong>keytab</strong> file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/httpd/conf.d/ovirt-sso.conf&#x000A;</code></pre></div>
+    <p><strong>Example authentication method file</strong></p>
+
+<div class="highlight"><pre class="highlight html"><code>  <span class="nt">&lt;LocationMatch</span> <span class="err">^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">sso</span><span class="err">/(</span><span class="na">interactive-login-negotiate</span><span class="err">|</span><span class="na">oauth</span><span class="err">/</span><span class="na">token-http-auth</span><span class="err">)|^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">api</span><span class="nt">&gt;</span>&#x000A;   <span class="nt">&lt;If</span> <span class="err">"</span><span class="na">req</span><span class="err">('</span><span class="na">Authorization</span><span class="err">')</span> <span class="err">!~</span> <span class="err">/^(</span><span class="na">Bearer</span><span class="err">|</span><span class="na">Basic</span><span class="err">)/</span><span class="na">i</span><span class="err">"</span><span class="nt">&gt;</span>&#x000A;     RewriteEngine on&#x000A;     RewriteCond %{LA-U:REMOTE_USER} ^(.*)$&#x000A;     RewriteRule ^(.*)$ - [L,NS,P,E=REMOTE_USER:%1]&#x000A;     RequestHeader set X-Remote-User %{REMOTE_USER}s&#x000A;&#x000A;     AuthType GSSAPI&#x000A;     AuthName "Kerberos Login"&#x000A;&#x000A;     # Modify to match installation&#x000A;     GssapiCredStore keytab:/etc/httpd/http.keytab&#x000A;     GssapiUseSessions On&#x000A;     Session On&#x000A;     SessionCookieName ovirt_gssapi_session path=/private;httponly;secure;&#x000A;&#x000A;     Require valid-user&#x000A;     ErrorDocument 401 "<span class="nt">&lt;html&gt;&lt;meta</span> <span class="na">http-equiv=</span><span class="s">\"refresh\"</span> <span class="na">content=</span><span class="s">\"0;</span> <span class="na">url=</span><span class="s">/ovirt-engine/sso/login-unauthorized\"/</span><span class="nt">&gt;&lt;body&gt;&lt;a</span> <span class="na">href=</span><span class="s">\"/ovirt-engine/sso/login-unauthorized\"</span><span class="nt">&gt;</span>Here<span class="nt">&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</span>"&#x000A;   <span class="nt">&lt;/If&gt;</span>&#x000A; <span class="nt">&lt;/LocationMatch&gt;</span>&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Rename the configuration files to match the profile name you want visible to users on the Administration Portal and the VM Portal login pages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # mv /etc/ovirt-engine/aaa/profile1.properties /etc/ovirt-engine/aaa/example.properties&#x000A; # mv /etc/ovirt-engine/extensions.d/profile1-http-authn.properties /etc/ovirt-engine/extensions.d/example-http-authn.properties&#x000A; # mv /etc/ovirt-engine/extensions.d/profile1-http-mapping.properties /etc/ovirt-engine/extensions.d/example-http-mapping.properties&#x000A; # mv /etc/ovirt-engine/extensions.d/profile1-authz.properties /etc/ovirt-engine/extensions.d/example-authz.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Edit the LDAP property configuration file by uncommenting an LDAP server type and updating the domain and passwords fields:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> #  vi /etc/ovirt-engine/aaa/example.properties&#x000A;</code></pre></div>
+    <p><strong>Example profile: LDAP server section</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # Select one&#x000A; include = &lt;openldap.properties&gt;&#x000A; #include = &lt;389ds.properties&gt;&#x000A; #include = &lt;rhds.properties&gt;&#x000A; #include = &lt;ipa.properties&gt;&#x000A; #include = &lt;iplanet.properties&gt;&#x000A; #include = &lt;rfc2307-389ds.properties&gt;&#x000A; #include = &lt;rfc2307-rhds.properties&gt;&#x000A; #include = &lt;rfc2307-openldap.properties&gt;&#x000A; #include = &lt;rfc2307-edir.properties&gt;&#x000A; #include = &lt;rfc2307-generic.properties&gt;&#x000A;&#x000A; # Server&#x000A; #&#x000A; vars.server = ldap1.company.com&#x000A;&#x000A; # Search user and its password.&#x000A; #&#x000A; vars.user = uid=search,cn=users,cn=accounts,dc=company,dc=com&#x000A; vars.password = 123456&#x000A;&#x000A; pool.default.serverset.single.server = ${global:vars.server}&#x000A; pool.default.auth.simple.bindDN = ${global:vars.user}&#x000A; pool.default.auth.simple.password = ${global:vars.password}&#x000A;</code></pre></div>
+    <p>To use TLS or SSL protocol to interact with the LDAP server, obtain the root CA certificate for the LDAP server and use it to create a public keystore file. Uncomment the following lines and specify the full path to the public keystore file and the password to access the file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> **Note:** For more information on creating a public keystore file, see [Setting Up SSL or TLS Connections between the Manager and an LDAP Server](Setting_Up_SSL_or_TLS_Connections_between_the_Manager_and_an_LDAP_Server).&#x000A;</code></pre></div>
+    <p><strong>Example profile: keystore section</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # Create keystore, import certificate chain and uncomment&#x000A; # if using ssl/tls.&#x000A; pool.default.ssl.startTLS = true&#x000A; pool.default.ssl.truststore.file = /full/path/to/myrootca.jks&#x000A; pool.default.ssl.truststore.password = password&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Review the authentication configuration file. The profile name visible to users on the Administration Portal and the VM Portal login pages is defined by <code>ovirt.engine.aaa.authn.profile.name</code>. The configuration profile location must match the LDAP configuration file location. All fields can be left as default.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/ovirt-engine/extensions.d/example-http-authn.properties&#x000A;</code></pre></div>
+    <p><strong>Example authentication configuration file</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ovirt.engine.extension.name = example-http-authn&#x000A; ovirt.engine.extension.bindings.method = jbossmodule&#x000A; ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A; ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension&#x000A; ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn&#x000A; ovirt.engine.aaa.authn.profile.name = example-http&#x000A; ovirt.engine.aaa.authn.authz.plugin = example-authz&#x000A; ovirt.engine.aaa.authn.mapping.plugin = example-http-mapping&#x000A; config.artifact.name = HEADER&#x000A; config.artifact.arg = X-Remote-User&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Review the authorization configuration file. The configuration profile location must match the LDAP configuration file location. All fields can be left as default.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> #  vi /etc/ovirt-engine/extensions.d/example-authz.properties&#x000A;</code></pre></div>
+    <p><strong>Example authorization configuration file</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ovirt.engine.extension.name = example-authz&#x000A; ovirt.engine.extension.bindings.method = jbossmodule&#x000A; ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap&#x000A; ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension&#x000A; ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz&#x000A; config.profile.file.1 = ../aaa/example.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Review the authentication mapping configuration file. The configuration profile location must match the LDAP configuration file location. The configuration profile extension name must match the <code>ovirt.engine.aaa.authn.mapping.plugin</code> value in the authentication configuration file. All fields can be left as default.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vi /etc/ovirt-engine/extensions.d/example-http-mapping.properties&#x000A;</code></pre></div>
+    <p><strong>Example authentication mapping configuration file</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = example-http-mapping&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping&#x000A;config.mapAuthRecord.type = regex&#x000A;config.mapAuthRecord.regex.mustMatch = true&#x000A;config.mapAuthRecord.regex.pattern = ^(?&lt;user&gt;.*?)((\\\\(?&lt;at&gt;@)(?&lt;suffix&gt;.*?)@.*)|(?&lt;realm&gt;@.*))$&#x000A;config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure that the ownership and permissions of the configuration files are appropriate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># chown ovirt:ovirt /etc/ovirt-engine/aaa/example.properties&#x000A;# chown ovirt:ovirt /etc/ovirt-engine/extensions.d/example-http-authn.properties&#x000A;# chown ovirt:ovirt /etc/ovirt-engine/extensions.d/example-http-mapping.properties&#x000A;# chown ovirt:ovirt /etc/ovirt-engine/extensions.d/example-authz.properties&#x000A;# chmod 600 /etc/ovirt-engine/aaa/example.properties&#x000A;# chmod 640 /etc/ovirt-engine/extensions.d/example-http-authn.properties&#x000A;# chmod 640 /etc/ovirt-engine/extensions.d/example-http-mapping.properties&#x000A;# chmod 640 /etc/ovirt-engine/extensions.d/example-authz.properties&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the Apache service and the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># systemctl restart httpd.service&#x000A;# systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h2 id="user-authorization">User Authorization</h2>
+
+<h3 id="user-authorization-model">User Authorization Model</h3>
+
+<p>oVirt applies authorization controls based on the combination of the three components:</p>
+
+<ul>
+  <li>
+    <p>The user performing the action</p>
+  </li>
+  <li>
+    <p>The type of action being performed</p>
+  </li>
+  <li>
+    <p>The object on which the action is being performed</p>
+  </li>
+</ul>
+
+<h3 id="user-actions">User Actions</h3>
+
+<p>For an action to be successfully performed, the <strong>user</strong> must have the appropriate <strong>permission</strong> for the <strong>object</strong> being acted upon. Each type of action corresponds to a <strong>permission</strong>. There are many different permissions in the system, so for simplicity:</p>
+
+<p>Some actions are performed on more than one object. For example, copying a template to another storage domain will impact both the template and the destination storage domain. The user performing an action must have appropriate permissions for all objects the action impacts.</p>
+
+<h2 id="administering-user-tasks-from-the-administration-portal">Administering User Tasks From the Administration Portal</h2>
+
+<h3 id="adding-users-and-assigning-vm-portal-permissions">Adding Users and Assigning VM Portal Permissions</h3>
+
+<p>Users must be created already before they can be added and assigned roles and permissions. The roles and permissions assigned in this procedure give the user the permission to log in to the VM Portal and to start creating virtual machines. The procedure also applies to group accounts.</p>
+
+<p><strong>Adding Users and Assigning VM Portal Permissions</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>System Permissions</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong> to open the <strong>Add System Permission to User</strong> window.</p>
+  </li>
+  <li>
+    <p>Select a profile under <strong>Search</strong>. The profile is the domain you want to search. Enter a name or part of a name in the search text field, and click <strong>GO</strong>. Alternatively, click <strong>GO</strong> to view a list of all users and groups.</p>
+  </li>
+  <li>
+    <p>Select the check boxes for the appropriate users or groups.</p>
+  </li>
+  <li>
+    <p>Select an appropriate role to assign under <strong>Role to Assign</strong>. The <strong>UserRole</strong> role gives the user account the permission to log in to the VM Portal.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>Log in to the VM Portal to verify that the user account has the permissions to log in.</p>
+
+<h3 id="viewing-user-information">Viewing User Information</h3>
+
+<p><strong>Viewing User Information</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Users</strong>  to display the list of authorized users.</p>
+  </li>
+  <li>
+    <p>Click the user’s name to open the details view, usually with the <strong>General</strong> tab displaying general information, such as the domain name, email and status of the user.</p>
+  </li>
+  <li>
+    <p>The other tabs allow you to view groups, permissions, quotas, and events for the user.</p>
+
+    <p>For example, to view the groups to which the user belongs, click the <strong>Directory Groups</strong> tab.</p>
+  </li>
+</ol>
+
+<h3 id="viewing-user-permissions-on-resources">Viewing User Permissions on Resources</h3>
+
+<p>Users can be assigned permissions on specific resources or a hierarchy of resources. You can view the assigned users and their permissions on each resource.</p>
+
+<p><strong>Viewing User Permissions on Resources</strong></p>
+
+<ol>
+  <li>
+    <p>Find and click the resource’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Permissions</strong> tab of the details pane to list the assigned users, the user's role, and the inherited permissions for the selected resource.</p>
+  </li>
+</ol>
+
+<h3 id="removing-users">Removing Users</h3>
+
+<p>When a user account is no longer required, remove it from oVirt.</p>
+
+<p><strong>Removing Users</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Users</strong>  to display the list of authorized users.</p>
+  </li>
+  <li>
+    <p>Select the user to be removed. Ensure the user is not running any virtual machines.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>, then click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The user is removed from oVirt, but not from the external directory.</p>
+
+<h3 id="viewing-logged-in-users">Viewing Logged-In Users</h3>
+
+<p>You can view the users who are currently logged in, along with session times and other details. Click <strong>Administration</strong> → <strong>Active User Sessions</strong> to view the <strong>Session DB ID</strong>, <strong>User Name</strong>, <strong>Authorization provider</strong>, <strong>User id</strong>, <strong>Source IP</strong>, <strong>Session Start Time</strong>, and <strong>Session Last Active Time</strong> for each logged-in user.</p>
+
+<h3 id="terminating-a-user-session">Terminating a User Session</h3>
+
+<p>You can terminate the session of a user who is currently logged in.</p>
+
+<p><strong>Terminating a User Session</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Active User Sessions</strong>.</p>
+  </li>
+  <li>
+    <p>Select the user session to be terminated.</p>
+  </li>
+  <li>
+    <p>Click <strong>Terminate Session</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="administering-user-tasks-from-the-command-line">Administering User Tasks From the Command Line</h2>
+
+<p>You can use the <code>ovirt-aaa-jdbc-tool</code> tool to manage user accounts on the internal domain. Changes made using the tool take effect immediately and do not require you to restart the <code>ovirt-engine</code> service. For a full list of user options, run <code>ovirt-aaa-jdbc-tool user --help</code>. Common examples are provided in this section.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** You must be logged into the Engine machine.&#x000A;</code></pre></div>
+<h3 id="creating-a-new-user">Creating a New User</h3>
+
+<p>You can create a new user account. The optional <code>--attribute</code> command specifies account details. For a full list of options, run <code>ovirt-aaa-jdbc-tool user add --help</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ovirt-aaa-jdbc-tool user add test1 --attribute=firstName=John --attribute=lastName=Doe&#x000A;    adding user test1...&#x000A;    user added successfully&#x000A;</code></pre></div>
+<h3 id="setting-a-user-password">Setting a User Password.</h3>
+
+<p>You can create a password. You must set a value for <code>--password-valid-to</code>, otherwise the password expiry time defaults to the current time. The date format is <code>yyyy-MM-dd HH:mm:ssX</code>. In this example, <code>-0800</code> stands for GMT minus 8 hours. For more options, run <code>ovirt-aaa-jdbc-tool user password-reset --help</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ovirt-aaa-jdbc-tool user password-reset test1 --password-valid-to="2025-08-01 12:00:00-0800"&#x000A;    Password:&#x000A;    updating user test1...&#x000A;    user updated successfully&#x000A;&#x000A;**Note:** By default, the password policy for user accounts on the internal domain has the following restrictions:&#x000A;&#x000A;* A minimum of 6 characters.&#x000A;&#x000A;* Three previous passwords used cannot be set again during the password change.&#x000A;&#x000A;For more information on the password policy and other default settings, run `ovirt-aaa-jdbc-tool settings show`.&#x000A;</code></pre></div>
+<h3 id="setting-user-timeout">Setting User Timeout</h3>
+<p>You can set the user timeout period:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # engine-config --set UserSessionTimeOutInterval=integer&#x000A;</code></pre></div>
+<h3 id="pre-encrypting-a-user-password">Pre-encrypting a User Password</h3>
+
+<p>You can create a pre-encrypted user password using the <code>ovirt-engine-crypto-tool</code> script. This option is useful if you are adding users and passwords to the database with a script.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Passwords are stored in the Engine database in encrypted form. The `ovirt-engine-crypto-tool` script is used because all passwords must be encrypted with the same algorithm.&#x000A;&#x000A;If the password is pre-encrypted, password validity tests cannot be performed. The password will be accepted even if it does not comply with the password validation policy.&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Run the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # /usr/share/ovirt-engine/bin/ovirt-engine-crypto-tool.sh pbe-encode&#x000A;</code></pre></div>
+    <p>The script will prompt you to enter the password.</p>
+
+    <p>Alternatively, you can use the <code>--password=file:file</code> option to encrypt a single password that appears as the first line of a file. This option is useful for automation. In the following example, file is a text file containing a single password for encryption:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # /usr/share/ovirt-engine/bin/ovirt-engine-crypto-tool.sh pbe-encode --password=file:file&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Set the new password with the <code>ovirt-aaa-jdbc-tool</code> script, using the <code>--encrypted</code> option:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool user password-reset test1 --password-valid-to="2025-08-01 12:00:00-0800" --encrypted&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Enter and confirm the encrypted password:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Password:&#x000A; Reenter password:&#x000A; updating user test1...&#x000A; user updated successfully&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="viewing-user-information-1">Viewing User Information</h3>
+
+<p>You can view detailed user account information:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ovirt-aaa-jdbc-tool user show test1&#x000A;</code></pre></div>
+<p>This command displays more information than in the Administration Portal’s <strong>Administration</strong> → <strong>Users</strong> screen.</p>
+
+<h3 id="editing-user-information">Editing User Information</h3>
+
+<p>You can update user information, such as the email address:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ovirt-aaa-jdbc-tool user edit test1 --attribute=email=jdoe@example.com&#x000A;</code></pre></div>
+<h3 id="removing-a-user">Removing a User</h3>
+
+<p>You can remove a user account:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ovirt-aaa-jdbc-tool user delete test1&#x000A;</code></pre></div>
+<p>Remove the user from the Administration Portal. See <a href="Removing_Users1">Removing Users</a> for more information.</p>
+
+<h3 id="disabling-the-internal-administrative-user">Disabling the Internal Administrative User</h3>
+
+<p>You can disable users on the local domains including the admin@internal user created during <code>engine-setup</code>. Make sure you have at least one user in the environment with full administrative permissions before disabling the default admin user.</p>
+
+<p><strong>Disabling the Internal Administrative User</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>Make sure another user with the <strong>SuperUser</strong> role has been added to the environment. See <a href="Adding_users">Adding users</a> for more information.</p>
+  </li>
+  <li>
+    <p>Disable the default <strong>admin</strong> user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool user edit admin --flag=+disabled&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> To enable a disabled user, run <code>ovirt-aaa-jdbc-tool user edit </code>username<code> --flag=-disabled</code></p>
+  </li>
+</ol>
+
+<h3 id="managing-groups">Managing Groups</h3>
+
+<p>You can use the <code>ovirt-aaa-jdbc-tool</code> tool to manage group accounts on your internal domain. Managing group accounts is similar to managing user accounts. For a full list of group options, run <code>ovirt-aaa-jdbc-tool group --help</code>. Common examples are provided in this section.</p>
+
+<p><strong>Creating a Group</strong></p>
+
+<p>This procedure shows you how to create a group account, add users to the group, and view the details of the group.</p>
+
+<ol>
+  <li>
+    <p>Log in to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>Create a new group:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool group add group1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add users to the group. The users must be created already.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool group-manage useradd group1 --user=test1&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> For a full list of the group-manage options, run <code>ovirt-aaa-jdbc-tool group-manage --help</code>.</p>
+  </li>
+  <li>
+    <p>View group account details:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool group show group1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the newly created group in the Administration Portal and assign the group appropriate roles and permissions. The users in the group inherit the roles and permissions of the group. See <a href="Adding_users">Adding users</a> for more information.</p>
+  </li>
+</ol>
+
+<p><strong>Creating Nested Groups</strong></p>
+
+<p>This procedure shows you how to create groups within groups.</p>
+
+<ol>
+  <li>
+    <p>Log in to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>Create the first group:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool group add group1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create the second group:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool group add group1-1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the second group to the first group:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool group-manage groupadd group1 --group=group1-1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the first group in the Administration Portal and assign the group appropriate roles and permissions. See <a href="Adding_users">Adding users</a> for more information.</p>
+  </li>
+</ol>
+
+<h3 id="querying-users-and-groups">Querying Users and Groups</h3>
+
+<p>The <code>query</code> module allows you to query user and group information. For a full list of options, run <code>ovirt-aaa-jdbc-tool query --help</code>.</p>
+
+<p><strong>Listing All User or Group Account Details</strong></p>
+
+<p>This procedure shows you how to list all account information.</p>
+
+<ol>
+  <li>
+    <p>Log in to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>List the account details.</p>
+
+    <ul>
+      <li>
+        <p>List all user account details:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ovirt-aaa-jdbc-tool query --what=user&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>List all group account details:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ovirt-aaa-jdbc-tool query --what=group&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+</ol>
+
+<p><strong>Listing Filtered Account Details</strong></p>
+
+<p>This procedure shows you how to apply filters when listing account information.</p>
+
+<ol>
+  <li>
+    <p>Log in to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>Filter account details using the <code>--pattern</code> parameter.</p>
+
+    <ul>
+      <li>
+        <p>List user account details with names that start with the character j.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ovirt-aaa-jdbc-tool query --what=user --pattern="name=j*"&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>List groups that have the department attribute set to marketing:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ovirt-aaa-jdbc-tool query --what=group --pattern="department=marketing"&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="managing-account-settings">Managing Account Settings</h3>
+
+<p>To change the default account settings, use the <code>ovirt-aaa-jdbc-tool</code> <code>settings</code> module.</p>
+
+<p><strong>Updating Account Settings</strong></p>
+
+<p>This procedure shows you how to update the default account settings.</p>
+
+<ol>
+  <li>
+    <p>Log in to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>Run the following command to show all the settings available:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovirt-aaa-jdbc-tool setting show&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Change the desired settings:</p>
+
+    <ul>
+      <li>
+        <p>This example updates the default log in session time to 60 minutes for all user accounts. The default value is 10080 minutes.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ovirt-aaa-jdbc-tool setting set --name=MAX_LOGIN_MINUTES --value=60&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>This example updates the number of failed login attempts a user can perform before the user account is locked. The default value is 5.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ovirt-aaa-jdbc-tool setting set --name=MAX_FAILURES_SINCE_SUCCESS --value=3&#x000A;</code></pre></div>
+        <p><strong>Note:</strong> To unlock a locked user account, run <code>ovirt-aaa-jdbc-tool user unlock test1</code>.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="configuring-additional-local-domains">Configuring Additional Local domains</h2>
+
+<p>Creating additional local domains other than the default <strong>internal</strong> domain is also supported. This can be done using the <strong>ovirt-engine-extension-aaa-jdbc</strong> extension and allows you to create multiple domains without attaching external directory servers, though the use case may not be common for enterprise environments.</p>
+
+<p>Additionally created local domains will not get upgraded autonmatically during standard Red Hat Virtualization upgrades and need to be upgraded manually for each future release. For more information on creating additional local domains and how to upgrade the domains, see the README file at <strong>/usr/share/doc/ovirt-engine-extension-aaa-jdbc-version/README.admin</strong>.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Automating_Configuration_Tasks_Using_Ansible">Chapter 14: Automating Configuration Tasks Using Ansible</a><br />
+<strong>Next:</strong> <a href="chap-Quotas_and_Service_Level_Agreement_Policy">Chapter 16: Quotas and Service Level Agreement Policy</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-users_and_roles">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Users_and_Roles.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Users_and_Roles.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 8 May 2019 07:35 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

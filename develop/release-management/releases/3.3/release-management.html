@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 3.3 release-management &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/releases/">Releases</a></li>
+<li><a href="/develop/release-management/releases/3.3/">oVirt 3.3 release notes</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-33-release-management">oVirt 3.3 release-management</h1>
+
+<h2 id="timeline">Timeline</h2>
+
+<p><em>' These are tentative planning dates and may change</em>'</p>
+
+<ul>
+  <li>General availability: <strong>2013-09-04</strong>
+    <ul>
+      <li>Beta release: <strong>2013-07-18</strong></li>
+      <li>Feature freeze: <strong>2013-07-17</strong></li>
+      <li><a href="/develop/release-management/releases/3.3/testday/">oVirt 3.3 Test Day:</a> <strong>2013-07-24</strong></li>
+      <li>RC Build: <strong>2013-08-14</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="tracker-bug">Tracker Bug</h2>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=918494">Tracker - 918494</a></li>
+</ul>
+
+<h2 id="release-criteria">Release Criteria</h2>
+
+<p>Tracker bug: <a href="https://bugzilla.redhat.com/918494">https://bugzilla.redhat.com/918494</a></p>
+
+<h3 id="general">General</h3>
+
+<ul>
+  <li>All sources must be available on ovirt.org</li>
+</ul>
+
+<h3 id="must">MUST</h3>
+
+<ul>
+  <li><strong>MUST</strong>: No blockers on the lower level components - libvirt, lvm,device-mapper,qemu-kvm, Jboss, postgres, iscsi-initiator
+    <ul>
+      <li><strong>Current blocker list:</strong></li>
+      <li>…</li>
+    </ul>
+  </li>
+  <li><strong>MUST</strong>: All image related operations work - copy, move, import, export, snapshot (vm and template)</li>
+  <li><strong>MUST</strong>: Ovirt/host installation should work flawlessly (w/o SSL)</li>
+  <li><strong>MUST</strong>: Fully operational flow (define DC hierarchy so you can run vm) with GUI/CLI/Python-API/REST-API</li>
+  <li><strong>MUST</strong>: vm life-cycle is working flawlessly (start,suspend,resume,stop,migrate)</li>
+  <li><strong>MUST</strong>: Upgrade from previous release
+    <ul>
+      <li><strong>Features/bug list:</strong></li>
+      <li><a href="/develop/release-management/features/node/upgrade-tool/">Features/Node_upgrade_tool</a> - Status:</li>
+      <li><a href="//bugzilla.redhat.com/show_bug.cgi?id=916728">Bug #916728: Upgrade from 3.1 to 3.2 fails</a></li>
+      <li><a href="//bugzilla.redhat.com/show_bug.cgi?id=963275">Bug #963275: Need upgrade process from 3.2 to 3.3</a></li>
+      <li>…</li>
+    </ul>
+  </li>
+  <li><strong>MUST</strong>: ovirt-node full cycle (register, approve and running VM)
+    <ul>
+      <li>See <a href="Node test procedure">Node test procedure</a></li>
+    </ul>
+  </li>
+  <li><strong>MUST</strong>: No known data corruptors
+    <ul>
+      <li><strong>Current list of data corruptors:</strong></li>
+      <li>…</li>
+    </ul>
+  </li>
+  <li><strong>MUST</strong>: Can define NFS, iSCSI, FC and local based storage domains
+    <ul>
+      <li>See <a href="storage test procedure">storage test procedure</a></li>
+    </ul>
+  </li>
+  <li><strong>MUST</strong>: Can define VLAN based networks, bond interfaces, and have VLANs over bonded interfaces</li>
+  <li><strong>MUST</strong>: Can authenticate users against at least one external LDAP server</li>
+  <li><strong>MUST</strong>: Can run multiple VMs</li>
+  <li><strong>MUST</strong>: Can connect to VMs using SPICE</li>
+  <li><strong>MUST</strong>: VM watchdog support</li>
+  <li><strong>MUST</strong>: Predictable host timeouts for HA fencing</li>
+  <li><strong>MUST</strong>: MoM integration- KSM verification</li>
+  <li><strong>MUST</strong>: Have Release Notes with feature specific information</li>
+  <li><strong>MUST</strong>: Have updated quick start guide available</li>
+  <li><strong>MUST</strong>: No regressions from 3.1 Release</li>
+  <li><strong>MUST</strong>: Have release announcement for front page of ovirt.org and for mailing lists</li>
+</ul>
+
+<h3 id="should">SHOULD</h3>
+
+<ul>
+  <li><strong>SHOULD</strong>: Can run full cycle with gluster storage</li>
+  <li><strong>SHOULD</strong>: have updated installation guide available</li>
+  <li><strong>SHOULD</strong>: Scheduling API.</li>
+  <li><strong>SHOULD</strong>: MoM integration- ballooning.</li>
+  <li><strong>SHOULD</strong>: Alerts when balloon not supported by guest</li>
+  <li><strong>SHOULD</strong>: (scheduling API first) VM affinity</li>
+  <li><strong>SHOULD</strong>: (scheduling API first) VM not getting minimum guaranteed memory</li>
+</ul>
+
+<h2 id="features-status-table">Features Status Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Functional team</th>
+      <th>Feature</th>
+      <th>Release priority</th>
+      <th>Owner</th>
+      <th>Status</th>
+      <th>Target date</th>
+      <th>Test page</th>
+      <th>Remarks</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/ram-snapshots/">RAM Snapshots</a></td>
+      <td>?</td>
+      <td>Arik Hadas (ahadas)</td>
+      <td>Green</td>
+      <td>June 25th</td>
+      <td><a href="/develop/release-management/features/virt/ram-snapshots/#testing">Features/RAM Snapshots#Testing</a></td>
+      <td>Merged</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/novnc-console/">noVNC console</a></td>
+      <td>?</td>
+      <td>Frantisek Kobzik (FKobzik)</td>
+      <td>Green</td>
+      <td>?</td>
+      <td><a href="/develop/release-management/features/virt/novnc-console/#testing">Features/noVNC console#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/non-plugin-console-invocation/">Non Plugin RDP Invocation</a></td>
+      <td>?</td>
+      <td>Frantisek Kobzik (FKobzik)</td>
+      <td>Green</td>
+      <td>?</td>
+      <td><a href="/develop/release-management/features/virt/non-plugin-console-invocation/#rdp">Features/Non plugin console invocation#RDP</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/instance-types/">Instance Types - VM Dialog Redesing</a></td>
+      <td>?</td>
+      <td>Tomas Jelinek (tjelinek) Omer Frenkel (ofrenkel)</td>
+      <td>Green</td>
+      <td>Jun 25th</td>
+      <td><a href="/develop/release-management/features/virt/instance-types/#testing">Features/Instance Types#Testing</a></td>
+      <td>will be there partially - only redesigned Edit VM dialog and typeahead listboxes</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/os-info/">OS Info</a></td>
+      <td>?</td>
+      <td>Roy Golan (rgolan)</td>
+      <td>Green</td>
+      <td>Jun 23rd</td>
+      <td><a href="/develop/release-management/features/virt/os-info/#testing">OS info#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/console-connection-settings-dialog-in-portals/">Redesigned Display Options dialog</a></td>
+      <td>?</td>
+      <td>Frantisek Kobzik (fkobzik)</td>
+      <td>Green</td>
+      <td> </td>
+      <td>?</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="Features/EmulatedMachine">EmulatedMachine</a></td>
+      <td>?</td>
+      <td>Roy Golan (rgolan)</td>
+      <td>Green</td>
+      <td>June 27th</td>
+      <td><a href="/develop/release-management/features/virt/cluster-emulation-modes/#testing">Cluster emulation modes#Testing</a></td>
+      <td>automatically use the right emulated machine type for QEMU. On review</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/spicehtml5/">SPICE HTML5 client integration</a></td>
+      <td>?</td>
+      <td>Frantisek Kobzik (fkobzik)</td>
+      <td>Green</td>
+      <td>June 25th</td>
+      <td><a href="/develop/release-management/features/virt/spicehtml5/#testing">Features/SpiceHTML5#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/storage/glusterfs-storage-domain/">GlusterFS Storage Domain</a></td>
+      <td>Must</td>
+      <td>Deepak C Shetty (vdsm) &amp; Sharad Mishra (engine)</td>
+      <td>Green</td>
+      <td> </td>
+      <td><a href="/develop/release-management/features/storage/glusterfs-storage-domain/#testing">Features/GlusterFS Storage Domain#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/cloud/cloud-init-integration/">Cloud-Init Integration</a></td>
+      <td>?</td>
+      <td>Greg Padgett (Gpadgett) Omer Frenkel (ofrenkel)</td>
+      <td>Green</td>
+      <td>Jul 25</td>
+      <td><a href="/develop/release-management/features/cloud/cloud-init-integration/#testing">Features/Cloud-Init Integration#Testing</a></td>
+      <td>Only available with UI, no REST implementation yet.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/network/device-custom-properties/">Device Custom Properties</a></td>
+      <td>must</td>
+      <td>Martin Perina (mperina) - infra Assaf Muller (amuller) - network</td>
+      <td>Green</td>
+      <td>2013-06-03</td>
+      <td>?</td>
+      <td>This feature is spread over infra network and storage. The infra aspect is covered by Martin, the network part is covered by Assaf and the storage part is not covered ATM. Infra and Networks parts are done.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/infra/asynctaskmanagerchanges-3.3/">Async task manager changes</a></td>
+      <td>should</td>
+      <td>Yair Zaslavsky (Yair Zaslavsky)</td>
+      <td>Green - Merged</td>
+      <td>2013-07-03</td>
+      <td><a href="/develop/release-management/features/infra/asynctaskmanagerchanges-3.3/#testing">Features/AsyncTaskManagerChanges 3.3#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/infra/externaltasks/">ExternalTasks</a></td>
+      <td>Must</td>
+      <td>Eli Mesika (emesika)</td>
+      <td>Green</td>
+      <td>2013-07-14</td>
+      <td> </td>
+      <td><a href="/develop/release-management/features/infra/externaltasks/#testing">Features/ExternalTasks#Testing</a></td>
+      <td>Merged</td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/vdsm/supervdsm-service/">Supervdsm service</a></td>
+      <td>Should</td>
+      <td>Yaniv Bronhaim (ybronhei)</td>
+      <td>Green</td>
+      <td>2013-06-03</td>
+      <td><a href="/develop/release-management/features/vdsm/supervdsm-service/">Features/Supervdsm service</a></td>
+      <td>Submitted upstream, missing backport to rhev</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/developer-guide/engine/automatic-fencing/#automatic-fencing-in-ovirt-3.3">SSH Soft Fencing</a></td>
+      <td>Should</td>
+      <td>Martin Perina (mperina)</td>
+      <td>Green</td>
+      <td>2013-07-02</td>
+      <td><a href="/develop/developer-guide/engine/automatic-fencing/#testing">Automatic Fencing#Testing</a></td>
+      <td>Merged</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="Features/Java_SDK">Java SDK</a></td>
+      <td>Must</td>
+      <td>Michael Pasternak (Michael pasternak)</td>
+      <td>Green - Merged</td>
+      <td> </td>
+      <td><a href="http://www.ovirt.org/Features/Java_SDK_3.3#Testing">http://www.ovirt.org/Features/Java_SDK_3.3#Testing</a></td>
+      <td>Merged</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/infra/ssh-abilities/">SSH Abilities</a></td>
+      <td>Should</td>
+      <td>Yaniv Bronhaim (ybronhei)</td>
+      <td>Green</td>
+      <td>2013-07-17</td>
+      <td><a href="/develop/release-management/features/infra/ssh-abilities/#testing">Features/Ssh Abilities#Testing</a></td>
+      <td>Merged</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/normalized-ovirtmgmt-initialization/">Normalized ovirtmgmt Initialization</a></td>
+      <td>Must</td>
+      <td>Moti Asayag (masayag)</td>
+      <td>Green</td>
+      <td>2013-06-03</td>
+      <td><a href="/develop/release-management/features/network/normalized-ovirtmgmt-initialization/#testing">Features/Normalized_ovirtmgmt_Initialization#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/migration-network/">Migration Network</a></td>
+      <td>Must</td>
+      <td>Alona Kaplan (alkaplan)</td>
+      <td>Green</td>
+      <td>Now</td>
+      <td><a href="/develop/release-management/features/network/migration-network/#testing">Features/Migration_Network#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/osn-integration/">Quantum Integration</a></td>
+      <td>Must</td>
+      <td>Michael Kolesnik (mkolesni)</td>
+      <td>Green</td>
+      <td>2013-06-16</td>
+      <td><a href="/develop/release-management/features/network/osn-integration/#testing">Features/Quantum_Integration#Testing</a></td>
+      <td>?</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/networkreloaded/">NetworkReloaded</a></td>
+      <td>Optional - see comment</td>
+      <td>Antoni Segura Puimedon (asegurap)</td>
+      <td>Orange - In progress, partially merged</td>
+      <td>?</td>
+      <td>?</td>
+      <td>This feature is mostly about code refactoring and enabling a pluggable network configuration implementation. This feature should not hold back the release.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/multiple-gateways/">Multiple Gateways</a></td>
+      <td>Must</td>
+      <td>Assaf Muller (amuller)</td>
+      <td>mostly done (though selinux kills dhcp support for multigw)</td>
+      <td>2013-06-09</td>
+      <td><a href="/develop/release-management/features/network/multiple-gateways/#testing">Features/Multiple_Gateways#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/virtio-scsi/">Virtio-SCSI support</a></td>
+      <td>Optional</td>
+      <td>Daniel Erez (derez)</td>
+      <td>Green</td>
+      <td>?</td>
+      <td><a href="/develop/release-management/features/storage/virtio-scsi/#testing">Features/Virtio-SCSI#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/read-only-disk/">Read Only Disks</a></td>
+      <td>Optional</td>
+      <td>Vered Volansky (vvolansk)</td>
+      <td>Orange - In progress, not submitted</td>
+      <td>?</td>
+      <td>?</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/manage-storage-connections/">Manage Storage Connections</a></td>
+      <td>Must</td>
+      <td>Alissa Bonas (abonas)</td>
+      <td>Orange - Work in Progress, partially merged</td>
+      <td>2013-06-30</td>
+      <td><a href="/develop/release-management/features/storage/manage-storage-connections/#testing">Features/Manage_Storage_Connections#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/disk-hooks/">Adding VDSM hooks for hotplugging/unplugging a disk</a></td>
+      <td>Optional</td>
+      <td>Vered Volansky (vvolansk)</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/moveascopyanddelete/">Separating "Move" vm operation to "Copy" and "Delete" operations to improve VM availability</a></td>
+      <td>Optional</td>
+      <td>Liron Aravot (laravot)</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td>Done</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/backup-restore-api-integration/">Backup and Restore API for Independent Software Vendors</a></td>
+      <td>Optional</td>
+      <td>Deepak C Shetty (vdsm) &amp; Sharad Mishra (engine)</td>
+      <td>Red - Work in Progress</td>
+      <td>?</td>
+      <td>?</td>
+      <td>Still in the early stages of development</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td>Allow resign/force re-election of SPM</td>
+      <td>Optional</td>
+      <td>Tal Nisan (tal)</td>
+      <td>?</td>
+      <td>?</td>
+      <td>?</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/diskalignment/">Disks Block Alignment</a></td>
+      <td>Optional</td>
+      <td>Federico Simoncelli (fsimonce)</td>
+      <td>Orange - In progress</td>
+      <td> </td>
+      <td> </td>
+      <td>VDSM patches merged, Engine/Webadmin in review</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="/develop/release-management/features/sla/ovirtscheduler/">oVirt scheduler</a></td>
+      <td>Must</td>
+      <td>Gilad Chaplik (GChaplik)</td>
+      <td>Green</td>
+      <td>15/7/2013</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="Features/Scheduling_API">Scheduling API</a></td>
+      <td>Must</td>
+      <td>Gilad Chaplik (GChaplik)</td>
+      <td>orange - in review</td>
+      <td> </td>
+      <td>?</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="/develop/release-management/features/network/network-qos-detailed-design/">Network QoS</a></td>
+      <td>Must</td>
+      <td>Ofri Masad (OMasad)</td>
+      <td>Green</td>
+      <td> </td>
+      <td>?</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="/develop/release-management/features/engine/watchdog-engine-support/">Watchdog engine support</a></td>
+      <td>Must</td>
+      <td>lhornyak@redhat.com (LHornyak)</td>
+      <td> </td>
+      <td> </td>
+      <td><a href="/develop/release-management/features/engine/watchdog-engine-support/#test-cases">Test cases</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="/develop/release-management/features/sla/trusted-compute-pools/">Trusted compute pools</a></td>
+      <td>Must</td>
+      <td><User:OMasad></User:OMasad></td>
+      <td> </td>
+      <td> </td>
+      <td><a href="/develop/release-management/features/sla/trusted-compute-pools/#test-cases">Trusted_compute_pools#Test_cases</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Gluster</td>
+      <td><a href="/develop/release-management/features/gluster/gluster-hooks-management/">Gluster Hooks Management</a></td>
+      <td>Should</td>
+      <td>Sahina Bose (Sahina)</td>
+      <td>Green</td>
+      <td>17/06/2013</td>
+      <td><a href="/develop/release-management/features/gluster/gluster-hooks-management/#test-cases">Gluster Hooks Management Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Node</td>
+      <td><a href="/develop/release-management/features/node/universal-image/">Universal Node Image</a></td>
+      <td>Must</td>
+      <td>mburns@redhat.com</td>
+      <td>Green</td>
+      <td>Now</td>
+      <td>?</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Node</td>
+      <td><a href="/develop/release-management/features/vdsm/vdsm-plugin/">Node VDSM Plugin</a></td>
+      <td>Must</td>
+      <td>mburns</td>
+      <td>Green</td>
+      <td>2013-05-31</td>
+      <td><a href="/develop/release-management/features/vdsm/vdsm-plugin/#testing">Features/Node_vdsm_plugin#Testing</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Integration</td>
+      <td><a href="/develop/release-management/features/integration/otopi-infra-migration/">Otopi Infra Migration</a></td>
+      <td>Must</td>
+      <td><a href="https://github.com/sandrobonazzola">Sandro Bonazzola</a></td>
+      <td>Green</td>
+      <td>29/6/2013</td>
+      <td><a href="/develop/release-management/features/integration/otopi-infra-migration/#basic-testing">Test cases</a></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>UX</td>
+      <td>User Portal performance improvements for IE8</td>
+      <td>Must</td>
+      <td>vszocs@redhat.com, awels@redhat.com</td>
+      <td>Green</td>
+      <td>Now</td>
+      <td>N/A</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>UX</td>
+      <td><a href="Feature/Branding">Branding Support</a></td>
+      <td>Should</td>
+      <td>awels@redhat.com</td>
+      <td>Green</td>
+      <td>June 11, 2013</td>
+      <td>N/A</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="feature-table-mapping">Feature Table Mapping</h3>
+
+<h4 id="release-priority">Release priority:</h4>
+
+<ul>
+  <li>Must - feature absense will delay the release</li>
+  <li>Should - feature absense won't delay the release</li>
+</ul>
+
+<h4 id="status-mapping">Status mapping:</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>* Red  - Feature isn't in code base yet.&#x000A;&#x000A;* Orange  -  Feature is in code base but not completed yet.&#x000A;&#x000A;* Green  - Feature is in code base and ready for testing.&#x000A;</code></pre></div>
+<h4 id="target-date">Target Date</h4>
+
+<p>date complete feature is merged in code base</p>
+
+<h4 id="test-page">Test Page</h4>
+
+<p>base description on how to test the new feature - should be relevant for test day</p>
+
+<h2 id="features">Features</h2>
+
+<p>Features being considered for inclusion/already in master:</p>
+
+<h3 id="virt">Virt</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/virt/ram-snapshots/">Features/RAM Snapshots</a></li>
+  <li><a href="/develop/release-management/features/virt/novnc-console/">Features/noVNC console</a></li>
+  <li><a href="/develop/release-management/features/storage/glusterfs-storage-domain/">Features/GlusterFS_Storage_Domain</a></li>
+  <li><a href="/develop/release-management/features/cloud/cloud-init-integration/">Features/Cloud-Init_Integration</a></li>
+</ul>
+
+<h3 id="infra">Infra</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/network/device-custom-properties/">Features/Device Custom Properties</a></li>
+  <li><a href="/develop/release-management/features/infra/externaltasks/">Features/ExternalTasks</a></li>
+  <li><a href="/develop/release-management/features/vdsm/supervdsm-service/">Features/Supervdsm_service</a></li>
+  <li><a href="Features/Java_SDK">Features/Java_SDK</a></li>
+  <li><a href="/develop/release-management/features/infra/ssh-abilities/">Features/Ssh_Abilities</a></li>
+</ul>
+
+<h3 id="networking">Networking</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/network/migration-network/">Features/Migration Network</a></li>
+  <li><a href="/develop/release-management/features/network/normalized-ovirtmgmt-initialization/">Features/Normalized ovirtmgmt Initialization</a></li>
+  <li><a href="/develop/release-management/features/network/osn-integration/">Features/Quantum_Integration</a></li>
+  <li><a href="/develop/release-management/features/network/networkreloaded/">Feature/NetworkReloaded</a> reimplementation of configNetwork in vdsm. Should have zero (0) effect on users, but required for future support for ovs/NM</li>
+  <li><a href="/develop/release-management/features/network/multiple-gateways/">Features/Multiple Gateways</a> configure more gateways on host, on top of the default one.</li>
+</ul>
+
+<h3 id="storage">Storage</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/storage/online-virtual-drive-resize/">Enable online virtual drive resize</a></li>
+  <li><a href="/develop/release-management/features/storage/virtio-scsi/">Virtio-SCSI support</a></li>
+  <li><a href="/develop/release-management/features/storage/read-only-disk/">Read Only Disks</a></li>
+  <li><a href="Features/Edit_Connection_Properties">Edit Connection Properties</a></li>
+  <li><a href="/develop/release-management/features/storage/disk-hooks/">Adding VDSM hooks for hotplugging/unplugging a disk</a></li>
+  <li><a href="/develop/release-management/features/storage/moveascopyanddelete/">Separating "Move" vm operation to "Copy" and "Delete" operations to improve VM availability</a></li>
+  <li><a href="/develop/release-management/features/storage/backup-restore-api-integration/">Backup and Restore API for Independent Software Vendors</a></li>
+  <li>Allow resign/force re-election of SPM</li>
+  <li><a href="/develop/release-management/features/storage/diskalignment/">Disks Block Alignment</a></li>
+  <li><a href="/develop/release-management/features/storage/glance-integration/">Integration with Glance</a></li>
+</ul>
+
+<h3 id="sla--scheduling">SLA &amp; Scheduling</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/sla/ovirtscheduler/">Features/oVirt_scheduler</a> Wrapping scheduling functionalities as a separate package</li>
+  <li><a href="Features/Scheduling_API">Features/Scheduling_API</a> (depends on <a href="/develop/release-management/features/sla/ovirtscheduler/">Features/oVirt_scheduler</a>) exposing user-level scheduling API</li>
+  <li><a href="/develop/release-management/features/engine/watchdog-engine-support/">Features/Watchdog_engine_support</a></li>
+  <li><a href="/documentation/sla/network-qos/">Features/Network_QoS</a></li>
+  <li><a href="/develop/release-management/features/sla/trusted-compute-pools/">Trusted_compute_pools</a></li>
+</ul>
+
+<h3 id="gluster">Gluster</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/gluster/gluster-hooks-management/">Features/Gluster Hooks Management</a> Managing gluster hooks from console
+    <ul>
+      <li>Status : In Progress</li>
+      <li>gerrit :
+        <ul>
+          <li><a href="http://gerrit.ovirt.org/#/q/project:ovirt-engine+branch:master+topic:gluster-hooks,n,z">http://gerrit.ovirt.org/#/q/project:ovirt-engine+branch:master+topic:gluster-hooks,n,z</a></li>
+          <li><a href="http://gerrit.ovirt.org/#/c/14145">http://gerrit.ovirt.org/#/c/14145</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="node">Node</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/node/universal-image/">Universal Node Image</a> make the ovirt-node image generic for use with non-oVirt Projects</li>
+  <li><a href="/develop/release-management/features/vdsm/vdsm-plugin/">Node VDSM Plugin</a> extract all vdsm and oVirt Engine specific code from ovirt-node into a plugin</li>
+  <li>oVirt Node works on a different asynchronous release schedule from the rest of oVirt.
+    <ul>
+      <li>At the time of the oVirt 3.3 release, the current version of ovirt-node will be 3.0.0.</li>
+      <li>Feature for oVirt node 3.0.0 can be found on the <a href="/develop/projects/node/3.0-release-management/">oVirt Node 3.0.0 release page</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="integration">Integration</h3>
+
+<ul>
+  <li>(MUST) <a href="/develop/release-management/features/integration/otopi-infra-migration/">Features/Otopi_Infra_Migration</a> A complete re-write of engine-setup, engine-cleanup, engine-upgrade and AIO plugin using otopi.</li>
+  <li>(SHOULD) <a href="/develop/release-management/features/engine/self-hosted-engine/">Features/Self_Hosted_Engine</a> The ability to run the Engine as a VM on the hosts that are managed by this Engine, in an HA configuration, when the Engine VM can start on any of the hosts.</li>
+</ul>
+
+<h3 id="ux">UX</h3>
+
+<ul>
+  <li>User Portal performance improvements for IE8
+    <ul>
+      <li><a href="http://gerrit.ovirt.org/#/c/11975/">http://gerrit.ovirt.org/#/c/11975/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/12104/">http://gerrit.ovirt.org/#/c/12104/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/10509/">http://gerrit.ovirt.org/#/c/10509/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/10579/">http://gerrit.ovirt.org/#/c/10579/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/12213/">http://gerrit.ovirt.org/#/c/12213/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/12301/">http://gerrit.ovirt.org/#/c/12301/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/12340/">http://gerrit.ovirt.org/#/c/12340/</a></li>
+      <li><a href="http://gerrit.ovirt.org/#/c/12524/">http://gerrit.ovirt.org/#/c/12524/</a></li>
+    </ul>
+  </li>
+  <li>Branding support
+    <ul>
+      <li><a href="http://gerrit.ovirt.org/#/c/13181/">http://gerrit.ovirt.org/#/c/13181/</a></li>
+    </ul>
+  </li>
+  <li>Frontend Clean-up/Refactoring (at least partial/first phase) <a href="/develop/release-management/features/ux/frontendrefactor/">Features/Design/FrontendRefactor</a></li>
+  <li>Upgrade Google Web Toolkit &amp; related framework versions</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/releases/3.3/release-management.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/releases/3.3/release-management.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

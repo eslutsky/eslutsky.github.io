@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+iSCSI-Multipath &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="iscsi-multipath">iSCSI Multipath</h1>
+
+<h2 id="configure-iscsi-multipathing">Configure iSCSI Multipathing</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Multipathing is a technique whereby there is more than one physical path between the server and the storage. This is a fault tolerant because in the case of a single path failure the operating system can route I/O through the remaining paths transparently to the application. In addition to path failover, multipathing provides load balancing by distributing I/O loads across multiple physical paths. This approach can reduce or remove potential bottlenecks.</p>
+
+<p>Up until now the iSCSI connection between the Host and the iSCSI Storage Domain is being done using only one "default" physical path. In case of a failure of any element in that path, such as an adapter, switch or cable the storage can't be reached from the Host which immediately becomes a non operational. Another problem is that VDSM can't actually control which path to use in order to establish connection to the storage so there is a possibility that storage traffic is routed through the busy management network.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Maor Lipchuk mlipchuk@redhat.com</li>
+  <li>Sergey Gotliv sgotliv@redhat.com</li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Merged to 3.4 branch</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>This feature introduces a new managed entity, iSCSI Bond which groups networks and storage targets reachable via these networks.
+User can configure an iSCSI Bond under the Data Center that contains at least one iSCSI Storage Domain.
+The User selects logical networks and iSCSI targets.
+The iSCSI bond must contain at least one logical network related to the Data Center.
+Once the iSCSI multipathing is configured, all hosts in the Data Center will be connected to the selected iSCSI targets through the selected iSCSI networks.</p>
+
+<h3 id="permissions">Permissions</h3>
+
+<p>Every user with permissions on the Data Center, can add/edit or remove the iSCSI Bond.</p>
+
+<h3 id="iscsi-bond-behaviour">iSCSI Bond behaviour</h3>
+
+<ul>
+  <li>Each Data Center with iSCSI storage can have one or more iSCSI Bonds. The iSCSI bond is not obligated in the Data Center.</li>
+  <li>Each iSCSI bond can be configured with any of the networks configured in the Data Center.</li>
+  <li>iSCSI Bond name should be a unique name in the Data Center.</li>
+  <li>Once a network is being removed from a Data Center it should be automatically removed from the iSCSI Bond as well.</li>
+  <li>Once a Data Center is being removed all the iSCSI Bonds related to it should be removed as well.</li>
+  <li>Once a network is being added to the iSCSI Bond, all hosts are reconnected to the iSCSI targets related to the same Bond through all related networks including the newly added.</li>
+  <li>Once a host gets activated in the iSCSI Data Center it should connect to all available iSCSI targets with all the networks available in the iSCSI Bond</li>
+  <li>If the Host does not contain any of the networks configured in the iSCSI bond it should connect to the storage iSCSI with its default network</li>
+  <li>If the Host does contain the networks configured in the iSCSI bond and it does not succeed to connect to the iSCSI storage with them then the Host should become non operational.</li>
+</ul>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>For the user to start using the iSCSI bond, it will need to do the following:</p>
+
+<ol>
+  <li>Add an iSCSI Storage to the Data Center</li>
+  <li>Make sure the Data Center contains networks.</li>
+  <li>Go to the Data Center main tab and choose the specific Data Center</li>
+  <li>At the sub tab choose "iSCSI Multipathing"</li>
+  <li>Press the "new" button to add a new iSCSI Bond</li>
+  <li>Configure the networks you want to add to the new iSCSI Bond.</li>
+</ol>
+
+<p>Once a new iSCSI bond is configured, The Hosts in the Data Center connects to the iSCSI storage using the networks configured in the bond.</p>
+
+<h3 id="rest">REST</h3>
+
+<p><strong>Creating a new iSCSI Bond:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: POST&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds&#x000A;HTTP/1.1&#x000A;Content-type: application/xml&#x000A;Body:&#x000A;&#x000A;<span class="nt">&lt;iscsi_bond&gt;</span>&#x000A; <span class="nt">&lt;name&gt;</span>fromRest<span class="nt">&lt;/name&gt;</span>&#x000A; <span class="nt">&lt;storage_connections&gt;</span>&#x000A;  <span class="nt">&lt;storage_connection</span> <span class="na">id=</span><span class="s">{storageconnection_id}</span> <span class="nt">/&gt;</span>&#x000A;      ....&#x000A; <span class="nt">&lt;/storage_connections&gt;</span>&#x000A; <span class="nt">&lt;networks&gt;</span>&#x000A;  <span class="nt">&lt;network</span> <span class="na">id=</span><span class="s">{network_id}</span> <span class="nt">/&gt;</span>&#x000A;      ....&#x000A; <span class="nt">&lt;/networks&gt;</span>&#x000A;<span class="nt">&lt;/iscsi_bond&gt;</span>&#x000A;</code></pre></div>
+<p><strong>Updating an iSCSI Bond, only name and description can be editing that way:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: PUT&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds/{iscsibond_id}&#x000A;HTTP/1.1&#x000A;Content-type: application/xml&#x000A;Body:&#x000A;&#x000A;<span class="nt">&lt;iscsi_bond&gt;</span>&#x000A; <span class="nt">&lt;name&gt;</span>fromRest<span class="nt">&lt;/name&gt;</span>&#x000A; <span class="nt">&lt;description&gt;</span>myDescription<span class="nt">&lt;/description&gt;</span>&#x000A;<span class="nt">&lt;/iscsi_bond&gt;</span>&#x000A;</code></pre></div>
+<p><strong>Removing an iSCSI Bond:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: DELETE&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds/{iscsibond_id}&#x000A;HTTP/1.1&#x000A;</code></pre></div>
+<p><strong>Getting all iSCSI Bonds for the specified data center:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: GET&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds HTTP/1.1&#x000A;Content-type: application/xml&#x000A;</code></pre></div>
+<p><strong>Get a list of Storage Connections contained in the iSCSI bond:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: Get&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds/{iscsibond_id}/storageconnections/&#x000A;</code></pre></div>
+<p><strong>Get a specific Storage Connection in the iSCSI bond:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: Get&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds/{iscsibond_id}/storageconnections/{storage_id}/&#x000A;</code></pre></div>
+<p><strong>Adding a new Storage Connection to an existing iSCSI Bond:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: POST&#x000A;URL: /api/datacenters/{datacenter_id}/iscsibonds&#x000A;HTTP/1.1&#x000A;Accept: application/xml&#x000A;Body:&#x000A;&#x000A;<span class="nt">&lt;storage_connection</span> <span class="na">id=</span><span class="s">"{connection_id}"</span><span class="nt">&gt;&lt;/storage_connection&gt;</span>&#x000A;&#x000A;</code></pre></div>
+<p><strong>Remove a Storage Connection from the existing iSCSi Bond:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>Method: DELETE&#x000A;/api/datacenters/{datacenter_id}/iscsibonds/{iscsibond_id}/storageconnections/{storage_id}/&#x000A;HTTP/1.1&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/iscsi-multipath.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/iscsi-multipath.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

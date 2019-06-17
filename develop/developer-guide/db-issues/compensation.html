@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+compensation &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/db-issues/">Db-issues</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="compensation-mechanism">Compensation mechanism</h1>
+
+<h2 id="what-is-compensation-all-about">What is compensation all about?</h2>
+
+<p>*Isolation level: what changes of a transaction T are exposed to other transactions
+*</p>
+
+<p>Postgres does not implement the READ-UNCOMMITTED isolation level. We have to notify the clients ASAP on entities that are changing status, this implies committing database changes ASAP before the asynchronous tasks associated with the relevant command are complete and in order to keep transactions as short as possible, create a entity change log which we can use to revert the changes if any asynchronous task fails.
+ The process of logging those changes and roll back them if something fails is called compensation.</p>
+
+<h2 id="compensation-change-log">Compensation change log</h2>
+
+<p>Change log is recorded in the database in the business_entity_snapshot table</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>       Column      |          Type          | Modifiers &#x000A;  -----------------+------------------------+-----------&#x000A;  id              | uuid                   | not null&#x000A;  command_id      | uuid                   | not null&#x000A;  command_type    | character varying(256) | not null&#x000A;  entity_id       | character varying(128) | &#x000A;  entity_type     | character varying(128) | &#x000A;  entity_snapshot | text                   | &#x000A;  snapshot_class  | character varying(128) | &#x000A;  snapshot_type   | integer                | &#x000A;  insertion_order | integer                |&#x000A;</code></pre></div>
+<p>Each command may affect multiple entities
+A parent command may call other commands as part of its execution.</p>
+
+<h2 id="what-changes-are-logged">What changes are logged?</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Insertion – the ID of the new entity (compensation = delete entity by Id)&#x000A;   Deletion – the deleted entity (compensation = re-insertion of the entity)&#x000A;   Update – the entity before the change (compensation = update entity with “old values”)&#x000A;   UpdateStatus – the status before change (compensation = update entity with “old status” - this is an optimization)&#x000A;</code></pre></div>
+<h2 id="businessentity-interface">BusinessEntity interface</h2>
+
+<p>All compensatable entities must implement BusinessEntity interface
+This interface exposes the get/set of the entity ID
+The business entity must be serializable, so does the type of the ID in order to log the changes</p>
+
+<h2 id="businessentitysnapshot">BusinessEntitySnapshot</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   CHANGED_ENTITY – update/delete&#x000A;   NEW_ENTITY_ID – insert&#x000A;   CHANGED_STATUS_ONLY – update status &#x000A;</code></pre></div>
+<h2 id="compensationcontext">CompensationContext</h2>
+
+<p>CompensationContext provides the API for adding entries to the “change log” and to flush the “change log” to DB</p>
+
+<h2 id="when-to-compensate">When to compensate?</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Exception in execution has occurred&#x000A;   The status of the transaction is inactive (if code is run in transaction)&#x000A;   Failure in execution&#x000A;   Server restart with existing entries at business_entity_snapshot&#x000A;</code></pre></div>
+<h2 id="example-activatestoragedomaincommand">Example: ActivateStorageDomainCommand</h2>
+
+<p>ChangeStorageDomainStatusInTransaction – change storage domain status to LOCKED, in a transaction + compensation code (pay attention – the code is run in a transaction scope which is comitted prior to the next step)
+ActivateStorageDomainCommand VDS command is executed (this takes some time)
+If VDS command successful</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Perform some stuff&#x000A;   Change storage domain status to active (in transaction  + compensation code)&#x000A;   Perform some other stuff&#x000A;</code></pre></div>
+<h2 id="usage">Usage</h2>
+
+<p>Make sure your entity implements BusinessEntitySnapshot
+Make sure its DAO implements ModificationDao and StatusAwareDao (optional, for status changes optimization)
+Add at DbFacade.mapEntityToDAO an entry that maps the entity to its DAO</p>
+
+<h2 id="using-compensation-at-a-command">Using compensation at a command</h2>
+
+<p>Implement a CTOR that takes a commandId as parameter for Compensation after server restart
+Annotate the command with @NonTransactiveCommandAttribute(forceCompensation=true) in order to eliminate creation of transaction that wraps the entire command, and in order to create a new CompensationContext
+Remember to use short transactions as possible
+For the last update part of the command – compensation code is not required – the transaction will rollback this part, if needed</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/db-issues/compensation.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/db-issues/compensation.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+User Portal Permissions &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="user-portal-permissions">User Portal Permissions</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This page details how the User Portal decides what objects to display, specifically in relation to create permissions.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Allon Mureinik</li>
+  <li>Email: amureini@redhat.com</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Status: Released in oVirt 3.1</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="query-permissions-and-integration-with-mla">Query Permissions and Integration with MLA</h3>
+
+<p>For each query the engine will manage <code>queryType</code>, which can be either an Admin query or a User query. Admin query means only admins can execute the query, while User query means that any user can execute the query (administrators included). In addition to the <code>queryType</code> a parameter, an <code>isFiltered</code> parameter will be added to the <code>VdcQueryParametersBase</code> class. This parameter will govern if the query is executed in filtered mode (and should return only the objects the user has user permissions on) or not (and as such should return all the objects). The default is that <code>isFiltered</code> is set to <code>false</code>, due to backwards compatibility considerations.</p>
+
+<p>Permission checking will be done in two levels:</p>
+
+<ol>
+  <li>Authorization - before executing the query: validating a user is an administrator (i.e., has at least one administrator role) if the query is an Admin query or if <code>isFiltered</code> is set to <code>false</code>.</li>
+  <li>Filtering - as part of the query execution: joining the "business logic" of the query to a permissions view, providing a single point of entry to managing permission logic.</li>
+</ol>
+
+<h3 id="vdcquerytype-enum"><code>VdcQueryType</code> enum</h3>
+
+<p>A property <code>queryType</code> will be added to the enum. Most queries are not available to users so the default will be <code>admin</code>.</p>
+
+<h3 id="vdcqueryparametersbase"><code>VdcQueryParametersBase</code></h3>
+
+<p>From now on, it will be possible to specify if the query should be executed in admin or in filtered mode. The default will be to execute as admin, for backwards compatibility reasons.</p>
+
+<h3 id="running-a-query">Running a Query</h3>
+
+<p>In case of an admin query (be it due to the query's internal type or to a request to run as an admin), the query will perform a minimal authorization check to see if the user may execute such queries.</p>
+
+<h3 id="daos">DAOs</h3>
+
+<p>Each method used by a user query will be overloaded with two additional parameters - <code>userID</code> and <code>isFiltered</code>. E.g., we would like to have a filtered version of <code>GetVmInterfacesByVmIdQuery</code>, which uses <code>VmNetworkInterfaceDAO.getAllForVm(Guid vmID)</code>, so we will overload this method and create <code>VmNetworkInterfaceDAO.getAllForVm(Guid vmID, Guid userID, boolean isFiltered)</code>.</p>
+
+<h4 id="hibernate-dao-implementations">Hibernate DAO implementations</h4>
+
+<p>Currently, will not be supported. If necessary, an additional method that throws <code>UnsupportedOperationException</code>, and a test that verifies this exception is thrown so when the Hibernate DAO will be implemented that test will break, and the implementor will remember to implement this method too.</p>
+
+<h3 id="permissions-views">Permissions Views</h3>
+
+<p>A set of n flat views (one per entity type) will be created. The view will hold the <code>user_id</code> and <code>entity_id</code> and fields will implement the flattened logic of permissions. E.g., if it's decided that permissions on pool grant read permissions on the VMs inside it, this will be exposed in the <code>vm_permissions_view</code> view. Each query implementation will be responsible for joining with the appropriate permissions view. Thus, permission-checking logic will only be implemented in a single place (per type, unfortunately) instead of inside each query.</p>
+
+<h3 id="stored-procedures">Stored Procedures</h3>
+
+<p>Each stored procedure used by a user query will have two parameters added to it - <code>user_id (UUID)</code> and <code>is_filtered (boolean)</code>.</p>
+
+<h3 id="inheriting-permissions">Inheriting Permissions</h3>
+
+<p>Today, the User Portal exposes all the objects under an entity if any permission is given on that entity or on the reflecting entities (add link to explanation what is reflecting entities). This behaviour is correct for "manipulate" and "use" permission, but not for "create" permissions. E.g. If a user has the permissions to create a VM in a cluster, he should not be able to see all the VMs in that cluster.</p>
+
+<p>In the suggested solution, an additional column, <code>allows_viewing_children</code> (<code>boolean</code>) will be added to the <code>roles_groups</code> table. Only action groups with <code>allows_viewing_children=true</code> will provide permissions on the objects contained in the object they are granted on.</p>
+
+<p>Following is a detailed description of the behavior for each entity type.</p>
+
+<ul>
+  <li>Data Center - Create VM/Template permission will not grant the ability to view VMs/Templates in the DC.</li>
+  <li>Cluster - Create VM/Template permission will not grant the ability to view VMs/Templates in the cluster.</li>
+  <li>Storage Domain - Create VM/Template/Disk permission will not grant the ability to view objects contained in the storage domain.</li>
+</ul>
+
+<h4 id="creator-roles">Creator Roles</h4>
+
+<p>Two new predefined roles should be added - VM Creator and Template Creator, which only contain the action groups for adding VMs/Templates, respectively, and do not allow users to manipulate existing entities. These new roles will be the way administrators will grant their users the ability to create new VMs/Templates without exposing existing ones. For disks, the existing role Disk Creator will be used.</p>
+
+<h4 id="operator-roles">Operator Roles</h4>
+
+<p>For the modification of an existing templates/vms/disks the VM ADMIN, TEMPLATE ADMIN and DISK ADMIN roles should be given to a user who issues a CreateVMTempalteCommand on the template he created.</p>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<p>No new entities are required for this feature.</p>
+
+<h3 id="crud">CRUD</h3>
+
+<p>No new entities are required for this feature.</p>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>See Inheriting Permissions.</p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>The three new predefined roles should be created.</p>
+
+<h3 id="user-work-flows">User work-flows</h3>
+
+<h4 id="adding-a-vm">Adding a VM</h4>
+
+<ol>
+  <li>The admin grants the VM Creator permission to a user on a host/cluster</li>
+  <li>The user can create a new VM on the host/cluster</li>
+  <li>Once the user creates the VM, he becomes a VM Operator on this VM</li>
+</ol>
+
+<h3 id="events">Events</h3>
+
+<p>No new events are added.</p>
+
+<h2 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h2>
+
+<h3 id="rest-api">REST API</h3>
+
+<p>As part of the user level queries changes, we also added user-level API capabilities to the REST API.
+Before these changes, only administrators could login to the API. Now, you can logic as a regular user as well, by specifying the "filter: true" HTTP header.
+For example, as a user, in order to get all your VMs through the API you can do the following:</p>
+
+<p><code>curl http://engine-address:engine-port/api/vms -u "user@domain":password -H</code> <strong><code>"filter: true"</code></strong></p>
+
+<p>The following endpoints are supported:</p>
+
+<ul>
+  <li>/api</li>
+  <li>/api/vms</li>
+  <li>/api/clusters</li>
+  <li>/api/datacenters</li>
+  <li>/api/roles</li>
+  <li>/api/storagedomains</li>
+  <li>/api/templates</li>
+  <li>/api/domains</li>
+  <li>/api/capabilities</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p><a href="/develop/developer-guide/engine/writing-a-new-user-query">Writing A New User
+Query</a></p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<ul>
+  <li>Should Create Host permissions be inherited for viewing?</li>
+  <li>Should we grant VM/Template Creator to any user who is a VM/Template Admin?</li>
+  <li>How do Disk Permissions integrate with this solution?</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/user-portal-permissions.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/user-portal-permissions.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

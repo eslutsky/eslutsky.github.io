@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Branding &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/ux/">Ux</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="branding-support">Branding Support</h1>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Alexander Wels (awels)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#119;&#101;&#108;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#119;&#101;&#108;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h1 id="overview">Overview</h1>
+
+<p>The oVirt user portal and web admin recently obtained new functionality to allow one to partially skin/override some of the existing styles. This document gives a description of what is change-able and where to look to make it happen. The purpose of the current implementation is to prove the framework and give some basic styling abilities as well as some ability to change some of the messages. As the user portal and web admin are both web applications developed in GWT, they use standard cascading style sheets (CSS) to style the application. GWT does some magic to in-line styles to make them available faster, so to allow external styles takes a little bit work.</p>
+
+<p>The current implementation gives the ability to change some of the styles in the following elements of the user interface:</p>
+
+<ul>
+  <li>pop-up windows</li>
+  <li>the login screen</li>
+  <li>the main header part of the user interfaces</li>
+  <li>Some of the tabbing tabs.</li>
+</ul>
+
+<p>If needed we can increase the number of style-able elements in the future.</p>
+
+<p>Some of the user interface elements that can be styled is shared between the two applications. One can style them independently or one can share the styles between the application. This is usually done by importing a common style sheet file into the main style sheet file of the application.</p>
+
+<p>It is also possible to change some of the messages displayed to the user. These messages include 'branding' type message. Basically everything you see that says 'oVirt' something can be changed to say something else. This allows one to brand oVirt for their own company or anything you want.</p>
+
+<h2 id="pop-up-windows">Pop-up windows</h2>
+
+<p>Popup windows include anything that allows you create/edit/update a particular entity such as hosts, VMs, etc. You can change the following attributes of pop-up windows:</p>
+
+<ul>
+  <li>Border</li>
+  <li>Header image on the left</li>
+  <li>Header center image (repeated)</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="682" height="539" src="/images/wiki/Popup-window-border.png?1560777612" />
+ As the oVirt default branding is itself a branding theme you can look at the oVirt branding in <code>packaging/branding/ovirt.branding</code> in the source tree to see which css classes are available. The classes for the popup window are in <code>ovirt_common.css</code> and <code>gwt_common.css</code></p>
+
+<h2 id="login-screen">Login Screen</h2>
+
+<p>The user portal and web admin share the same login screen, so in the default branding style they share the same classes. You can change the following attributes of the login screen:</p>
+
+<ul>
+  <li>Border</li>
+  <li>Header image on the left</li>
+  <li>Header center image (repeated)</li>
+  <li>Header right image</li>
+  <li>Text in the header center</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="495" height="310" src="/images/wiki/Login-window.png?1560777613" />
+As the oVirt default branding is itself a branding theme you can look at the oVirt branding in <code>packaging/branding/ovirt.branding</code> in the source tree to see which css classes are available. The classes for the login window are in <code>ovirt_common.css</code> and <code>gwt_common.css</code></p>
+
+<h2 id="user-portal-main-header">User portal main header</h2>
+
+<p>The user portal main header has the following attributes that can be changed:</p>
+
+<ul>
+  <li>Logo</li>
+  <li>Center background image</li>
+  <li>Right background image</li>
+  <li>The border around the main grid</li>
+  <li>Text right above the 'logged in user' label.</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="1034" height="103" src="/images/wiki/User_portal_header.png?1560777612" />
+As the oVirt default branding is itself a branding theme you can look at the oVirt branding in <code>packaging/branding/ovirt.branding</code> in the source tree to see which css classes are available. The classes for the user portal header are in <code>ovirt_user_portal.css</code></p>
+
+<h2 id="web-admin-main-header">Web admin main header</h2>
+
+<p>The web admin main header has the following attributes that can be changed:</p>
+
+<ul>
+  <li>Logo</li>
+  <li>left and center background</li>
+  <li>right background</li>
+  <li>Text to the right of the logo</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="1041" height="111" src="/images/wiki/Wed_admin_header.png?1560777612" />
+As the oVirt default branding is itself a branding theme you can look at the oVirt branding in <code>packaging/branding/ovirt.branding</code> in the source tree to see which css classes are available. The classes for the user portal header are in <code>ovirt_webadmin.css</code></p>
+
+<h2 id="tabbing-elements">Tabbing elements</h2>
+
+<p>There are two types of tabbing elements in the user portal. The main page tabbing elements (to switch between basic and extended) and the tabs on the left side of the screen when you have the extended tab selected. The following attributes can be changed:</p>
+
+<ul>
+  <li>Active tab</li>
+  <li>Inactive tab</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="1035" height="207" src="/images/wiki/User_portal_tab.png?1560777612" />
+A lot of pop-up windows will have a tabbing element on it as well these elements are common between the user portal and web admin interfaces. The following attributes can be changed:</p>
+
+<ul>
+  <li>Active tab</li>
+  <li>Inactive tab</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="680" height="266" src="/images/wiki/User_portal_tab_popup.png?1560777612" />
+As the oVirt default branding is itself a branding theme you can look at the oVirt branding in <code>packaging/branding/ovirt.branding</code> in the source tree to see which css classes are available. The classes for the tabbing elements are in <code>ovirt_common.css</code> and <code>ovirt_user_portal.css</code></p>
+
+<h1 id="welcome-page">Welcome page</h1>
+
+<p>When a user initially goes to the oVirt engine web application, they are greeted with the welcome page. The welcome page by default has links to:</p>
+
+<ul>
+  <li>The user portal.</li>
+  <li>The administrator portal.</li>
+  <li>The reports portal.</li>
+</ul>
+
+<p>Branding allows one to add more links to the welcome page (for instance to extra documentation, or internal web sites). These links will NOT overwrite the above mentioned links, but will be added into their own section below them. The extra links are added by creating a template file just like the one found in <code>packaging/branding/ovirt.branding/welcome_page.template</code>. You can name the file anything you want, as long as you denote the correct file name in branding.properties.</p>
+
+<p>The template file is regular html, but without the HTML, HEAD, and BODY tags. As the contents of the template will be directly inserted into the out welcome page. The template file can also contain place holder string that look like this: {user_portal}. While processing the place holders will be replaced with messages from the messages.properties file in the current user locale. All the keys in the messages.properties should start with 'obrand.welcome'. One exception is the {userLocale} place holder. This will be replaced by the short version of the current user locale. For instance if the current user locale is 'Spanish, spain' then {userLocale} will be replaced by 'es_ES'. This is to allow for link to locale specific files.</p>
+
+<p>Besides the template the following aspects can be changed:</p>
+
+<ul>
+  <li>Page title</li>
+  <li>The header (left, center, right)</li>
+  <li>The error message</li>
+  <li>The link to forward to as well as the associated message for the link.</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="828" height="356" src="/images/wiki/Welcome_page.png?1560777612" /></p>
+
+<h2 id="file-not-found-page">File not found page</h2>
+
+<p>Whenever a user goes to a page that is not found inside the oVirt engine web application, a custom page not found error page is displayed. We are able to customize certain aspects of that page not found page. The following aspects can be changed:</p>
+
+<ul>
+  <li>Page title</li>
+  <li>The header (left, center, right)</li>
+  <li>The error message</li>
+  <li>The link to forward to as well as the associated message for the link.</li>
+</ul>
+
+<p>As illustrated by the following image:
+<img alt="" width="828" height="239" src="/images/wiki/Page_not_found_page.png?1560777612" />
+As the oVirt default branding is itself a branding theme you can look at the oVirt branding in <code>packaging/branding/ovirt.branding</code> in the source tree to see which css classes are available. The classes for the page not found page are in <code>welcome_style.css</code>. The page not found page shares a lot of the structure of the welcome page.</p>
+
+<h1 id="adding-new-brandable-styles">Adding new brandable styles</h1>
+
+<h2 id="css">CSS</h2>
+
+<p>Because this is a GWT application most of the styles are compiled into the application when the application is built. As part of this process the style class names are obfuscated and they change each time the application is build. GWT provides some guidance on how to solve this problem <a href="https://developers.google.com/web-toolkit/doc/latest/DevGuideClientBundle#External_and_legacy_scopes">here</a>. In order to add new brand-able style classes the following will have to be considered:</p>
+
+<ul>
+  <li>Any class name you define needs to marked with @external</li>
+  <li>All the class names should start with obrand_ this is signify to theme authors that the class can be used to override styles.</li>
+  <li>Any images normally cannot be changed with a style sheet, so we cheated a little and used style sheets to set the background image on an image tag. In order to not display a broken image icon you need to set the src of the image to something transparent and small. Luckily GWT provides an image like that already in 'clear.cache.gif'</li>
+  <li>Other than this any normal style properties can be set in your external style sheet.</li>
+</ul>
+
+<p>For step-by-step instructions, see the <a href="http://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=README.branding;hb=HEAD">README.branding</a> in the root of the oVirt source code tree.</p>
+
+<h2 id="text-messages">Text messages</h2>
+
+<p>GWT provides a mechanism that allows you to define messages for your application and have them automatically translated during the compile process if you have provided a proper translation in a standard Java properties file. GWT provides a 'Messages' and 'Constants' interface for this purpose. Since the translations are compiled into the application during compile time this does not allow one to use an external file to override particular messages. In order to solve this we pass a messages Javascript object to the GWT application using the host page. This object is then processed and used to override some predefined messages.</p>
+
+<p>The available messages are defined in ovirt_messages.properties which is a standard Java resource bundle. The resource bundle is consumed and translated into a Javascript object and placed in the host page. Since it is a standard resource bundle you can have multiple locales.</p>
+
+<p>For step-by-step instructions, see the <a href="http://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=README.branding;hb=HEAD">README.branding</a> in the root of the oVirt source code tree.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/ux/branding.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/ux/branding.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

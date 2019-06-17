@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+SNMPv3 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="engine-snmp">engine-snmp</h1>
+
+<h2 id="ovirt-engine-snmpv3-traps">oVirt Engine SNMPv3 Traps</h2>
+
+<p>See also <a href="/develop/developer-guide/events/configuration-event-subscribers/">Features/configuration-event-subscribers</a>.</p>
+
+<h3 id="summary">Summary</h3>
+
+<p>This feature extends events notifier capabilities and enables it to generate SNMPv3 traps out of system events to integrate oVirt with generic monitoring systems.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Ravi Nori (rnori)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#110;&#111;&#114;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#114;&#110;&#111;&#114;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release: 4.1</li>
+  <li>Status: Post</li>
+  <li>Last updated:</li>
+</ul>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>Add a new configuration file /etc/ovirt-engine/notifier/notifier.conf.d/99-snmp.conf to configure the SNMP.</p>
+
+<p>Configuration for sending SNMPv3 NoAuthNoPriv traps as user 'NoAuthNoPriv'.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  SNMP_MANAGERS=localhost&#x000A;  SNMP_OID=1.3.6.1.4.1.2312.13.1.1&#x000A;  FILTER="include:*(snmp:)"&#x000A;  SNMP_VERSION=3&#x000A;  SNMP_ENGINE_ID="80:00:00:00:01:02:06:06"&#x000A;  SNMP_USERNAME=NoAuthNoPriv&#x000A;  SNMP_SECURITY_LEVEL=1&#x000A;</code></pre></div>
+<p>Configuration for sending SNMPv3 AuthNoPriv traps as user 'ovirtengine' with snmp auth passphrase 'authpass'.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  SNMP_MANAGERS=localhost&#x000A;  SNMP_OID=1.3.6.1.4.1.2312.13.1.1&#x000A;  FILTER="include:*(snmp:)"&#x000A;  SNMP_VERSION=3&#x000A;  SNMP_ENGINE_ID="80:00:00:00:01:02:05:05"&#x000A;  SNMP_USERNAME=ovirtengine&#x000A;  SNMP_AUTH_PROTOCOL=MD5&#x000A;  SNMP_AUTH_PASSPHRASE=authpass&#x000A;  SNMP_SECURITY_LEVEL=2&#x000A;</code></pre></div>
+<p>Configuration for sending SNMPv3 AuthPriv traps as user 'ovirtengine'  with snmp auth passphrase 'authpass' and snmp priv passphrase 'privpass'.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  SNMP_MANAGERS=localhost&#x000A;  SNMP_OID=1.3.6.1.4.1.2312.13.1.1&#x000A;  FILTER="include:*(snmp:)"&#x000A;  SNMP_VERSION=3&#x000A;  SNMP_ENGINE_ID="80:00:00:00:01:02:05:05"&#x000A;  SNMP_USERNAME=ovirtengine&#x000A;  SNMP_AUTH_PROTOCOL=MD5&#x000A;  SNMP_AUTH_PASSPHRASE=authpass&#x000A;  SNMP_PRIVACY_PROTOCOL=AES128&#x000A;  SNMP_PRIVACY_PASSPHRASE=privpass&#x000A;  SNMP_SECURITY_LEVEL=3&#x000A;</code></pre></div>
+<h3 id="net-snmp-configuration">Net-Snmp configuration</h3>
+
+<h4 id="stop-snmp-services">Stop snmp services</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service snmpd stop&#x000A;  # service snmptrapd stop&#x000A;</code></pre></div>
+<h4 id="edit-etcsnmpsnmptrapdconf-to-support-version-3-traps-and-log-traps-to-file">Edit /etc/snmp/snmptrapd.conf to support version 3 traps and log traps to file.</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # version 3 traps: allow user ovirtengine to log,execute,net&#x000A;  authUser log,execute,net ovirtengine&#x000A;  &#x000A;  # version 3 add a user NoAuthnoPriv who can send noAuthNoPriv &#x000A;  authUser log,execute,net NoAuthNoPriv noauth&#x000A;  # Log incoming traps to /var/log/snmptrapd.log&#x000A;  logOption f /var/log/snmptrapd.log&#x000A;</code></pre></div>
+<p>With latest net-snmp-5.7.3-38.fc28.x86_64 logOption is moved to a library specific directive from an application-level one.
+Edit /etc/snmp/snmptrapd.conf to add the library specific directive in front of logOption.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # Log incoming traps to /var/log/snmptrapd.log&#x000A;  [snmp] logOption f /var/log/snmptrapd.log&#x000A;</code></pre></div>
+<h4 id="create-the-users">Create the users</h4>
+
+<p>edit /var/lib/net-snmp/snmpd.conf add createUser to support version 3 traps
+and 
+edit /var/lib/net-snmp/snmptrapd.conf add creatUser to support version 3 traps</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  createUser -e 0x8000000001020505 ovirtengine MD5 authpass AES privpass&#x000A;  createUser -e 0x8000000001020606 NoAuthNoPriv&#x000A;</code></pre></div>
+<h4 id="edit-etcsnmpsnmpdconf">Edit /etc/snmp/snmpd.conf</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  rwuser ovirtengine&#x000A;  rwuser NoAuthNoPriv noauth&#x000A;</code></pre></div>
+<h4 id="start-the-snmp-services">Start the snmp services</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service snmpd start&#x000A;  # service snmptrapd start&#x000A;</code></pre></div>
+<h4 id="test-by-sending-snmpv3-traps">Test by sending SNMPv3 traps</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # snmptrap -v 3 -n "" -l noAuthNoPriv -u NoAuthNoPriv -e 0x8000000001020606 localhost 0 linkUp.0&#x000A;  # snmptrap -v 3 -n "" -a MD5 -A authpass -l authNoPriv -u ovirtengine -e 0x8000000001020505 localhost 0 linkUp.0&#x000A;  # snmptrap -v 3 -n "" -a MD5 -A authpass -x AES -X privpass -l authPriv -u engine -e 0x8000000001020505 localhost 0 linkUp.0&#x000A;</code></pre></div>
+<h4 id="see-traps-in-varlogsnmptrapdlog">See traps in /var/log/snmptrapd.log</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  tail -n 40 /var/log/snmptrapd.log&#x000A;</code></pre></div>
+<p>Notes:</p>
+
+<ul>
+  <li>SNMP_MANAGER (net-snmp) must be properly installed and configured in order for the notifier to send SNMPv3 traps.</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/engine-snmp3.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/engine-snmp3.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 8 May 2019 07:39 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

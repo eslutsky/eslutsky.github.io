@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt and OKD &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='rgolan' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='oVirt and OKD' property='og:title'>
+<meta content='This is a series of posts to demonstrate how to  install  OKD 3.11 on oVirt and what you can do with it.
+Part I   -  How to install OKD 3.11 on oVirt' property='og:description'>
+<meta content='http://ovirt.org/blog/2019/01/ovirt-openshift-part-1.html' property='og:url'>
+<meta content='2019-01-06T09:01:00Z' property='article:published_time'>
+<meta content='rgolan' property='article:author:username'>
+<meta content='external-storage' property='article:tag'>
+<link href='/blog/tag/external-storage.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='flexdriver' property='article:tag'>
+<link href='/blog/tag/flexdriver.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='open source virtualization' property='article:tag'>
+<link href='/blog/tag/open source virtualization.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt 4.2' property='article:tag'>
+<link href='/blog/tag/ovirt 4.2.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='provisioner' property='article:tag'>
+<link href='/blog/tag/provisioner.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='oVirt and OKD' name='twitter:title'>
+<meta content='This is a series of posts to demonstrate how to  install  OKD 3.11 on oVirt and what you can do with it.
+Part I   -  How to install OKD 3.11 on oVirt' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2019</li>
+<li class='active'>01</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+oVirt and OKD
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/rgolan.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/rgolan/">rgolan</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2019-01-06T09:01:00Z'>
+Sunday  6 January
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>This is a series of posts to demonstrate how to  install  OKD 3.11 on oVirt and what you can do with it.
+<strong>Part I</strong>   -  How to install OKD 3.11 on oVirt</p>
+
+<p></p>
+
+<p><img align="left" src="/images/blog/2019-01-06/boxhead.png" width="400px" style="margin-right: 25px;border-radius: 4px" /></p>
+
+<h1 id="how-to-install-okd-311-on-ovirt-42-and-up">How to install OKD 3.11 on oVirt (4.2 and up)</h1>
+<p>Installing OKD or Kubernetes on oVirt has many advantages, and it's also gotten a lot easier these days. Admins and users who want to take container platform management for a spin, on oVirt, will be encouraged by this.<br />
+Few of the advantages are:</p>
+<ul>
+  <li>Virtualizing the control plane for Kubernetes - provide HA/backup/affinity capabilities to the controllers and allowing hardware maintenance cycles</li>
+  <li>Providing persistent volume for containers via the IAAS, without the need for additional storage array dedicated to Kubernetes</li>
+  <li>Allowing a quick method to build up/tear down Kubernetes clusters, providing hard tenancy model via VMs between clusters.</li>
+</ul>
+
+<p>The installation uses <a href="https://github.com/openshift/openshift-ansible">openshift-ansible</a> and, specifically the <code>openshift_ovirt</code> ansible-role. The integration between OpenShift and oVirt is tighter, and provides storage integration. If you need persistent volumes for your containers you can get that directly from oVirt using <strong>ovirt-volume-provisioner</strong> and <strong>ovirt-flexvolume-driver</strong>.<br />
+For the sake of simplicity, this example will cover an all-in-one OpenShift cluster, on a single VM.<br />
+On top of that, in the 2nd post, we will run a classic web stack, a Java application with a simple REST-API endpoint + Postgres. Postgres will get a persistent volume from oVirt using its flexvolume driver.</p>
+
+<p><span style="font: italic 10px robot, monospace; top: 220px">Picture by <a href="https://unsplash.com/@soroushgolpoor?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge">Soroush golpoor on Unsplash</a></span></p>
+
+<script id="asciicast-219956" src="https://asciinema.org/a/219956.js" async=""></script>
+
+<h2 id="single-shell-file-installation">Single shell file installation</h2>
+
+<p>Dropping to shell - this <a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/install.sh">install.sh</a> is a wrapper for installing  the ovirt-openshift-installer container, it uses ansible-playbook and has two main playbooks: install_okd.yaml and install_extensions.yaml. The latter is mainly for installing oVirt storage plugins.</p>
+
+<p>The install.sh script has one dependency, it needs to have 'podman' installed on the host, while all the rest runs inside a container.</p>
+
+<p>The only dependency (except from running oVirt datacenter) is podman:</p>
+<div class="highlight"><pre class="highlight console"><code><span class="gp">[bastion ~]#</span> dnf install podman&#x000A;</code></pre></div>
+<p><a href="https://github.com/containers/libpod/blob/master/docs/tutorials/podman_tutorial.md">For other ways to install podman consult the readme</a></p>
+
+<p>If you can't install <code>podman</code> docker will be fine as well, just edit the install.sh, and substitute podman for docker.</p>
+
+<h3 id="get-the-installsh-and-customize">Get the install.sh and customize</h3>
+<div class="highlight"><pre class="highlight console"><code><span class="gp">[bastion ~]#</span> curl <span class="nt">-O</span> <span class="s2">"https://raw.githubusercontent.com/oVirt/ovirt-openshift-extensions/master/automation/ci/{install.sh,vars.yaml}"</span>&#x000A;</code></pre></div>
+<p>Edit the <code>vars.yaml</code>:</p>
+
+<ul>
+  <li>Put the engine details in engine_url
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">engine_url</span><span class="pi">:</span> <span class="s">https://ovirt-engine-fqdn/ovirt-engine/api</span>&#x000A;</code></pre></div></li>
+  <li>Choose the oVirt cluster and data domain you want, if you don't want 'Default'
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">openshift_ovirt_cluster</span><span class="pi">:</span> <span class="s">yours</span>&#x000A;<span class="na">openshift_ovirt_data_store</span><span class="pi">:</span> <span class="s">yours</span>&#x000A;</code></pre></div></li>
+  <li>Unmark to disable the memory and disks checks in case the VM memory is under 8Gb
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">openshift_disable_check</span><span class="pi">:</span> <span class="s">memory_availability,disk_availability,docker_image_availability</span>&#x000A;</code></pre></div></li>
+  <li>Domain name of the setup. The setup will create a VM with the name master0.$public_hosted_zone here. This VM will
+be used for all the components of the setup
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">public_hosted_zone</span><span class="pi">:</span> <span class="s">example.com</span>&#x000A;</code></pre></div></li>
+</ul>
+
+<p>For a more complete list of customizations, take a look at the <a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/vars.yaml">vars.yaml</a> and the <a href="https://github.com/oVirt/ovirt-openshift-extensions/blob/master/automation/ci/integ.ini">inventory file</a>.</p>
+<h2 id="install">Install</h2>
+
+<p>Run install.sh to start the installation.</p>
+
+<div class="highlight"><pre class="highlight console"><code><span class="gp">[bastion ~]#</span> bash install.sh&#x000A;</code></pre></div>
+<p>install.sh automates the following steps:</p>
+<ol>
+  <li>Pull the ovirt-openshift-installer container and run it.</li>
+  <li>Download Centos Cloud Image and import it into oVirt based on the <code>qcow_url</code> variable.</li>
+  <li>Create a VM named master0.example.com from the template above.The VM name is based on the <code>public_hosted_zone</code> variable.</li>
+  <li>The cloud-init script will configure repositories, a network, ovirt-guest-agent, etc. based on the <code>cloud_init_script_master</code> variable.</li>
+  <li>The VM will dynamically be inserted into an ansible inventory, under <code>master</code>, <code>compute</code>, and <code>etc</code> groups</li>
+  <li>Openshift-ansible main playbooks are executed to install OKD: <code>prerequisite.yml</code> and <code>deploy_cluster.yml</code></li>
+</ol>
+
+<p>When the script finishes, an all-in-one cluster is installed and running. Let's check it out.</p>
+
+<div class="highlight"><pre class="highlight console"><code><span class="gp">[root@master0 ~]#</span> oc get nodes&#x000A;<span class="go">NAME                         STATUS    ROLES                  AGE       VERSION&#x000A;master0.example.com   Ready     compute,infra,master   1h        v1.11.0+d4cacc0&#x000A;</span></code></pre></div>
+<p>Check oVirt's extensions</p>
+<div class="highlight"><pre class="highlight console"><code><span class="gp">[root@master0 ~]#</span> oc get deploy/ovirt-volume-provisioner&#x000A;<span class="go">NAME                       DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE&#x000A;ovirt-volume-provisioner   1         1         1            1           57m&#x000A;&#x000A;</span><span class="gp">[root@master0 ~]#</span> oc get ds/ovirt-flexvolume-driver&#x000A;<span class="go">NAME                      DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE&#x000A;</span><span class="gp">ovirt-flexvolume-driver   1         1         1         1            1           &lt;none&gt;</span>          59m&#x000A;</code></pre></div>
+<h3 id="default-storage-class">Default Storage Class</h3>
+<p>To run all the dynamic storage provisioning through oVirt's provisioner, 
+we need to set oVirt's storage class to the default.<br />
+Notice that a storage class defines which oVirt storage domain will<br />
+be used to provision the disks. Also it will set the disk type (thin/thick) provision to be the default, thin.</p>
+
+<div class="highlight"><pre class="highlight console"><code><span class="gp">[root@master ~]#</span> oc patch sc/ovirt <span class="se">\ </span>&#x000A;<span class="go">                    -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'&#x000A;</span></code></pre></div>
+<h3 id="connect-to-okd-web-console">Connect to OKD web console</h3>
+<p>You can now connect to the web console, and keep manage your cluster from there. To do so<br />
+first make sure you can resolve <code>master0.example.com</code> (substitute example.com with whatever<br />
+is set in <code>public_hosted_zone</code> customization variable, as mentioned above.)</p>
+
+<p>Browse to <code>https://master0.example.com:8443</code>  and login with whatever user/password you want:</p>
+
+<p><img src="/images/blog/2019-01-06/okd-web-console.png" /></p>
+
+<h1 id="summary">Summary</h1>
+<p>This blog post covered the installation of OKD on an oVirt VM. If you followed the step you now have<br />
+an all-in-one cluster with dynamic storage provisioning from oVirt storage.
+In the next post I'm going deploy Postgres DB in a container with persistent volume from oVirt
+storage domain.</p>
+
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/external-storage.html">external-storage</a></li>
+<li><a href="../../tag/flexdriver.html">flexdriver</a></li>
+<li><a href="../../tag/kubernetes.html">kubernetes</a></li>
+<li><a href="../../tag/open-source-virtualization.html">open source virtualization</a></li>
+<li><a href="../../tag/openshift.html">openshift</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/ovirt-4-2.html">oVirt 4.2</a></li>
+<li><a href="../../tag/provisioner.html">provisioner</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2019-01-06-ovirt-openshift-part-1.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2019-01-06-ovirt-openshift-part-1.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 11 Feb 2019 20:38 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

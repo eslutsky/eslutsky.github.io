@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DiskPermissions &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="disk-permissions">Disk Permissions</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The Disk Permissions feature is supplementary for Disk related features (Floating Disk, Shared Raw Disk, Direct LUN). It enables permissions management on a Disk.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Moti Asayag</li>
+  <li>Email: masayag@redhat.com</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<p>Disk inherits permissions from the VM it is attached to and from the storage domain it resides on (if there is one)
+When granting a user 'Create VM' permission, the user will be able to create a VM without creating Disks.
+Creating disks requires specific permissions for that, on the storage domain or the storage pool.
+Add permissions command will support adding permissions which are already existing in the system without failing the command in can-do-action as done today.
+It will serve the client when the user decide not to use permissions nor quota for Disk creation.
+When disk is created, 'DISK_OPERATOR' role is given to the user which created the Disk.
+When creating VM from template, the user should get VM_OPERATOR permissions for the VM (as is now) and DISK_OPERATOR for the VM Disks.</p>
+
+<h3 id="disk-permissions-and-quota">Disk Permissions and Quota</h3>
+
+<p>When Quota is enabled, Disk consumption will be enforced by the Quota, regardless the user's permissions on the Storage entities.
+When Quota is disabled for the Data Center, User must have permissions on Storage domain for disk operations requiring quota(create/move).
+Therefore when Quota is set as disabled for the Data Center, the GUI will suggest to add DISK_CREATOR permissions on the relevant storage domains to everyone.
+ The following section describes permissions for Disk entities.</p>
+
+<h3 id="disk-actions">Disk Actions</h3>
+
+<p>Required permissions for Disk related actions:</p>
+
+<ul>
+  <li>Create disk - requires permissions on the Storage Domain.</li>
+  <li>Attach disk to VM - requires permissions on the Disk and on the VM (applies for shared disk as well).</li>
+  <li>Detach disk from VM - requires permissions on the VM only. (Unlike attach disk that requires permissions on the VM and on the Disk).</li>
+  <li>Activate/Deactivate disk on VM (also Hot Plug) - requires permission on the VM.</li>
+  <li>Remove disk (from Disk tab)- permissions on the Disk.</li>
+  <li>Update disk - permissions on the Disk.</li>
+  <li>Move or copy disk - requires permissions on the Disk and on the target Storage Domain.</li>
+  <li>Add disk to VM - requires both permissions on the VM and on the storage domain (same as adding disk and attaching to VM).
+    <ul>
+      <li>Create - on storage domain</li>
+      <li>Attach - on disk and VM</li>
+      <li>Activate - on VM</li>
+    </ul>
+  </li>
+  <li>Remove VM - we'll extend the command to support either deleting disks from the system (the current behavior) or only detach the disks, permissions goes as follows:
+    <ul>
+      <li>If disks are marked for deletion - requires permissions on the removed Disks and on the VM.</li>
+      <li>If disks aren't marked for deletion - the disks are detached, therefore no permissions required for the Disk, only for removing VM.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="roles">Roles</h3>
+
+<h4 id="new-action-groups-for-disk-object-type">New Action Groups for Disk Object Type</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   CREATE_DISK - AddDisk, AddDiskToVm&#x000A;   EDIT_DISK_PROPERTIES - UpdateDisk, UpdateVM, Activate/Deactivate&#x000A;   ATTACH_DISK - AttachDiskToVm&#x000A;   CONFIGURE_DISK_STORAGE - MoveOrCopyDisk&#x000A;   DELETE_DISK - RemoveDisk, RemoveVm&#x000A;</code></pre></div>
+<h4 id="new-roles">New Roles</h4>
+
+<p>New predefined user role for disks <strong>DISK_OPERATOR</strong> will be given to user when creating a Disk (either from Disk tab or from VM's disk sub-tab).
+DISK_OPERATOR will be associated with the following action groups: CREATE_DISK, EDIT_DISK_PROPERTIES, ATTACH_DISK, CONFIGURE_DISK_STORAGE and DELETE_DISK.</p>
+
+<p><code> Add new role to </code><em><code>PredefinedRoles.java</code></em>
+       Add new upgrade script for new roles and updating existing roles.</p>
+
+<h4 id="updated-roles">Updated Roles</h4>
+
+<p>SuperUser, ENGINEPowerUser, ClusterAdmin, DataCenterAdmin, StorageAdmin and VmOperator should be extended with action groups of Disks (CREATE_DISK, EDIT_DISK_PROPERTIES, ATTACH_DISK, DELETE_DISK).
+Currently attach/detach is being executed as part of the UpdateVm action.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Existing roles are Update by upgrade script.&#x000A;   Extend `*`VdcObjectType`*` with Disk.&#x000A;</code></pre></div>
+<h3 id="db-changes">DB Changes</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Modify create_functions.sql:&#x000A;   Add support for Disk to `*`fn_get_entity_parents`*` stored-procedure.&#x000A;   Add support for Disk to `*`fn_get_entity_name`*` stored-procedure.&#x000A;</code></pre></div>
+<h3 id="upgrade-db">Upgrade DB</h3>
+
+<p>DB Upgrade should handle the following:</p>
+
+<ul>
+  <li>Add "Disk Operator" actions to the following predefined roles:
+    <ul>
+      <li>SuperUser, ENGINEPowerUser, ClusterAdmin, DataCenterAdmin, VmOperator and StorageAdmin.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Add "Disk Operator" permissions on the relevant Disks to:
+    <ul>
+      <li>"VM Operator" users (applies to users with permissions on *VM* with *Disks* attached to it).</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Permissions will be given on storage domains to users with CREATE_VM action group for the storage domains where the VM disks reside on (DISK_CREATOR role).
+    <ul>
+      <li>CREATE_VM on Cluster will allow creating Disks on the Storage Domains of the Data Center which the Cluster belongs to.</li>
+      <li>CREATE_VM on Data Center will allow creating Disks on the Storage Domains of the Data Center.</li>
+      <li>CREATE_VM on System will allow creating Disks on all Storage Domains in the System.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ui-changes">UI Changes</h3>
+
+<p>Add Permissions sub-tab under Disks main tab
+Add Disk Operator role to Roles Tree in:
+ <em>frontend/webadmin/modules/uicommonweb/src/main/java/org/ovirt/engine/ui/uicommonweb/models/configure/roles_ui/RoleTreeView.java</em></p>
+
+<p><code> </code><em><code>frontend/webadmin/modules/uicompat/src/main/java/org/ovirt/engine/ui/uicompat/Enums.java</code></em>
+<code> </code><em><code>frontend/webadmin/modules/uicompat/src/main/resources/org/ovirt/engine/ui/uicompat/Enums.properties</code></em></p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Permission management for Disks enhances the Disk functionality, provides flexibility to users and protects it from misuse.
+Granting permissions on Disk to user is done via the Administrator Portal or using RESTful API.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>The Disk Permissions is dependent on the following features:</p>
+
+<ul>
+  <li>SharedRawDisk</li>
+  <li>Floating Disk</li>
+  <li>Direct LUN</li>
+</ul>
+
+<p>Affected oVirt projects:</p>
+
+<ul>
+  <li>Engine-core</li>
+  <li>Admin Portal</li>
+</ul>
+
+<h2 id="open-issues">Open issues</h2>
+
+<ul>
+  <li>Direct LUN - Add/Remove Direct LUN disk has its own commands or share the same Disk Add/Remove ? If share, need to distinguish the required permission by the Disk in the <em>CommandBase.getPermissionCheckSubjects</em></li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p><a href="Category: Feature">Category: Feature</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/diskpermissions.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/diskpermissions.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

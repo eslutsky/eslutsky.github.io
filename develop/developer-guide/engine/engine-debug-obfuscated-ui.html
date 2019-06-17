@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Engine Debug Obfuscated UI &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/engine/">Engine</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-engine-debug-obfuscated-ui">oVirt Engine Debug Obfuscated UI</h1>
+
+<h2 id="debug-obfuscated-ui">Debug Obfuscated UI</h2>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Alexander Wels (awels)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#119;&#101;&#108;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#119;&#101;&#108;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>Sometimes during the usage of the Web admin or User portal you will get a popup about an uncaught exception like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Uncaught exception occurred. Please try reloading the page. Details:  [some information]&#x000A;</code></pre></div>
+<p>In general this message lets us know something went wrong, but is less than helpful in determining what exactly went wrong. The information provided usually includes some obfuscated code like 'c is null' or 'cannot get field O5d'. None of which is very helpful.</p>
+
+<p>Why is this happening now? Recently we introduced some code that captures all exceptions that are not handled anywhere else, and displays it to the user. Before the un-handled exceptions would be written to the browser console and mostly ignored unless someone looked at the browser console. They are still written to the console, but they are also reported to the user, this has some benefits and some negatives. The benefits include the fact that the user can now report something is going wrong since they are being told. The negatives include the fact that the user sees the fact that something goes wrong and they conclude the product is bad. The developers cannot fix issues they are not aware of, so in the short term we will have more bug reports but in the long term we will have a better product due the more transparent exception reporting.</p>
+
+<h2 id="debugging-steps">Debugging steps</h2>
+
+<h4 id="getting-the-full-stack-trace-from-the-console">Getting the full stack trace from the console</h4>
+
+<p>As before the full stack trace is being written to the console, but the user is now aware of it via the pop-up message. To get the full stack trace you can open up the browser console. On most browsers you can start the development tools by pressing <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>i</kbd>.</p>
+
+<p>Once the development tools are open, you can switch to the console tab. Scroll down to where you see the exception as shown in the following diagram:</p>
+
+<p><img alt="" width="1061" height="322" src="/images/wiki/exception_console.png?1560777612" /></p>
+
+<p>Your exception will be different but the top line as highlighted will be the important one.</p>
+
+<h4 id="making-sure-we-have-the-right-symbol-maps">Making sure we have the right symbol maps</h4>
+
+<p>Now that we have the stack trace and the most likely culprit of the exception, we don't know what it is. When the UI is built, goes through a process of optimizing and obfuscating the original code. This is done to reduce the download size and optimize the performance of the application. The down side of this is that one can't easily tell what is going on. During this process another file is generated called a symbol map. This file maps the obfuscated code to the original source code. Due to the size of the file this is not installed by default. To install the symbol maps run the following command as root:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install ovirt-engine-webadmin-portal-debuginfo ovirt-engine-userportal-debuginfo&#x000A;# If you are running rhv&#x000A;yum install rhevm-webadmin-portal-debuginfo rhevm-userportal-debuginfo&#x000A;</code></pre></div>
+<p>After installing these packages, the engine should be restarted (regardless of whether this is oVirt or RHV)</p>
+
+<p>This will install the symbol maps in <code>/usr/share/ovirt-engine/gwt-symbols/webadmin/symbolMaps</code> and <code>/usr/share/ovirt-engine/gwt-symbols/userportal/symbolMaps</code>. Each directory will contain a bunch of files called <code>&lt;permutation hash&gt;.symbolMap</code>.</p>
+
+<h4 id="determine-the-permutation-you-are-using">determine the permutation you are using</h4>
+
+<p>Some browsers will include the permutation file name at the bottom of the exception. If you are lucky enough to have a browser that does that, you can skip this step and use the value from the bottom of the exception.</p>
+
+<p>The way the UI is optimized it will generate one permutation for each combination of supported browser and supported locale. When you log into the web admin or user portal a script runs that determines which locale and which browser you are using, and loads the appropriate permutation for that combination. To determine which permutation you have loaded open up the developer tools in your browser again like above with <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>i</kbd>. Then switch to the network tab as shown in the following diagram and look for the <permutation>.cache.html line.</permutation></p>
+
+<p><img alt="" width="1221" height="356" src="/images/wiki/exception_network.png?1560777612" /></p>
+
+<h4 id="putting-it-all-together">Putting it all together</h4>
+
+<p>Now that you know which permutation you are using, open up the associated <code>&lt;permutation&gt;.symbolMap</code> with your favorite editor. Search for the symbol you found in step 1. This will look something like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Tjb,com.google.gwt.lang.ClassLiteralHolder::Lcom_google_gwt_event_dom_client_KeyEvent_2_classLit,com.google.gwt.lang.ClassLiteralHolder,Lcom_google_gwt_event_dom_client_KeyEvent_2_classLit,com/google/gwt/dev/jjs/intrinsic/com/google/gwt/lang/ClassLiteralHolder.java,23,-1&#x000A;</code></pre></div>
+<p>The part in this instance, that the developers are interested in is <code>ClassLiteralHolder.java,23</code>. This means that the symbol is defined in line 23 of the <code>ClassLiteralHolder.java</code> file. This will help them determine the source of the actual exception.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/engine/engine-debug-obfuscated-ui.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/engine/engine-debug-obfuscated-ui.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

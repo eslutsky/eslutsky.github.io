@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Now Supports OVS-DPDK &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='igoihman' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='oVirt Now Supports OVS-DPDK' property='og:title'>
+<meta content='DPDK (Data Plane Development Kit) provides high-performance packet processing libraries and user space drivers.
+Open vSwitch uses DPDK libraries to perform entirely within the user space. According to Intel ONP performance tests, using OVS with DPDK can provide a huge performance enhancement, increasing network packet throughput and reducing latency.
+
+OVS-DPDK has been added to the oVirt Master branch as an experimental feature. The following post describes the OVS-DPDK installation and configuration procedures.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/09/ovs-dpdk.html' property='og:url'>
+<meta content='2017-09-02T10:00:00Z' property='article:published_time'>
+<meta content='igoihman' property='article:author:username'>
+<meta content='Open vSwitch' property='article:tag'>
+<link href='/blog/tag/open vswitch.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OVS-DPDK' property='article:tag'>
+<link href='/blog/tag/ovs-dpdk.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='oVirt Now Supports OVS-DPDK' name='twitter:title'>
+<meta content='DPDK (Data Plane Development Kit) provides high-performance packet processing libraries and user space drivers.
+Open vSwitch uses DPDK libraries to perform entirely within the user space. According to Intel ONP performance tests, using OVS with DPDK can provide a huge performance enhancement, increasing network packet throughput and reducing latency.
+
+OVS-DPDK has been added to the oVirt Master branch as an experimental feature. The following post describes the OVS-DPDK installation and configuration procedures.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>09</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+oVirt Now Supports OVS-DPDK
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/igoihman.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/igoihman/">igoihman</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-09-02T10:00:00Z'>
+Saturday  2 September 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p><a href="http://dpdk.org/">DPDK</a> (Data Plane Development Kit) provides high-performance packet processing libraries and user space drivers.
+<a href="http://openvswitch.org/">Open vSwitch</a> uses DPDK libraries to perform entirely within the user space. According to <a href="https://download.01.org/packet-processing/ONPS2.1/Intel_ONP_Release_2.1_Performance_Test_Report_Rev1.0.pdf">Intel ONP performance tests</a>, using OVS with DPDK can provide a huge performance enhancement, increasing network packet throughput and reducing latency.</p>
+
+<p>OVS-DPDK has been added to the oVirt Master branch as an experimental feature. The following post describes the OVS-DPDK installation and configuration procedures.</p>
+
+<p></p>
+
+<p><strong>Please note:</strong> Accessing the OVS-DPDK feature requires installing the oVirt Master version. In addition, OVS-DPDK cannot access any features located within the Linux kernel. This includes Linux bridge, tun/tap devices, iptables, etc.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>In order to achieve the best performance, please follow the instructions at:
+ <a href="http://dpdk.org/doc/guides-16.11/linux_gsg/nic_perf_intel_platform.html">http://dpdk.org/doc/guides-16.11/linux_gsg/nic_perf_intel_platform.html</a></p>
+
+<p>The network card must be on the supported vendor matrix, located here: <a href="http://dpdk.org/doc/nics">http://dpdk.org/doc/nics</a></p>
+
+<p>Ensure that your system supports 1GB hugepages:
+<code>grep -q pdpe1gb /proc/cpuinfo &amp;&amp; echo "1GB supported"</code></p>
+
+<ul>
+  <li>Hardware support: Make sure VT-d / AMD-Vi is enabled in BIOS</li>
+  <li>Kernel support: When adding a new host via the oVirt GUI, go to Hosts -&gt; Edit &gt; Kernel, and add the following parameters to the Kernel command line:  <code>iommu=pt intel_iommu=on default_hugepagesz=1GB hugepagesz=1G hugepages=N</code>
+In the event that 1GB hugepages is not supported, drop the <code>default_hugepagesz=1GB hugepagesz=1G</code>. The default hugepages size will be used instead.</li>
+</ul>
+
+<p>It is best to configure the host before installing it on oVirt-engine. If changes are made after VDSM is installed, move the host to maintenance mode and reboot the host and re-install it for the changes to take effect.</p>
+
+<h2 id="configuring-ovs-and-dpdk-on-the-host">Configuring OVS and DPDK on the Host</h2>
+
+<h3 id="install-dpdk-1611-packages">Install dpdk 16.11 packages:</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install dpdk dpdk-tools driverctl&#x000A;</code></pre></div>
+<h3 id="bind-nics-to-dpdk">Bind NICs to DPDK</h3>
+
+<p>In order to run a DPDK application, a suitable UIO module should be loaded into kernel memory.
+Available modules are: uio_pci_generic, igb_uio and vfio-pci.
+In many cases, the standard uio_pci_generic module included in the Linux kernel can provide the UIO capability.
+For some devices which lack support for legacy interrupts, igb_uio module should be used. Note that it is an out-of-tree kernel module.
+VFIO is the preferred driver in latest DPDK versions, in platforms that support VFIO.</p>
+
+<p>All ports that you would like to run DPDK application should be bound to one of the modules before OVS is started. DPDK will ignore all devices which are not bound to one of the modules above.</p>
+
+<p>Load vfio-pci</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># modprobe vfio_pci&#x000A;</code></pre></div>
+<p>Find the appropriate network devices you wish to bind:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># lspci | grep Ether&#x000A;</code></pre></div>
+<p>Review the status of current port bindings:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># driverctl -v list-devices&#x000A;</code></pre></div>
+<p>Bind the device to DPDK:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># driverctl set-override &lt;PCI_ID&gt; vfio-pci&#x000A;</code></pre></div>
+<h3 id="hugepages-support">Hugepages Support</h3>
+<p>Hugepages support is required for increasing performance. It allows the Linux kernel to manage larger pages, in addition to the standard 4K pages.
+Modern CPUs use a page-based mechanism to translate a virtual address into a physical address. The mapping is stored in page tables and can grow significantly large. To make the translation faster, we use a transparent cache called Translation Lookaside Buffer (TLB). A TLB miss will be handled by the hardware, which will increase the translation time significantly.
+TLB misses can be reduced by increasing the page size. Therefore, 1GB pages are preferable.</p>
+
+<p>The number of pages can vary according to usage requirements but is limited to memory size.
+Hugepages must be marked as shared in order to enable host and guest communication, as packets are transmitted and received on buffers allocated on hugepages memory.</p>
+
+<p>Review custom properties:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-config -g UserDefinedVMProperties&#x000A;</code></pre></div><p>Add engine custom properties for hugepages support (followed by engine restart)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)"&#x000A;</code></pre></div>
+<h3 id="enable-dpdk-in-ovs">Enable DPDK in OVS</h3>
+
+<p>To enable DPDK functionality, ovs-vscwhitchd should receive the following parameters:</p>
+
+<ul>
+  <li>Set <code>dpdk-init</code> to allow OVS to initialize and support DPDK ports:</li>
+</ul>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true&#x000A;</code></pre></div>
+<ul>
+  <li><code>dpdk-socket-mem</code>: A comma-separated list of the mount of memory to allocate from each NUMA node. It is important to allocate memory on all NUMA nodes that have DPDK interfaces associated with them, otherwise, the NUMA node cannot be used and errors will occur.
+For example, in a dual socket system, we allocate 1GB only for NUMA node 0:</li>
+</ul>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="1024,0"&#x000A;</code></pre></div>
+<ul>
+  <li><code>pmd-cpu-mask</code>: PMD (poll mode driver) threads are used to poll DPDK devices for new packets instead of using the NIC driver that interacts with the kernel.
+To better scale the workloads across cores, multiple PMD threads can be created and pinned to CPU cores by explicitly specifying pmd-cpu-mask. Ensure that cores from the same NUMA nodes as the network device are enabled. In case of hyper-threading, it is best to use sibling cpus.</li>
+</ul>
+
+<p>eg: To spawn 2 PMD threads and pin them to cores 1, 2:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=0x6&#x000A;</code></pre></div>
+<ul>
+  <li><code>dpdk-lcore-mask</code>: Specifies the CPU cores on which DPDK lcore threads should be spawned and expects a hex string. These are threads for OVS usage other than PMD. They cannot overlap with PMD or vCPUs threads.</li>
+</ul>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-lcore-mask=0x2&#x000A;</code></pre></div>
+<p>Restart openvswitch service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># sudo systemctl restart openvswitch&#x000A;</code></pre></div>
+<p>Verify that DPDK is enabled:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ovs-vsctl get Open_vSwitch . iface_types&#x000A;[dpdk, dpdkr, dpdkvhostuser, dpdkvhostuserclient, geneve, gre, internal, ipsec_gre, lisp, patch, stt, system, tap, vxlan]&#x000A;</code></pre></div>
+<h2 id="ovs-dpdk-in-ovirt">OVS-DPDK in oVirt</h2>
+
+<ul>
+  <li>Upon creating a new cluster, choose OVS as the switch type.</li>
+  <li>When setting up host networks, DPDK-bound NICs are shown in the dialog,as well as Linux-controlled ones</li>
+  <li>When creating a network on a DPDK device, an OVS bridge with datapath_type=’netdev’ automatically attached to a DPDK device, will be created.</li>
+</ul>
+
+<h3 id="vms">VMs</h3>
+
+<p>VMs will be created with vhost-user network interface. In order to support vhostuser interfaces, hugepages should be configured on the VM.</p>
+
+<p>In the oVirt GUI, configure hugepages size, number of pages to use and enable shared hugepages.
+Choose <code>hugepages=1048576</code> and <code>hugepages_shared=true</code>.</p>
+
+<p>Vhostuser XML file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;interface type="vhostuser"&gt;&#x000A;            &lt;address bus="0x00" domain="0x0000" function="0x0" slot="0x04" type="pci" /&gt;&#x000A;            &lt;mac address="00:1a:4a:16:01:54" /&gt;&#x000A;            &lt;model type="virtio" /&gt;&#x000A;            &lt;source mode="server" path="/var/run/vdsm/vhostuser/ee844c42-7075-3bf5-86c2-ec831f287c22" type="unix" /&gt;&#x000A;            &lt;filterref filter="vdsm-no-mac-spoofing" /&gt;&#x000A;            &lt;link state="up" /&gt;&#x000A;            &lt;bandwidth /&gt;&#x000A;        &lt;/interface&gt;&#x000A;</code></pre></div>
+<h3 id="dpdk-in-the-guest">DPDK in the Guest</h3>
+
+<p>DPDK can be used in the guest in order to run a high-speed packet forwarding program between vhostuser ports.
+VM should be configured to support DPDK using the same steps introduced in the host: configure hugepages, install dpdk package, load the suitable kernel module and bind network devices to DPDK.
+Testpmd is a good example of a DPDK application designated for testing packet forwarding.</p>
+
+<p><code># sudo testpmd -l 0-3 --socket-mem 1024 -n 4 -- -i</code></p>
+
+<ul>
+  <li><code>-l</code> : List of cores to run on</li>
+  <li><code>--socket-memory</code>: memory to allocate on specific sockets</li>
+  <li><code>-n</code> : number of memory channels to use</li>
+  <li><code>-i</code> : interactive mode</li>
+</ul>
+
+<p>For more options, please consult testpmd <a href="http://dpdk.org/doc/guides/testpmd_app_ug/run_app.html">documentation</a>.</p>
+
+<h3 id="limitations">Limitations</h3>
+
+<ul>
+  <li>hugepages must be configured for each host via the command line.</li>
+  <li>Shared hugepages must be requested for every VM via a custom property.</li>
+  <li>Performance is highly affected from the hardware and the setup configuration.</li>
+  <li>NIC Hotplug / Hotunplug and live migration are currently not supported.</li>
+</ul>
+
+<p>Ways to achieve optimized performance will be discussed in a follow up post.</p>
+
+<h3 id="references">References</h3>
+<ul>
+  <li><a href="https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/intro/install/dpdk.rst">https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/intro/install/dpdk.rst</a></li>
+  <li><a href="https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/howto/dpdk.rst">https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/howto/dpdk.rst</a></li>
+  <li><a href="https://software.intel.com/en-us/articles/vhost-user-numa-awareness-in-open-vswitch-with-dpdk">https://software.intel.com/en-us/articles/vhost-user-numa-awareness-in-open-vswitch-with-dpdk</a></li>
+  <li><a href="https://developers.redhat.com/blog/2017/06/28/ovs-dpdk-parameters-dealing-with-multi-numa/">https://developers.redhat.com/blog/2017/06/28/ovs-dpdk-parameters-dealing-with-multi-numa/</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/open-vswitch.html">Open vSwitch</a></li>
+<li><a href="../../tag/ovs-dpdk.html">OVS-DPDK</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-09-02-ovs-dpdk.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-09-02-ovs-dpdk.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 6 Sep 2017 08:33 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

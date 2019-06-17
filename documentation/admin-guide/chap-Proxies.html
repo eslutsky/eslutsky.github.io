@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Proxies &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-20-proxies">Chapter 20: Proxies</h1>
+
+<h2 id="spice-proxy-overview">SPICE Proxy Overview</h2>
+
+<p>The SPICE Proxy is a tool used to connect SPICE Clients to virtual machines when the SPICE Clients are outside the network that connects the hypervisors. Setting up a SPICE Proxy consists of installing Squid on a machine and configuring <code>iptables</code> to allow proxy traffic through the firewall. Turning a SPICE Proxy on consists of using <code>engine-config</code> on the Engine to set the key <code>SpiceProxyDefault</code> to a value consisting of the name and port of the proxy. Turning a SPICE Proxy off consists of using <code>engine-config</code> on the Engine to remove the value to which the key <code>SpiceProxyDefault</code> has been set.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** The SPICE Proxy can only be used in conjunction with the standalone SPICE client, and cannot be used to connect to virtual machines using SPICE HTML5 or noVNC.&#x000A;</code></pre></div>
+<h3 id="spice-proxy-machine-setup">SPICE Proxy Machine Setup</h3>
+
+<p>This procedure explains how to set up a machine as a SPICE Proxy. A SPICE Proxy makes it possible to connect to the oVirt network from outside the network. We use Squid in this procedure to provide proxy services.</p>
+
+<p><strong>Installing Squid on Enterprise Linux</strong></p>
+
+<ol>
+  <li>
+    <p>Install <code>Squid</code> on the Proxy machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install squid&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Open <strong>/etc/squid/squid.conf</strong>. Change:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> http_access deny CONNECT !SSL_ports&#x000A;</code></pre></div>
+    <p>to:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> http_access deny CONNECT !Safe_ports&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Start the proxy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # service squid start&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Open the default squid port:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # iptables -A INPUT -p tcp --dport 3128 -j ACCEPT&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Make this iptables rule persistent:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # service iptables save&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>You have now set up a machine as a SPICE proxy. Before connecting to the oVirt network from outside the network, activate the SPICE proxy.</p>
+
+<h3 id="turning-on-a-spice-proxy">Turning On a SPICE Proxy</h3>
+
+<p>This procedure explains how to activate (or turn on) the SPICE proxy.</p>
+
+<p><strong>Activating SPICE Proxy</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine, use the engine-config tool to set a proxy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s SpiceProxyDefault=someProxy&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # service ovirt-engine restart&#x000A;</code></pre></div>
+    <p>The proxy must have this form:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> protocol://[host]:[port]&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Only SPICE clients shipped with Enterprise Linux 6.7, Enterprise Linux 7.2, or later, support HTTPS proxies. Older clients only support HTTP. If HTTPS is specified for older clients, the client will ignore the proxy setting and attempt a direct connection to the host.</p>
+  </li>
+</ol>
+
+<p>SPICE Proxy is now activated (turned on). It is now possible to connect to the oVirt network through the SPICE proxy.</p>
+
+<h3 id="turning-off-a-spice-proxy">Turning Off a SPICE Proxy</h3>
+
+<p>This procedure explains how to turn off (deactivate) a SPICE proxy.</p>
+
+<p><strong>Turning Off a SPICE Proxy</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> $ ssh root@[IP of Engine]&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the following command to clear the SPICE proxy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-config -s SpiceProxyDefault=""&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # service ovirt-engine restart&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>SPICE proxy is now deactivated (turned off). It is no longer possible to connect to the oVirt network through the SPICE proxy.</p>
+
+<h2 id="squid-proxy">Squid Proxy</h2>
+
+<h3 id="installing-and-configuring-a-squid-proxy">Installing and Configuring a Squid Proxy</h3>
+
+<p><strong>Summary</strong></p>
+
+<p>This section explains how to install and configure a Squid proxy to the User Portal. A Squid proxy server is used as a content accelerator. It caches frequently-viewed content, reducing bandwidth, and improving response times.</p>
+
+<p><strong>Configuring a Squid Proxy</strong></p>
+
+<ol>
+  <li>
+    <p>Obtain a keypair and certificate for the HTTPS port of the Squid proxy server. You can obtain this keypair the same way that you would obtain a keypair for another SSL/TLS service. The keypair is in the form of two PEM files which contain the private key and the signed certificate. For this procedure, we assume that they are named <strong>proxy.key</strong> and <strong>proxy.cer</strong>.</p>
+
+    <p><strong>Note:</strong> The keypair and certificate can also be generated using the certificate authority of the engine. If you already have the private key and certificate for the proxy and do not want to generate it with the engine certificate authority, skip to the next step.</p>
+  </li>
+  <li>
+    <p>Choose a host name for the proxy. Then, choose the other components of the distinguished name of the certificate for the proxy.</p>
+
+    <p><strong>Note:</strong> It is good practice to use the same country and same organization name used by the engine itself. Find this information by logging in to the machine where the Engine is installed and running the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # openssl x509 -in /etc/pki/ovirt-engine/ca.pem -noout -subject&#x000A;</code></pre></div>
+    <p>This command outputs something like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> subject= /C=US/O=Example Inc./CN=engine.example.com.81108&#x000A;</code></pre></div>
+    <p>The relevant part here is <code>/C=US/O=Example Inc.</code>. Use this to build the complete distinguished name for the certificate for the proxy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> /C=US/O=Example Inc./CN=proxy.example.com&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Log in to the proxy machine and generate a certificate signing request:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # openssl req -newkey rsa:2048 -subj '/C=US/O=Example Inc./CN=proxy.example.com' -nodes -keyout proxy.key -out proxy.req&#x000A;</code></pre></div>
+    <p><strong>Important:</strong> You must include the quotes around the distinguished name for the certificate. The <code>-nodes</code> option ensures that the private key is not encrypted; this means that you do not need to enter the password to start the proxy server.</p>
+
+    <p>The command generates two files: <strong>proxy.key</strong> and <strong>proxy.req</strong>. <strong>proxy.key</strong> is the private key. Keep this file safe. <strong>proxy.req</strong> is the certificate signing request. <strong>proxy.req</strong> does not require any special protection.</p>
+  </li>
+  <li>
+    <p>To generate the signed certificate, copy the certificate signing request file from the proxy machine to the Engine machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp proxy.req engine.example.com:/etc/pki/ovirt-engine/requests/.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Log in to the Engine machine and sign the certificate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # /usr/share/ovirt-engine/bin/pki-enroll-request.sh --name=proxy --days=3650 --subject='/C=US/O=Example Inc./CN=proxy.example.com'&#x000A;</code></pre></div>
+    <p>This signs the certificate and makes it valid for 10 years (3650 days). Set the certificate to expire earlier, if you prefer.</p>
+  </li>
+  <li>
+    <p>The generated certificate file is available in the directory <strong>/etc/pki/ovirt-engine/certs</strong> and should be named <strong>proxy.cer</strong>. On the proxy machine, copy this file from the Engine machine to your current directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp engine.example.com:/etc/pki/ovirt-engine/certs/proxy.cer .&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure both <strong>proxy.key</strong> and <strong>proxy.cer</strong> are present on the proxy machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ls -l proxy.key proxy.cer&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the Squid proxy server package on the proxy machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install squid&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Move the private key and signed certificate to a place where the proxy can access them, for example to the <strong>/etc/squid</strong> directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp proxy.key proxy.cer /etc/squid/.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Set permissions so that the <code>squid</code> user can read these files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># chgrp squid /etc/squid/proxy.*&#x000A;# chmod 640 /etc/squid/proxy.*&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The Squid proxy must verify the certificate used by the engine. Copy the Engine certificate to the proxy machine. This example uses the file path <strong>/etc/squid</strong>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># scp engine.example.com:/etc/pki/ovirt-engine/ca.pem /etc/squid/.&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> The default CA certificate is located in <strong>/etc/pki/ovirt-engine/ca.pem</strong> on the Engine machine.</p>
+  </li>
+  <li>
+    <p>Set permissions so that the <code>squid</code> user can read the certificate file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># chgrp squid /etc/squid/ca.pem&#x000A;# chmod 640 /etc/squid/ca.pem&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>If SELinux is in enforcing mode, change the context of port 443 using the <code>semanage</code> tool to permit Squid to use port 443:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install policycoreutils-python&#x000A;# semanage port -m -p tcp -t http_cache_port_t 443&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Replace the existing Squid configuration file with the following:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>https_port 443 key=/etc/squid/proxy.key cert=/etc/squid/proxy.cer ssl-bump defaultsite=engine.example.com&#x000A;cache_peer engine.example.com parent 443 0 no-query originserver ssl sslcafile=/etc/squid/ca.pem name=engine login=PASSTHRU&#x000A;cache_peer_access engine allow all&#x000A;ssl_bump allow all&#x000A;http_access allow all&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the Squid proxy server:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># systemctl restart squid.service&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Squid Proxy in the default configuration will terminate its connection after 15 idle minutes. To increase the amount of time before Squid Proxy terminates its idle connection, adjust the <code>read_timeout</code> option in <strong>squid.conf</strong> (for instance <code>read_timeout 10 hours</code>).</p>
+  </li>
+</ol>
+
+<h2 id="websocket-proxy">Websocket Proxy</h2>
+
+<h3 id="websocket-proxy-overview">Websocket Proxy Overview</h3>
+
+<p>The websocket proxy allows users to connect to virtual machines via noVNC and SPICE HTML5 consoles. Previously, the websocket proxy could only run on the oVirt Engine machine, but now the proxy can run on any machine that has access to the network.</p>
+
+<p>The websocket proxy can be installed and configured on the oVirt Engine machine during the initial configuration (see "Configuring the oVirt Engine" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>), or on a separate machine (see "Installing a Websocket Proxy on a Separate Machine" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>).</p>
+
+<p>The websocket proxy can also be migrated from the Engine machine to a separate machine. See the "Migrating the Websocket Proxy to a Separate Machine" section below.</p>
+
+<h3 id="migrating-the-websocket-proxy-to-a-separate-machine">Migrating the Websocket Proxy to a Separate Machine</h3>
+
+<p>For security or performance reasons the websocket proxy can run on a separate machine that does not run oVirt Engine. The procedure to migrate the websocket proxy from the Engine machine to a separate machine involves removing the websocket proxy configuration from the Engine machine, then installing the proxy on the separate machine.</p>
+
+<p>The <code>engine-cleanup</code> command can be used to remove the websocket proxy from the Engine machine.</p>
+
+<p><strong>Migrating the Websocket Proxy to a Separate Machine</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine machine, run <code>engine-cleanup</code> to remove the required configuration.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-cleanup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Type <code>No</code> when asked to remove all components and press <strong>Enter</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Do you want to remove all components? (Yes, No) [Yes]: No&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Type <code>No</code> when asked to remove the engine and press <strong>Enter</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Do you want to remove the engine? (Yes, No) [Yes]: No&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Type <code>Yes</code> when asked to remove the websocket proxy and press <strong>Enter</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Do you want to remove the WebSocket proxy? (Yes, No) [No]: Yes&#x000A;</code></pre></div>
+    <p>Select <code>No</code> if asked to remove any other components.</p>
+  </li>
+  <li>
+    <p>Install and configure the proxy on the separate machine. See "Installing a Websocket Proxy on a Separate Machine" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a> for instructions.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Log_Files">Chapter 19: Log Files</a><br />
+<strong>Next:</strong> <a href="appe-VDSM_and_Hooks">Appendix A: VDSM and Hooks</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-proxies">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Proxies.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Proxies.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 15 Feb 2019 13:18 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

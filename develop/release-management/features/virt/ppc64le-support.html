@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+ppc64le support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ppc64le-support">ppc64le Support</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature adds full support for ppc64le platform. Most of the requirements are already implemented by <a href="/develop/release-management/features/vdsm/for-ppc64/">VDSM's support</a>.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>name: Martin Polednik (Martin Polednik)</li>
+  <li>email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#112;&#111;&#108;&#101;&#100;&#110;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#112;&#111;&#108;&#101;&#100;&#110;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Released in oVirt 3.6</li>
+</ul>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li>ppc64le machine - currently supported is POWER8</li>
+  <li>RHEL 7.2 (ppc64le)</li>
+</ul>
+
+<h2 id="differences-between-ppc64le-and-x86_64">Differences Between ppc64le and x86_64</h2>
+
+<p>Most of the differences are already solved by lower components of the stack. That said, there are several details that are not abstracted at all. In order to overcome these issues, VDSM must take care of gathering the information from sources relevant for the platform and Engine must use them adequately.</p>
+
+<h3 id="hardware-info">Hardware Info</h3>
+
+<h4 id="device-tree">Device Tree</h4>
+
+<p>First difference is hardware information. On x86_64, we use <code>dmidecode</code> to read the low level system information. POWER8 lacks DMI table at all, but another structure - device tree - is used. There are several keys in our info structure, such as <code>system-id</code>, <code>model-name</code> and <code>vendor</code>. Using device-tree to obtain them is possibly via <code>procfs</code>:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c"># cat /proc/device-tree/system-id</span>&#x000A;&lt;value&gt;&#x000A;<span class="c"># cat /proc/device-tree/model-name</span>&#x000A;IBM Power System S822L&#x000A;<span class="c"># cat /proc/device-tree/vendor</span>&#x000A;IBM&#x000A;</code></pre></div>
+<p>Similar information found in <code>dmidecode</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Handle 0x0001, DMI type 1, 27 bytes&#x000A;System Information&#x000A;        Manufacturer: HP&#x000A;        Product Name: ProLiant DL160 G6&#x000A;        Version:&#x000A;        Serial Number: &lt;value&gt;&#x000A;        UUID: &lt;value&gt;&#x000A;        Wake-up Type: Power Switch&#x000A;        SKU Number: &lt;value&gt;&#x000A;        Family:&#x000A;</code></pre></div>
+<h4 id="different-cpuinfo-format">Different cpuinfo Format</h4>
+
+<p>The fields in cpuinfo have different values. Following table displays how x86_64 fields map to ppc64le fields.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>'flags'      -&gt; __not there __&#x000A;'cpu MHz'    -&gt; 'clock'&#x000A;'model name' -&gt; 'cpu'&#x000A;</code></pre></div>
+<h4 id="cpu-flags">Cpu Flags</h4>
+
+<p>Libvirt uses notion of baseline CPUs for x86_64, meaning that the model of CPU is mapped by it's flags to a closest baseline subset of these flags. This does not apply for ppc64le where no flags are reported. Since there are data passed in the flags field other then flags (supported baseline CPUs), we use an arbitrary flag <code>powernv</code>. The machine type is then read from libvirt's capabilities XML in a same way as on x86_64.</p>
+
+<h3 id="machine-type-differences">Machine Type Differences</h3>
+
+<h4 id="graphics">Graphics</h4>
+
+<p>Various constraints must be considered when launching ppc64le VM. Most notably the SPICE is not supported, therefore VNC (with virtio-vga video) must be used.</p>
+
+<h4 id="cpu">CPU</h4>
+
+<p>The libvirt CPU format for ppc64le is quite different from ppc64le. Relevant information is that POWER8 is a magic constant in qemu, meaning 'select the most appropriate CPU for the host'. This is achieved by following XML. Also note that this mode currently allows migration between POWER8 hosts in the same cluster.</p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;cpu&gt;</span>&#x000A;    <span class="nt">&lt;model&gt;</span>POWER8<span class="nt">&lt;/model&gt;</span>&#x000A;<span class="nt">&lt;/cpu&gt;</span>&#x000A;</code></pre></div>
+<p>Using host-model is reserved for POWER compatibility modes. These are not used within VDSM.</p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;cpu</span> <span class="na">mode=</span><span class="s">"host-model"</span><span class="nt">&gt;</span>&#x000A;    <span class="nt">&lt;model&gt;</span>POWER7<span class="nt">&lt;/model&gt;</span>&#x000A;<span class="nt">&lt;/cpu&gt;</span>&#x000A;</code></pre></div>
+<h4 id="input">Input</h4>
+
+<p>ppc64le uses USB instead of PS2 for mouse. Since the preferred way of interacting with VM is using absolute pointing device (tablet) that is USB on both platforms, this is mostly a fallback.</p>
+
+<h4 id="smbios">SMBIOS</h4>
+
+<p>Not relevant for ppc64le at all.</p>
+
+<h2 id="updating-firmware-from-the-os">Updating firmware from the OS</h2>
+
+<p>The following instructions are taken from <a href="https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/W51a7ffcf4dfd_4b40_9d82_446ebc23c550/page/Updating%20firmware%20on%20a%20Power%20system%20running%20Ubuntu">IBM's public wiki</a>. This manual covers update from inside of the OS, no HMC or any other tools available.</p>
+
+<ul>
+  <li>1) Determine the model, serial number and firmware version(?) of the machine.</li>
+</ul>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c"># cat /proc/cpuinfo  | grep model</span>&#x000A;model           : 8247-22L&#x000A;&#x000A;<span class="c"># cat /proc/device-tree/system-id</span>&#x000A;&lt;serial number&gt;&#x000A;&#x000A;<span class="c"># lsmcode | awk '{print $6}'</span>&#x000A;FW810.33&#x000A;</code></pre></div>
+<ul>
+  <li>2) Enter the information obtained in 1) at <a href="http://www-933.ibm.com/support/fixcentral/">http://www-933.ibm.com/support/fixcentral/</a> and download the firmware version requested. The only required part is the rpm.</li>
+  <li>3) Install the rpm. The firmware image can be located at <code>/tmp/fwupdate</code>.</li>
+</ul>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c"># rpm -Uvh --ignoreos 01SV810_133_081.rpm</span>&#x000A;&#x000A;Preparing...                          <span class="c">################################# [100%]</span>&#x000A;Updating / installing...&#x000A;   1:01SV810_133_081-1.1-1            <span class="c">################################# [100%]</span>&#x000A;</code></pre></div>
+<ul>
+  <li>4) Verify the firmware.</li>
+</ul>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c"># update_flash -v -f /tmp/fwupdate/01SV810_133_081.img</span>&#x000A;info: Current Temporary side will be committed to&#x000A;Permanent side before being replaced with the new&#x000A;image.&#x000A;&#x000A;Projected Flash Update Results:&#x000A;Current T Image: SV810_133&#x000A;Current P Image: SV810_081&#x000A;New T Image:     SV810_133&#x000A;New P Image:     SV810_133&#x000A;</code></pre></div>
+<ul>
+  <li>5) If everything seems correct, update the firmware.</li>
+</ul>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="c"># update_flash -f /tmp/fwupdate/01SV810_133_081.img</span>&#x000A;</code></pre></div>
+<ul>
+  <li>6) The script will reboot the machine and update the firmware. Do not do anything, wait for the process to finish.</li>
+  <li>7) The system will eventually boot up. After using it with the new firmware, decide whether to move the image to permanent firmware memory (erasing the previous version).</li>
+</ul>
+
+<p>To move from temporary to permanent memory: <code>update_flash -c</code><br />
+To revert the temporary flash update: <code>update_flash -r</code></p>
+
+<h2 id="fakekvm--faqemu">FakeKVM / faqemu</h2>
+
+<p>There are few issues with FakeKVM. Faqemu should work fine. TBD: fakearch to fix these.</p>
+
+<h2 id="final-goal">Final Goal</h2>
+
+<p>Allow users to use POWER8 in oVirt with only minimal differences to x86_64.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/ppc64le-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/ppc64le-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

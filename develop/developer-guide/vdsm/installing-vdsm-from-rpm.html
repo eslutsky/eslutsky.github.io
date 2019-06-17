@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing VDSM from rpm &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="installing-vdsm-from-rpm">Installing VDSM from rpm</h1>
+
+<p>This Documents has come to describe the steps required in order to install &amp; configure VDSM on the same host with ovirt-engine, this steps are usually not required when installing VDSM on another host than ovirt-engine
+Use this guide in order to install ovirt-engine: <a href="/develop/developer-guide/engine/installing-engine-from-rpm/">Installing_ovirt-engine_from_rpm</a></p>
+
+<h3 id="installing-prerequisite-packages">Installing Prerequisite Packages</h3>
+
+<p>execute the following command as root:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  yum install -y bridge-utils&#x000A;</code></pre></div>
+<h3 id="configuring-ovirts-repository">Configuring oVirt's Repository</h3>
+
+<p>Execute the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  sudo yum install http://resources.ovirt.org/releases/ovirt-release/ovirt-release-master.rpm&#x000A;</code></pre></div>
+<h2 id="vdsm">VDSM</h2>
+
+<h3 id="configuring-the-bridge-interface">Configuring the bridge Interface</h3>
+
+<p>Disable the network manager service by executing as root:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  systemctl stop NetworkManager.service&#x000A;  systemctl disable NetworkManager.service&#x000A;&#x000A;  service network start&#x000A;  chkconfig network on&#x000A;</code></pre></div>
+<p>Add the following content into a new file named: <strong>/etc/sysconfig/network-scripts/ifcfg-ovirtmgmt</strong>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  DEVICE=ovirtmgmt&#x000A;  TYPE=Bridge&#x000A;  ONBOOT=yes&#x000A;  DELAY=0&#x000A;  BOOTPROTO=static&#x000A;  IPADDR=192.168.1.110&#x000A;  NETMASK=255.255.255.0&#x000A;  GATEWAY=192.168.1.1&#x000A;</code></pre></div>
+<p>Add the following line into the configuration file of your out going interface (usually em1/eth0) the file is located at: <strong>/etc/sysconfig/network-scripts/ifcfg-em1</strong> (assuming the device is em1)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  BRIDGE=ovirtmgmt&#x000A;</code></pre></div>
+<p>and remove the IPADDR, NETMASK and BOOTPROTO keys, since the interface should not have an IP address of its own. Full Example</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  DEVICE=em1&#x000A;  ONBOOT=yes&#x000A;  BRIDGE=ovirtmgmt&#x000A;</code></pre></div>
+<p>Restart the network service by executing:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  service network restart&#x000A;</code></pre></div>
+<p><strong>Note that if any other bridge (from ovirtmgmt) is present at the time of host installation, the bridge creation operation is skipped and you have to change the bridge settings to correspond to above shown configuration manually.</strong></p>
+
+<h3 id="installing--configuring-vdsm">Installing &amp; Configuring VDSM</h3>
+
+<h4 id="install">Install</h4>
+
+<p>Install VDSM by executing as root the following commands:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  yum install -y vdsm vdsm-cli&#x000A;</code></pre></div>
+<p>Note:if you are using vdsm-4.10.0, you may need to install libvirt-0.10.0 which can't be found in yum. You can find the libvirt rpm in the following page:<a href="http://libvirt.org/sources/">http://libvirt.org/sources/</a></p>
+
+<h4 id="configure">Configure</h4>
+
+<p>Add the following content into the file: <strong>/etc/vdsm/vdsm.conf</strong> (you may need to create that file):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  [vars]&#x000A;  ssl = false&#x000A;</code></pre></div>
+<p>Restart the vdsmd service by executing:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  systemctl restart vdsmd&#x000A;</code></pre></div>
+<p>If Vdsm was started earlier with ssl=true, it would refuse to start and you may need to use the undocumented verb</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  vdsm-tool configure --force&#x000A;  systemctl start vdsmd&#x000A;</code></pre></div>
+<p>which edits <strong>/etc/libvirt/qemu.conf</strong> and changes <strong>spice_tls=1</strong> to <strong>spice_tls=0</strong>.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/installing-vdsm-from-rpm.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/installing-vdsm-from-rpm.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

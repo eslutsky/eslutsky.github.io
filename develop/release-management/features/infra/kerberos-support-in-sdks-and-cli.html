@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Kerberos Support in SDKs and CLI &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="kerberos-support-in-the-sdks-and-the-cli">Kerberos support in the SDKs and the CLI</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This page describes the Kerberos support that will be added to the Python SDK, the Java SDK and the CLI in version 3.6.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Juan Hernández (Jhernand)
+    <ul>
+      <li>Email:<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#104;&#101;&#114;&#110;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#106;&#104;&#101;&#114;&#110;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<p>Status: implementation</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Support isntallations where Kerberos has been selected as the authentication mechanism for the engine.</li>
+</ul>
+
+<h2 id="description">Description</h2>
+
+<h3 id="python-sdk">Python SDK</h3>
+
+<p>The Kerberos support for the Python SDK will be implemented in two steps:</p>
+
+<ul>
+  <li>Replace the standard HTTP library with pycurl: <a href="http://gerrit.ovirt.org/33064">http://gerrit.ovirt.org/33064</a></li>
+  <li>Add the Kerberos support: <a href="http://gerrit.ovirt.org/33221">http://gerrit.ovirt.org/33221</a></li>
+</ul>
+
+<p>Once this is implemented the user will be able to specify the use of Kerberos authentication with a new <code>kerberos</code> parameter in the constructor of the <code>API</code> object:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> api = ovirtsdk.api.API(&#x000A;  url="https://ovirt.example.com/ovirt-engine/api",&#x000A;  kerberos=True,&#x000A;  ...&#x000A; )&#x000A;</code></pre></div>
+<p>For this to work the Kerberos client has to be correctly configured (the <code>/etc/krb5.conf</code> file has to exist) and the credentials cache has to be already populated (using the <code>kinit</code> command, for example).</p>
+
+<h3 id="java-sdk">Java SDK</h3>
+
+<p>The Kerberos support in the Java SDK will be implemented in one step, as the <code>httpcomponents</code> library that we currently use already supports Kerberos authentication. However, to simplify things for users, we will also introduce a new <code>ApiBuilder</code> class to make construction of the API object easier:</p>
+
+<ul>
+  <li>Introduce the new <code>ApiBuilder</code> class: <a href="http://gerrit.ovirt.org/33503">http://gerrit.ovirt.org/33503</a></li>
+  <li>Add the Kerberos support: <a href="http://gerrit.ovirt.org/33504">http://gerrit.ovirt.org/33504</a></li>
+</ul>
+
+<p>Once these two changes are done, the user will use the SDK as follows:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Api api = new ApiBuilder()&#x000A;  .url("https://ovirt.example.com/ovirt-engine/api")&#x000A;  .kerberos(true)&#x000A;  .build();&#x000A;</code></pre></div>
+<p>For this to work the Kerberos of the Java virtual machine has to be configured correctly. This means that the <code>/etc/krb5.conf</code> file has to exist. This isn't usually a problem, as it is required by almost any Kerberos client. But it also means that a JAAS configuration file has to be created to configure the Java virtual machine. The location of this JAAS configuration file isn't important, it just has to be readable by the Java virtual machine. The content should be like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>com.sun.security.jgss.login {&#x000A;  com.sun.security.auth.module.Krb5LoginModule required client=true useTicketCache=true;&#x000A;};&#x000A;&#x000A;com.sun.security.jgss.initiate {&#x000A;  com.sun.security.auth.module.Krb5LoginModule required client=true useTicketCache=true;&#x000A;};&#x000A;&#x000A;com.sun.security.jgss.accept {&#x000A;  com.sun.security.auth.module.Krb5LoginModule required client=true useTicketCache=true;&#x000A;};&#x000A;</code></pre></div>
+<p>In addition the following system properties need to be present, either adding command line options to the <code>java</code> command or using the <code>System.setProperty(...)</code> method:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>-Djava.security.auth.login.config=/etc/jaas.conf&#x000A;-Djava.security.krb5.conf=/etc/krb5.conf&#x000A;-Djavax.security.auth.useSubjectCredsOnly=false&#x000A;</code></pre></div>
+<p>The Java SDK will not populate the credentials cache, it has to be populated before calling it, using the <code>kinit</code> command, for example.</p>
+
+<h3 id="cli">CLI</h3>
+
+<p>As the CLI uses the Python SDK for all its network communication the only change required is a new <code>--kerberos</code> option that will be translated into the new <code>kerberos=True</code> parameter of the constructor of the API object:</p>
+
+<ul>
+  <li>Add the <code>--kerberos</code> option: <a href="http://gerrit.ovirt.org/33417">http://gerrit.ovirt.org/33417</a></li>
+</ul>
+
+<p>After this modification the user will be able to use Kerberos authentication adding the <code>--kerberos</code> option to the <code>ovirt-shell</code> command or adding the <code>kerberos = True</code> option to the <code>.ovirtshellrc</code> file.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/kerberos-support-in-sdks-and-cli.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/kerberos-support-in-sdks-and-cli.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

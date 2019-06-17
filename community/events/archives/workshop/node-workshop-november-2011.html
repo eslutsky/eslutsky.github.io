@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Node - oVirt workshop November 2011 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/community/">Community</a></li>
+<li><a href="/community/events/">Events</a></li>
+<li><a href="/community/events/archives/">Archives</a></li>
+<li><a href="/community/events/archives/workshop/">Workshop</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="node---ovirt-workshop-november-2011">Node - oVirt workshop November 2011</h1>
+
+<p>Edit this page and put session notes and other links on this page</p>
+
+<p><a href="http://resources.ovirt.org/old-site-files/wp/ovirt-node.pdf">Slides</a></p>
+
+<p>oVirt Node is a minimal hypervisor install. Fedora based, will discuss expanding to other distros later.</p>
+
+<p>Two RPMS:</p>
+
+<ul>
+  <li>ovirt-node: python/newt based TUI for installation; can auto install based on kernel cmdline params.</li>
+  <li>ovirt-node-tools: Used to create image</li>
+</ul>
+
+<p>Image is</p>
+
+<ul>
+  <li>provided in ISO format</li>
+  <li>installs to any bootable? block device.</li>
+  <li>Can be pxebooted</li>
+  <li>State stored on persistent config partition.</li>
+  <li>Supports in-place upgrade (point it at a new ISO &amp; reboot).</li>
+  <li>Built using livecd-tools (perhaps debian/ubuntu could use live-build, or an installer udeb)</li>
+  <li>supports 'rescue' kernel cmdline parameter</li>
+</ul>
+
+<p>(Slides are pretty self-explanatory)</p>
+
+<p>Node Hypervisor boot menu will take any kernel boot parameter.</p>
+
+<p>Admin user is only user supported by Node. Supported meaning, "as coded" we presume.</p>
+
+<p>Password auth over ssh is disabled by default; relies upon sshkeys. Changeable in the Configuration screen</p>
+
+<p>Logging - supports rsyslog to send logs to external host.</p>
+
+<p>kdump supports ssh, not nfs.</p>
+
+<p>monitoring is via collectd.</p>
+
+<p>What is in config partition?</p>
+
+<ul>
+  <li>network script
+    <ul>
+      <li>ifcfg …</li>
+    </ul>
+  </li>
+  <li>private key</li>
+  <li>password files</li>
+  <li>anything that is configured via the Configuration utility is persisted</li>
+</ul>
+
+<p>Q: Is a mechanism provided/needed to deal with static config files across upgrades/downgrades?</p>
+
+<p>A: Not needed since the /config filesystem is not touched in an upgrade/downgrade, so this is transparent</p>
+
+<p>Q: What is the overlay mechanism? aufs/symlinks?</p>
+
+<p>A: config files are bind mounted from the /config partition to the location in /etc for example. This is part of the Fedora/RHEL specific 'stateless support' <a href="https://fedoraproject.org/wiki/StatelessLinux">https://fedoraproject.org/wiki/StatelessLinux</a> Unfortunately, something unionfs-like is not upstream, so not in Fedora/RHEL.</p>
+
+<p>Q: Where do logs for diagnostic use end up?</p>
+
+<p>A: /var/log/ovirt.log and other /var/log standard logs</p>
+
+<p>Matahari maybe more core than other plugins; a systems management framework built upon QMF (apache project)</p>
+
+<p>Note: There's a dead project called systemconfigurator for abstracting away distro-specific configuration</p>
+
+<p>Q: Do we want to develop different distro based Nodes? or call it a black box? community viewpoint v. product viewpoint Temperature of the room is, make Engine require a working Node but let people make and use their own distro-underneath-the-hood-based Nodes. Make Node dependency</p>
+
+<p>SUSE's kiwi seems to do 80% of what Node does.</p>
+
+<ul>
+  <li><a href="http://kiwi.berlios.de/">http://kiwi.berlios.de/</a> - seems to be image creator? So more like livecd/appliance-tools equivalent?</li>
+  <li>maybe add that to oVirt as a project, with a script that covers the Node requirements</li>
+</ul>
+
+<p>If you upgrade &amp; it won't reboot, you can boot to TUI and use downgrade - covers 90% of cases.</p>
+
+<p>If that doesn't work, there is a partition called 'RootBackup' - if upgraded image fails to boot, next reboot is from the RootBackup.</p>
+
+<p>Q: What is the roadmap for dealing with upgrades and adding packages?</p>
+
+<p>A: The idea is, it's a black box - individual package installs are not supported. Use the plugins instead.</p>
+
+<p>Ideal: ISO from distro + plugins from ISV/IHV, tool creates a new ISO from that. (These tools are 'livecd-based'.)</p>
+
+<ul>
+  <li>May need parallel tools to do some of this.</li>
+</ul>
+
+<p>current plug-in proposals for upstream are RPM-based</p>
+
+<p>Not supported means, "Could work, but we haven't really tested it."</p>
+
+<p>Not supported means, "It violates the idea of Node as a black box."</p>
+
+<p>How do we prove that the ISO is really a Node instance? How do we handle plugin auth?</p>
+
+<ul>
+  <li>Signed?</li>
+  <li>Rely upon the vendor to sign their plugins?</li>
+  <li>Upstream signs the plugins?</li>
+</ul>
+
+<p>Plugin makers need to do dependency resolution stand-alone - it's not part of Node to do that.</p>
+
+<p>The product is very tightly integrated - specific version numbers, etc.. What will the community want to do?</p>
+
+<p>Provide the template of the Node, so other tools can produce a usable Node?</p>
+
+<p>Small image supports PXE boot in many hosts environment, so the network is bogged down by huge boots - the small size keeps from having to stagger PXE boots.</p>
+
+<p>Value of Node:</p>
+
+<ul>
+  <li>Minimal security footprint - RO filesystem, etc.</li>
+  <li>Once running, don't have to manage any longer; Engine works on top of that</li>
+</ul>
+
+<p>Treat Node like firmware - all the interesting stuff happens in the guests.</p>
+
+<p><a href="/community/events/archives/workshop/workshop-november-2011/">Category:Workshop November 2011</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/community/events/archives/workshop/node-workshop-november-2011.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/community/events/archives/workshop/node-workshop-november-2011.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

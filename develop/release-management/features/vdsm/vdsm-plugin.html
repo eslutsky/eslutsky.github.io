@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Node vdsm plugin &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="node-vdsm-plugin">Node vdsm plugin</h1>
+
+<h2 id="ovirt-node-vdsm-plugin">oVirt Node VDSM plugin</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>This feature converts the generic oVirt Node image into an image customized use with oVirt Engine.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Mike Burns (mburns)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: mburns AT redhat DOT com</li>
+  <li>IRC: mburns</li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Initial code base uploaded, initial test images <a href="http://resources.ovirt.org/releases/node-base/beta/iso/">available</a>, should be ready for oVirt 3.3 beta</li>
+  <li>Last updated: 2013-05-22</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>An offshoot of the <a href="/develop/release-management/features/node/universal-image/">Universal Node Image</a> feature. This plugin can be used to convert a generic oVirt Node image into an image ready for use with oVirt Engine.</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>Because of the <a href="/develop/release-management/features/node/universal-image/">Universal Node Image</a> feature, there would be no more oVirt Node image available with the oVirt Project. This plugin is simply the moving of the logic for interacting with oVirt Engine from oVirt Node into a plugin.</p>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<ul>
+  <li><a href="/develop/release-management/features/node/universal-image/">Universal Node Image</a></li>
+  <li>Affected Packages
+    <ul>
+      <li>ovirt-node</li>
+      <li>ovirt-node-iso</li>
+      <li>New Package: ovirt-node-plugin-vdsm (Name TBD)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<p>Cover all methods for registering an oVirt Node to oVirt Engine</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test</th>
+      <th>Steps</th>
+      <th>Expected Result</th>
+      <th>Status</th>
+      <th>Version</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Auto-install (HTTPS)</td>
+      <td>Register with https using autoinstall (management_server=host:port)</td>
+      <td>Host should show up in Engine to be approved</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Auto-install (HTTP)</td>
+      <td>Register with http using autoinstall (management_server=host:port) (port 80)</td>
+      <td>Host should show up in Engine to be approved</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Auto-install (password)</td>
+      <td>autoinstall with rhevm-admin-password</td>
+      <td>Root password should be set correctly, ssh password authentication should be enabled</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>TUI – HTTPS</td>
+      <td>Register with Host/Port on the TUI, confirm certificate, host should appear</td>
+      <td>Host should appear in engine for approval</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>TUI – HTTP</td>
+      <td>Register with Host/Port on the TUI using HTTP ports (80)</td>
+      <td>Host should appear for approval in Engine</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>TUI – password</td>
+      <td>Set password in the TUI oVirt Engine screen</td>
+      <td>Root password should be set; ssh password authentication should be enabled</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Engine Add Host</td>
+      <td>After setting password (either through the TUI or autoinstall), use Add Host flow in the Engine to add oVirt Node Host</td>
+      <td>Host should be added and activated correctly</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Engine approval</td>
+      <td>After registering (Tui host/port or autoinstall management_server), approve oVirt Node host in Engine</td>
+      <td>Host should be approved successfully</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Negative: invalid hostname/ip</td>
+      <td>set invalid host/ip on the hostname line in the tui</td>
+      <td>On screen warning should be shown, should not let you commit changes</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Negative: invalid port</td>
+      <td>set invalid port (letters, blank, special chars) on the hostname line in the tui</td>
+      <td>On screen warning should be shown, should not let you commit changes</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Negative: reject certificate</td>
+      <td>when registering with engine, reject the downloaded certificate</td>
+      <td>You should not be able to submit the changes</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Negative: don't match password with confirmation</td>
+      <td>set password to something and set confirmation to something else</td>
+      <td>On screen warning should be shown, should not let you commit changes</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Retrieve certificate</td>
+      <td>Click on retrieve certificate (with https)</td>
+      <td>Screen should cleanly display the fingerprint and provide accept/reject offer</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Acccept certificate</td>
+      <td>Accept certificate</td>
+      <td>Should return and say that the certificate has been accepted</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Negative - retrieve cert from incorrect host</td>
+      <td>retrieve cert from an incorrect host/ip (typo like engin.example.com instead of engine.example.com)</td>
+      <td>Screen should cleanly report error retrieving the certificate.</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<ul>
+  <li>Coming Soon</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/vdsm/vdsm-plugin.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/vdsm/vdsm-plugin.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

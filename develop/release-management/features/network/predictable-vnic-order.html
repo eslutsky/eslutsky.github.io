@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Predictable vNIC Order &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="predictable-vnic-order">Predictable vNIC Order</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Make the in-guest order of NICs predictable, given their visual order.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Dan Kenigsberg (danken)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#097;&#110;&#107;&#101;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#097;&#110;&#107;&#101;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: danken at #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="background">Background</h2>
+
+<p>The term "vNIC order" may mean multiple things to multiple people. Let us enumerate them first:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>mnemonic</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>oVirt nic names (nic1,nic2..)</td>
+    </tr>
+    <tr>
+      <td>mac</td>
+      <td>mac addresses</td>
+    </tr>
+    <tr>
+      <td>libvirt</td>
+      <td>order in libvirt domxml</td>
+    </tr>
+    <tr>
+      <td>pci</td>
+      <td>pci addresses</td>
+    </tr>
+    <tr>
+      <td>guest</td>
+      <td>guest device names (eth0,p1p2,em1..)</td>
+    </tr>
+    <tr>
+      <td>boot</td>
+      <td>bios boot order of nics</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>A virtual machine may have multiple network interface cards (vNICs), each connected to profoundly different networks. Users need to know the mapping between [name] and [guest]. If a VM is connected to two networks, RED and BLUE, it is important to tell within the guest which network device leads to which network. It is also important to maintain the [name]-[guest] mapping when cloning a VM from a template.</p>
+
+<p>However, when adding a vNIC, the end user can select her favorite address, and if she hasn't done so, Engine would draw a random address from a pool of available addresses. In both cases, the [name]-[mac] mapping is random.</p>
+
+<p>oVirt uses the [mac] ordering to pass the devices to [libvirt]. On the first startup of a vNIC in a VM, libvirt assigns it with a [pci] address. [mac] and [pci] are used by the guest operating system to obtain the [guest] name for the vNIC. The latter step depends heavily on the make and version of the the OS. For example, EL5 orders interfaces based on their [mac]; So does EL6 (since biosdevname is disabled in guests); Modern Fedoras and EL7_beta with systemd&gt;=197 use pci addresses; Forgotten ifcfg files and udev.rules affect clones; And a guest admin can always override the name. Bottom line: [mac/pci]-[guest] mapping is a big mess.</p>
+
+<p>Another, somewhat related problem, is the need to control the boot order [boot]. Currently, [boot] matches [mac].</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Assume that we have two networks. RED is classified, and BLUE is public. We would like to have several intrusion detection VMs, monitoring BLUE and sending reports to RED. We create such a VM, find out that eth0 leads to RED and eth1 leads to BLUE, and configure our application appropriately. We create a template from the VM, and clone another VM from it.</p>
+
+<p>Without predictable vNIC order, the cloned VM may have eth0 leading to BLUE, and our IDS would leak information from the classified network to the public one. That's bad.</p>
+
+<h2 id="possible-solutions">Possible Solutions</h2>
+
+<h3 id="transactional-mac-allocation---chosen-solution">Transactional MAC allocation - Chosen Solution</h3>
+
+<p>mac addresses should not be allocated when a vNIC is first added to the VM. Only when a VM is first run, or is cloned from a template, allocate all addresses and make sure that [mac] matches [name]. This leads to a predictable [name]-[mac]-[pci] mapping, which in sane, clean guests, leads to predictable [name]-[guest].</p>
+
+<p>Cons:</p>
+
+<ul>
+  <li>Does not handle plugging (hot or cold) of vNICs after initial run. Consider a VM created with 3 vNICs (nic1, nic2, nic3). If nic2 is removed, and later added, there is no guarantee that it would receive the original mac or pci addresses. It most likely would not receive its original guest name without admin intervension.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Awkward to implement in Engine</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Does not give explicit control on [boot], but nic1 boots first on template and on clones.</li>
+</ul>
+
+<p>Pros:</p>
+
+<ul>
+  <li>Would soothe the pains of most of users.</li>
+</ul>
+
+<p>Transactional MAC allocation should take place in the following occasions:</p>
+
+<ul>
+  <li>Create Vm from template</li>
+  <li>Create Vm from snapshot</li>
+  <li>Add Vm dialog</li>
+  <li>Import Vm</li>
+</ul>
+
+<p>On such the addresses should be allocated to NIC entities based on the original order (on the template, snapshot, or exported Vm). If the information is missing, the MAC order should match the NIC name order.</p>
+
+<h3 id="user-control-on-libvirt-order">User control on libvirt order</h3>
+
+<p>We can expose [libvirt] to the end users, who could then sort vNICs to their liking. On first boot, the [libvirt] order controls [pci], which translates predictably to [guest] on modern Fedoras.</p>
+
+<p>Cons:</p>
+
+<ul>
+  <li>Complete solution of boot order must involve disks, cdroms, floppies and usb cards, on top of vNICs.</li>
+  <li>No predictability on EL5 and EL6 guests. A user can move a vNIC to the top, it would receive the lowest PCI address and would be booted from, but it may be named <code>eth7</code>.</li>
+</ul>
+
+<h3 id="ovirt-control-on-guest-names">oVirt control on guest names</h3>
+
+<p>Before starting up a VM (and before hot-plugging a vNIC), we could use libguestfs (and guest-side config) to configure ifcfg and udev.rules according to our requested naming.</p>
+
+<p>Pros:</p>
+
+<ul>
+  <li>Gives oVirt complete control on [guest]</li>
+</ul>
+
+<p>Cons:</p>
+
+<ul>
+  <li>Requires intimacy with each guest OS.</li>
+  <li>Guests that already have a predictable naming convention are going to suffer unneeded level of complexity.</li>
+  <li>Not workable for guests based on the blank template, or when the guest host is re-installed.</li>
+</ul>
+
+<h2 id="user-experience">User Experience</h2>
+
+<p>TBD</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="rest">REST</h3>
+
+<h3 id="engine">Engine</h3>
+
+<h3 id="vdsm">Vdsm</h3>
+
+<h3 id="guest-agent">Guest Agent</h3>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p>The case for iface name predictability in general</p>
+
+<ul>
+  <li><a href="http://fedoraproject.org/wiki/Features/ConsistentNetworkDeviceNaming">http://fedoraproject.org/wiki/Features/ConsistentNetworkDeviceNaming</a></li>
+  <li><a href="http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/">http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/</a></li>
+  <li>
+    <p><a href="http://lwn.net/Articles/531850/">http://lwn.net/Articles/531850/</a></p>
+  </li>
+  <li>On the arch@ovirt.org mailing list.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/predictable-vnic-order.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/predictable-vnic-order.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

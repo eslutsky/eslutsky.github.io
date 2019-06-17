@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Security group support in OVN external networks &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='mdbarroso' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Security group support in OVN external networks' property='og:title'>
+<meta content='In this post I will introduce and showcase how security groups can be used to
+enable certain scenarios.
+
+Security groups
+allow fine-grained access control to - and from - the oVirt VMs attached to
+external OVN networks.
+
+The Networking API v2 defines security groups as a white list of rules - the
+user specifies in it which traffic is allowed. That means, that when the rule
+list is empty, neither incoming nor outgoing traffic is allowed (from the VMs
+perspective).
+
+A demo recording of the security group feature can be found below.
+
+.' property='og:description'>
+<meta content='http://ovirt.org/blog/2019/05/ovn-security-groups.html' property='og:url'>
+<meta content='2019-05-27T15:35:00Z' property='article:published_time'>
+<meta content='mdbarroso' property='article:author:username'>
+<meta content='Acess Control' property='article:tag'>
+<link href='/blog/tag/acess control.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Open vSwitch' property='article:tag'>
+<link href='/blog/tag/open vswitch.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OVN' property='article:tag'>
+<link href='/blog/tag/ovn.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Security group support in OVN external networks' name='twitter:title'>
+<meta content='In this post I will introduce and showcase how security groups can be used to
+enable certain scenarios.
+
+Security groups
+allow fine-grained access control to - and from - the oVirt VMs attached to
+external OVN networks.
+
+The Networking API v2 defines security groups as a white list of rules - the
+user specifies in it which traffic is allowed. That means, that when the rule
+list is empty, neither incoming nor outgoing traffic is allowed (from the VMs
+perspective).
+
+A demo recording of the security group feature can be found below.
+
+.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2019</li>
+<li class='active'>05</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Security group support in OVN external networks
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/mdbarroso.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/mdbarroso/">mdbarroso</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2019-05-27T15:35:00Z'>
+Monday 27 May
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>In this post I will introduce and showcase how security groups can be used to
+enable certain scenarios.</p>
+
+<p><a href="https://developer.openstack.org/api-ref/network/v2/#security-groups-security-groups">Security groups</a>
+allow fine-grained access control to - and from - the oVirt VMs attached to
+external OVN networks.</p>
+
+<p>The Networking API v2 defines security groups as a white list of rules - the
+user specifies in it which traffic is allowed. That means, that when the rule
+list is empty, neither incoming nor outgoing traffic is allowed (from the VMs
+perspective).</p>
+
+<p>A demo recording of the security group feature can be found below.</p>
+
+<p><a href="http://www.youtube.com/watch?v=RCdV6W_tFWw"><img alt="here" src="http://img.youtube.com/vi/RCdV6W_tFWw/0.jpg" /></a>.</p>
+
+<p></p>
+
+<h2 id="provided-tools">Provided tools</h2>
+<p><a href="https://github.com/maiqueb/ovirt-security-groups-demo">This repo</a>
+adds tools, and information on how to use them, to help manage the security
+groups in oVirt, since currently there is no supported mechanism to provision
+security groups, other than the REST API, and ManageIQ. ManageIQ also doesn't
+fully support security groups, since it lacks a way to attach security groups
+to logical ports.</p>
+
+<h2 id="demo-scenarios">Demo scenarios</h2>
+<p>In the following links you can also find playbooks that can be built upon to
+reach different types of scenarios.</p>
+
+<ul>
+  <li><a href="https://github.com/maiqueb/ovirt-security-groups-demo#icmp-configuration">Allow ICMP traffic</a></li>
+  <li><a href="https://github.com/maiqueb/ovirt-security-groups-demo#web-server-configuration">Allow web traffic</a></li>
+  <li><a href="https://github.com/maiqueb/ovirt-security-groups-demo#group-membership-based-access-scenario">Configure access based on group membership</a></li>
+</ul>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/acess-control.html">Acess Control</a></li>
+<li><a href="../../tag/ansible.html">ansible</a></li>
+<li><a href="../../tag/open-vswitch.html">Open vSwitch</a></li>
+<li><a href="../../tag/ovn.html">OVN</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2019-04-15-ovn-security-groups.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2019-04-15-ovn-security-groups.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 31 May 2019 07:23 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+RESTSessionManagement &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="rest-api-session-management">REST API session management</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The purpose of the feature is to add session management to the oVirt REST API.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Oved Ourfali (Ovedo)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#111;&#118;&#101;&#100;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#111;&#118;&#101;&#100;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Finished implementation in oVirt 3.1</li>
+</ul>
+
+<h2 id="background">Background</h2>
+
+<p>This feature is essential for certain types of ISV integration. Many ISVs need to mirror the oVirt inventory (i.e. all VMs, clusters, basically any object managed by oVirt) in real-time to their own database. The way they do this currently is by polling /api/events and look for changes. In order to be able to react to changes fast, they typically poll every 5 seconds. The query itself is very efficient, so it doesn't cause a whole lot of load on oVirt. But it floods the log with login/logout events. This persistent session feature is a solution for that.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ol>
+  <li>Provide a session management mechanism that would allow clients to use the oVirt API without requiring them to pass credentials on each call</li>
+  <li>Reduce the overhead and also without the extra overhead of logging in and out in each request.</li>
+  <li>Continue supporting the old mechanism, in which credentials are passed in every request (no login/logout optimization, just the same as today).</li>
+</ol>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Today, when working with the API (via the CLI, SDK, curl, browser or any other web client), the credentials must be passed in each and every request made to the API. Also, in each such request the REST API initiates a login and logout to the engine core. The purpose of this feature is to allow clients to perform some initial login phase, work with the same session for multiple requests, and then close it (or leave it open until it is closed for inactivity).</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>The proposed implementation for that is to rely on cookies in the following way:</p>
+
+<ol>
+  <li>First, the client does a request providing credentials, with a special Header field: "Prefer: persistent-auth".</li>
+  <li>The server logs in to the engine-core, with a new generated session-id that is saved on the HTTP Session, and performs the required action. The JSESSIONID cookie is returned automatically to the client.</li>
+  <li>The client gets the cookie, and (if he wants to) in the second request he passes it to the server, with the "Prefer" header to enable keeping the session. No need to pass credentials.</li>
+  <li>Passing the credentials will re-authenticate, returning a new cookie.</li>
+  <li>The server gets the cookie, validates the session using (getting the session-ID from the HTTP session attributes), performs the request, and returns. The session remains valid as the "Prefer" header was passed.</li>
+  <li>Once the client passes the cookie but doesn't pass the "Prefer" header, the session is closed.</li>
+</ol>
+
+<p>Notes:</p>
+
+<ul>
+  <li>Existing clients can continue working as they are working today. They just ignore the JSESSIONID cookie, and pass credentials on each call. No need to provide the "Prefer" header. The API will then do login and logout to the engine on each call.</li>
+  <li>If the session is expired, the client will be required to pass credentials again, resulting in a new session being created.
+    <ol>
+      <li>The client passes the "Prefer" header field on every request, besides the last one. When the server gets a request with a JSESSIONID, and without the "Prefer" header, it logs out the session.</li>
+    </ol>
+  </li>
+  <li>Other options are:</li>
+  <li>Rely on session timeout for invalidation of sessions.
+    <ol>
+      <li>The client passes the "Prefer" header field only once (on start), and passes another header field when he finishes the work with the session.</li>
+    </ol>
+  </li>
+  <li>The engine session ID is not the JSESSIONID. The</li>
+</ul>
+
+<p>We decided to go with the first approach, passing the header on every request, and releasing the session once the header isn't passed.</p>
+
+<p>Flow of using the Prefer header on each call:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Client                                           Server&#x000A;    |                                                |&#x000A;    | ---------initial request with Prefer header--&gt; |&#x000A;    |                                          [login]&#x000A;    | &lt;----Set-Cookie:JSESSIONID=.....---------------|&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=.....+ Prefer header---&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=.....+ Prefer header---&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    |              ... time pases...                 |&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=.....------------------&gt;|&#x000A;    | [validate session. no Prefer header --&gt; logout ]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;   &#x000A;</code></pre></div>
+<p>Flow when relying on session timeout:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Client                                           Server&#x000A;    |                                                |&#x000A;    | ---------initial request with Prefer header--&gt; |&#x000A;    |                                          [login]&#x000A;    | &lt;----Set-Cookie:JSESSIONID=.....---------------|&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=....................---&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=....................---&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    |              ... time pases...                 |&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=.....------------------&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    |              ... time pases...                 |&#x000A;    |                                                |&#x000A;    |             [session timeout --&gt; remove session]&#x000A;    |                                                |&#x000A;   &#x000A;</code></pre></div>
+<p>Flow when passing another header for ending sessions:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Client                                           Server&#x000A;    |                                                |&#x000A;    | ---------initial request with Prefer header--&gt; |&#x000A;    |                                          [login]&#x000A;    | &lt;----Set-Cookie:JSESSIONID=.....---------------|&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=....................---&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=....................---&gt;|&#x000A;    |                               [validate session]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;    |              ... time pases...                 |&#x000A;    |                                                |&#x000A;    | -----Cookie:JSESSIONID=....., "Logout" header-&gt;|&#x000A;    |                      [validate session. logout ]&#x000A;    | &lt;----------------------------------------------|&#x000A;    |                                                |&#x000A;   &#x000A;</code></pre></div>
+<h2 id="scope">Scope</h2>
+
+<p>The scope of the feature is as follows:</p>
+
+<ul>
+  <li>Adding the mechanism to the REST API</li>
+  <li>Using this mechanism in the CLI/SDK</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ol>
+  <li>On the HTTP Prefer header field: <a href="http://tools.ietf.org/html/draft-snell-http-prefer-12">http://tools.ietf.org/html/draft-snell-http-prefer-12</a></li>
+</ol>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/restsessionmanagement.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/restsessionmanagement.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

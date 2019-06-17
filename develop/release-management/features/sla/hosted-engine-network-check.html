@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Configurable Network Check for Self Hosted Engine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="configurable-network-check-for-self-hosted-engine">Configurable Network Check for Self Hosted Engine</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Currently ovirt-hosted-engine-ha, the agent running on potential hosts to host
+the Self Hosted Engine VM, checks his network liveliness by pinging the
+gateway.
+This feature adds alternative ways to check network liveliness, to enable
+Self Hosted Engine in networks which does not allow pinging the gateway.</p>
+
+<p>The progress of the implementation and testing of this feature is tracked on
+<a href="https://bugzilla.redhat.com/1659052">Bug 1659052 - [RFE] Consider alternative to ICMP ping for hosted engine network test</a></p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>
+    <p>Name: <a href="https://github.com/dominikholler">Dominik Holler</a></p>
+  </li>
+  <li>
+    <p>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#104;&#111;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#104;&#111;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></p>
+  </li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Additional ways to check the network liveliness to be added are DNS, TCP and
+none.</p>
+
+<p>DNS means that an NS query for "." (the root) will be performed, if this
+succeeds, network is considered as alive.</p>
+
+<p>TCP means, that a TCP connection to a given host and port combination will be
+created. If this succeeds, network is considered as alive.
+The configuration of this given host is out of scope of this feature.</p>
+
+<p>None means, that the network is always considered alive.</p>
+
+<p>Like ping, the DNS and TCP check should work for IPv4 and IPv6.
+This feature requires that on deployment of the self hosted engine up to three
+additional parameters:</p>
+
+<ul>
+  <li>The desired way of checking network liveliness.</li>
+  <li>The destination host for the TCP liveliness check.</li>
+  <li>The destination port for the TCP liveliness check.</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>This feature will enable the usage of Self Hosted Engine in networks which does
+not allow pinging the gateway.</p>
+
+<h2 id="modification-of-ovirt-hosted-engine-setup">Modification of ovirt-hosted-engine-setup</h2>
+
+<p><code>hosted-engine --deploy</code> is going to be extended to ask and check the additional
+parameters like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>          Please specify which way the network connectivityshould be checked (ping, dns, tcp, none) [dns]: tcp&#x000A;          Please specify the desired destination IP addressof the TCP connection test: sdf&#x000A;          Please specify the desired destination TCP portof the TCP connection test: 434&#x000A;[ ERROR ] Failed to connect via TCP&#x000A;</code></pre></div>
+<p>The related variables in the answer file will be
+<code>OVEHOSTED_NETWORK/network_test</code>, <code>OVEHOSTED_NETWORK/network_test_tcp_address</code>
+and <code>OVEHOSTED_NETWORK/network_test_tcp_port</code>, while the latter two are only
+relevant if the value of <code>OVEHOSTED_NETWORK/network_test</code> is <code>tcp</code>.</p>
+
+<p>The related input is validated instantly. On invalid input, an error is
+reported. If the invalid input is read from the answer file, the deployment will
+stop, if the invalid input is provided interactively, the wizard repeats the
+question after presenting the error message.</p>
+
+<h2 id="modification-of-cockpit-ovirt">Modification of cockpit-ovirt</h2>
+
+<p>cockpit-ovirt is going to be extended to ask and check the additional
+parameters like this:
+<img alt="Additional inputs" src="/images/../../../../images/features/sla/hosted-engine-network-check-cockpit.png" />
+<code>DNS</code> has to be the pre-selected default value.</p>
+
+<h2 id="modification-of-ovirt-ansible-hosted-engine-setup">Modification of ovirt-ansible-hosted-engine-setup</h2>
+
+<p>ovirt-hosted-engine-setup and cockpit-ovirt will provide the three additional
+options as the inputs <code>he_network_test</code>, <code>he_tcp_t_address</code>, <code>he_tcp_t_port</code> to
+ovirt-ansible-hosted-engine-setup.
+ovirt-ansible-hosted-engine-setup will transform them into the three parameters
+<code>network_test</code>, <code>tcp_t_address</code>, <code>tcp_t_port</code> in <code>hosted-engine.conf</code>.</p>
+
+<h2 id="modification-of-ovirt-hosted-engine-ha">Modification of ovirt-hosted-engine-ha</h2>
+
+<p>ovirt-hosted-engine-ha will perform the liveliness check according to the three
+parameters in <code>hosted-engine.conf</code></p>
+
+<h2 id="upgrade">Upgrade</h2>
+
+<p>On upgrade the new option <code>network_test</code> is missing in <code>hosted-engine.conf</code>.
+In this case ovirt-hosted-engine-ha will still ping the gateway, which will
+ensure backward capability.</p>
+
+<h2 id="configuration-of-existing-deployments">Configuration of existing Deployments</h2>
+
+<p>If the option <code>network_test</code> should set on a specific host,
+this can be done like in the following example:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>hosted-engine --set-shared-config network_test dns --type=he_local&#x000A;</code></pre></div>
+<p>If the default setting in the template for new hosts to be added in the future
+should be modified, the option has to be set on the shared storage like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>hosted-engine --set-shared-config network_test dns --type=he_shared&#x000A;</code></pre></div>
+<p>A full example of an update of <code>network_test</code> to <code>tcp</code> on a specific host looks
+like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>[root@c76he20190415h1 ~]# hosted-engine --set-shared-config network_test tcp --type=he_local&#x000A;[root@c76he20190415h1 ~]# hosted-engine --set-shared-config tcp_t_port 192.168.1.115 --type=he_local&#x000A;[root@c76he20190415h1 ~]# hosted-engine --set-shared-config tcp_t_port 22 --type=he_local&#x000A;[root@c76he20190415h1 ~]# systemctl restart ovirt-ha-broker ovirt-ha-agent&#x000A;[root@c76he20190415h1 ~]# tail -f /var/log/ovirt-hosted-engine-ha/broker.log&#x000A;Listener::INFO::2019-04-17 14:13:02,712::monitor::78::ovirt_hosted_engine_ha.broker.monitor.Monitor::(start_submonitor) Started submonitor storage-domain&#x000A;Thread-5::INFO::2019-04-17 14:13:02,913::engine_health::94::engine_health.EngineHealth::(action) VM not on this host&#x000A;Listener::WARNING::2019-04-17 14:13:03,029::status_broker::153::ovirt_hosted_engine_ha.broker.status_broker.StatusBroker::(lock_host_id) Host id is not locked, trying to lock&#x000A;Thread-3::INFO::2019-04-17 14:13:03,041::mem_free::51::mem_free.MemFree::(action) memFree: 5084&#x000A;Thread-2::INFO::2019-04-17 14:13:03,637::mgmt_bridge::62::mgmt_bridge.MgmtBridge::(action) Found bridge ovirtmgmt with ports&#x000A;Thread-1::INFO::2019-04-17 14:13:04,894::network::88::network.Network::(action) Successfully verified network status&#x000A;Thread-4::INFO::2019-04-17 14:13:12,725::cpu_load_no_engine::110::cpu_load_no_engine.CpuLoadNoEngine::(calculate_load) VM not on this host&#x000A;Thread-4::INFO::2019-04-17 14:13:12,726::cpu_load_no_engine::126::cpu_load_no_engine.CpuLoadNoEngine::(calculate_load) System load total=0.0380, engine=0.0000, non-engine=0.0380&#x000A;Thread-5::INFO::2019-04-17 14:13:12,927::engine_health::94::engine_health.EngineHealth::(action) VM not on this host&#x000A;Thread-2::INFO::2019-04-17 14:13:13,585::mgmt_bridge::62::mgmt_bridge.MgmtBridge::(action) Found bridge ovirtmgmt with ports&#x000A;Thread-1::INFO::2019-04-17 14:13:15,072::network::88::network.Network::(action) Successfully verified network status&#x000A;</code></pre></div>
+<h2 id="user-work-flows">User work-flows</h2>
+
+<p>The user has to configure the desired way of checking network liveliness
+on graphical installation as described in
+<a href="#modification-of-cockpit-ovirt">cockpit-ovirt</a>, or interactively as described
+in <a href="#modification-of-ovirt-hosted-engine-setup">ovirt-hosted-engine-setup</a>, or
+in the answer file as described in
+<a href="#modification-of-ovirt-hosted-engine-setup">ovirt-hosted-engine-setup</a>.
+)
+If the TCP check is chosen, the user has to define the destination host and
+port in the same way. If the destination host and port are missing in the answer
+file, ovirt-hosted-engine-setup will ask interactively.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p>It should be checked if the three possible inputs (ovirt-hosted-engine-setup interactivly and by answer file, and cockpit-ovirt) rejects wrong values and passes correct values correctly to <code>hosted-engine.conf</code>.</p>
+
+<p>Additionally, the ovirt-hosted-engine-ha reacts on the related condition for
+all 4 (none, ping, dns and tcp) possible values in for <code>network_test</code> in
+<code>hosted-engine.conf</code>.</p>
+
+<p>Even there is nothing special about IPv6 in this feature, it might be useful to
+verify on IPv6.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/hosted-engine-network-check.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/hosted-engine-network-check.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 8 Jun 2019 12:49 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

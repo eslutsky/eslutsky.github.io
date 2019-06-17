@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Preparing a Host for vGPU Installation &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="appendix-h-preparing-a-host-for-vgpu-installation">Appendix H: Preparing a Host for vGPU Installation</h1>
+
+<p>You can use a host with a compatible graphics processing unit (GPU) to run virtual machines with virtual GPUs (vGPUs). A virtual machine with a vGPU is better suited for graphics-intensive tasks than a virtual machine without
+a vGPU. A virtual machine with a vGPU can also run software that cannot run without a GPU, such as CAD.</p>
+
+<p><strong>vGPU Requirements</strong></p>
+
+<p>If you plan to configure a host to allow virtual machines on that host to install a vGPU, the following requirements must be met:</p>
+
+<ul>
+  <li>vGPU-compatible GPU</li>
+  <li>GPU-enabled host kernel</li>
+  <li>Installed GPU with correct drivers</li>
+  <li>Predefined <strong>mdev_type</strong> set to correspond with one of the mdev types supported by the device</li>
+  <li>vGPU-capable drivers installed on each host in the cluster</li>
+  <li>vGPU-supported virtual machine operating system with vGPU drivers installed</li>
+</ul>
+
+<p><strong>Preparing a Host for vGPU Installation</strong></p>
+
+<ol>
+  <li>
+    <p>Install vGPU-capable drivers onto your host. Consult the documentation for your GPU card for more information.</p>
+  </li>
+  <li>
+    <p>Install <strong>vdsm-hook-vfio-mdev</strong>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install vdsm-hook-vfio-mdev&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>You can now install vGPUs on the virtual machines running on this host.</p>
+
+<p><strong>Installing a vGPU on a Virtual Machine</strong></p>
+
+<ol>
+  <li>Confirm the vGPU instance to use:</li>
+</ol>
+
+<ul>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>, click the required host’s name to go to the details view, and click the <strong>Host Devices</strong> tab. Available vGPU instances appear in the <strong>Mdev Types</strong> column.</p>
+  </li>
+  <li>
+    <p>Alternatively, run the following command on the host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vdsm-client Host hostdevListByCaps&#x000A;</code></pre></div>
+    <p>Available vGPU instances appear in the <strong>mdev</strong> key <strong>available_instances</strong>.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Install the required virtual machine operating system.</p>
+  </li>
+  <li>
+    <p>Shut down the virtual machine.</p>
+  </li>
+  <li>
+    <p>Add the vGPU instance to the virtual machine:</p>
+  </li>
+</ol>
+
+<p>i. Select the virtual machine and click Edit.
+  ii. Click Show Advanced Options, then click the <strong>Custom Properties</strong> tab.
+  iii. Select <strong>mdev_type</strong> from the drop-down list and enter the vGPU instance in the text field.
+  iv. Click OK.</p>
+
+<ol>
+  <li>
+    <p>Start the virtual machine and install the vGPU driver through the vendor’s installer. Consult the documentation for your GPU card for more information.</p>
+  </li>
+  <li>
+    <p>Restart the virtual machine.</p>
+  </li>
+  <li>
+    <p>Verify that the vGPU is recognized by checking the virtual machine operating system’s device manager.</p>
+  </li>
+</ol>
+
+<p><strong>Important:</strong> You cannot migrate a virtual machine using a vGPU to a different host. When upgrading the virtual machine, verify the operating system and GPU vendor support in the vendor’s documentation.</p>
+
+<p><strong>Prev:</strong> <a href="appe-Configuring_a_Host_for_PCI_Passthrough">Appendix G: Configuring a Host for PCI Passthrough</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/preparing_a_host_for_vgpu_installation">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/appe-Preparing_a_Host_for_vGPU_Installation.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/appe-Preparing_a_Host_for_vGPU_Installation.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

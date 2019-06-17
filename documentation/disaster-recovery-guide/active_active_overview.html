@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Active-Active Disaster Recovery &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/disaster-recovery-guide/">Disaster-recovery-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-2-active-active-disaster-recovery">Chapter 2: Active-Active Disaster Recovery</h1>
+
+<p>##Active-Active Overview</p>
+
+<p>oVirt supports an active-active disaster recovery failover configuration that can span two sites. Both sites are active, and if the primary site becomes unavailable, the oVirt environment will continue to operate in the secondary site to ensure business continuity.</p>
+
+<p>The active-active failover is achieved by configuring a stretch cluster where hosts capable of running the virtual machines are located in the primary and secondary site. All the hosts belong to the same oVirt cluster.</p>
+
+<p>You require replicated storage that is writeable on both sites to allow virtual machines to migrate between sites and continue running on the site’s storage.</p>
+
+<p><strong>Stretch Cluster Configuration</strong>
+<img alt="" width="1520" height="930" src="/images/disaster-recovery/StretchCluster.png?1560777613" /></p>
+
+<p>Virtual machines will migrate to the secondary site if the primary site becomes unavailable. The virtual machines will automatically failback to the primary site when the site becomes available and the storage is replicated in both sites.</p>
+
+<p><strong>Failed Over Stretch Cluster</strong>
+<img alt="" width="1520" height="930" src="/images/disaster-recovery/StretchClusterFailover.png?1560777613" /></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** To ensure virtual machine failover and failback works:&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <p>Virtual machines must be configured to be highly available, and each virtual machine must have a lease on a target storage domain to ensure the virtual machine can start even without power management.</p>
+  </li>
+  <li>
+    <p>Soft enforced virtual machine to host affinity must be configured to ensure the virtual machines only start on the selected hosts.</p>
+  </li>
+</ul>
+
+<p>The stretched cluster configuration can be implemented using a self-hosted engine environment, or a standalone Engine environment.</p>
+
+<h3 id="network-considerations">Network Considerations</h3>
+
+<p>All hosts in the cluster must be on the same broadcast domain over an L2 network. This means that connectivity between the two sites needs to be L2.</p>
+
+<p>The maximum latency requirements between the sites across the L2 network differs for the two setups. The standalone Engine environment requires a maximum latency of 100ms, while the self-hosted engine environment requires a maximum latency of 7ms.</p>
+
+<h3 id="storage-considerations">Storage Considerations</h3>
+
+<p>The storage domain for oVirt can be made of either block devices (SAN - iSCSI or FCP) or a file system (NAS - NFS, GlusterFS, or other POSIX compliant file systems).</p>
+
+<p>The sites require synchronously replicated storage that is writeable on both sites with shared layer 2 (L2) network connectivity. The replicated storage is required to allow virtual machines to migrate between sites and continue running on the site’s storage. All storage replication options supported by Enterprise Linux 7 and later can be used in the stretch cluster.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** If you have a custom multipath configuration that is recommended by the storage vendor, copy the .conf file to the `/etc/multipath/conf.d/` directory. The custom settings will override settings in the VDSMs `multipath.conf` file.  Do not modify the VDSM file directly.&#x000A;</code></pre></div>
+<h2 id="configure-a-self-hosted-engine-stretch-cluster-environment">Configure a Self-hosted Engine Stretch Cluster Environment</h2>
+
+<p>This procedure provides instructions to configure a stretch cluster using a self-hosted engine deployment.</p>
+
+<p><strong>Prerequisites</strong>:</p>
+
+<ul>
+  <li>
+    <p>A writable storage server in both sites with L2 network connectivity.</p>
+  </li>
+  <li>
+    <p>Real-time storage replication service to duplicate the storage.</p>
+  </li>
+</ul>
+
+<p><strong>Limitations</strong>:</p>
+
+<ul>
+  <li>Maximum 7ms latency between sites.</li>
+</ul>
+
+<p><strong>Configuring the Self-hosted Engine Stretch Cluster</strong></p>
+
+<ol>
+  <li>
+    <p>Deploy the self-hosted engine.</p>
+  </li>
+  <li>
+    <p>Install additional self-hosted engine nodes in each site and add them to your cluster.</p>
+  </li>
+  <li>
+    <p>Optional. Install additional standard hosts.</p>
+  </li>
+  <li>
+    <p>Configure the SPM priority to be higher on all hosts in the primary site to ensure SPM failover to the secondary site occurs only when all hosts in the primary site are unavailable.</p>
+  </li>
+  <li>
+    <p>Configure all virtual machines that need to failover as highly available, and ensure that the virtual machine has a lease on the target storage domain.</p>
+  </li>
+  <li>
+    <p>Configure virtual machine to host soft affinity and define the behavior you expect from the affinity group.</p>
+  </li>
+</ol>
+
+<p>The active-active failover can be manually performed by placing the main site's hosts into maintenance mode.</p>
+
+<h2 id="configure-a-standalone-engine-stretch-cluster-environment">Configure a Standalone Engine Stretch Cluster Environment</h2>
+
+<p>This procedure provides instructions to configure a stretch cluster using a standalone Engine deployment.</p>
+
+<p><strong>Prerequisites:</strong></p>
+
+<ul>
+  <li>
+    <p>A writable storage server in both sites with L2 network connectivity.</p>
+  </li>
+  <li>
+    <p>Real-time storage replication service to duplicate the storage.</p>
+  </li>
+</ul>
+
+<p><strong>Limitations:</strong></p>
+
+<ul>
+  <li>Maximum 100ms latency between sites.</li>
+</ul>
+
+<p><strong>Important:</strong> The Engine must be highly available for virtual machines to failover and failback between sites. If the Engine goes down with the site, the virtual machines will not failover.</p>
+
+<p>The standalone Engine is only highly available when managed externally. For example:</p>
+
+<ul>
+  <li>
+    <p>Using oVirt’s High Availability Add-On.</p>
+  </li>
+  <li>
+    <p>As a highly available virtual machine in a separate virtualization environment.</p>
+  </li>
+  <li>
+    <p>Using Enterprise Linux Cluster Suite.</p>
+  </li>
+  <li>
+    <p>In a public cloud.</p>
+  </li>
+</ul>
+
+<p><strong>Configuring the Standalone Engine Stretch Cluster</strong></p>
+
+<ol>
+  <li>
+    <p>Install and configure the oVirt Engine.</p>
+  </li>
+  <li>
+    <p>Install the hosts in each site and add them to the cluster.</p>
+  </li>
+  <li>
+    <p>Configure the SPM priority to be higher on all hosts in the primary site to ensure SPM failover to the secondary site occurs only when all hosts in the primary site are unavailable.</p>
+  </li>
+  <li>
+    <p>Configure all virtual machines that need to failover as highly available, and ensure that the virtual machine has a lease on the target storage domain.</p>
+  </li>
+  <li>
+    <p>Configure virtual machine to host soft affinity and define the behavior you expect from the affinity group.</p>
+  </li>
+</ol>
+
+<p>The active-active failover can be manually performed by placing the main site's hosts into maintenance mode.</p>
+
+<p><strong>Prev:</strong> <a href="disaster_recovery_solutions">Chapter 1: Disaster Recovery Solutions</a><br />
+<strong>Next:</strong> <a href="active_passive_overview">Chapter 3: Active-Passive Disaster Recovery</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/disaster_recovery_guide/active_active">Adapted from oVirt 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/disaster-recovery-guide/active_active_overview.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/disaster-recovery-guide/active_active_overview.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

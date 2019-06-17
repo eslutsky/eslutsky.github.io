@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+formatting &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<!-- TODO: Content review -->
+
+<h1 id="sql-formatting">SQL Formatting</h1>
+
+<p>The following SQL formatting rules apply to code written as views/SP/upgrade scripts under the dbscripts folder:</p>
+
+<p>Please note that each example demonstrates ONLY the specific rule and not the entire formatting for simplicity.</p>
+
+<h2 id="indentation">Indentation</h2>
+
+<p>All indentations should use 4 spaces no TABs are allowed</p>
+
+<h2 id="capitalization">Capitalization</h2>
+
+<p>Keyword: UPPER
+ SELECT Data type: UPPER
+ VARCHAR(32) Table name : lower
+ users Column name : lower
+ user_name Function name : InitCap for SP, lower for general functions that also must start with fn_db_
+ InsertAuditLog</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   fn_db_add_column&#x000A;</code></pre></div>
+<p>Column alias: lower
+ dept AS department Variable : lower, starts with v_
+ v_user Constraint: lower</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   fk_user_user_sessions&#x000A;</code></pre></div>
+<h2 id="comma-option">Comma option</h2>
+
+<p>Always after item</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  SELECT&#x000A;  a,&#x000A;  b,&#x000A;  c&#x000A;  FROM t;&#x000A;</code></pre></div>
+<h2 id="andor">AND/OR</h2>
+
+<p>Always in the beginning of line</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  a &gt; 1&#x000A;  AND b&lt;10&#x000A;</code></pre></div>
+<h2 id="operators">Operators</h2>
+
+<p>Always surround operators with one space</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  a + b = c&#x000A;</code></pre></div>
+<h2 id="select-query">Select Query</h2>
+
+<p>Column list style : stacked
+ INSERT INTO T (name,
+ size)
+VALUES('a',
+ 1);</p>
+
+<p>FROM clause : in a new line
+ SELECT *
+FROM T FROM clause table list style : stacked
+ SELECT *
+ FROM a,
+ b FROM clause join : join table in a new line
+ SELECT a.*
+FROM a
+INNER JOIN b ON a.id = b.id WHERE clause : condition in a new line
+ SELECT *
+FROM t
+WHERE a = 1; WHERE clause : AND/OR at beginning of line
+ SELECT *
+FROM t
+WHERE a = 1
+ AND b='x'; GROUP BY clause : Column list in a new line
+ SELECT *
+FROM t
+WHERE a = 1
+GROUP BY b; GROUP BY column list style : stacked
+ SELECT *
+FROM t
+WHERE a = 1
+GROUP BY b,
+ c; ORDER BY clause : Column list in a new line
+ SELECT *
+FROM t
+WHERE a = 1
+ORDER BY b; ORDER BY column list style : stacked
+ SELECT *
+FROM t
+WHERE a = 1
+ORDER BY b,
+ c;</p>
+
+<h2 id="nested-conditions">Nested Conditions</h2>
+
+<p>Example 1</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  SELECT DISTINCT vds.*&#x000A;         FROM vds&#x000A;         WHERE (&#x000A;                 NOT v_is_filtered&#x000A;                 OR EXISTS (&#x000A;                     SELECT 1&#x000A;                     FROM user_vds_permissions_view&#x000A;                     WHERE user_id = v_user_id&#x000A;                         AND entity_id = vds_id&#x000A;                     )&#x000A;                 );&#x000A;</code></pre></div>
+<p>Example 2</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    WHILE FOUND LOOP v_id := CAST(v_tempId AS UUID);&#x000A;             SELECT count(*)&#x000A;             INTO v_result&#x000A;             FROM users&#x000A;             WHERE user_id IN (&#x000A;                     SELECT ad_element_id AS user_id&#x000A;                     FROM permissions,&#x000A;                         roles&#x000A;                     WHERE permissions.role_id = roles.id&#x000A;                         AND ad_element_id IN (&#x000A;                             (&#x000A;                                 SELECT ad_groups.id&#x000A;                                 FROM ad_groups,&#x000A;                                     engine_sessions&#x000A;                                 WHERE engine_sessions.user_id = v_id&#x000A;                                     AND ad_groups.id IN (&#x000A;                                         SELECT *&#x000A;                                         FROM fnsplitteruuid(engine_sessions.group_ids)&#x000A;                                         )&#x000A;                                 UNION&#x000A;                                 SELECT v_id&#x000A;                                 )&#x000A;                             )&#x000A;                         AND (&#x000A;                             roles.role_type = 1&#x000A;                             OR permissions.role_id = '00000000-0000-0000-0000-000000000001'&#x000A;                             )&#x000A;                     );&#x000A;         UPDATE users&#x000A;         SET last_admin_check_status = CASE&#x000A;                 WHEN v_result = 0&#x000A;                     THEN FALSE&#x000A;                 ELSE TRUE&#x000A;                 END&#x000A;         WHERE user_id = v_id;&#x000A;         FETCH myCursor&#x000A;         INTO v_tempId;&#x000A;     END LOOP;&#x000A;</code></pre></div>
+<p>Example 3</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  IF EXISTS (&#x000A;             SELECT 1&#x000A;             FROM vm_device&#x000A;             WHERE vm_id = v_vm_id&#x000A;                 AND type = 'balloon'&#x000A;                 AND device = 'memballoon'&#x000A;             ) THEN result := true;&#x000A;  END IF ;&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/sql-formatting.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/sql-formatting.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

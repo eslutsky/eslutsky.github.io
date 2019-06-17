@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DetailedHostPMProxyPreferences &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-host-pm-proxy-preferences">Detailed Host PM Proxy Preferences</h1>
+
+<h2 id="host-power-management-proxy-preferences">Host Power Management Proxy Preferences</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>When Power Management is defined on the Host and the host becomes non-responding , the engine will attempt to restart the Host after a graceful period is passed
+The Host non-responding treatment is doing the following actions
+ Send a Stop command</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    Wait for status 'off' &#x000A;      (controlled by FenceStopStatusDelayBetweenRetriesInSec,FenceStopStatusRetries configuration values)&#x000A;    Send a Start command&#x000A;    Wait for status 'on' &#x000A;      (controlled by FenceStartStatusDelayBetweenRetriesInSec,FenceStartStatusRetries configuration values)&#x000A;</code></pre></div>
+<p>The current implementation of PM proxy selection is based on selection of host from the data center with 'UP' status.
+ This implementation is not robust enough, since fence action such as 'RestartVds' which is comprised of two fence actions (stop &amp; start) might be able to complete the first action, but fails to detect a proxy for the second. In some cases the entire DC becomes non-responsive or even stopped. In that case no host on DC could act as a proxy.</p>
+
+<p>This document describes an extension to the current proxy selection algorithm that enables each Host to define its proxy chain as a priority list.</p>
+
+<p>Specifically, the local host may be chosen as a proxy for fencing operations
+This may be achieved by installing a full VDSM packages on the local machine by using
+<a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#local-vdsm">Local VDSM</a></p>
+
+<p>An alternative to installing a lightweight local VDSM is writing a <a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#fence-wrapper">Fence Wrapper</a></p>
+
+<p>And finally , we can also implement it by additional <a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#vdsm-instance">VDSM Instance</a></p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Feature owner: Eli Mesika (emesika)</p>
+
+    <ul>
+      <li>
+        <p>GUI Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>REST Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>Engine Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>QA Owner: Yaniv Kaul (ykaul)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: emesika@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release: 3.2</li>
+  <li>Status: Design</li>
+  <li>Last updated date: Nov 4 2012</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h3 id="crud">CRUD</h3>
+
+<p>Adding a pm_proxy_preferences column to vds_static table.
+this column represents a comma separated proxy preferences lists per Host
+The default value for this column will be : 'CLUSTER,DC'
+So, if this value is for example the default value, a Host that is in non-responsive state and has Power Management configured will be fenced using the first UP Host in Cluster then the first UP Host in the Data Center then the engine.</p>
+
+<p>Modify views vds and vds_with_tags to include pm_proxy_preferences
+Update InsertVdsStatic and UpdateVdsStatic SPs to handle pm_proxy_preferences</p>
+
+<h4 id="dao">DAO</h4>
+
+<p>Adding handling of pm_proxy_preferences to
+VdsStaticDAODbFacadeImpl
+VdsDAODbFacadeImpl</p>
+
+<h4 id="metadata">Metadata</h4>
+
+<p>Adding test for the new pm_proxy_preferences field in VdsStaticDAOTest
+Adding test data in fixtures.xml</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>A new configuration value will be added named FenceProxyDefaultPreferences
+The default value will be : CLUSTER,DC</p>
+
+<p>This configuration value should be exposed to the engine-config tool.</p>
+
+<h3 id="business-logic">Business Logic</h3>
+
+<p>Add pmProxyPreferences field to VdsStatic
+Add pmProxyPreferences field to VDS
+ Allow to edit the PmProxyPreferences property
+ FencingExecutor::FindVdsToFence
+ Modify the following commands to send the value of proxy preferences settings for the Host:
+<em>AddVdsCommand</em>
+<em>UpdateVdsCommand</em></p>
+
+<hr />
+
+<p>Apply the logic of searching for the proxy according to the pmProxyPreferences value</p>
+
+<h4 id="flow">Flow</h4>
+
+<p>Start/Stop commands are passed to the Host fencing agent via a proxy machine, in this case
+The pm_proxy_preferences of the Host that is in non-responding state is examined
+for each entry in the comma-separated values for this field we are trying to send the fencing command (Start/Stop) via the proxy
+In the case that the proxy is the local engine , a validation phase of checking existence of local installed fence-agents package is issued
+The first proxy on the pm_proxy_preferences chain that succeeded to execute the command takes
+If all proxies in the pm_proxy_preferences chain fails to execute the fencing operation , an ERROR is written to the log.
+Actual proxy used in a fencing operation should be logged as well.</p>
+
+<h3 id="api">API</h3>
+
+<p>The REST API will be enhanced to include the new Proxy Preferences as follows</p>
+
+<p><code>  </code><host>
+`    `<power_management>
+`       `<pm_proxies>
+`          `<pm_proxy>
+`             `<proprietary>`cluster`</proprietary>
+`          `</pm_proxy>
+`         `<pm_proxy>
+`             `<proprietary>`dc`</proprietary>
+`          `</pm_proxy>
+`       `</pm_proxies>
+`    `</power_management>
+` `</host></p>
+
+<p>To achieve that we should do the following:
+in api.xsd (schema) define new elements:
+ <em>PmProxy</em> which contains one field : predefined</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    `*`PmProxies`*` which contains a list of PmProxy&#x000A;</code></pre></div>
+<p>Add enum PmProxyType {CLUSTER,DATACENTER} in org.ovirt.engine.api.model package
+Add PmProxyType enum to capabilities (BackendCapabilitiesResource)
+Add enum validations
+Add custom mapping for these new power-management fields in HostMapper.java, for both REST–&gt;Backend and Backend–&gt;REST directions)
+Add metadata to rsdl_metadata_v-3.1.yaml</p>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>A new list will be added to the Power Management Tab when adding a new Host or modifying existing Host
+The list will have by default the entries : CLUSTER ,DC and ENGINE(in 3.2)
+ The user may also use the UP and DOWN buttons to change items order inside the list(item order = priority)
+ See <a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#open-issues">pre-defined values</a> for details.</p>
+
+<p><img alt="" width="325" height="223" src="/images/wiki/ProxyPreferences.png?1560777612" /></p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>Add the new pm_proxy_preferences column in the upgrade script.
+Adding configuration values as described in <a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#configuration">Configuration</a></p>
+
+<h4 id="user-work-flows">User work-flows</h4>
+
+<h3 id="enforcement">Enforcement</h3>
+
+<h3 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h3>
+
+<h4 id="affected-ovirt-projects">Affected oVirt projects</h4>
+
+<p><a href="/develop/release-management/features/ux/hostpmmultipleagents/">Host Power Management Multiple Agents</a></p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p><a href="/develop/release-management/features/infra/hostpmproxypreferences/">Features/HostPMProxyPreferences</a></p>
+
+<h3 id="future-directions">Future Directions</h3>
+
+<p>The user may add other existing Host by pressing the ADD button, this will open a drop-down list of all available Hosts defined in the Data Center except the currently edited/added Host
+ We are skipping that for the first phase since it has complexities when a Host is removed or moved to another Cluster etc.</p>
+
+<h3 id="ovirt-35">oVirt 3.5</h3>
+
+<p>This <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1054778">RFE</a>is planned for oVirt 3.5
+ We will address for 3.5 only the option to look for proxy outside the DC where the host is located and try to use other DCs
+ This will be done by adding to the pm_proxy_preferences field which is defaulted now to "cluster,DC" another option named other_dc.
+(The pm_proxy_preferences value is available via the UI Host New/Edit PM TAB in the field named "source" , in the API it is under <pm_proxies>)
+ Example of POST request to update Host pm proxy details :</pm_proxies></p>
+
+<p><code>  </code><host>
+`    `<power_management type="apc_snmp">
+`       `<pm_proxies>
+`          `<pm_proxy>
+`              `<type>`cluster`</type>
+`           `</pm_proxy>
+`          `<pm_proxy>
+`              `<type>`dc`</type>
+`           `</pm_proxy>
+`          `<pm_proxy>
+`              `<type>`other_dc`</type>
+`           `</pm_proxy>
+`      `</pm_proxies>
+`    `</power_management>
+`  `</host></p>
+
+<p>The default will stay "cluster,DC" and the admin can change this value per host using the API</p>
+
+<h3 id="open-issues">Open Issues</h3>
+
+<h4 id="pre-defined-values">pre-defined values</h4>
+
+<p>Are pre-defined values applied implicitly?
+Meaning, if a user modified the PM Proxy Preferences to be for example only : IP1,IP2
+Does this means that this is the actual chain and if both IP1 &amp; IP2 fails to serve as proxies the Power Management operation fails?
+or, we should say that this actually implies IP1,IP2,engine,cluster,dc implicitly?
+In case of that, what should we apply if user set PM Proxy Preferences to be engine,IP1,IP2 ?
+Suggestion:
+engine,cluster,dc should be applied implicitly and missing definitions from the original default (engine,cluster.dc) will be applied using the same priority
+Examples:
+engine,IP1,IP2 =&gt; engine,IP1,IP2,cluster,dc IP1,dc,IP2 =&gt; IP1,dc,IP2,engine,cluster</p>
+
+<h4 id="local-vdsm">Local VDSM</h4>
+
+<p>In the case that engine is selected as a proxy, we may want a separate service (temporary name : local vdsm) that will run on the local host and expose only the fencing functionality from VDSM
+ This option has major affect on the effort/cost and time-line of this feature since we need to write a new service for that, package it , install it etc.</p>
+
+<h4 id="fence-wrapper">Fence Wrapper</h4>
+
+<p>A script or standalone program that will call the fence-agents package scripts directly
+An option is to use the separation of fenceAgent.py from API.py as suggested <a href="http://gerrit.ovirt.org/#/c/7190/7/vdsm/API.py">here</a>
+(Invocation in this case from <a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#jna">JNA</a> )
+In this case we do not need a <a href="/develop/release-management/features/infra/detailedhostpmproxypreferences/#local-vdsm">Local VDSM</a></p>
+
+<h4 id="vdsm-instance">VDSM Instance</h4>
+
+<p>A separate instance of vdsm, listening on a separate port.</p>
+
+<h3 id="jna">JNA</h3>
+
+<p>Java Native Access provides Java programs easy access to native shared libraries without using the Java Native Interface.</p>
+
+<p>Example:
+The following program loads the local C standard library implementation and uses it to call the printf function.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  import com.sun.jna.Library;&#x000A;  import com.sun.jna.Native;&#x000A;  import com.sun.jna.Platform;&#x000A;  /** Simple example of native library declaration and usage. */&#x000A;  public class HelloWorld {&#x000A;     public interface CLibrary extends Library {&#x000A;         CLibrary INSTANCE = (CLibrary) Native.loadLibrary(&#x000A;             (Platform.isWindows() ? "msvcrt" : "c"), CLibrary.class);&#x000A;         void printf(String format, Object... args);&#x000A;     }&#x000A;     public static void main(String[] args) {&#x000A;         CLibrary.INSTANCE.printf("Hello, World\n");&#x000A;         for (int i = 0; i &lt; args.length; i++) {&#x000A;             CLibrary.INSTANCE.printf("Argument %d: %s\n", i, args[i]);&#x000A;         }&#x000A;     }&#x000A;  }&#x000A;</code></pre></div>
+<p><a href="Category: Feature">Category: Feature</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/detailedhostpmproxypreferences.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/detailedhostpmproxypreferences.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

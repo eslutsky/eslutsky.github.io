@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Gluster Swift Management &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-swift-management">Gluster Swift Management</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allows the administrator to manage the gluster swift related services and configuration from oVirt Engine. With this the administrator can view gluster swift status in the cluster as well as on each host/server. Administrator will be able to start/stop gluster swift service across the servers in a cluster or on each server.</p>
+
+<p>To read more about gluster swift integration, see <a href="http://www.gluster.org/community/documentation/index.php/GlusterFS_Swift">http://www.gluster.org/community/documentation/index.php/GlusterFS_Swift</a></p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Shubhendu Tripathi <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner: Kanagaraj Mayilsamy <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#107;&#109;&#097;&#121;&#105;&#108;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#107;&#109;&#097;&#121;&#105;&#108;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>Engine Component owner: Shubhendu Tripathi <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>VDSM Component owner: Aravinda V K <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#118;&#105;&#115;&#104;&#119;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#118;&#105;&#115;&#104;&#119;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>QA Owner: Sudhir Dharanendraiah <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status: Deprecated/ On hold</li>
+  <li>Last updated: ,</li>
+  <li>Available In : NA</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<p>Gluster Swift Services Management has been designed to manage any group of services belonging to a service type. For instance, the Service Type for Gluster Swift is GLUSTER_SWIFT and the services are gluster-swift-proxy, gluster-swift-container, gluster-swift-object and gluster-swift-account.</p>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<h4 id="service-type">Service Type</h4>
+
+<p>An enum of supported Service Type. Currently only GLUSTER_SWIFT.</p>
+
+<h4 id="gluster-service">Gluster Service</h4>
+
+<p>This is the master list of supported services in the cluster and will be populated as part of installation or upgrade.</p>
+
+<ul>
+  <li>ServiceType - Type of service</li>
+  <li>serviceName - Name of service</li>
+</ul>
+
+<h4 id="gluster-server-service">Gluster Server Service</h4>
+
+<p>This entity stores the status of individual services on a server in the cluster</p>
+
+<ul>
+  <li>serviceType - Type of service</li>
+  <li>serviceName - Name of service</li>
+  <li>serverId - Refers the VDS server</li>
+  <li>status - Valid value from GlusterServiceStatus
+    <ul>
+      <li>RUNNING (UP)</li>
+      <li>STOPPED(DOWN)</li>
+      <li>PARTIALLY_UP - services are running only in some hosts</li>
+      <li>NOT_INSTALLED - SWIFT is not installed in the host</li>
+      <li>UNKNOWN - error in fetching the service status</li>
+    </ul>
+  </li>
+  <li>message - stores the message returned from VDS command when querying for service status on a server</li>
+</ul>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>Administrator can view the status of SWIFT in the cluster from the Cluster -&gt; General tab. The service status from all servers in the cluster is aggregated and shown as either UP/DOWN/PARTIALLY_UP/NOT_INSTALLED/UNKNOWN .</p>
+
+<ul>
+  <li>RUNNING - indicates that all Gluster_SWIFT related services are running in all servers in the cluster</li>
+  <li>STOPPED - indicates that all Gluster_SWIFT related services are stopped in all the servers in the cluster</li>
+  <li>PARTIALLY_UP - indicates that Gluster_SWIFT related services maybe running in some of the servers</li>
+  <li>NOT INSTALLED - indicates that SWIFT is not installed in the servers</li>
+  <li>UNKNOWN - indicates unable to fetch any information about the swift services</li>
+</ul>
+
+<h4 id="status-mapping">Status Mapping</h4>
+
+<p><img alt="" width="890" height="360" src="/images/wiki/GlusterSwift-StatusMapping.png?1560777613" /></p>
+
+<h4 id="cluster-general-subtab">Cluster General Subtab</h4>
+
+<p><img alt="" width="398" height="178" src="/images/wiki/GlusterSwift-ClusterStatus.png?1560777613" /></p>
+
+<h4 id="manage-gluster-swift-services">Manage Gluster Swift Services</h4>
+
+<p><img alt="" width="817" height="493" src="/images/wiki/GlusterSwift-ClusterManage.png?1560777613" /></p>
+
+<p>From the Servers view, clicking on server will show a Gluster SWIFT sub tab. This will list all services of GLUSTER_SWIFT service type along with the status for that server. Administrator can choose to start/stop the GLUSTER_SWIFT service from this tab.</p>
+
+<h4 id="host-gluster-swift-subtab">Host Gluster Swift Subtab</h4>
+
+<p><img alt="" width="1016" height="337" src="/images/wiki/GlusterSwift-HostManage.png?1560777613" /></p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<h3 id="user-work-flows">User work-flows</h3>
+
+<h3 id="events">Events</h3>
+
+<p>Periodic sync job will report if service status changes in a server.</p>
+
+<h2 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h2>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<ol>
+  <li>Engine - setup with Gluster or Both application mode, in order to create clusters with gluster service enabled.</li>
+  <li>Two or more servers to be added to cluster. The servers should have the gluster repo added so that while engine bootstraps host, the gluster rpms can be installed.</li>
+  <li>Install gluster-swift rpms and memcached if they are not already installed.</li>
+  <li>start the swift service by using the command "swift-init main start"</li>
+  <li>start the memcached service by using the command "service memcached start"</li>
+</ol>
+
+<h3 id="test-cases">Test Cases</h3>
+
+<ul>
+  <li>Verify Swift Status at cluster level.
+    <ul>
+      <li>Should have a cluster with "gluster service" enabled created and servers attached to it.</li>
+      <li>Should have gluster-swift package installed on the servers.</li>
+      <li>Click on the clusters tab and select the cluster to see the status.</li>
+      <li>Verify that in the General sub tab of a cluster, Gluster Swift status will be shown "DOWN" by default.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify swift status at server level.
+    <ul>
+      <li>Should have a cluster with "gluster service" enabled created and servers attached to it.</li>
+      <li>Should have gluster-swift package installed on the servers.</li>
+      <li>Click on the servers tab.</li>
+      <li>Go to Gluster Swift tab.</li>
+      <li>Verify that the following services are listed with status of the services as "Down":</li>
+    </ul>
+
+    <ol>
+      <li>gluster-swift-account</li>
+      <li>gluster-swift-container</li>
+      <li>gluster-swift-object</li>
+      <li>gluster-swift-proxy</li>
+      <li>memcached</li>
+    </ol>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify start Swift at cluster level
+    <ul>
+      <li>Should have a cluster with "gluster service" enabled created and servers attached to it.</li>
+      <li>Click on the Clusters tab.</li>
+      <li>Go to Manage link under the clusters general sub tab.</li>
+      <li>Click on the Start radio button in the manage gluster swift services popup.</li>
+      <li>Click on OK button.</li>
+      <li>Verify for the message "SWIFT Services started on cluster <cluster Name="">".</cluster></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify Stop SWIFT at cluster level
+    <ul>
+      <li>Should have a cluster with "gluster service" enabled created and servers attached to it.</li>
+      <li>Click on the Clusters tab.</li>
+      <li>Go to Manage link under the clusters general sub tab.</li>
+      <li>Click on the Stop radio button in the manage gluster swift services popup.</li>
+      <li>Click on OK button.</li>
+      <li>Verify for the message "SWIFT Services stopped on cluster <cluster Name="">".</cluster></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify restarting of Swift at cluster level
+    <ul>
+      <li>Should have a cluster with "gluster service" enabled created and servers attached to it.</li>
+      <li>Click on the Clusters tab.</li>
+      <li>Go to Manage link under the clusters general sub tab.</li>
+      <li>Click on the Restart radio button in the manage gluster swift services in the popup.</li>
+      <li>Click on OK button.</li>
+      <li>Verify for the message "SWIFT Services re-started on cluster <cluster Name=""></cluster></li>
+      <li>Verify that Gluster Swift status shows as "UP" in the general subtab of cluster.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify Start Swift Services at Server level.
+    <ul>
+      <li>click on the cluster which has severs present in it.</li>
+      <li>Click on the server in which Gluster Swift Services needs to be started.</li>
+      <li>Go to Gluster Swift Sub tab.</li>
+      <li>Click on the Start Swift link .</li>
+      <li>Verify that Status column of all the services shows "Up" .</li>
+      <li>Verify for the following message for all the services present in the server.</li>
+    </ul>
+
+    <ol>
+      <li>Status of service <Service Type=""> on server <server Name=""> changed from Up to Down. Updating in engine now.</server></Service></li>
+    </ol>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify Stop Swift Services at server level.
+    <ul>
+      <li>Click on the cluster which has servers present in it.</li>
+      <li>Click on the server in which Gluster Swift Services needs to be stopped.</li>
+      <li>Go to Gluster Swift Sub tab.</li>
+      <li>Click on the Stop Swift link .</li>
+      <li>Verify that Status column of all the services shows "Down" .</li>
+      <li>Verify for the following message for all the services present in the server.</li>
+    </ul>
+
+    <ol>
+      <li>Status of service <Service Type=""> on server <server Name=""> changed from Up to Down. Updating in engine now.</server></Service></li>
+    </ol>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Verify Restarting of Swift Services at server level.
+    <ul>
+      <li>Click on the cluster which has servers present in it.</li>
+      <li>Click on the server in which Gluster Swift Services needs to be restarted.</li>
+      <li>Go to Gluster Swift Sub tab.</li>
+      <li>Click on the Restart Swift link .</li>
+      <li>Verify that Status column of all the services shows "UP" .</li>
+      <li>Verify for the following message for all the services present in the server.</li>
+    </ul>
+
+    <ol>
+      <li>Status of service <Service Type=""> on server <server Name=""> changed from Down to Up. Updating in engine now.</server></Service></li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li><a href="http://www.gluster.org/community/documentation/index.php/GlusterFS_Swift">http://www.gluster.org/community/documentation/index.php/GlusterFS_Swift</a></li>
+  <li><a href="http://www.gluster.org/community/documentation/index.php/Arch/Understanding_Swift_Integration">http://www.gluster.org/community/documentation/index.php/Arch/Understanding_Swift_Integration</a></li>
+</ul>
+
+<h2 id="open-issues">Open Issues</h2>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/gluster-swift-management.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/gluster-swift-management.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

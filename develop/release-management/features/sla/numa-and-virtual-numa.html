@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+NUMA and Virtual NUMA &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="numa-and-virtual-numa">NUMA and Virtual NUMA</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allows enterprise customers to provision large guests for their traditional scale-up enterprise workloads and expect low overhead due to virtualization.</p>
+
+<ul>
+  <li>Query target host’s NUMA topology</li>
+  <li>NUMA bindings of guest resources (vCPUs &amp; memory)</li>
+  <li>Virtual NUMA topology</li>
+</ul>
+
+<p>You may also refer to the <a href="/develop/release-management/features/sla/detailed-numa-and-virtual-numa/">detailed feature page</a>.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Jason Liao (JasonLiao), Bruce Shi (BruceShi)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#099;&#104;&#117;&#097;&#110;&#046;&#108;&#105;&#097;&#111;&#064;&#104;&#112;&#046;&#099;&#111;&#109;">&#099;&#104;&#117;&#097;&#110;&#046;&#108;&#105;&#097;&#111;&#064;&#104;&#112;&#046;&#099;&#111;&#109;</a>, <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#120;&#105;&#097;&#111;&#045;&#108;&#101;&#105;&#046;&#115;&#104;&#105;&#064;&#104;&#112;&#046;&#099;&#111;&#109;">&#120;&#105;&#097;&#111;&#045;&#108;&#101;&#105;&#046;&#115;&#104;&#105;&#064;&#104;&#112;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: jasonliao, bruceshi @ #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Target Release: oVirt 3.5</li>
+  <li>Status: design</li>
+  <li>Last updated: 25 Mar 2014</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<ul>
+  <li>Query target host’s NUMA topology</li>
+</ul>
+
+<p>The ability to gather a given host’s NUMA topology (the number of NUMA nodes, CPUs, and total memory per node, NUMA node distances), NUMA statistics (free memory per node, CPUs and memory usage per node) from the UI, RESTful API and other APIs. Besides consuming this information for planning and provisioning guests and oVirt scheduler etc. there may be other likely consumers now and in the future.</p>
+
+<ul>
+  <li>NUMA bindings of guest resources (vCPUs &amp; memory)</li>
+</ul>
+
+<p>The ability to optionally specify the bindings for backing memory of a guest (i.e. via numatune with mode set to: strict, preferred, or interleave) along with the vCPU pinning across a desired set of host NUMA nodes from the UI, RESTful API and other APIs. An automatic NUMA balancing feature will be introduced in kernel 3.13. As this technology matures, it should reduce the need for having to specify explicit NUMA bindings.</p>
+
+<ul>
+  <li>Virtual NUMA topology</li>
+</ul>
+
+<p>The ability to specify virtual NUMA nodes for a medium- or large-sized guest from the UI, RESTful API and other APIs. This helps the operating system running in the guest to perform NUMA-aware allocation of data structures and scale better. Automatic NUMA balancing in the guest kernel can take advantage of this, too.</p>
+
+<h2 id="use-case-diagram">Use Case Diagram</h2>
+
+<p><img alt="" width="663" height="585" src="/images/wiki/Use_case_diagram.png?1560777612" /></p>
+
+<ul>
+  <li>Color of the use cases
+    <ul>
+      <li>Green - oVirt features are existed.</li>
+      <li>Blue - NUMA related feature.</li>
+      <li>Dashed - feature under discussion.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Use cases in detailed (v1 - current version, v2 - next version)
+    <ul>
+      <li>When ovirt engine add some host or refresh host capabilities, the <code>Gather host NUMA topology</code> will collect the number of NUMA nodes, CPU list and total memory per node, NUMA distances (v2), Automatic NUMA balancing support (v2) from vdsm.</li>
+      <li>When ovirt engine on timely to do get host statistics, the <code>Gather host NUMA statistics</code> will collect free memory per node, CPUs and memory usage per node from vdsm,</li>
+      <li>The CPUs usage per node is the sum of NUMA node’s CPUs usage depending on <code>Gather per CPU statistics</code>. It contains CPU’s system, user and idle usage. These data will be used not only by NUMA feature, oVirt scheduler and Report will use them.</li>
+      <li>By using user interface <code>Show host NUMA information</code>, administrator will take a loot at host NUMA information, then decide how to configure VM with NUMA aware.</li>
+      <li>Thus <code>Manual binding NUMA node</code> feature turn on, administrator should know the operation will let the VM lose high availability and live migration as same as CPU pinning feature. Binding NUMA node contain three steps:
+        <ul>
+          <li>Select NUMA tuning mode (strict, preferred or interleave)</li>
+          <li>Select NUMA node sets from specified host.</li>
+          <li>Check the CPU pinning is suitable for node sets.</li>
+        </ul>
+      </li>
+      <li>If the VM has the large size (i.e., 40 vCPUs and 512G memory) and cross the NUMA node, the <code>Guest NUMA topology</code> is the suggested feature that make the system has better performance. There are two checkpoints:
+        <ul>
+          <li>The sum of Guest NUMA node’s CPUs count must equal to VM total CPU count.</li>
+          <li>The sum of Guest NUMA node’s memory size must equal to VM total memory size.</li>
+        </ul>
+      </li>
+      <li>Follow up <code>oVirt Scheduler with NUMA policy</code>, these situation should consider:
+        <ul>
+          <li>When <code>Manual binding NUMA node</code> and <code>CPU pinning</code> are configured
+            <ul>
+              <li>If there is enough free memory (each or sum) for binding NUMA nodes to run VM. (v1)</li>
+              <li>If there is enough CPU idle (each or sum) for binding NUMA nodes to run VM. (v1)</li>
+              <li>If there is enough CPU idle (each or sum) for VM CPU pinning to run VM. (v2)</li>
+            </ul>
+          </li>
+          <li>When <code>Guest NUMA topology</code> is configured
+            <ul>
+              <li>If there is enough free memory per NUMA node to run VM. (v2)</li>
+              <li>If there is enough CPU idle per NUMA node to run VM. (v2)</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>The <code>NUMA topology section restful API</code> is under the Host and VM root section. It contains the list of NUMA nodes, each NUMA node’s CPUs and total memory, node distance (v2), automatic NUMA balancing support (v2).</li>
+      <li>The <code>NUMA statistics section restful API</code> is under the Host root section, it contains each NUMA node’s free memory, CPUs &amp; memory usage.</li>
+      <li><code>Search Host/VM by NUMA node count</code> and <code>MOM setting</code> with NUMA are still in discussion and will be published in v2.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="ui-design-prototype">UI Design Prototype</h2>
+
+<p>Work in Progress…</p>
+
+<ul>
+  <li>Host sub tab NUMA information
+    <ul>
+      <li>Follow CPUs and Memory of each NUMA node information, CPU pinning and manual binding NUMA node on VM is much easier.</li>
+      <li>Click Show NUMA distances button will popup panel show distances map.</li>
+    </ul>
+  </li>
+  <li>Manual binding NUMA node
+    <ul>
+      <li>Specific host changed on Host tabs will refresh Tuning nodes from the specified host.</li>
+      <li>Click Manual Binding NUMA node checkbox, the tuning mode selector and nodes checkboxes will enabled.</li>
+      <li>Tuning mode has these values: strict, preferred, interleave</li>
+      <li>There is one help box content: Configure wrong CPU pinning against NUMA nodes will take bad performance.</li>
+    </ul>
+  </li>
+  <li>Guest NUMA topology
+    <ul>
+      <li>Left node0 CPUs and Memory be blank, system will ignore Guest NUMA topology configuration.</li>
+      <li>Click Add and Minus button will increase and decrease NUMA nodes.</li>
+      <li>On saving the VM, there are some checks in NUMA topology:</li>
+      <li>The sum of every node’s CPUs number should equal to Total Virtual CPUs</li>
+      <li>The sum of every node’s Memory number should equal to total Memory Size</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>The hypervisor’s default policy is to schedule and run the guest on any available resources on the host. As a result, the resources backing a given guest could end up getting spread out across multiple NUMA nodes and over a period of time may get moved around, leading to poor and unpredictable performance inside the guest. Use the NUMA feature configuration could allow the users to get better performance from their VM's through using all CPU related memory - including the ones not handled by qemu/kvm. Allows users to get better performance from their VM's through split virtual NUMA node</p>
+
+<p>Note: Automatic NUMA balancing changes in the Linux kernel (i.e. upstream 3.8 kernel) should help reduce the need for having to explicitly specify this for a guest. But there will still be specific use cases where having this ability in the UI will prove useful.</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1010059">BZ1010059 - NUMA aware and balanced allocation of backing host resources for large guests</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1010079">BZ1010079 - Virtual NUMA nodes inside larger guests</a></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/numa-and-virtual-numa.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/numa-and-virtual-numa.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

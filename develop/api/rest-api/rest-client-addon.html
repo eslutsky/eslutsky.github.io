@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+REST Client Addon &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/api/">Api</a></li>
+<li><a href="/develop/api/rest-api/">Rest-api</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="rest-client-addon">REST Client Addon</h1>
+
+<p><strong>Two methods for invoking REST-API requests are described bellow:</strong></p>
+
+<h2 id="using-firefox-rest-client-add-on">Using <em>firefox</em> rest client add on</h2>
+
+<ol>
+  <li>Add to firefox the rest-client add-on:</li>
+</ol>
+
+<p><a href="https://addons.mozilla.org/en-US/firefox/addon/restclient/"><code>https://addons.mozilla.org/en-US/firefox/addon/restclient/</code></a></p>
+
+<ol>
+  <li>Restart firefox</li>
+  <li>Go to Tools –&gt; REST Client</li>
+  <li>
+    <p>Click on Authorization -&gt; Basic Authorization button, enter username and password.
+Username should include the domain. e.g.
+ admin@internal 5. Click on Headers -&gt; Custom headers and add</p>
+
+    <p>name: Content-type
+   value: application/xml</p>
+  </li>
+  <li>Select "Get" method, put in URL field the server address, followed by /api. e.g:</li>
+</ol>
+
+<p><a href="http://localhost:8080/api/"><code>http://localhost:8080/api/</code></a></p>
+
+<ol>
+  <li>Click on send
+ The expected result in the bottom window should be a red bar with text:
+ STATUS CODE: 200, OK On the "Response Body" tab, the entire entities supported by the service are presented.
+Selecting a specific entity and sending request for it will return the action supported for it and a collection of those entities.
+The following link will return the entire list of VMs:</li>
+</ol>
+<p><a href="http://localhost:8080/api/vms">http://localhost:8080/api/vms</a> The response body contains a fixed list of "ready-to-paste" list which could be used to be pasted into the URL.
+ If wishes to run command/action:</p>
+<ol>
+  <li>Change to "Post" method 2. Paste in the request body the request
+e.g. for adding a snapshot for a specific vm, type a url for that vm:</li>
+</ol>
+
+<p><a href="http://localhost:8080/api/vms/61d0c568-62f5-4b8c-8548-7000beb27d7c/snapshots"><code>http://localhost:8080/api/vms/61d0c568-62f5-4b8c-8548-7000beb27d7c/snapshots</code></a></p>
+
+<p>The request body:</p>
+
+<snapshot>
+<description>`New Snapshot for VM`</description>
+<vm id="61d0c568-62f5-4b8c-8548-7000beb27d7c" href="/api/vms/67f2ba3e-1a32-4aee-8be6-3f5c6fa4cfd8" />
+</snapshot>
+<p><code> </code></p>
+
+<p>This will add a new snapshot for VM with id 61d0c568-62f5-4b8c-8548-7000beb27d7c.</p>
+
+<h2 id="curl">curl</h2>
+
+<p>The second method is by using <em>curl</em> utility from the command line.
+ Example of adding new snapshot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  curl -v -u "admin@internal":letmein\! \&#x000A;    -H "Content-type: application/xml" \&#x000A;    -d '`&lt;snapshot&gt;`  \&#x000A;         `&lt;description&gt;`New Snapshot for VM`&lt;/description&gt;` \&#x000A;         `&lt;vm id="61d0c568-62f5-4b8c-8548-7000beb27d7c" href="/api/vms/61d0c568-62f5-4b8c-8548-7000beb27d7c"/&gt;` \&#x000A;     `&lt;/snapshot&gt;`' \&#x000A;    '`[`http://localhost:8080/api/vms/61d0c568-62f5-4b8c-8548-7000beb27d7c/snapshots`](http://localhost:8080/api/vms/61d0c568-62f5-4b8c-8548-7000beb27d7c/snapshots)`'&#x000A;</code></pre></div>
+<p>The <em>curl</em> command line utility (provided by the <em>curl</em> package) could be enhanced by a script which could run in parallel to test various scenarios.
+It is also suitable for any type of non-functional tests (NFT). For full list of arguments refer to curl man pages.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/api/rest-api/rest-client-addon.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/api/rest-api/rest-client-addon.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

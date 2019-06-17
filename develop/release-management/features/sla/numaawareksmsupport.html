@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+NumaAwareKsmSupport &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h2 id="numa-aware-ksm-support">NUMA aware KSM support</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>The KSM feature is optimizing shared memory pages across all NUMA nodes. The consequences is: a shared memory pages (controlled by KSM) to be read from many CPUs across NUMA nodes. Hence degrading (could totally eliminate) the NUMA performance gain. The optimal behavior is for KSM feature to optimize memory usage per NUMA nodes. This feature is implemented in KSM since <a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Virtualization_Administration_Guide/chap-KSM.html">RHEL 6.5</a>. We want to introduce a new feature to oVirt that will allow host administrator to control NUMA aware KSM policy.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Feature Owner: Dudi Maroshi &lt;dmaroshi (at) redhat (dot) com&gt;</li>
+  <li>GUI Component Owner: Dudi Maroshi &lt;dmaroshi (at) redhat (dot) com&gt;</li>
+  <li>Engine Component Owner: Dudi Maroshi &lt;dmaroshi (at) redhat (dot) com&gt;</li>
+  <li>VDSM Component Owner: Dudi Maroshi &lt;dmaroshi (at) redhat (dot) com&gt;</li>
+  <li>MoM Component Owner: Dudi Maroshi &lt;dmaroshi (at) redhat (dot) com&gt;</li>
+  <li>REST Component Owner: Dudi Maroshi &lt;dmaroshi (at) redhat (dot) com&gt;</li>
+</ul>
+
+<h3 id="general-description">General Description</h3>
+
+<p>The information flow is presented in the diagram bellow:</p>
+
+<p><img alt="" width="794" height="1123" src="/images/wiki/Ksm-merge_across-node-data-flow.png?1560777613" />
+The implementation activities are the following:</p>
+<h1 id="update-database-and-entities-with-new-attribute">Update Database and entities with new attribute.</h1>
+
+<ol>
+  <li>Update REST api and its translation system with new attribute</li>
+  <li>Update GUI with new widget</li>
+  <li>Test GUI and REST api</li>
+  <li>Update oVirt-engine business logic to transmit KSM changes to host</li>
+  <li>Test oVirt-engine</li>
+  <li>Update MoM subsystem with new attribute</li>
+  <li>Test MoM subsystem to track new attribute, and update KSM policy</li>
+  <li>Update VDSM agent to update new MoM policy with new attribute</li>
+</ol>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>We want to introduce a new feature to HREV-M that will allow host administrator to control NUMA aware KSM.</p>
+
+<h4 id="kernel-level-solution">Kernel level solution</h4>
+
+<p>Since RHEL 6.5 there is a kernel flag that controls KSM's NUMA awareness. The flag <strong>/sys/kernel/mm/ksm/merge_across_nodes</strong> has strict logic for enabling/disabling NUMA awareness in KSM. Especially this documented lifecycle constraint:
+ “<em>merge_across_nodes setting can be changed only when there are no ksm shared pages in system: set run 2 to unmerge pages first, then to 1 after changing merge_across_nodes, to remerge according to the new setting. Default = 1 (merging across NUMA nodes as in earlier releases)</em>”
+ The initial life-cycle of KSM service with NUMA awareness is presented in the pic bellow:
+<img alt="" width="646" height="633" src="/images/wiki/Ksm-merge-nodes-statechart.png?1560777613" />
+The skilled hypervisor/host administrator may control merge_across_nodes life-cycle using scripts. Outside oVirt control.
+=== oVirt feature design === Add cluster level property to store and manage the NUMA aware KSM policy.
+This requires adding new boolean column to vds_group table.
+Updating the corresponding insert and update stored procedure.
+Refactoring the DAO command and refactoring VDSGroup class.
+ Refactor all usage scenarios to guarantee that change to above cluster property will percolate at runtime to all active hosts. And NUMA aware KSM policy will be effective on every host activation. Using GUI and REST api.
+ Eventually achieving NUMA aware KSM policy conformance on all hosts in cluster. The initial default to all hosts in data center is merge_across_nodes = 1 (NUMA performance loss) this is RHEL default initial state.</p>
+
+<h5 id="a-activate-host-with-numa-aware-ksm-policy">A) Activate host with NUMA aware KSM policy</h5>
+
+<ol>
+  <li>Refactor engine class InitVdsOnUpCommand to send VDSM the current NUMA aware KSM policy value.</li>
+  <li>Refactor VDSM command SetMOMPolicyParameters to accept NUMA aware KSM policy. And make the VDSM side modification to receive the command. Preserving host performance.</li>
+  <li>On MoM update KSM controller and collector to identify new parameter. Also update the KSM policy to reflect the KSM with <strong>ksm_across_nodes</strong> flag life-cycle logic.</li>
+</ol>
+
+<h5 id="b-update-cluster-with-numa-aware-ksm-policy-using-rest-api">B) Update cluster with NUMA aware KSM policy using REST api</h5>
+
+<ol>
+  <li>Refactor engine class UpdateVdsGroupCommand. At execution: concurrently distributed the NUMA aware KSM policy values to each active host (calling VDSM command SetMOMPolicyParameters as in section A above).</li>
+  <li>Update REST api.xsd rsdl file and mapping classes</li>
+  <li>On VDSM and MoM side use the design from section A above.</li>
+</ol>
+
+<h5 id="c-update-cluster-with-numa-aware-ksm-policy-using-gui">C) Update cluster with NUMA aware KSM policy using GUI</h5>
+
+<p>In addition to the design from section B) above. Add radio buttons to engine GUI ClusterPopup at the bottom enabled by KSM checkbox.
+As in the picture bellow:
+<img alt="" width="800" height="559" src="/images/wiki/KSM-Policy-for-Numa-GUI.png?1560777613" />
+==== D) Adding new cluster with NUMA aware KSM policy using REST api ==== Refactor engine class AddVdsGroupCommand. Add validation to NUMA aware KSM policy value.</p>
+
+<h5 id="e-adding-new-cluster-with-numa-aware-ksm-policy-using-gui">E) Adding new cluster with NUMA aware KSM policy using GUI</h5>
+
+<p>Apply the GUI changes in section C above. And the design in section D above.</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<ol>
+  <li>Optimize host performance, by optimizing NUMA performance with KSM memory saving.</li>
+  <li>Effectively apply KSM policy to all active host at request time, not requiring maintenance-activation.</li>
+</ol>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<h4 id="data-and-entities">Data and entities</h4>
+
+<ul>
+  <li>Database – update vds_groups table (boolean, default = true, not null)</li>
+  <li>Database – update stored procedure insertvdsgroups</li>
+  <li>Database – update stored procedure updatevdsgroups</li>
+  <li>Database – Schema upgrade script.</li>
+  <li>Class VdsGroupDAODbFacadeImpl - update</li>
+  <li>Class VDSGroup – update</li>
+</ul>
+
+<h4 id="rest-api">REST api</h4>
+
+<ul>
+  <li>File api.xsd - update</li>
+  <li>File rsdl_metadata.yaml - update</li>
+  <li>Class ClusterMapper – update</li>
+</ul>
+
+<h4 id="ovirt-engine-backend">oVirt engine backend</h4>
+
+<ul>
+  <li>Class MomPolicyVDSParameters – update</li>
+  <li>Class InitVdsOnUpCommand – update</li>
+  <li>Class AddVdsGroupCommand – update</li>
+  <li>Class UpdateVdsGroupCommad – update</li>
+  <li>Class SetMOMPolicyParametersVDSCommand – update</li>
+  <li>Class VDSProperties - update</li>
+</ul>
+
+<h4 id="ovirt-engine-gui">oVirt engine GUI</h4>
+
+<ul>
+  <li>Class ClusterPopupView – update</li>
+  <li>File clusterPopupView.ui.xml – update</li>
+  <li>Class ClusterModel – update</li>
+</ul>
+
+<h4 id="vdsm">VDSM</h4>
+
+<ul>
+  <li>File supervdsmServer – update</li>
+  <li>Class vdsm/momIF.py – update</li>
+</ul>
+
+<h4 id="mom">MoM</h4>
+
+<ul>
+  <li>Class controller file KSM.py – update</li>
+  <li>Class collector file HostKSM.py – update</li>
+  <li>Policy file File KSM.rules -update</li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<p>Following are test scenarios for this feature.
+Required: A cluster with 2 NUMA capable hosts</p>
+
+<h4 id="activate-host-with-numa-aware-ksm-policy">Activate host with NUMA aware KSM policy</h4>
+
+<p>This test can be performed with REST or GUI.
+<strong>Initial set up:</strong>
+Take all hosts in clusters on maintenance.
+Set cluster with with NUMA aware KSM policy = KSM share NUMA nodes (the default).
+==== Test 1 – system test ====</p>
+
+<ol>
+  <li>Using oVirt engine, activate 1 host</li>
+  <li>When host is up
+:Verify: On host file /sys/kernel/mm/ksm/merge_across_nodes contains 1 .</li>
+  <li>Take host 1 on maintenance</li>
+  <li>
+    <p>When host is on maintenance</p>
+
+    <p>Update cluster with with NUMA aware KSM policy = KSM per each NUMA nodes.</p>
+  </li>
+  <li>Using oVirt engine, activate 1 host</li>
+  <li>
+    <p>When host is up</p>
+
+    <p>Verify: On host file /sys/kernel/mm/ksm/merge_across_nodes contains 0 .</p>
+
+    <p>Verify: received info event from host about NUMA aware KSM policy change.</p>
+  </li>
+  <li>Take host 1 on maintenance</li>
+  <li>
+    <p>When host is on maintenance</p>
+
+    <p>Update cluster with with NUMA aware KSM policy = KSM share NUMA nodes.</p>
+  </li>
+  <li>Using oVirt engine, activate 1 host</li>
+  <li>
+    <p>When host is up</p>
+
+    <p>Verify: On host file /sys/kernel/mm/ksm/merge_across_nodes contains 1 .</p>
+
+    <p>Verify: received info event from host about NUMA aware KSM policy change.</p>
+  </li>
+</ol>
+
+<h4 id="update-cluster-with-numa-aware-ksm-policy-using-rest">Update cluster with NUMA aware KSM policy using REST</h4>
+
+<p>Initial set up:
+Set cluster with with NUMA aware KSM policy = KSM share NUMA nodes (the default).
+Take all hosts in clusters up.</p>
+
+<h5 id="test-1--system-test">Test 1 – system test</h5>
+
+<ol>
+  <li>
+    <p>Update cluster with KSM disabled and NUMA aware KSM policy = KSM per each NUMA nodes</p>
+
+    <p>Wait for 20 secs</p>
+  </li>
+  <li>Verify: received from each host info event about NUMA aware KSM policy change.</li>
+  <li>Verify: on each host /sys/kernel/mm/ksm/merge_across_nodes contains 0 .</li>
+</ol>
+
+<h5 id="test-2--system-test">Test 2 – system test</h5>
+
+<ol>
+  <li>
+    <p>Update cluster with KSM disabled and NUMA aware KSM policy = KSM share NUMA nodes</p>
+
+    <p>Wait for 20 secs</p>
+  </li>
+  <li>Verify: received from each host info event about NUMA aware KSM policy change.</li>
+  <li>Verify: on each host /sys/kernel/mm/ksm/merge_across_nodes contains 1</li>
+</ol>
+
+<h3 id="comments-and-discussion">Comments and Discussion</h3>
+
+<ul>
+  <li>No visible feedback about individual host NUMA awareness for KSM (not in RFE requirements)</li>
+  <li>Host administrator's manual configuration for /sys/kernel/mm/ksm/merge_across_nodes kernel flag. Is effective till next MoM collection cycle (important for manually trials and testing).</li>
+  <li>Reusing and dependent on existing oVirt engine mechanisms, and reusing VDSM host mechanisms.</li>
+</ul>
+
+<!-- -->
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/numaawareksmsupport.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/numaawareksmsupport.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

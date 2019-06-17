@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Engine Vacuum Tool &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="engine-vacuum">Engine Vacuum</h1>
+
+<h1 id="description">Description</h1>
+<p>This page describes the <strong><em>engine-vacuum</em></strong> cli tool and the <strong><em>vacuum setup-plugin</em></strong> that uses it.</p>
+
+<h1 id="motivation">Motivation</h1>
+
+<blockquote>
+  <p>"PostgreSQL databases require periodic maintenance known as vacuuming.
+For many installations, it is sufficient to let vacuuming be performed by the autovacuum daemon"</p>
+  <ul>
+    <li>routine-vacuuming, <a href="https://www.postgresql.org/docs/9.2/static/routine-vacuuming.html">postgres documentation</a></li>
+  </ul>
+</blockquote>
+
+<p>Apart from updating the tables and removing garbage from the tables,
+full vacuum is the only vacuum operation that can reclaim disk space back to the operating system.
+If the engine db is falling behind in collecting garbage,(autovacuum doesn't perfom optimally) we will
+see disk usage growth in time as a result.</p>
+
+<p>The engine-vacuum tool is a wrapper around postgres commands and is aimed to ease Vacuum
+maintenance actions on the DB, and can be used easily and securely, as they reuse
+the setup credentials to authenticate against the engine db. The tool is being
+used by an engine-setup plugin and act as a maintenance task, taking advantage of
+the downtime period when updating the engine. The tool can be used just as well
+by cron, script or just manual invocation and it covers most of the functionality
+of the vacuum commands.</p>
+
+<h1 id="scope">Scope</h1>
+<p>This page covers the tool itself, and the engine-setup plugin that was created to use it.</p>
+
+<p>Not covered - Vacuum design and functionality. See the references section to read about vacuum.</p>
+
+<h1 id="synopsis">Synopsis</h1>
+
+<h2 id="engine-vacuum-1">engine-vacuum</h2>
+
+<div class="highlight"><pre class="highlight shell"><code>  engine-vacuum <span class="o">[</span>OPTION]...&#x000A;</code></pre></div><p>Located under <code>/bin/engine-vacuum</code>, invoking this can perform vacuum, vacuum full
+and analyze against the installed engine db, optionally specifying the tables,
+without needing to specifying the engine db, user and password.</p>
+
+<div class="highlight"><pre class="highlight shell"><code>engine-vacuum <span class="nt">--help</span>&#x000A;&#x000A;  <span class="nt">-a</span>          - run analyze, update optimizer statistics&#x000A;  <span class="nt">-A</span>          - run analyze only, only update optimizer stats, no vacuum&#x000A;  <span class="nt">-f</span>          - <span class="k">do </span>full vacuuming&#x000A;  <span class="nt">-t</span>          - vacuum specific table&#x000A;  <span class="nt">-v</span>          - verbose output&#x000A;  <span class="nt">-h</span>          - print this usage message&#x000A;</code></pre></div>
+<h2 id="examples">Examples</h2>
+<p>Run vacuum only:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>engine-vacuum&#x000A;</code></pre></div>
+<p>Run vacuum analyze:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>engine-vacuum <span class="nt">-a</span>&#x000A;</code></pre></div>
+<p>Only update <a href="https://wiki.postgresql.org/wiki/Introduction_to_VACUUM,_ANALYZE,_EXPLAIN,_and_COUNT#Using_ANALYZE_to_optimize_PostgreSQL_queries">optimizer stats</a>, no vacuum:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>engine-vacuum <span class="nt">-A</span>&#x000A;</code></pre></div><p>Run vacuum full, and verbose for more output:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>engine-vacuum <span class="nt">-f</span> <span class="nt">-v</span>&#x000A;</code></pre></div><p>Run vacuum full, verbose on vm_dynamic and vds_dynamic tables only:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>engine-vacuum <span class="nt">-f</span> <span class="nt">-v</span> <span class="nt">-t</span> vm_dynamic <span class="nt">-t</span> vds_dynamic&#x000A;</code></pre></div>
+<h2 id="vacuum-setup-plugin">Vacuum setup plugin</h2>
+<p>During an execution of engine-setup, excluding new installation, at the
+ customization stage, the setup will raise a dialog, asking to perform full vacuum:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>engine-setup&#x000A;...&#x000A;<span class="o">[</span> INFO  <span class="o">]</span> Stage: Environment customization&#x000A;...&#x000A;          Perform full vacuum on the engine database engine@localhost?&#x000A;          This operation may take a <span class="k">while </span>depending on this setup health and the&#x000A;          configuration of the db vacuum process.&#x000A;          See https://www.postgresql.org/docs/9.2/static/sql-vacuum.html&#x000A;          <span class="o">(</span>Yes, No<span class="o">)</span> <span class="o">[</span>No]:&#x000A;</code></pre></div>
+<p>Choosing <code>[Yes]</code>, will invoke vacuum full verbose on the engine db by
+invoking <code>engine-vacuum -f -v</code> and by setting <code>/tmp/{tmpdir}/.pgpass</code> - See <a href="https://www.postgresql.org/docs/9.2/static/libpq-pgpass.html">pgpass documantation</a>.</p>
+
+<ul>
+  <li>Default value: <em>No</em> (does nothing)</li>
+  <li>Output: to the install log, small elapsed time summary to the console</li>
+  <li>Answer file entry: <code>OVESETUP_DB/engineVacuumFull=bool:False</code></li>
+  <li>Fail install on error: <em>Yes</em>, output will go to the installation log</li>
+</ul>
+
+<h2 id="security">Security</h2>
+<p>The credentials of the user, engine db and password
+are taken from /etc/ovirt-engine/engine.conf.d/10-setup-database and passed
+using .pgpass file thus not used as a command argument and not in risk to
+go into history, log or similar. See <a href="https://www.postgresql.org/docs/9.2/static/libpq-pgpass.html">pgpass documentation</a> for more details.</p>
+
+<h2 id="todo">TODO</h2>
+<ul>
+  <li>Try to give a rough estimation of how long this is going to take. We can count
+the dead rows and at least provide the size of amount of bytes to delete.</li>
+</ul>
+
+<div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">relname</span><span class="p">,</span><span class="n">n_dead_tup</span> <span class="k">from</span> <span class="n">pg_stat_user_tables</span> <span class="k">order</span> <span class="k">by</span> <span class="n">n_dead_tup</span> <span class="k">desc</span><span class="p">;</span>&#x000A;</code></pre></div>
+<h1 id="references">References</h1>
+
+<ul>
+  <li><a href="https://www.postgresql.org/docs/9.2/static/routine-vacuuming.html">Postgres routine vacuuming documentation page</a></li>
+  <li><a href="https://www.postgresql.org/docs/9.2/static/libpq-pgpass.html">Postgres pgpass documentation page</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1388430">The original RFE for this page</a> - https://bugzilla.redhat.com/show_bug.cgi?id=1388430</li>
+  <li><a href="https://wiki.postgresql.org/wiki/Introduction_to_VACUUM,_ANALYZE,_EXPLAIN,_and_COUNT#Using_ANALYZE_to_optimize_PostgreSQL_queries">Using ANALYZE to optimize PostgreSQL queries</a></li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/Engine_vacuum.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/Engine_vacuum.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 23 Jan 2017 08:34 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

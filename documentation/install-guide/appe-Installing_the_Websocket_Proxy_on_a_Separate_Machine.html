@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing a Websocket Proxy on a Separate Machine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="appendix-f-installing-a-websocket-proxy-on-a-separate-machine">Appendix F: Installing a Websocket Proxy on a Separate Machine</h1>
+
+<p>The websocket proxy allows users to connect to virtual machines via noVNC and SPICE HTML5 consoles. The noVNC client uses websockets to pass VNC data. However, the VNC server in QEMU does not provide websocket support, therefore a websocket proxy must be placed between the client and the VNC server. The proxy can run on any machine that has access to the network, including the the Engine machine.</p>
+
+<p>For security and performance reasons, users may want to configure the websocket proxy on a separate machine.</p>
+
+<p>This section describes how to install and configure the websocket proxy on a separate machine that does not run the Engine.</p>
+
+<p><strong>Installing and Configuring a Websocket Proxy on a Separate Machine</strong></p>
+
+<ol>
+  <li>
+    <p>Install the websocket proxy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-websocket-proxy&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the <code>engine-setup</code> command to configure the websocket proxy.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> If the <code>rhevm</code> package has also been installed, choose <code>No</code> when asked to configure the engine on this host.</p>
+  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to allow <code>engine-setup</code> to configure a websocket proxy server on the machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure WebSocket Proxy on this machine? (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to accept the automatically detected hostname, or enter an alternative hostname and press <strong>Enter</strong>. Note that the automatically detected hostname may be incorrect if you are using virtual hosts:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Host fully qualified DNS name of this server [host.example.com]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to allow <code>engine-setup</code> to configure the firewall and open the ports required for external communication. If you do not allow <code>engine-setup</code> to modify your firewall configuration, then you must manually open the required ports.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Setup can automatically configure the firewall on this system.&#x000A; Note: automatic configuration of the firewall may overwrite current settings.&#x000A; Do you want Setup to configure the firewall? (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Enter the fully qualified DNS name of the Engine machine and press <strong>Enter</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Host fully qualified DNS name of the engine server []: engine_host.example.com&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to allow <code>engine-setup</code> to perform actions on the Engine machine, or press <strong>2</strong> to manually perform the actions.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Setup will need to do some actions on the remote engine server. Either automatically, using ssh as root to access it, or you will be prompted to manually perform each such action.&#x000A;  Please choose one of the following:&#x000A; 1 - Access remote engine server using ssh as root&#x000A; 2 - Perform each action manually, use files to copy content around&#x000A; (1, 2) [1]:&#x000A;</code></pre></div>
+    <p>i. Press <strong>Enter</strong> to accept the default SSH port number, or enter the port number of the Engine machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     ssh port on remote engine server [22]:&#x000A;</code></pre></div>
+    <p>ii. Enter the root password to log in to the Engine machine and press <strong>Enter</strong>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     root password on remote engine server engine_host.example.com:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Select whether to review iptables rules if they differ from the current settings.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Generated iptables rules are different from current ones.&#x000A; Do you want to review them? (Yes, No) [No]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to confirm the configuration settings.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> --== CONFIGURATION PREVIEW ==--&#x000A;&#x000A; Firewall manager                        : iptables&#x000A; Update Firewall                         : True&#x000A; Host FQDN                               : host.example.com&#x000A; Configure WebSocket Proxy               : True&#x000A; Engine Host FQDN                        : engine_host.example.com&#x000A;&#x000A; Please confirm installation settings (OK, Cancel) [OK]:&#x000A;</code></pre></div>
+    <p>Instructions are provided to configure the Engine machine to use the configured websocket proxy.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Manual actions are required on the engine host&#x000A; in order to enroll certs for this host and configure the engine about it.&#x000A;&#x000A; Please execute this command on the engine host:&#x000A;    engine-config -s WebSocketProxy=host.example.com:6100&#x000A; and than restart the engine service to make it effective&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Log in to the Engine machine and execute the provided instructions.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-config -s WebSocketProxy=host.example.com:6100&#x000A;# systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="appe-Preparing_a_Local_Manually-Configured_PostgreSQL_Database">Appendix E: Preparing a Local Manually-Configured PostgreSQL Database</a> <br />
+<strong>Next:</strong> <a href="appe-Configuring_a_Host_for_PCI_Passthrough">Appendix G: Configuring a Host for PCI Passthrough</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/appe-installing_the_websocket_proxy_on_a_different_host">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/appe-Installing_the_Websocket_Proxy_on_a_Separate_Machine.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/appe-Installing_the_Websocket_Proxy_on_a_Separate_Machine.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

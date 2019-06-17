@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Gluster Volume Asynchronous Tasks Management &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-volume-asynchronous-tasks-management">Gluster Volume Asynchronous Tasks Management</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature provide the support for managing the asynchronous tasks on Gluster volumes.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Sahina Bose <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner: Kanagaraj Mayilsamy <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#107;&#109;&#097;&#121;&#105;&#108;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#107;&#109;&#097;&#121;&#105;&#108;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>Engine Component owner: Sahina Bose <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>VDSM component owner: Balamurugan Arumugam <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#098;&#097;&#114;&#117;&#109;&#117;&#103;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#098;&#097;&#114;&#117;&#109;&#117;&#103;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>REST component owner: Sahina Bose <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>QA Owner: Sudhir Dharanendraiah <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status: Completed</li>
+  <li>Last updated date: ,</li>
+  <li>Requires : glusterfs &gt;= 3.5</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Support managing the following gluster operations that run asynchronously, from the oVirt UI</p>
+
+<ul>
+  <li>Rebalance volume</li>
+  <li>Remove brick</li>
+</ul>
+
+<p>User should be able to start any of these operations as follows:</p>
+
+<ul>
+  <li>Select a volume and click on the button "Start Rebalance"</li>
+  <li>Select a brick and click on the button "Remove"
+    <ul>
+      <li>When removing a brick, select/un-select a checkbox "Migrate data". If selected, the remove brick operation will be triggered in asynchronous fashion by first migrating the data from the brick to be removed.This is the default option. If not checked, the remove is performed with the "force" option to "gluster volume remove-brick" command. This is a synchronous operation</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Task Monitoring</strong></p>
+
+<ul>
+  <li>Tasks can be monitored using the Tasks sub-tab in the bottom pane of the UI</li>
+  <li>A child step is added to the Executing step, the status of which is periodically updated for as long as the task is in progress</li>
+  <li>If rebalance or remove-brick operations are started from the Gluster CLI, these can also be monitored using the Tasks sub-tab. A job entry is created for any such operation which is associated with the gluster task id.</li>
+  <li>User can also check the status of the task from the Volume/Bricks tabs by selecting the volume/brick.</li>
+</ul>
+
+<p><strong>Task Operations</strong></p>
+
+<p>Once started, a rebalance volume or remove-brick can be stopped while in progress. This can be done from the Volumes/Bricks tab depending on the operation.</p>
+
+<ul>
+  <li>For rebalance volume, clicking on the volume which is being rebalanced will enable a UI option to stop the task</li>
+  <li>For remove brick, clicking on one or more bricks that have a remove brick operation in progress will enable a UI option to stop the task.</li>
+</ul>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<h2 id="user-flows">User Flows</h2>
+
+<p>User flow that's given in "Rebalance Volume" and "Remove Brick" section, has been slightly altered after the UX team's review. Though the functionality remains same, the menu and flows have been altered.</p>
+
+<p><strong>Pls. take a look at the flow description ( no images attached - only description ) given bellow to know the changes…</strong> Rebalance Operation related UI modifications</p>
+
+<p>Now the "Rebalance" menu does not have any of the Start, Stop and Status sub-menu. And this menu would come before the "Optimization for Virt Store".</p>
+
+<p>To Start Rebalance operation on a volume: User goes to the volume tab and selects one or more volume and clicks the "Rebalance" menu (Note : Rebalance menu will not be activated, when no row in the Volume table is selected. Currently no default row is selected when the user comes to the volume page ). This will start the rebalance operation on the selected Volume(s) and the "Activities" column for those volume will show an icon indicating that the rebalance operation is on progress on those volumes. The rebalance-progress icon will be changed to rebalance-completed-successfully icon, once the rebalance task on the volume is finished successfully. If the rebalance operation fails on any of the selected volumes, then the icon will change to rebalance-fail icon. If all the bricks of the selected volume is down ( volume status is shown with yellow-exclamation mark ), then the pressing Rebalance menu would give a proper warning, saying rebalance operation can not be started.</p>
+
+<p>The rebalance progress icon, will also have a drop down arrow, which can be clicked by the end user to get the context sensitive menu. Upon clicking that, a menu will be shown. If the rebalance operation is in-progress on the volume, then the following two menu items will be shown. "Stop" and "Status". Otherwise, it will show only the "Status" menu.</p>
+
+<p>If the user clicks the "Stop" menu, user will be given a confirmation dialogue, which would ask "Do you want to stop the rebalance operation on the selected volume?". If the user presses the "Yes", then the rebalance operation on that volume will be stopped and rebalance-status dialogue will be shown (no change in status dialogue). If the user presses the "No" button, then the rebalance operation will not be stopped and this dialogue will be closed.</p>
+
+<p>If the user clicks the "Status" menu, then rebalance-status dialogue will be shown (it will be same as already given description bellow)</p>
+
+<p>Smilarly the Remove brick</p>
+
+<p>Few other items, that are modified in the course of Corbett are as follows : There is not a whole lot of change, but it makes sense to have them captured….</p>
+
+<ol>
+  <li>
+    <p>When one or more brick is down in a volume, volume status would be shown as Yellow-Up arrow ( volume service is still up )</p>
+  </li>
+  <li>
+    <p>If all the bricks are down in a volume, volume status would be shown as Yellow-Up Arrow + Yellow-exclamation mark ( volume service is till up )</p>
+  </li>
+</ol>
+
+<h3 id="rebalance-volume">Rebalance Volume</h3>
+
+<ul>
+  <li>Users can initiate a rebalance operation on a volume using the following UI</li>
+</ul>
+
+<p><img alt="" width="1386" height="788" src="/images/wiki/Start_vol_rebalance.png?1560777612" /></p>
+
+<ul>
+  <li>If volume rebalance is in progress, the UI will be updated as follows:</li>
+</ul>
+
+<p><img alt="" width="1386" height="788" src="/images/wiki/View_vol_rebalance.png?1560777612" /></p>
+
+<ul>
+  <li>
+    <ul>
+      <li>The icon in the Activities column indicates that "Rebalance" operation is in progress</li>
+      <li>User can check status/ stop operation from the Rebalance menu. Rebalance –&gt; Start, Rebalance –&gt; Stop</li>
+      <li>The tasks tab in the bottom pane is updated periodically with short summary status of task</li>
+      <li><strong>\1</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>User can check the detailed status of the rebalance operation using Rebalance –&gt; Status, which will invoke the following UI</li>
+</ul>
+
+<p><img alt="" width="596" height="402" src="/images/wiki/Vol_rebalance_status.png?1560777612" /></p>
+
+<ul>
+  <li>
+    <ul>
+      <li>The status dialog gets refreshed automatically (a periodic refresh for as long as dialog is open) When the rebalance operation is done, it would also append the string "(Rebalance Completed)" to 'Status at' field.</li>
+      <li>User can stop rebalance from the status window by clicking on "Stop Rebalance" button. User will be prompted for confirmation and after confirmation, it will stop the rebalance operation and show the Stop dialog as below</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>To stop, the rebalance operation, user can use the Rebalance –&gt; Stop option, which will ask for confirmation and once stopped display the status of rebalance operation as below:</li>
+</ul>
+
+<p><img alt="" width="595" height="401" src="/images/wiki/Stop_vol_rebalance.png?1560777612" /></p>
+
+<h3 id="remove-brick">Remove Brick</h3>
+
+<ul>
+  <li>Remove Brick can be initiated from the Bricks sub tab as below:</li>
+</ul>
+
+<p><img alt="" width="1386" height="788" src="/images/wiki/StartRemovebrick.png?1560777612" /></p>
+
+<ul>
+  <li>
+    <ul>
+      <li>In Gluster CLI, remove brick is a two-step process - where data is first migrated using <strong>remove-brick start</strong> and then user calls <strong>remove-brick commit</strong> to remove the brick</li>
+      <li>In the engine UI, once a user clicks on Remove -&gt; Start, he/she is presented with a dialog that has 2 checkboxes
+        <ul>
+          <li>Migrate data from bricks is ON by default. This is needed to ensure data migration before brick is removed. If unchecked, the engine will call a remove-brick force, which could lead to data loss on the bricks being removed</li>
+          <li>Auto commit. If checked, once the migration of data is complete, the engine will automatically call commit on remove-brick in CLI, which removes the brick.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <ul>
+      <li>If the user chooses to Remove brick without auto commit option, once migration of data is complete, the Tasks tab is updated with message that user needs to commit for the remove brick operation to take effect.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Once remove brick operation is started, the UI is updated as follows (similar to Rebalance volume in progress)</li>
+</ul>
+
+<p><img alt="" width="1101" height="628" src="/images/wiki/Removebrickview.png?1560777612" /></p>
+
+<ul>
+  <li>''UX input required - Need a way in Bricks sub tab to indicate that remove brick is in progress on one or more bricks - Icon or colour coding rows? ''</li>
+  <li>User can check the detailed status of the remove brick operation using Remove –&gt; Status (it will invoke a UI similar to volume rebalance status)</li>
+</ul>
+
+<p><img alt="" width="596" height="402" src="/images/wiki/Removebrickstatus.png?1560777612" /></p>
+
+<ul>
+  <li>
+    <ul>
+      <li>The dialog is periodically refreshed when open. If Migration of data is complete, the commit button will be enabled.</li>
+      <li>User can choose to stop the remove brick operation by clicking on the "Stop Remove" button. This will ask for confirmation and display the Stop dialog as below</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>To stop the remove brick operation while in progress, user can use the Remove –&gt; Stop option. This will ask for confirmation, and if confirmed will display a dialog as below</li>
+</ul>
+
+<p><img alt="" width="596" height="402" src="/images/wiki/Removebrickstop.png?1560777612" /></p>
+
+<h2 id="detailed-design">Detailed Design</h2>
+
+<p>Please see <a href="/develop/release-management/features/gluster/detailed-gluster-volume-asynchronous-tasks-management/">Detailed Gluster Volume Asynchronous Tasks Management</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/gluster-volume-asynchronous-tasks-management.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/gluster-volume-asynchronous-tasks-management.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

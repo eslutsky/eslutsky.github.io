@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Metrics Store - Collected Data &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/metrics/">Metrics</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="metrics-store---collected-data">Metrics Store - Collected Data</h1>
+
+<h2 id="statistics-collection">Statistics Collection</h2>
+<p>collectd gathers oVirt statistics from the oVirt engine and hypervisors, and transfers the data to fluentd.</p>
+
+<p>The data is then transformed, enriched, and sent to the remote metrics store.</p>
+
+<h3 id="ovirt-metrics---collectd-loaded-plugins-list">oVirt Metrics - collectd loaded plugins list</h3>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Disk">Disk</a></p>
+
+<p>Disk utilization: Sectors read/written, number of read/write actions,
+  average time an IO-operation took to complete.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:CPU">CPU</a></p>
+
+<p>CPU time spent in the system, user, nice, idle, wait, interrupt, softirq and steal.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Memory">Memory</a></p>
+
+<p>Collects information about the used, buffered, cached and free RAM memory.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Load">Load</a></p>
+
+<p>The average number of runnable tasks in the run-queue, for one, five, and fifteen minute average.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:virt">Virt</a> (Applies only to oVirt hypervisors).</p>
+
+<p>CPU, memory, disk, and network I/O statistics from virtual machines.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:NFS">NFS</a></p>
+
+<p>NFS usage: A count of the number of procedure calls for each procedure, grouped by version
+  and whether the system runs as a server or client. NFS version 4 is not supported for now.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Entropy">Entropy</a></p>
+
+<p>Amount of entropy available to the system.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Swap">Swap</a></p>
+
+<p>Records the free, cached, and used memory utilized by swap and swap in/out.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:DF">DF</a></p>
+
+<p>Collects file system (incl. the hard drive) usage information such as free, reserved, and used space.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Interface">Interface</a></p>
+
+<p>Collects network traffic download and upload data, including the number of octets, packets, and errors transmitted and received, for each network interface.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Aggregation">Aggregation</a></p>
+
+<p>Aggregates multiple values into a single value, using one or several consolidation functions, e.g. summation and average.</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:Processes">Processes</a></p>
+
+<p>Collects the number of processes, grouped by their state (incl. running, blocked, sleeping, paging, stopped and zombies).</p>
+
+<p><a href="https://collectd.org/wiki/index.php/Plugin:PostgreSQL">PostgreSQL</a> (Applies only to oVirt engine).</p>
+
+<p>PostgreSQL database statistics: custom_deadlocks, table_states, disk_io, disk_usage.</p>
+
+<h2 id="logs-collection">Logs Collection</h2>
+<p>fluentd collects oVirt logs from the oVirt engine and hypervisors.
+The data is then transformed, enriched and sent to the remote metrics store.</p>
+
+<p>Logs collected from the engine machine include:</p>
+
+<ul>
+  <li>engine.log</li>
+</ul>
+
+<p>Logs collected from the hypervisors machines include:</p>
+
+<ul>
+  <li>vdsm.log</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/metrics/metrics-store-collected-metrics.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/metrics/metrics-store-collected-metrics.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 17 Feb 2019 21:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

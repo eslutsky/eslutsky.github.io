@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 3.4 Release Announcement &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/releases/">Releases</a></li>
+<li><a href="/develop/release-management/releases/3.4/">oVirt 3.4 Release Notes</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-34-release-announcement">oVirt 3.4 Release Announcement</h1>
+
+<p>The oVirt project, the open-source, openly governed KVM virtualization management project, today announced the general availability of oVirt 3.4, a community-driven open virtual datacenter management platform. This latest community release includes several new features, including hosted engine; improved storage and scheduling; and a preview of hot-plug CPU and PPC64 support features.</p>
+
+<p>Developed by a global community, oVirt offers advanced virtualization capabilities, including high availability, live migration, live storage migration, the ability to schedule and control the deployment of virtual machines, and more. As the upstream development project for Red Hat Enterprise Virtualization, oVirt’s integrated virtualization enables cost savings for enterprises without the need to re-develop applications to conform to cloud platforms' APIs. oVirt also shares services with Red Hat’s cloud solutions including RDO, Red Hat's community OpenStack distribution, to improve key building blocks for private and public cloud deployments and allow upstream developments to make their way into Red Hat’s enterprise-hardened cloud and virtualization solutions.</p>
+
+<p><strong>\1</strong></p>
+
+<p><strong>Improved storage, scheduling and management:</strong> oVirt 3.4 is designed to manage multiple storage domains, allowing users to mix different types of shared storage in the same datacenter. Virtual machine availability has also been enhanced, as the oVirt Engine can now provide high availability to VMs in the event of a host failure, and the oVirt Manager can flag individual VMs for high availability. Network processes and configuration have been simplified in oVirt 3.4, offering multi-host network configuration, reduced number of steps to reflect a definition change and new networking labels to differentiate host interfaces.</p>
+
+<p><strong>Expanded developer features:</strong> This newest release will allow developers to apply affinity and anti-affinity rules to VMs to manually dictate when VMs should simultaneously run on one hypervisor, or separately on different hypervisor hosts. They will also be able to manage a wider variety of storage options, including NFS, iSCI, POSIX, as well as GlusterFS and FibreChannel storage domains. Multi-host network configuration will enable administrators to modify networks already provisioned by hosts and apply those changes to all hosts within a datacenter, and power-saving rules can shut down and power up hosts as needed.</p>
+
+<p><strong>Hosted engine and hot-plug CPUs:</strong> New clustered solutions in oVirt 3.4 enable users to configure multiple hosts while running their oVirt engine inside a virtual machine. The ability to add and remove virtual resources to a virtual machine is critical in any virtualization environment, and oVirt 3.4 gives system administrators this freedom with an added preview of a hot-plug CPU feature. oVirt 3.4’s hot-plug CPU enables users to meet customer service-level agreements and dynamically scale virtual machine compute resources without restarting the virtual machine.</p>
+
+<p>oVirt 3.4 also provides cross-architecture capabilities not found in most competing virtualization platforms, including a preview of PPC64 support, thanks to efforts from IBM and the Instituto de Pesquisas Eldorado (Eldorado Research Institute) in Brazil. Efforts continue to integrate oVirt with other projects and solutions that users want, such as oVirt guest agents for openSUSE and Ubuntu.</p>
+
+<p>A complete list of oVirt 3.4 features is available on the oVirt Project’s community release announcement page: <a href="/develop/release-management/releases/3.4/release-announcement/">OVirt 3.4 release announcement</a> . oVirt 3.4 takes virtual datacenter management to new levels, with access to more developers, using open technologies. With easier-to-install features, more availability on different architectures and platforms, and better access to a variety of storage options, this newest release is a significant milestone for flexible, open source virtual datacenter management.</p>
+
+<p>Itamar Heim, Director of Software Engineering, Red Hat adds, "oVirt 3.4 will provide admins with more flexibility than ever to better manage and synchronize and schedule their virtualization and cloud workloads. Managing virtual machines is now easier with many new scheduling and load balancing options and dynamic changes such as hot-plug CPU. Deployment is also more flexible with oVirt Engine able to run as a VM on the same hosts it manages, network configurations across multiple hosts and the capability to mix different types of storage in the same datacenter."</p>
+
+<p><strong>Additional Resources</strong></p>
+
+<ul>
+  <li>Read more about the <a href="/develop/release-management/releases/3.4/">oVirt 3.4 release highlights</a></li>
+  <li>Get more <a href="//twitter.com/ovirt">oVirt updates on Twitter</a></li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Read more about [</td>
+          <td>Red Hat’s community projects and upcoming community events](//community.rehat.com)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p><strong>About the oVirt Project</strong> The oVirt project is an open virtualization project providing a feature-rich server virtualization management system with advanced capabilities for hosts and guests, including high availability, live migration, storage management, system scheduler and more. Powered by KVM on Linux, oVirt offers developer choice of a stand-alone hypervisor or can be installed on top of an existing Linux platform on an easy-to-use web interface. Some technologies developed in the oVirt community may later be integrated into Red Hat virtualization products, and they are developed in oVirt under a free and open source license so other communities and projects are free to study, adopt and modify them.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/releases/3.4/release-announcement.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/releases/3.4/release-announcement.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

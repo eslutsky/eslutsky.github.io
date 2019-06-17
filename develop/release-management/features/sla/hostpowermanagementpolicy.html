@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+HostPowerManagementPolicy &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="host-power-management-policy">Host Power Management Policy</h1>
+
+<p>Bug-Url: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1035238">https://bugzilla.redhat.com/show_bug.cgi?id=1035238</a></p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Martin Sivak <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="status">Status</h2>
+
+<ul>
+  <li>Basic implementation in gerrit verified to work with the nice scenarios:
+    <ul>
+      <li><a href="http://gerrit.ovirt.org/22376">http://gerrit.ovirt.org/22376</a></li>
+      <li><a href="http://gerrit.ovirt.org/22488">http://gerrit.ovirt.org/22488</a></li>
+      <li><a href="http://gerrit.ovirt.org/22520">http://gerrit.ovirt.org/22520</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="goals">Goals</h2>
+
+<ul>
+  <li>shutdown hosts when Powersaving is selected and engine clears the host (migrates all VMs elsewhere)</li>
+  <li>wake up a host when the available resources get below configured level</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<ul>
+  <li>shutdown methods:
+    <ul>
+      <li>graceful shutdown - SSH, IPMI (if it supports that)</li>
+      <li>standard engine's fencing methods - IPMI, Drac, …</li>
+    </ul>
+  </li>
+  <li>wake methods:
+    <ul>
+      <li>standard fencing methods - IPMI, SSH, … - with fallback to WOL when needed and supported</li>
+    </ul>
+  </li>
+  <li>use Start/StopVdsCommand internally</li>
+</ul>
+
+<h3 id="shutdown-rules">Shutdown rules</h3>
+
+<ul>
+  <li>decided as part of load balancing thread</li>
+  <li>there is enough available hosts in the cluster even without this host</li>
+  <li>make sure spm is not killed</li>
+</ul>
+
+<h3 id="wake-up-rule">Wake Up rule</h3>
+
+<ul>
+  <li>decided as part of load balancing thread</li>
+  <li>not enough free hosts in the cluster</li>
+</ul>
+
+<h3 id="shutdown-procedure">Shutdown procedure</h3>
+
+<ul>
+  <li>qualifying Hosts (powerManagementControlledByPolicy==true) in the Up state (one at a time) will be moved to maintenance and powerManagementControlledByPolicy kept as true by the load balancer</li>
+  <li>qualifying Hosts in the Maintenance state that also have powerManagementControlledByPolicy flag set will be shut down</li>
+</ul>
+
+<h3 id="wake-up-procedure">Wake up procedure</h3>
+
+<ul>
+  <li>when the load balancer decides to wake up a host or the user clicks the Activate button</li>
+  <li>engine will start the host and set powerManagementControlledByPolicy to true flag when the startup is finished</li>
+</ul>
+
+<h2 id="db-changes">DB changes</h2>
+
+<ul>
+  <li>new boolean flag for Host - powerManagementControlledByPolicy - meaning the host can be controlled by the automatic policy, will be cleared by user triggered PM actions and set every time the host goes Up</li>
+  <li>new boolean flag for Host - disableAutomaticPowerManagement - that will make this host invisible to the power management policy</li>
+</ul>
+
+<h2 id="new-power-saving-policy-attributes">new Power saving policy attributes</h2>
+
+<ul>
+  <li>Cluster policy needs to allow the user to set:
+    <ul>
+      <li>the minimum amount of free hosts</li>
+      <li>whether host shutdown is allowed</li>
+      <li>(how long does a host need to be empty to be considered for shutdown)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="ui">UI</h2>
+
+<ul>
+  <li>Each host needs a boolean that will override the shutdown (persistent host)</li>
+</ul>
+
+<h2 id="known-issues">Known issues</h2>
+
+<ul>
+  <li>when user tries to start a Vm that is pinned to a powered down host, we will fail the start</li>
+  <li>if there is no spare available we might need to fail RunVm and inform the user to try again once we start more hosts</li>
+  <li>if we initiate host shutdown and it takes long time, we might try to start it up again - we need a way of distinguishing initiated shutdown and real down state</li>
+  <li>if we are powering up a host and it fails, it is possible we will select the same host for the next attempt</li>
+  <li>power operations might need to be executed in a separate thread to not block the balancer operations</li>
+</ul>
+
+<h2 id="possible-future-enhancements">Possible future enhancements</h2>
+
+<ul>
+  <li>Reserve defined in terms of power, memory, …
+    <ul>
+      <li>useful for reserving space for fast start of some important VM</li>
+      <li>bogomips used as the CPU power unit (/proc/cpuinfo)</li>
+    </ul>
+  </li>
+  <li>Wake On Lan fencing method:
+    <ul>
+      <li>each host has to report MAC and WOL capability for each NIC</li>
+      <li>locality information to know who can send the proper WOL packet (each host will report it's ARP database of visible MAC addresses for each NIC)</li>
+    </ul>
+  </li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/hostpowermanagementpolicy.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/hostpowermanagementpolicy.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Online Virtual Drive Resize &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="enable-online-virtual-drive-resize">Enable Online Virtual Drive Resize</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allows oVirt users to resize virtual disks while they are in use by one or more virtual machines without the need of pausing, hibernating or rebooting the guests. The virtual disk is disk seen by the guest operating system and should not be confused with the hardware storage (storage domain) which already support online extension.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Sean Cohen <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#099;&#111;&#104;&#101;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#099;&#111;&#104;&#101;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Engine Component owner: Sergey Gotliv <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#103;&#111;&#116;&#108;&#105;&#118;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#103;&#111;&#116;&#108;&#105;&#118;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>VDSM Component owner: Federico Simoncelli <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#115;&#105;&#109;&#111;&#110;&#099;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#102;&#115;&#105;&#109;&#111;&#110;&#099;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>QEMU
+    <ul>
+      <li>must support the online resizing of virtual disks: <strong>Done in 0.12.1.2-2.295</strong></li>
+    </ul>
+  </li>
+  <li>Libvirt
+    <ul>
+      <li>libvirt needs to expose an API to use such capability: <strong>Done in 0.10.2-18 (EL) and 1.0.2-1 (Fedora)</strong></li>
+    </ul>
+  </li>
+  <li>VDSM
+    <ul>
+      <li>changes to block devices (new SPM API call): <strong>Done in v4.12</strong></li>
+      <li>additional API call to passthrough to libvirt: <strong>Done in v4.12</strong></li>
+    </ul>
+  </li>
+  <li>oVirt Engine
+    <ul>
+      <li>need to create a new command to coordinate the entire flow (call to SPM and then call to VM): <strong>Done in oVirt Engine 3.3</strong></li>
+    </ul>
+  </li>
+  <li>oVirt GUI
+    <ul>
+      <li>need to expose the new functionality: <strong>Done in oVirt Engine 3.3</strong></li>
+    </ul>
+  </li>
+  <li>Rest API
+    <ul>
+      <li>need to expose the new functionality: <strong>Done oVirt Engine 3.3</strong></li>
+    </ul>
+  </li>
+  <li>QEMU-GA
+    <ul>
+      <li>support for notifying the guest and updating the size of the visible disk: <strong>To be integrated</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="limitations">Limitations</h2>
+
+<ul>
+  <li>Shrinking of the virtual drive currently is not supported</li>
+  <li>Floating disk, the disk which is not attached to any VM, is not supported</li>
+</ul>
+
+<h1 id="user-experience">User Experience</h1>
+
+<p>User can extend virtual drive size using UI or REST API.</p>
+
+<h4 id="ui">UI:</h4>
+
+<ul>
+  <li>Go to "Virtual Machines" tab and select virtual machine</li>
+  <li>Go to "Disks" sub tab and select disk</li>
+  <li>Click on "Edit", pay attention that if disk is locked or VM has other status than "UP", "PAUSED", "DOWN" or "SUSPENDED", editing is not allowed so "Edit" option is grayed out.</li>
+  <li>Use "Extend Size By(GB)" field to insert the size in GB which should be added to the existing size</li>
+</ul>
+
+<p><img alt="" width="447" height="362" src="/images/wiki/OnlineVirtualDiskResizeDiagram4.png?1560777613" /></p>
+
+<h4 id="rest-api">REST API:</h4>
+
+<h4 id="standard-updating-of-virtual-machine-disk">Standard updating of virtual machine disk:</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>PUT /api/vms/{VM_ID}/disks/{DISK_ID} HTTP/1.1&#x000A;Accept: application/xml     Content-type: application/xml&#x000A;&#x000A;&lt;disk&gt;&#x000A;    &lt;size&gt;{NEW_SIZE_IN_BYTES}&lt;/size&gt;&#x000A;&lt;/disk&gt;&#x000A;</code></pre></div>
+<h1 id="detailed-description">Detailed Description</h1>
+
+<ol>
+  <li>A request from oVirt Engine is sent to the SPM to extend the image. The scope of this request is mainly to extend the Logical Volume where the image resides and to update the metadata. The extension relevant only when the image is RAW and resides on both a block device and file domain. QCOW images will be treated as a NO-OP at this phase. In the case of a RAW image on a file domain a “truncate” command will be issued on the image to add additional sparse space at the end but we expect the QEMU process to do this anyway as part of its implementation. A preallocated RAW file will be extended using a non-sparse dd command to add zeroes at the end of the image (this is for consistence even if preallocating data on NFS doesn't guarantee that the space is actually reserved).</li>
+  <li>The oVirt Engine polls the <code>extendVolumeSize</code> status. Generally this task is expected to complete quite quickly (NO-OP or lvm command to extend a volume). The only case which might take a long time to complete is preallocating the space on file domains.</li>
+  <li>The <code>extendVolumeSize</code> task is completed with success.</li>
+  <li>A <code>diskSizeExtend</code> is sent to the HSM where the virtual machine is running. This command is used to notify the request to extend the image seen by the virtual machine.</li>
+  <li>The request of extending the virtual image is passed to libvirt as it's the layered interface on top of the QEMU process (virtual machine)</li>
+  <li>The request to extend the virtual image is passed by libvirt to QEMU. QEMU is in charge of truncating the file when relevant, changing the QCOW header of the image (if applicable) to reflect the new size and update all its internal structures (including the ones reporting the disk size to the guest).</li>
+  <li>Once the extension is successfully updated on disk (QCOW) and in the internal representation of the QEMU process an optional (in terms of libvirt API) request to the guest agent is delivered to notify the change and to update the guest OS</li>
+</ol>
+
+<p><img alt="`OnlineVirtualDiskResizeDiagram3.png`" width="1088" height="825" src="/images/wiki/OnlineVirtualDiskResizeDiagram3.png?1560777613" /></p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li><a href="http://libvirt.org/html/libvirt-libvirt.html#virDomainBlockResize">http://libvirt.org/html/libvirt-libvirt.html#virDomainBlockResize</a></li>
+</ul>
+
+<h2 id="future-work">Future Work</h2>
+
+<ul>
+  <li>Enable to extend size of the floating disks.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/online-virtual-drive-resize.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/online-virtual-drive-resize.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

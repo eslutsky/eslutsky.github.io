@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+VM Icons &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vm-icons">VM Icons</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>It allows users to add icon to VMs and Templates in order to customize the appearance of these entities in userportal.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Jakub Niedermertl (jniederm)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#106;&#110;&#105;&#101;&#100;&#101;&#114;&#109;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#106;&#110;&#105;&#101;&#100;&#101;&#114;&#109;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="description">Description</h2>
+
+<p>User can optionally add arbitrary image (limited in dimensions, size, and format) - icon - to VM and Template entities. Icons are stored in new separate DB table 'vm_icons'. Rows of this table are referenced from 'vm_static' table.</p>
+
+<p>Currently used default icons (assigned according to OS) will also be stored in 'vm_icons' table. Thus this system fully replace current approach of storing and providing icons - GWT ClientBundles and ImageResources.</p>
+
+<p>Each icon is stored in two sizes:</p>
+
+<ul>
+  <li>Large, 150x120 px, used in basic userportal</li>
+  <li>Small, 43x43 px, used in mostly in extended userportal</li>
+</ul>
+
+<p>User can only upload the large version of custom icon, the small one is computed during store procedure.</p>
+
+<h3 id="icon-inheritance">Icon inheritance</h3>
+
+<ul>
+  <li>When new Template is created, it inherits icon from VM it is based on.</li>
+  <li>When new VM is created, it inherits icon from Template it is based on.</li>
+  <li>When new Pool is created, it inherits icon from Template it is based on.</li>
+  <li>When new VM in Pool is created, it inherits icon from Pool it belongs to.</li>
+</ul>
+
+<h3 id="pools">Pools</h3>
+
+<ul>
+  <li>Similarly to other VM parameters user can't directly edit icon of pool or icons of VMs attached to a Pool. To update icon of a Pool one can create a Template with desired icon and then create new Pool based on that Template, or provided that the Pool is based on latest template version, create new version of base Template with desired icon.</li>
+  <li>When icon of a pool is updated, icons of all attached VMs are also updated to the same icon.</li>
+</ul>
+
+<h3 id="default-icons">Default Icons</h3>
+
+<ul>
+  <li>Default icons are assigned based on operating system.</li>
+  <li>'vm_icon_defaults' database table maps operating system IDs to icon IDs</li>
+  <li>'vm_icon_defaults' table and default icons are updated during each engine startup according to '/usr/share/ovirt-engine/conf/osinfo-defaults.properties' file and '/user/share/ovirt-engine/icons/small,large' directories.</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<ul>
+  <li>Supported image formats are: jpg, png, gif</li>
+  <li>Maximum dimensions are 150px <small>x</small> 120px (w <small>x</small> h) (based on Userportal &gt; Basic icons)</li>
+  <li>Maximum size is 24kB</li>
+  <li>Icons are transferred and stored in dataUrl format.</li>
+  <li>Icons are cached in browser based on their UUIDs in order to save network resources during listing updates.</li>
+  <li>Icons are stored in separate database table. Each image is stored at most once.</li>
+</ul>
+
+<h3 id="ui">UI</h3>
+
+<ul>
+  <li>Show icons in Userportal &gt; Basic, Userpotal &gt; Extended &gt; Virtual Machines, Templates.</li>
+  <li>Add icon editing and validating tab to 'New VM', 'Edit VM' and 'Edit Template', 'New Pool' dialogs.</li>
+  <li>Create per-session cache of Icons: Map&lt;Guid, String&gt; iconUuid -&gt; icon</li>
+</ul>
+
+<h3 id="backend">Backend</h3>
+
+<ul>
+  <li>Extend commands saving VMs and templates to be able to validate and store icon reference. It should validate that old icon, if custom (user defined), is still reference by other row or delete unused custom icon.</li>
+  <li>Create new command to validate and store a new icon.</li>
+  <li>Create new query to fetch map [guid-&gt;icon] by list of icon guids.</li>
+  <li>Extend model VmBase by <code>Guid smallIconId</code> and <code>Guid LargeIconId</code>.</li>
+  <li>Create new business entities corresponding to 'vm_icons' and 'vm_icon_defaults' database tables.</li>
+</ul>
+
+<h3 id="database">Database</h3>
+
+<p><img alt="Database schema" title="Database schema" width="1200" height="235" src="/images/wiki/Vm_icons_db.png?1560777612" /></p>
+
+<h3 id="rest-api">REST API</h3>
+
+<ul>
+  <li>
+    <p><code>/api/icons</code> read-only top level collection of all icons</p>
+
+    <p>GET /icons
+  Accept: application/xml</p>
+  </li>
+</ul>
+
+<icons>
+`    `<icon href="/ovirt-engine/api/icons/4905bfca-59a5-4022-ae66-ab7763f33c8f" id="4905bfca-59a5-4022-ae66-ab7763f33c8f">
+`        `<media_type>`image/jpeg`</media_type>
+`        `<data>`/9j/4AAQSkZJRgABAQEAYABgAAD...`</data>
+`    `</icon>
+`    `<icon href="/ovirt-engine/api/icons/91386415-dc7f-41db-90c6-e0b8f4f941b2" id="91386415-dc7f-41db-90c6-e0b8f4f941b2">
+`        `<media_type>`image/png`</media_type>
+`        `<data>`iVBORw...`</data>
+`    `</icon>
+</icons>
+
+<ul>
+  <li>
+    <p><code>/api/icons/{id}</code> provides an object corresponding to VmIcon business entity</p>
+
+    <p>GET /icons/4905bfca-59a5-4022-ae66-ab7763f33c8f
+  Accept: application/xml</p>
+  </li>
+</ul>
+
+<icon href="/ovirt-engine/api/icons/4905bfca-59a5-4022-ae66-ab7763f33c8f" id="4905bfca-59a5-4022-ae66-ab7763f33c8f">
+`    `<media_type>`image/jpeg`</media_type>
+`    `<data>`/9j/4AAQSkZJ...`</data>
+</icon>
+
+<ul>
+  <li>
+    <p>entities at <code>/api/vms/{id}</code> and <code>/api/templates/{id}</code> contains properties <code>small_icon</code> and <code>large_icon</code> that provides icon IDs that and can be resolved using top level <code>/api/icons</code> collection</p>
+
+    <p>GET /api/vms/789
+  Accept: application/xml</p>
+  </li>
+</ul>
+
+<p>&lt;vm id="789" href=…&gt;
+      …
+<code>    </code><small_icon id="123" href="/icons/123"></small_icon>
+<code>    </code><large_icon id="456" href="/icons/456"></large_icon>
+      …
+&lt;/vm&gt;</p>
+
+<ul>
+  <li>
+    <p>Icons of vm or template can be updated either by uploading new large icon (small icon is automatically computed by shrinking large one) or by setting new id of small, large or both icons. Similar approach can be applied to creation of vms and templates.</p>
+
+    <p>PUG /vms/789
+  Content-Type: application/xml
+  Accept: application/xml</p>
+  </li>
+</ul>
+<vm>
+`    `<large_icon>
+`        `<media_type>`image/png`</media_type>
+`        `<data>`iVBORw0KGgoAAAANSUhEUgAAAJ...`</data>
+`    `</large_icon>
+          ...
+</vm>
+
+<p>&lt;vm id="789" href=…&gt;
+<code>    </code><small_icon id="111" href="/icons/111"></small_icon>
+<code>    </code><large_icon id="222" href="/icons/222"></large_icon>
+          …
+&lt;/vm&gt;</p>
+
+<hr />
+
+<div class="highlight"><pre class="highlight plaintext"><code>  PUT /vms/789&#x000A;  Content-Type: application/xml&#x000A;  Accept: application/xml&#x000A;</code></pre></div><vm>
+`    `<small_icon id="123" />
+`    `<large_icon id="456" />
+</vm>
+
+<p>&lt;vm id="147" href=…&gt;
+<code>    </code><small_icon id="123" href="/icons/123"></small_icon>
+<code>    </code><large_icon id="456" href="/icons/456"></large_icon>
+          …
+&lt;/vm&gt;</p>
+
+<ul>
+  <li>
+    <p><code>/api/operationgsystems</code> and <code>/api/operationgsystems/{id}</code> provides information about default icons of operating systems</p>
+
+    <p>GET /operatingsystems
+  Accept: application/xml</p>
+  </li>
+</ul>
+
+<operating_systems>
+`    `<operating_system href="/operatingsystems/1" id="1">
+`        `<name>`windows_xp`</name>
+`        `<description>`Windows XP`</description>
+`        `<large_icon href="/icons/14f38bb8-4754-4837-b158-e00fd9ec7297" id="14f38bb8-4754-4837-b158-e00fd9ec7297" />
+`        `<small_icon href="/icons/d300a94e-f00b-477f-b040-6763dc7bce0c" id="d300a94e-f00b-477f-b040-6763dc7bce0c" />
+`    `</operating_system>
+</operating_systems>
+
+<h3 id="compatibility-issues">Compatibility issues</h3>
+
+<p>Proposed design requires following browser 'HTML5' features:</p>
+
+<ul>
+  <li>dataURL, IE8 limits content size to 24kB, IE9 full support</li>
+  <li>File API (File and FileReader objects), since IE10</li>
+</ul>
+
+<p><a href="/develop/release-management/features/">VM Icon</a> <a href="category:OVirt_3.6_Feature">VM Icon</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/vm-icons.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/vm-icons.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

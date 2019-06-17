@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hosted Engine Agent Offloading &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="hosted-engine-move-all-the-hard-work-from-the-agent-to-the-broker">Hosted Engine: Move all the hard work from the agent to the broker</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Initially, when hosted engine tools were designed, they were intentionally split between the agent and the broker. It was planned for the agent to be a lightweight application responsible for cluster management decisions while the broker was intended to handle all of the hard work of storage operations, monitoring, locking, etc.
+However, during hosted engine development, the agent was burdened with additional load, like OVF extraction, storage preparation, and other activities.</p>
+
+<p>The goal of this feature is to make the agent lightweight again by moving all non-management code to the broker.. This will result in a more maintanable code and more reliable hosted engine behavior..</p>
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: <a href="https://github.com/akashihi">Denis Chaplygin</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#099;&#104;&#097;&#112;&#108;&#121;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#099;&#104;&#097;&#112;&#108;&#121;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 4.2</li>
+  <li>Status: Done</li>
+  <li>Last updated: December 11, 2017</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>The specific goals associated with this feature are as follows:</p>
+
+<ul>
+  <li>Move storage mounting/unmounting from the agent to the broker.</li>
+  <li>
+    <p>The broker should start/stop the domain monitor on the agent's command. The domain monitor could be implemented as a submonitor.</p>
+
+    <p>Domain monitoring needs to be changed drastically. When the storage validation approach was changed (See <a href="develop/release-management/features/sla/hosted-engine-agent-offloading/#documentation">Documentation/External references</a>), active domain monitoring became vital for domain validation. If domain monitoring has not been started, the domain will be reported as invalid, regardless of its actual state.
+Therefore, the old approach where domain monitoring was only active outside of local maintenance mode is no longer applicable. I propose the following change: domain monitoring should still be disabled in local maintenance mode. While domain monitoring is disabled, actual domain validation will be skipped and the domain will be reported as valid. The broker will still try to update the status and read statuses of the other cluster participants, even in maintenance mode, so it will have a chance to block on broken storage. Thus, all I/O should be moved to a separate thread, to prevent the broker from blocking on I/O issues.</p>
+  </li>
+  <li>Move sanlock acquire/release activities from the agent to the broker.</li>
+  <li>As the steps above introduce a possible new 'half-configured' state, FSM should be extended with that state.</li>
+  <li>
+    <p>The agent should only post state to the broker, and the broker must publish it on storage, if possible.</p>
+
+    <p>The broker will keep the current status in memory and reply to the agent, hosted-engine-setup, and VDSM using that in-memory state. The agent will call broker's RPC to update that state. Upon an in-memory state update, a separate disk-writing thread will be notified.. That separate disk-writing thread will be started during the broker start-up sequence and its only purpose is to write the state to the storage and block in case of storage failures, while letting other broker code run. I plan to use deque with a size of one to pass the current state to the disk-writing thread and use Conditions to synchronize threads.</p>
+  </li>
+  <li><del>OVF extraction should be moved from the agent to the broker.
+At the moment, OVF are extracted on every short monitoring loop run by calling <code>_initialize_storage_images</code>, which calls <code>refresh_vm_conf</code>, which actually updates <code>vm.conf</code> from the OVF. I plan to move the refresh_vm_conf function to the submonitor and specify the vm.conf update period as a submonitor parameter, so the agent will be able to control it. The submonitor will update the <code>vm.conf</code> periodically and report the time elapsed since the last update, which can then be used in score calculations in the future.</del>
+OVF extraction alongside with other shared configs extraction and caching will be implemented as additional feature. (See <a href="develop/release-management/features/sla/hosted-engine-agent-offloading/#documentation">Documentation/External references</a>)</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Less code - less bugs.</li>
+  <li>Clean separation of concerns makes code cleaner and easier to maintain.</li>
+  <li>Hosted engine state updates will happen faster and without delays, thus decreasing overall latency of the whole system. See <a href="develop/release-management/features/sla/hosted-engine-agent-offloading/#documentation">Documentation/External references</a></li>
+</ul>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<ul>
+  <li>In order to implement this feature, hosted-engine must be stateless, as desribed at <a href="develop/release-management/features/sla/stateless-broker">Stateless broker feature</a></li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>Bugzilla ticket: <a href="https://bugzilla.redhat.com/1399766">BZ#1399766</a></li>
+  <li>Bugzilla ticket: <a href="https://bugzilla.redhat.com/1337914">BZ#1337914</a></li>
+  <li><a href="develop/release-management/features/sla/hosted-engine-ovf-extraction">Hosted engine shared configuration extraction and caching</a></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/hosted-engine-agent-offloading.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/hosted-engine-agent-offloading.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 11 Jan 2018 13:23 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

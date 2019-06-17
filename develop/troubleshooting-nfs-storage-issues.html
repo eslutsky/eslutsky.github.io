@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Troubleshooting NFS Storage Issues &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="troubleshooting-nfs-storage-issues">Troubleshooting NFS Storage Issues</h1>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>To attach NFS storage domains to an oVirt environment, the NFS exports must be configured in a specific way. This page is designed to outline the core requirements for configuring NFS exports, and assist in troubleshooting issues encountered when attempting to attach NFS storage domains to an oVirt environment for the first time.</p>
+
+<h3 id="permissions">Permissions</h3>
+
+<p>In principle, the user <strong>vdsm</strong>, with uid <strong>36</strong> and gid <strong>36</strong>, must have read and write permissions on all NFS exports. However, some daemons on the hypervisor hosts (for example, sanlock) use a different uid but need access to the directory too. Therefore, all incoming NFS requests must be mapped to the aforementioned uid and gid. Two steps are required to ensure this mapping:</p>
+
+<ol>
+  <li>
+    <p>Change the ownership of the export directory, replacing <em>directory_name</em> with the name of the directory:</p>
+
+    <p>  # chown 36:36 directory_name</p>
+  </li>
+  <li>
+    <p>Add the <strong>rw</strong> options on the export in <strong>/etc/exports</strong>.</p>
+
+    <p>  # /exports/directory_name       *(rw)</p>
+  </li>
+  <li>
+    <p>Set the permissions of the export directory, replacing <em>directory_name</em> with the name of the directory:</p>
+
+    <p>  # chmod 0755 directory_name</p>
+  </li>
+  <li>
+    <p>The NFS server must actually be running.</p>
+  </li>
+</ol>
+
+<p>a. Ensure that the <strong>nfs</strong> and <strong>rpcbind</strong> services are running on the NFS server,
+b. Ensure that **showmount -e *<nfs_server_ip>*** shows the expected export(s).</nfs_server_ip></p>
+
+<h4 id="selinux">SELinux</h4>
+
+<ul>
+  <li>Ensure that selinux is not interfering with NFS access.
+    <ul>
+      <li>
+        <table>
+          <tbody>
+            <tr>
+              <td>getsebool -a</td>
+              <td>grep virt_use_nfs should show virt_use_nfs –&gt; on, if not then do `setsebool virt_use_nfs 1` to allow NFS access for VMs</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+      <li>One can also use `setsebool -P virt_use_nfs 1` to make this setting persistent across reboots.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The easiest way to definitively test that an NFS export is ready for use by oVirt is to:</p>
+
+<ul>
+  <li>Create the <strong>vdsm</strong> user with uid <strong>36</strong> on the ovirt-engine host if it does not already exist.</li>
+  <li>Change to the <strong>vdsm</strong> user using <strong>su - vdsm -s /bin/bash</strong></li>
+  <li>Attempt to mount the export on a temporary directory (for example, /tmpmnt) using the following command form: <strong>/usr/bin/sudo -n /bin/mount -t nfs -o soft,nosharecache,timeo=600,retrans=6,nfsvers=3 <em>servername:/path/of/export</em> /tmpmnt</strong></li>
+  <li>If the mount succeeds, then try to create a file in it via the <strong>touch</strong> command, i.e. <strong>touch /tmpmnt/tempfile</strong></li>
+</ul>
+
+<h4 id="iso-domain">ISO Domain</h4>
+
+<h5 id="todo-update-to-a-current-version">TODO: Update to a current version</h5>
+
+<p>The <strong>engine-setup</strong> command can optionally create an ISO domain and export it.</p>
+
+<ul>
+  <li>Until oVirt 3.3, it always exported to the entire network.</li>
+  <li>In 3.4 it prompted the user for an ACL, and the default was still the entire network.</li>
+  <li>In 3.5 it still prompts the user, but the default was changed to allow access for the local machine only.</li>
+</ul>
+
+<p>The format for the ACL is simply that of <strong>/etc/exports</strong> - see the exports(5) manpage for details. Some simple examples:</p>
+
+<ul>
+  <li>To allow access to 3 hosts host1, host2 and host3, input: <em>host1(rw) host2(rw) host3(rw)</em></li>
+  <li>To allow access to the entire Internet, input: <em>*(rw)</em></li>
+</ul>
+
+<p>If you use the last example, you must ensure that other means such as a firewall are in place to protect the ISO domain. When configuring this option, also consider protecting the ISO domain from untrusted guests that you might want to run on your hosts.</p>
+
+<h3 id="nfs-check-program">nfs-check program</h3>
+
+<p>A new <strong>nfs-check</strong> script is now available to test whether an NFS export is ready for use by oVirt :</p>
+
+<ul>
+  <li><strong>nfs-check.py</strong> is a python script to validate nfs targets to use with oVirt project. Some operations include: mount the nfs target, create a file as vdsm:kvm and then remove it.</li>
+  <li><strong>nfs-check.py</strong> is available in the <strong>vdsm/contrib/</strong> directory of the vdsm source</li>
+  <li>
+    <p>Run it on a node via <strong>\1</strong></p>
+
+    <p> $ git clone http://gerrit.ovirt.org/p/vdsm.git
+   $ cd vdsm/contrib
+   $ python nfs-check.py myNFSServer:/nfsTarget</p>
+  </li>
+</ul>
+
+<h3 id="setting-nfs-server">Setting NFS Server</h3>
+
+<h4 id="debian-squeeze">Debian Squeeze</h4>
+<h5 id="todo-update-to-current-debian">TODO: Update to current Debian</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code> #&gt; groupadd kvm -g 36&#x000A; #&gt; useradd vdsm -u 36 -g kvm&#x000A;&#x000A; # mkdir /storage&#x000A; &#x000A; #&gt; chmod 0755 /storage&#x000A; #&gt; chown 36:36 /storage/&#x000A; #&gt; cat /etc/exports&#x000A; /storage    *(rw)&#x000A;&#x000A; #&gt;/etc/init.d/nfs-kernel-server restart &#x000A;</code></pre></div>
+<h4 id="fedora-26-or-higher">Fedora 26 or higher</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  #&gt; groupadd kvm -g 36&#x000A;  #&gt; useradd vdsm -u 36 -g kvm&#x000A;&#x000A;  # mkdir /storage&#x000A;&#x000A;  # chmod 0755 /storage&#x000A;  # chown 36:36 /storage/&#x000A;&#x000A;  # yum -y install nfs-utils&#x000A;&#x000A;  # cat /etc/exports&#x000A;  /storage    *(rw)&#x000A;&#x000A;  # systemctl start rpcbind.service&#x000A;  # systemctl start nfs-server.service&#x000A;  &#x000A;  # Relevant only for NFS v3&#x000A;  # systemctl start nfs-lock.service &#x000A;  &#x000A;&#x000A;  # systemctl enable rpcbind.service&#x000A;  # systemctl enable nfs-server.service&#x000A;   &#x000A;&#x000A;  # Relevant only for NFS v3&#x000A;  # systemctl enable nfs-lock.service&#x000A;</code></pre></div>
+<h4 id="rhel7-based-distro">RHEL7 based distro</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  #&gt; groupadd kvm -g 36&#x000A;  #&gt; useradd vdsm -u 36 -g kvm&#x000A;&#x000A;  # mkdir /storage&#x000A;&#x000A;  # chmod 0755 /storage&#x000A;  # chown 36:36 /storage/&#x000A;&#x000A;  # cat /etc/exports&#x000A;  /storage    *(rw)&#x000A;&#x000A;  # systemctl enable rpcbind&#x000A;  # systemctl enable nfs-server&#x000A;  # systemctl start rpcbind &#x000A;  # systemctl start nfs-server&#x000A;</code></pre></div>
+<h2 id="workarounds-for-known-issues">Workarounds for known issues</h2>
+
+<h4 id="todo-update-for-the-newer-supported-releases">TODO: update for the newer supported releases</h4>
+
+<h3 id="nfs-lockups">NFS Lockups</h3>
+
+<p>Normally the NFS server of any distro should work out of the box. Using older NFS servers or following different tuning advices throughout the internet may lead to a misconfiguration that gives lockups/freezes/stalls. Rule of thumb is to always ensure that the tcp window size parameters of your server are larger than the wsize and rsize mount option of your hypervisor hosts. E.g. using Fedora 19 as a hypervisor node these parameters are set to 1 MB.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   # df&#x000A;  ...&#x000A;  10.10.30.253:/var/nas3/ovirt on /rhev/data-center/mnt/10.10.30.253:_var_nas3_ovirt type nfs (...,rsize=1048576,wsize=1048576,...)&#x000A;  ...&#x000A;   &#x000A;</code></pre></div>
+<p>In this case it is a good idea to set the tcp window parameters on the NFS server to at least 4 MB in /etc/sysctl.conf.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   # cat /etc/sysctl.conf&#x000A;  net.ipv4.tcp_mem=4096 65536 4194304&#x000A;  net.ipv4.tcp_rmem=4096 65536 4194304&#x000A;  net.ipv4.tcp_wmem=4096 65536 4194304&#x000A;  net.core.rmem_max=8388608&#x000A;  net.core.wmem_max=8388608&#x000A;   &#x000A;</code></pre></div>
+<p>To activate these settings for the running server reload them with</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   # sysctl -p &#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/troubleshooting-nfs-storage-issues.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/troubleshooting-nfs-storage-issues.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 15 Dec 2018 19:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

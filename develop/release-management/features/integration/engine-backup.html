@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt-engine-backup &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/integration/">Integration</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ovirt-engine-backup">oVirt-engine-backup</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>A simple utility to backup and restore a complete ovirt-engine environment.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Ofer Schreiber (oschreib)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#111;&#115;&#099;&#104;&#114;&#101;&#105;&#098;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#111;&#115;&#099;&#104;&#114;&#101;&#105;&#098;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Last updated: ,</li>
+</ul>
+
+<h3 id="phase">Phase</h3>
+
+<p>First version released in ovirt 3.3.</p>
+
+<p>DWH/Reports support added in ovirt 3.4.1.</p>
+
+<p>DB provisioning, speed/size tuning options, <a href="/develop/release-management/features/backupawareness/">engine notification</a> added in oVirt 3.6.</p>
+
+<h2 id="howto">Howto</h2>
+
+<h3 id="backup">Backup</h3>
+
+<p>Backup is straightforward. See <code>--help</code> for details.</p>
+
+<p>Example:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>engine-backup --mode=backup --file=backup1 --log=backup1.log&#x000A;</code></pre></div>
+<h3 id="restore">Restore</h3>
+
+<p>Requirements:</p>
+
+<ul>
+  <li>A clean machine</li>
+  <li>oVirt installed but not set up</li>
+</ul>
+
+<p>To restore:</p>
+
+<ul>
+  <li>Run restore (<code>--help</code> for details)</li>
+  <li>Run engine-setup</li>
+</ul>
+
+<p>Example:</p>
+
+<p>With a backup file <code>backup1</code>, taken on a 4.0 engine+dwh machine in a default setup, this should restore the engine and dwh on a new machine:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>yum install ovirt-engine ovirt-engine-dwh&#x000A;engine-backup --mode=restore --log=restore1.log --file=backup1 --provision-db --provision-dwh-db --no-restore-permissions&#x000A;engine-setup&#x000A;</code></pre></div>
+<h4 id="details">Details</h4>
+
+<p>If backed up databases were provisioned by engine-setup ("Automatic" was accepted for the questions "Setup can configure the local postgresql server automatically for X…"), engine-backup can provision them too on restore if requested, since 3.6, using these options: <code>--provision-db</code>, <code>--provision-dwh-db</code>, <code>--provision-reports-db</code>.</p>
+
+<p>When restoring a backup taken using the (default) <code>custom</code> dump format, the user must pass one of the options <code>--restore-permissions</code> or <code>--no-restore-permissions</code> - there is no default.
+With <code>--no-restore-permissions</code>, only the database owner will have access to it, which is enough for the normal functioning of oVirt.</p>
+
+<p>If extra users were added and granted access to the database, for example for integration with ManageIQ, they will not be created and will not have access. If they are manually created, passing <code>--restore-permissions</code> will run the extra GRANT commands.</p>
+
+<p>In 4.0.4 and later, if passing both <code>--provision*db</code> and <code>--restore-permissions</code>, the extra users will be created automatically with random passwords. See <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1369757#c1">BZ 1369757 Comment 1</a> for details.</p>
+
+<p>Provisionoing is done using a utility based on the same code used by engine-setup, that is called by engine-backup. In particular, this means that these options will:</p>
+
+<ul>
+  <li>work either if a database does not exist (including if postgresql was not initialized at all) or if it exists and is empty (e.g. right after engine-cleanup). This should work even if the user exists and has a different password (it will be changed).</li>
+  <li>fail if a database exists and is not empty. In such a case a new empty database will be created named BASENAME_TIMESTAMP (e.g. engine_20150506120000), as does engine-setup in such a case, but unlike engine-setup, restore will be aborted asking the user to clean up and retry.</li>
+</ul>
+
+<p><strong>The text below applies to versions &lt;= 3.5</strong>, as well as to 3.6 if <code>--provision-\*db</code> is not used.</p>
+
+<h4 id="db-credentials">DB credentials</h4>
+
+<p>If it happens that the credentials used during backup still work during restore, they can be used, and in this case restore is as simple as backup. Example scenarios where this is the case:</p>
+
+<ul>
+  <li>engine was setup with a local database, backup was created, some time later engine-cleanup was called, and we now want to restore to the state saved by backup. This works because engine-cleanup does not drop the user and/or database in postgresql, just the database's content.</li>
+  <li>engine was setup with a remote database, backup was created, engine-cleanup was ran, and now we want to restore the engine on another machine, but using the same database server. This will work too without supplying different credentials, for the same reason, provided that we make sure the new engine host has access to the database server/instance/etc.</li>
+</ul>
+
+<p>In most other cases, we have to manually create the database, make it accessible to the engine, and use the credentials we have chosen when calling restore. An example scenario that requires this:</p>
+
+<ul>
+  <li>engine was setup with a local database, backup was done, now we want to restore this backup on another machine (for testing or whatever).</li>
+</ul>
+
+<p>Due to some misunderstanding about the previous points, it was sometimes suggested on various places to do:</p>
+
+<ul>
+  <li>setup engine with local database on machineA</li>
+  <li>backup</li>
+  <li>Copy backup to machineB</li>
+  <li>
+    <p>On machineB:</p>
+
+    <p> <em> engine-setup
+   </em> engine-cleanup
+   * restore</p>
+  </li>
+</ul>
+
+<p>This "almost" works. engine-setup/engine-cleanup on machineB create a user/database for us. What's missing? The password is generated randomly by setup, and so will be different on both machines and restore will not be able to connect. What can we do to continue and save us from manually doing all the work (2x create, edit pg_hba, restart postgresql)? Generally, two options:</p>
+
+<ol>
+  <li>
+    <p>change the password:</p>
+
+    <p> <em> Open the backup in some temporary directory (it's a tar file)
+    </em> look at the file "files/etc/ovirt-engine/engine.conf.d/10-setup-database.conf" and find the password used when doing backup
+    * as user postgres, run psql, and there do:
+       alter role engine ENCRYPTED PASSWORD 'MYPASSWORD';
+      replace MYPASSWORD with the password you found inside the backup file.</p>
+  </li>
+  <li>
+    <p>manually create with existing credentials:</p>
+
+    <p> * instead of doing setup/cleanup to merely create a database, do that yourself manually, but instead of inventing a new password (and other credentials), use the ones found inside the backup file (as explained in the previous option "change the password"). This is a bit more work than running setup/cleanup, but is probably much faster (especially if scripted).</p>
+  </li>
+  <li>
+    <p>After running engine-setup and before engine-cleanup, check what random password was chosen by setup:</p>
+
+    <p>grep ENGINE_DB_PASSWORD /etc/ovirt-engine/engine.conf.d/10-setup-database.conf</p>
+  </li>
+</ol>
+
+<p>Then use this password on restore (after cleanup). Note that you must provide more credentials than just the password:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  engine-backup --mode=restore --file=BACKUP_FILE --log=LOG_FILE --change-db-credentials --db-host=localhost --db-user=engine --db-name=engine --db-password&#x000A;</code></pre></div>
+<h2 id="dwhreports">DWH/Reports</h2>
+
+<p>The 3.4.1 release added support for DWH and Reports. On backup, whatever that's installed/setup - among engine, DWH and Reports - is backed up, and on restore, you should install whatever packages that were used during backup (engine/dwh/reports), then restore and setup. Running engine-setup is now mandatory after restore.</p>
+
+<p>The notes and discussion above about DB credentials apply also to the DWH and Reports databases - they are never created by restore but are expected to exist, and be usable with the credentials saved in the backup or passed using the various options.</p>
+
+<h3 id="dwh-up-during-backup">DWH up during backup</h3>
+
+<p><strong>Update for 3.6</strong>: <code>engine-backup --mode=restore</code> will automatically reset DwhCurrentlyRunning in the engine's database.</p>
+
+<p>The text below applies to versions &lt;= 3.5.</p>
+
+<p>If dwhd is running during backup, 'engine-setup' after restore will emit the following error and exit:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  [ ERROR ] dwhd is currently running. Its hostname is `*`hostname`*`. Please stop it before running Setup.&#x000A;  [ ERROR ] Failed to execute stage 'Transaction setup': dwhd is currently running&#x000A;</code></pre></div>
+<p>This will be emitted whether or not dwh is setup on the same machine as the engine or on a different one. To "fix" this, connect to the engine db using psql and run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  UPDATE dwh_history_timekeeping SET var_value=0 WHERE var_name ='DwhCurrentlyRunning';&#x000A;</code></pre></div>
+<p>Then run 'engine-setup' again and it should succeed.</p>
+
+<h2 id="speedsize-tuning">Speed/Size tuning</h2>
+
+<p>In version 3.6, several options were added that can affect the size of the generated backup file, as well as the speed of backup/restore:</p>
+
+<h3 id="compression">Compression</h3>
+
+<p>Each of 'files' (which are now always tarred into their own tar file inside the final archive), 'db' (engine database) 'dwhdb' (DWH database) and 'reportsdb' (Reports database) and the final archive (<code>--file=FILE</code>) can be separately either left uncompressed, or compressed with one of gzip, bzip2, xz.</p>
+
+<h3 id="database-dump-format">Database dump format</h3>
+
+<p>For each of the databases:</p>
+
+<ul>
+  <li>The dump format can be selected - either 'plain' or 'custom' are accepted.</li>
+  <li>If, during backup, 'custom' format and no compression (None) are selected, then during restore, the number of restore jobs can be set, and is passed to pg_restore's <code>--jobs</code> option.</li>
+</ul>
+
+<h3 id="defaults-and-discussion">Defaults and discussion</h3>
+
+<p>The defaults are currently (on the master branch):</p>
+
+<ul>
+  <li>Final archive compressed with gzip</li>
+  <li>Files tar is compressed with xz</li>
+  <li>Databases are using the 'custom' dump format, and are not compressed further (this format uses gzip internally)</li>
+  <li>On restore, number of restore jobs is 2</li>
+</ul>
+
+<p>See <a href="https://bugzilla.redhat.com/1213153">bug 1213153</a> about adding other "collections" of options.</p>
+
+<p>For smallest size (e.g. for archiving), probably everything should be compressed with xz, with 'plain' dump format for databases.</p>
+
+<p>For fastest restore, number of restore jobs should be set somewhere between N and 1.5*N, where N is the number of available cpu cores.</p>
+
+<p>Also for fastest restore (and general good performance), each of the Engine/DWH/Reports can have its database on its own machine. In such a case, in principle, restore can be done in parallel. <code>engine-backup</code> currently does not support that natively, but a user can try to achieve that manually, by backing up each 'scope' (using <code>--scope=</code>) to its own file, and then, on restore, first restore the files, and after that restore the databases in parallel.</p>
+
+<p>See also the documentation of PostgreSQL - on <a href="http://www.postgresql.org/">postgresql.org</a> and in the pg_restore man page.</p>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Backup logic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  * Create Temporary directory&#x000A;  * Copy configuration files into temp directory&#x000A;     1. /etc/ovirt-engine/  (ovirt engine configuration)&#x000A;     2. /etc/sysconfig/ovirt-engine (ovirt engine configuration)&#x000A;     3. /etc/exports.d  (NFS export created on setup)&#x000A;     4. /etc/pki/ovirt-engine (ovirt-engine keys)&#x000A;     5. Firewall&#x000A;     6. Other&#x000A;   * Create tar file from that directory&#x000A;   * Create database backup using pg_dump (database configuration should be read from /etc and written into temporary .pgpass file)&#x000A;</code></pre></div>
+<p>Restore: Phase one (BASH)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  1. Request user to run engine-setup&#x000A;  2. Override DB and PKI directories&#x000A;</code></pre></div>
+<p>Phase two (??)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  * Gather all needed information from the backup&#x000A;  *  Run otopi based ovirt-engine-setup with special parameters (use pg_dump, don't create new PKI)&#x000A;</code></pre></div>
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Easy to use backup utility</li>
+  <li>Easy restore of existing environments.</li>
+</ul>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>TBD</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p>See output of <code>engine-backup --help</code>.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/integration/engine-backup.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/integration/engine-backup.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 15:05 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

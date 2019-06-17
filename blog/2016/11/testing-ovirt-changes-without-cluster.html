@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Testing ovirt-engine changes without a real cluster &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Martin Sivak' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Testing ovirt-engine changes without a real cluster' property='og:title'>
+<meta content='The ovirt-engine component of oVirt is the brain of oVirt and is responsible for managing attached systems; providing the webadmin UI and REST interfaces; and other core tasks. The process of setting up a real cluster on which to deploy the project is a time-consuming task that greatly increases patch turnaround time and can provide a significant barrier of entry to those wanting to contribute to the project.' property='og:description'>
+<meta content='http://ovirt.org/blog/2016/11/testing-ovirt-changes-without-cluster.html' property='og:url'>
+<meta content='2016-11-14T08:30:00Z' property='article:published_time'>
+<meta content='msivak' property='article:author:username'>
+<meta content='development' property='article:tag'>
+<link href='/blog/tag/development.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ovirt-engine' property='article:tag'>
+<link href='/blog/tag/ovirt-engine.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Test' property='article:tag'>
+<link href='/blog/tag/test.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vdsmfake' property='article:tag'>
+<link href='/blog/tag/vdsmfake.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Testing ovirt-engine changes without a real cluster' name='twitter:title'>
+<meta content='The ovirt-engine component of oVirt is the brain of oVirt and is responsible for managing attached systems; providing the webadmin UI and REST interfaces; and other core tasks. The process of setting up a real cluster on which to deploy the project is a time-consuming task that greatly increases patch turnaround time and can provide a significant barrier of entry to those wanting to contribute to the project.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2016</li>
+<li class='active'>11</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Testing ovirt-engine changes without a real cluster
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/msivak.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/msivak/">Martin Sivak</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2016-11-14T08:30:00Z'>
+Monday 14 November 2016
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>The ovirt-engine component of oVirt is the brain of oVirt and is responsible for managing attached systems; providing the webadmin UI and REST interfaces; and other core tasks. The process of setting up a real cluster on which to deploy the project is a time-consuming task that greatly increases patch turnaround time and can provide a significant barrier of entry to those wanting to contribute to the project.</p>
+
+<p></p>
+
+<h2 id="development-environment">Development Environment</h2>
+
+<p>There are couple of preparation steps you must take to create your development environment. I am using CentOS 7 as my development machine so I will use that system to describe everything, but it should be pretty straightforward to adapt the article to Fedora.</p>
+
+<p>We first need the source code for the ovirt-engine itself. You can get it from the project's code review tool: <a href="http://gerrit.ovirt.org">gerrit.ovirt.org</a>. Just execute the following command and wait for it to finish:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># git clone git://gerrit.ovirt.org/ovirt-engine.git&#x000A;</code></pre></div>
+<p>You will also need a directory for the development deployments, so create a directory somewhere. Mine is in ~/Applications/ovirt-engine-prefix. I have set the$OVIRT_PREFIX environment variable to point to that path, so when you see it used throughout this article, substitute the path for your own development deployments directory.</p>
+
+<p>Now you have to install all the necessary development packages and a postgres database. Please follow the <code>Prerequisities</code>, <code>System settings</code>, and <code>PostgreSQL accessibility</code> sections of the main <a href="https://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=README.adoc;h=ba141ab34728da6048ab9659acd6d9ca45c975f4;hb=8b2b8fdf6921a4da4fa098e7cf37edbe9796f45c">README.adoc</a> file. Do not create any databases or users yet, though!</p>
+
+<p>Databases will be created later, but a database user is needed, so create a PostgreSQL user <code>engine</code> with the password set to <code>engine</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># su - postgres -c "psql -d template1"&#x000A;template1=# create user engine password 'engine';&#x000A;</code></pre></div>
+<h2 id="resolving-fake-host-names">Resolving Fake Host Names</h2>
+
+<p>We will be using <a href="https://gerrit.ovirt.org/gitweb?p=ovirt-vdsmfake.git;a=summary">oVirt host simulator</a> (also known as vdsmfake) to be able to test the virtual machine, host, and storage related functionality. A single simulator can act as multiple hosts, but the engine needs a separate FQDN (fully qualified domain name) for each host. There is an elegant way to assign multiple names to a single machine (your development laptop for example) using <a href="http://www.thekelleys.org.uk/dnsmasq/doc.html">dnsmasq</a> integration with NetworkManager.</p>
+
+<p>Create the following two files with the provided content:</p>
+
+<ul>
+  <li>
+    <p>/etc/NetworkManager/dnsmasq.d/10-vdsmfake.conf</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>address=/vdsm.fake/127.0.0.1&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>/etc/NetworkManager/conf.d/20-dnsmasq.conf</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[main]&#x000A;dns=dnsmasq&#x000A;</code></pre></div>  </li>
+</ul>
+
+<p>Install and properly configure the necessary services as shown below. Do not be confused by the fact you are disabling dnsmasq, as it will be started internally by the NetworkManager.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ yum install dnsmasq&#x000A;$ systemctl disable dnsmasq&#x000A;$ systemctl restart NetworkManager&#x000A;</code></pre></div>
+<p>Once you have completed the above steps, you will be able to access your machine using any name with the <code>.vdsm.fake</code> suffix. For example <code>host1.vdsm.fake</code>, <code>blue.vdsm.fake</code>, or anything else.</p>
+
+<p>If you do not feel like touching the NetworkManager configuration, there is an alternative approach. You can add additional static localhost aliases to /etc/hosts. Please check the example line below to see how:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 host1.vdsm.fake host2.vdsm.fake host3.vdsm.fake&#x000A;</code></pre></div>
+<p>The disadvantage of the /etc/hosts approach is that you have to edit the file always when you want to create an additional hostname for your virtual hosts.</p>
+
+<h2 id="compiling-the-engine">Compiling the Engine</h2>
+
+<p>The full compilation with all language variants takes a looong time and eats a huge amount of resources. Fortunately, there are couple of options to disable compilation of pieces we won't need.</p>
+
+<p>To create a full development build, use the commands below. By specifying the prefix "$OVIRT_PREFIX/my-first-test", the build will be created in that directory. Don't forget to substitute the path for your own development deployments directory if you haven't set the OVIRT_PREFIX environment variable. Also, do not attempt to create this build unless you have at least 8 GiB of free RAM!</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># PREFIX="$OVIRT_PREFIX/my-first-test"&#x000A;# make clean install-dev PREFIX="$PREFIX"&#x000A;</code></pre></div>
+<p>The command can be further tweaked using a couple of variables. The most important options you might or might not want are:</p>
+
+<ul>
+  <li><code>BUILD_GWT_USERPORTAL=0</code> – You can use this variable to disable the user portal</li>
+  <li><code>BUILD_GWT_WEBADMIN=0</code> – You can use this variable to disable the webadmin UI</li>
+  <li><code>DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.userAgent=safari"</code> – This variable will change the default compiled browser variant to be Chrome compatible</li>
+</ul>
+
+<p>The engine will be deployed to the specified <code>$PREFIX</code> directory once the <code>install-dev</code> command finishes. It's not usable yet though. The database still needs to be created and there is a configuration step that must also be performed.</p>
+
+<h2 id="setting-up-the-deployed-engine">Setting Up the Deployed Engine</h2>
+
+<p>Now is the time to prepare the database for the currently deployed engine. I am usually working on multiple fixes for multiple branches at the same time so I typically use a separate database for each branch or feature I work on. Here I will create a database named <code>firsttest</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># su - postgres -c "psql -d template1"&#x000A;template1=# drop database firsttest;&#x000A;template1=# create database firsttest owner engine template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';&#x000A;</code></pre></div>
+<p>The deployed engine can be configured now. Execute the setup command and answer all the questions. Do not forget to use the proper database user (<code>engine</code>), password (<code>engine</code>), and database name (<code>firsttest</code>). Also, one of the setup questions will ask you to provide an administrator password. Make sure you remember the password you provide because you will need it to log in to the engine later..</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># "${PREFIX}/bin/engine-setup"&#x000A;</code></pre></div>
+<p>The remaining steps modify configuration values related to the fake hosts we'll be using.</p>
+
+<p>The host simulator does not support encrypted communication so we need to disable it:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>sudo -i -u postgres psql $ENGINE_DB -c "UPDATE vdc_options set option_value = 'false' WHERE option_name = 'SSLEnabled';"&#x000A;sudo -i -u postgres psql $ENGINE_DB -c "UPDATE vdc_options set option_value = 'false' WHERE option_name = 'EncryptHostCommunication';"&#x000A;</code></pre></div>
+<p>Since the fake host isn't real, we also have to disable the host deploy option, otherwise the engine would try to update and configure the development machine if provided the proper credentials!</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>psql $ENGINE_DB -c "UPDATE vdc_options set option_value = 'false' where option_name = 'InstallVds'"&#x000A;</code></pre></div>
+<p>The last option we'll set instructs the engine to send the hostname with every request that goes to the host. This allows us to use a single vdsmfake instance to simulate multiple hosts at once:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>psql $ENGINE_DB -c "UPDATE vdc_options set option_value = 'true' WHERE option_name = 'UseHostNameIdentifier';"&#x000A;</code></pre></div>
+<h2 id="starting-up-the-engine-and-adding-the-fake-hosts">Starting Up the Engine and Adding the Fake Hosts</h2>
+
+<p>A properly deployed and configured engine can be now started using the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ "${PREFIX}/share/ovirt-engine/services/ovirt-engine/ovirt-engine.py" start&#x000A;</code></pre></div>
+<p>Once the service boots up, you can access it by going to <a href="http://localhost:8080">http://localhost:8080</a> and logging in using the engine credentials you provided during the setup phase.</p>
+
+<p><img alt="oVirt welcome screen" width="1273" height="940" src="/images/vdsmfake/welcome.png?1560777613" /></p>
+
+<p>Our fake hosts can be started by first cloning the <a href="git://gerrit.ovirt.org/ovirt-vdsmfake.git">source</a>, entering the ovirt-vdsmfake directory and using maven to start the <a href="http://www.eclipse.org/jetty/">jetty</a> container:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># git clone git://gerrit.ovirt.org/ovirt-vdsmfake.git&#x000A;# pushd ovirt-vdsmfake&#x000A;# mvn clean jetty:run&#x000A;</code></pre></div>
+<p>You can now add as many hosts as you need to the engine using any made up names and addresses (just suffix them with <code>.vdsm.fake</code>). The engine requires you to enter a password when adding a host, but any random string is fine there (it won't be used anyway).</p>
+
+<p><img alt="adding a new host" width="801" height="771" src="/images/vdsmfake/new-host.png?1560777613" /></p>
+
+<p>You have to connect a storage domain to make the engine fully operational, so go to the Storage tab and create a new storage domain using any random NFS path. The fake hosts will report a connection success without actually talking to any remote server and this will enable the Datacenter functionality.</p>
+
+<p><img alt="adding a new storage domain" width="785" height="685" src="/images/vdsmfake/storage.png?1560777613" /></p>
+
+<h2 id="what-to-do-next">What To Do Next?</h2>
+
+<p>The setup is now ready and you can use most of the functionality to test your changes or just play with the engine. Starting, stopping, and migrating VMs will work (no real VMs will exist though - everything is faked by the host simulator) as will most of the other administrative flows.</p>
+
+<p>In case you update the source code, just stop the engine using Control-C, execute the <code>make install-dev</code> and <code>engine-setup</code> (only needed if database structure was updated) commands to redeploy the changed pieces. Then you can start the engine again and test your changes.</p>
+
+<p>I hope this tutorial was useful for you. To make the process even simpler, I have attached a simple script that compiles all the steps into one simple command dev-build.sh, which is found at http://www.ovirt.org/download/dev-build.sh, that does almost everything (including the engine-setup) for you. Before using it, you will need to tweak the <code>ROOT</code> path in it to point to your <code>$OVIRT_PREFIX</code> directory. It also supports couple of command line options like <code>--clean</code> (cleans the existing prefix and database before deploying) and <code>--config</code> (reruns the setup steps for an existing prefix). The default password it generates for the administrator user is <code>letmein</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>pushd ovirt-engine&#x000A;dev-build.sh firsttest&#x000A;</code></pre></div>
+<p>Please forward any questions to the usual development mailing list devel@ovirt.org or to me personally to msivak@redhat.com.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/development.html">development</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/ovirt-engine.html">ovirt-engine</a></li>
+<li><a href="../../tag/test.html">Test</a></li>
+<li><a href="../../tag/vdsmfake.html">vdsmfake</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2016-11-14-testing-ovirt-changes-without-cluster.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2016-11-14-testing-ovirt-changes-without-cluster.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 28 Nov 2016 15:06 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

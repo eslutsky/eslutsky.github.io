@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Utilities &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-18-utilities">Chapter 18: Utilities</h1>
+
+<h2 id="the-ovirt-engine-rename-tool">The oVirt Engine Rename Tool</h2>
+
+<p>When the <code>engine-setup</code> command is run in a clean environment, the command generates a number of certificates and keys that use the fully qualified domain name of the Engine supplied during the setup process. If the fully qualified domain name of the Engine must be changed later on (for example, due to migration of the machine hosting the Engine to a different domain), the records of the fully qualified domain name must be updated to reflect the new name. The <code>ovirt-engine-rename</code> command automates this task.</p>
+
+<p>The <code>ovirt-engine-rename</code> command updates records of the fully qualified domain name of the Engine in the following locations:</p>
+
+<ul>
+  <li>
+    <p>/etc/ovirt-engine/engine.conf.d/10-setup-protocols.conf</p>
+  </li>
+  <li>
+    <p>/etc/ovirt-engine/isouploader.conf.d/10-engine-setup.conf</p>
+  </li>
+  <li>
+    <p>/etc/ovirt-engine/logcollector.conf.d/10-engine-setup.conf</p>
+  </li>
+  <li>
+    <p>/etc/pki/ovirt-engine/cert.conf</p>
+  </li>
+  <li>
+    <p>/etc/pki/ovirt-engine/cert.template</p>
+  </li>
+  <li>
+    <p>/etc/pki/ovirt-engine/certs/apache.cer</p>
+  </li>
+  <li>
+    <p>/etc/pki/ovirt-engine/keys/apache.key.nopass</p>
+  </li>
+  <li>
+    <p>/etc/pki/ovirt-engine/keys/apache.p12</p>
+
+    <p><strong>Warning:</strong> While the <code>ovirt-engine-rename</code> command creates a new certificate for the web server on which the Engine runs, it does not affect the certificate for the engine or the certificate authority. Due to this, there is some risk involved in using the <code>ovirt-engine-rename</code> command, particularly in environments that have been upgraded from oVirt 3.2 and earlier. Therefore, changing the fully qualified domain name of the Engine by running <code>engine-cleanup</code> and <code>engine-setup</code> is recommended where possible.</p>
+  </li>
+</ul>
+
+<h3 id="syntax-for-the-ovirt-engine-rename-command">Syntax for the oVirt Engine Rename Command</h3>
+
+<p>The basic syntax for the <code>ovirt-engine-rename</code> command is:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># /usr/share/ovirt-engine/setup/bin/ovirt-engine-rename&#x000A;</code></pre></div>
+<p>The command also accepts the following options:</p>
+
+<dl>
+  <dt><code>--newname=[new name]</code></dt>
+  <dd>Allows you to specify the new fully qualified domain name for the Engine without user interaction.</dd>
+  <dt><code>--log=[file]</code></dt>
+  <dd>Allows you to specify the path and name of a file into which logs of the rename operation are to be written.</dd>
+  <dt><code>--config=[file]</code></dt>
+  <dd>Allows you to specify the path and file name of a configuration file to load into the rename operation.</dd>
+  <dt><code>--config-append=[file]</code></dt>
+  <dd>Allows you to specify the path and file name of a configuration file to append to the rename operation. This option can be used to specify the path and file name of an answer file.</dd>
+  <dt><code>--generate-answer=[file]</code></dt>
+  <dd>Allows you to specify the path and file name of a file into which your answers to and the values changed by the <code>ovirt-engine-rename</code> command are recorded.</dd>
+</dl>
+
+<h3 id="renaming-the-engine-with-the-ovirt-engine-rename-tool">Renaming the Engine with the oVirt Engine Rename Tool</h3>
+
+<p>You can use the <code>ovirt-engine-rename</code> command to update records of the fully qualified domain name of the Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** The `ovirt-engine-rename` command does not update SSL certificates, such as `imageio-proxy` or `websocket-proxy`. These must be updated manually, after running `ovirt-engine-rename`. See "Updating SSL Certificates" below.&#x000A;</code></pre></div>
+<p>The tool checks whether the Engine provides a local ISO or Data storage domain. If it does, the tool prompts the user to eject, shut down, or place into maintenance mode any virtual machine or storage domain connected to the storage before continuing with the operation. This ensures that virtual machines do not lose connectivity with their virtual disks, and prevents ISO storage domains from losing connectivity during the renaming process.</p>
+
+<p><strong>Using the oVirt Engine Rename Tool</strong></p>
+
+<ol>
+  <li>
+    <p>Prepare all DNS and other relevant records for the new fully qualified domain name.</p>
+  </li>
+  <li>
+    <p>Update the DHCP server configuration if DHCP is used.</p>
+  </li>
+  <li>
+    <p>Update the host name on the Engine.</p>
+  </li>
+  <li>
+    <p>Run the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # /usr/share/ovirt-engine/setup/bin/ovirt-engine-rename&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>When prompted, press <strong>Enter</strong> to stop the engine service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> During execution engine service will be stopped (OK, Cancel) [OK]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>When prompted, enter the new fully qualified domain name for the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> New fully qualified server name:[new name]&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The <code>ovirt-engine-rename</code> command updates records of the fully qualified domain name of the Engine.</p>
+
+<p><strong>Updating SSL Certificates</strong></p>
+
+<p>Run the following commands after the <code>ovirt-engine-rename</code> command to update the SSL certificates:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>1. # names="websocket-proxy imageio-proxy"&#x000A;&#x000A;2. # subject="$(\&#x000A;    openssl x509 \&#x000A;    -in /etc/pki/ovirt-engine/certs/apache.cer \&#x000A;    -noout \&#x000A;    -subject | \&#x000A;        sed \&#x000A;            's;subject= \(.\*\);\1;'&#x000A;  )"&#x000A;&#x000A;3. # . /usr/share/ovirt-engine/bin/engine-prolog.sh&#x000A;&#x000A;4. # for name in $names; do&#x000A;    /usr/share/ovirt-engine/bin/pki-enroll-pkcs12.sh \&#x000A;        --name="${name}" \&#x000A;        --password=mypass \&#x000A;        --subject="${subject}" \&#x000A;        --keep-key \&#x000A;        --san=DNS:"${ENGINE_FQDN}"&#x000A;  done&#x000A;</code></pre></div>
+<h2 id="the-engine-configuration-tool">The Engine Configuration Tool</h2>
+
+<h3 id="the-engine-configuration-tool-1">The Engine Configuration Tool</h3>
+
+<p>The engine configuration tool is a command-line utility for configuring global settings for your oVirt environment. The tool interacts with a list of key-value mappings that are stored in the engine database, and allows you to retrieve and set the value of individual keys, and retrieve a list of all available configuration keys and values. Furthermore, different values can be stored for each configuration level in your oVirt environment.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Neither the oVirt Engine nor Wildfly/JBoss Application Platform need to be running to retrieve or set the value of a configuration key. Because the configuration key value-key mappings are stored in the engine database, they can be updated while the `postgresql` service is running. Changes are then applied when the `ovirt-engine` service is restarted.&#x000A;</code></pre></div>
+<h3 id="syntax-for-the-engine-config-command">Syntax for the engine-config Command</h3>
+
+<p>You can run the engine configuration tool from the machine on which the oVirt Engine is installed. For detailed information on usage, print the help output for the command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-config --help&#x000A;</code></pre></div>
+<p><strong>Common tasks</strong></p>
+
+<ul>
+  <li>
+    <p>List available configuration keys</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-config --list&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>List available configuration values</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-config --all&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Retrieve value of configuration key</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-config --get [KEY_NAME]&#x000A;</code></pre></div>
+    <p>Replace <code>[KEY_NAME]</code> with the name of the preferred key to retrieve the value for the given version of the key. Use the <code>--cver</code> parameter to specify the configuration version of the value to be retrieved. If no version is provided, values for all existing versions are returned.</p>
+  </li>
+  <li>
+    <p>Set value of configuration key</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-config --set [KEY_NAME]=[KEY_VALUE] --cver=[VERSION]&#x000A;</code></pre></div>
+    <p>Replace <code>[KEY_NAME]</code> with the name of the specific key to set, and replace <code>[KEY_VALUE]</code> with the value to be set. You must specify the <code>[VERSION]</code> in environments with more than one configuration version.</p>
+  </li>
+  <li>
+    <p>Restart the ovirt-engine service to load changes</p>
+
+    <p>The <code>ovirt-engine</code> service needs to be restarted for your changes to take effect.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # service ovirt-engine restart&#x000A;</code></pre></div>  </li>
+</ul>
+
+<h2 id="the-usb-filter-editor">The USB Filter Editor</h2>
+
+<h3 id="installing-the-usb-filter-editor">Installing the USB Filter Editor</h3>
+
+<p>The USB Filter Editor is a Windows tool used to configure the <strong>usbfilter.txt</strong> policy file. The policy rules defined in this file allow or deny automatic pass-through of specific USB devices from client machines to virtual machines managed using the oVirt Engine. The policy file resides on the oVirt Engine in the following location: <strong>/etc/ovirt-engine/usbfilter.txt</strong> Changes to USB filter policies do not take effect unless the <strong>ovirt-engine</strong> service on the Red Hat Virtualization Manager server is restarted.</p>
+
+<p><strong>Installing the USB Filter Editor</strong></p>
+
+<ol>
+  <li>
+    <p>On a Windows machine, launch the <strong>USBFilterEditor.msi</strong> installer.</p>
+  </li>
+  <li>
+    <p>Follow the steps of the installation wizard. Unless otherwise specified, the USB Filter Editor will be installed by default in either <strong>C:\Program Files\RedHat\USB Filter Editor</strong> or <strong>C:\Program Files(x86)\RedHat\USB Filter Editor</strong> depending on your version of Windows.</p>
+  </li>
+  <li>
+    <p>A USB Filter Editor shortcut icon is created on your desktop.</p>
+
+    <p><strong>Important:</strong> Use a Secure Copy (SCP) client to import and export filter policies from the oVirt Engine. A Secure Copy tool for Windows machines is WinSCP (<a href="http://winscp.net">http://winscp.net</a>).</p>
+  </li>
+</ol>
+
+<p>The default USB device policy provides virtual machines with basic access to USB devices; update the policy to allow the use of additional USB devices.</p>
+
+<h3 id="the-usb-filter-editor-interface">The USB Filter Editor Interface</h3>
+
+<p>Double-click the USB Filter Editor shortcut icon on your desktop.</p>
+
+<p>The <strong>Red Hat USB Filter Editor</strong> interface displays the <strong>Class</strong>, <strong>Vendor</strong>, <strong>Product</strong>, <strong>Revision</strong>, and <strong>Action</strong> for each USB device. Permitted USB devices are set to <strong>Allow</strong> in the <strong>Action</strong> column; prohibited devices are set to <strong>Block</strong>.</p>
+
+<p><strong>USB Editor Fields</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Class</strong></td>
+      <td>Type of USB device; for example, printers, mass storage controllers.</td>
+    </tr>
+    <tr>
+      <td><strong>Vendor</strong></td>
+      <td>The manufacturer of the selected type of device.</td>
+    </tr>
+    <tr>
+      <td><strong>Product</strong></td>
+      <td>The specific USB device model.</td>
+    </tr>
+    <tr>
+      <td><strong>Revision</strong></td>
+      <td>The revision of the product.</td>
+    </tr>
+    <tr>
+      <td><strong>Action</strong></td>
+      <td>Allow or block the specified device.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The USB device policy rules are processed in their listed order. Use the <strong>Up</strong> and <strong>Down</strong> buttons to move rules higher or lower in the list. The universal <strong>Block</strong> rule needs to remain as the lowest entry to ensure all USB devices are denied unless explicitly allowed in the USB Filter Editor.</p>
+
+<h3 id="adding-a-usb-policy">Adding a USB Policy</h3>
+
+<p>Double-click the USB Filter Editor shortcut icon on your desktop to open the editor.</p>
+
+<p><strong>Adding a USB Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Use the <strong>USB Class</strong>, <strong>Vendor ID</strong>, <strong>Product ID</strong>, and <strong>Revision</strong> check boxes and lists to specify the device.</p>
+
+    <p>Click the <strong>Allow</strong> button to permit virtual machines use of the USB device; click the <strong>Block</strong> button to prohibit the USB device from virtual machines.</p>
+
+    <p>Click <strong>OK</strong> to add the selected filter rule to the list and close the window.</p>
+
+    <p><strong>Adding a Device</strong></p>
+
+    <p>The following is an example of how to add USB Class <code>Smartcard</code>, device <code>EP-1427X-2 Ethernet Adapter</code>, from manufacturer <code>Acer Communications &amp; Multimedia</code> to the list of allowed devices.</p>
+
+    <p><img alt="" width="592" height="370" src="/images/admin-guide/306.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Click <strong>File</strong> → <strong>Save</strong> to save the changes.</p>
+  </li>
+</ol>
+
+<p>You have added a USB policy to the USB Filter Editor. USB filter policies need to be exported to the oVirt Engine to take effect.</p>
+
+<h3 id="removing-a-usb-policy">Removing a USB Policy</h3>
+
+<p>Double-click the USB Filter Editor shortcut icon on your desktop to open the editor.</p>
+
+<p><strong>Removing a USB Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Select the policy to be removed.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>. A message displays prompting you to confirm that you want to remove the policy.</p>
+  </li>
+  <li>
+    <p>Click <strong>Yes</strong> to confirm that you want to remove the policy.</p>
+  </li>
+  <li>
+    <p>Click <strong>File</strong> → <strong>Save</strong> to save the changes.</p>
+  </li>
+</ol>
+
+<p>You have removed a USB policy from the USB Filter Editor. USB filter policies need to be exported to the oVirt Engine to take effect.</p>
+
+<h3 id="searching-for-usb-device-policies">Searching for USB Device Policies</h3>
+
+<p>Search for attached USB devices to either allow or block them in the USB Filter Editor.</p>
+
+<p>Double-click the USB Filter Editor shortcut icon on your desktop to open the editor.</p>
+
+<p><strong>Searching for USB Device Policies</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Search</strong>. The <strong>Attached USB Devices</strong> window displays a list of all the attached devices.</p>
+  </li>
+  <li>
+    <p>Select the device and click <strong>Allow</strong> or <strong>Block</strong> as appropriate. Double-click the selected device to close the window. A policy rule for the device is added to the list.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Up</strong> and <strong>Down</strong> buttons to change the position of the new policy rule in the list.</p>
+  </li>
+  <li>
+    <p>Click <strong>File</strong> → <strong>Save</strong> to save the changes.</p>
+  </li>
+</ol>
+
+<p>You have searched the attached USB devices. USB filter policies need to be exported to the oVirt Engine to take effect.</p>
+
+<h3 id="exporting-a-usb-policy">Exporting a USB Policy</h3>
+
+<p>USB device policy changes need to be exported and uploaded to the oVirt Engine for the updated policy to take effect. Upload the policy and restart the <strong>ovirt-engine</strong> service.</p>
+
+<p>Double-click the USB Filter Editor shortcut icon on your desktop to open the editor.</p>
+
+<p><strong>Exporting a USB Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Export</strong>; the <strong>Save As</strong> window opens.</p>
+  </li>
+  <li>
+    <p>Save the file with a file name of <strong>usbfilter.txt</strong>.</p>
+  </li>
+  <li>
+    <p>Using a Secure Copy client, such as WinSCP, upload the <strong>usbfilter.txt</strong> file to the server running oVirt Engine. The file must be placed in the following directory on the server:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> /etc/ovirt-engine/&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>As the <strong>root</strong> user on the server running oVirt Engine, restart the <strong>ovirt-engine</strong> service.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="importing-a-usb-policy">Importing a USB Policy</h3>
+
+<p>An existing USB device policy must be downloaded and imported into the USB Filter Editor before you can edit it.</p>
+
+<p><strong>Importing a USB Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Using a Secure Copy client, such as WinSCP, upload the <strong>usbfilter.txt</strong> file to the server running oVirt Engine. The file must be placed in the following directory on the server:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> /etc/ovirt-engine/&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Double-click the USB Filter Editor shortcut icon on your desktop to open the editor.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import</strong> to open the <strong>Open</strong> window.</p>
+  </li>
+  <li>
+    <p>Open the <strong>usbfilter.txt</strong> file that was downloaded from the server.</p>
+  </li>
+</ol>
+
+<h2 id="the-log-collector-tool">The Log Collector Tool</h2>
+
+<p>A log collection tool is included in the oVirt Engine. This allows you to easily collect relevant logs from across the oVirt environment when requesting support.</p>
+
+<p>The log collection command is <code>ovirt-log-collector</code>. You are required to log in as the <code>root</code> user and provide the administration credentials for the oVirt environment. The <code>ovirt-log-collector -h</code> command displays usage information, including a list of all valid options for the <code>ovirt-log-collector</code> command.</p>
+
+<h3 id="syntax-for-the-ovirt-log-collector-command">Syntax for the ovirt-log-collector Command</h3>
+
+<p>The basic syntax for the log collector command is:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ovirt-log-collector options  list all|clusters|datacenters&#x000A;# ovirt-log-collector options collect&#x000A;</code></pre></div>
+<p>The two supported modes of operation are <code>list</code> and <code>collect</code>.</p>
+
+<ul>
+  <li>
+    <p>The <code>list</code> parameter lists either the hosts, clusters, or data centers attached to the oVirt Engine. You are able to filter the log collection based on the listed objects.</p>
+  </li>
+  <li>
+    <p>The <code>collect</code> parameter performs log collection from the oVirt Engine. The collected logs are placed in an archive file under the <strong>/tmp/logcollector</strong> directory. The <code>ovirt-log-collector</code> command assigns each log a specific file name.</p>
+  </li>
+</ul>
+
+<p>Unless another parameter is specified, the default action is to list the available hosts together with the data center and cluster to which they belong. You will be prompted to enter user names and passwords to retrieve certain logs.</p>
+
+<p>There are numerous parameters to further refine the <code>ovirt-log-collector</code> command.</p>
+
+<p><strong>General options</strong></p>
+
+<dl>
+  <dt><code>--version</code></dt>
+  <dd>Displays the version number of the command in use and returns to prompt.</dd>
+  <dt><code>-h</code>, <code>--help</code></dt>
+  <dd>Displays command usage information and returns to prompt.</dd>
+  <dt><code>--conf-file=PATH</code></dt>
+  <dd>Sets <code>PATH</code> as the configuration file the tool is to use.</dd>
+  <dt><code>--local-tmp=PATH</code></dt>
+  <dd>Sets <code>PATH</code> as the directory in which logs are saved. The default directory is <code>/tmp/logcollector</code>.</dd>
+  <dt><code>--ticket-number=TICKET</code></dt>
+  <dd>Sets <code>TICKET</code> as the ticket, or case number, to associate with the SOS report.</dd>
+  <dt><code>--upload=FTP_SERVER</code></dt>
+  <dd>Sets <code>FTP_SERVER</code> as the destination for retrieved logs to be sent using FTP.</dd>
+  <dt><code>--log-file=PATH</code></dt>
+  <dd>Sets <code>PATH</code> as the specific file name the command should use for the log output.</dd>
+  <dt><code>--quiet</code></dt>
+  <dd>Sets quiet mode, reducing console output to a minimum. Quiet mode is off by default.</dd>
+  <dt><code>-v</code>, <code>--verbose</code></dt>
+  <dd>Sets verbose mode, providing more console output. Verbose mode is off by default.</dd>
+  <dt><code>--time-only</code></dt>
+  <dd>Displays only information about time differences between hosts, without generating a full SOS report.</dd>
+</dl>
+
+<p><strong>oVirt Engine Options</strong></p>
+
+<p>These options filter the log collection and specify authentication details for the oVirt Engine.</p>
+
+<p>These parameters can be combined for specific commands. For example, <code>ovirt-log-collector --user=admin@internal --cluster ClusterA,ClusterB --hosts "SalesHost"*</code> specifies the user as <code>admin@internal</code> and limits the log collection to only <code>SalesHost</code> hosts in clusters <code>A</code> and <code>B</code>.</p>
+
+<dl>
+  <dt><code>--no-hypervisors</code></dt>
+  <dd>Omits virtualization hosts from the log collection.</dd>
+  <dt><code>--one-hypervisor-per-cluster</code></dt>
+  <dd>Collects the logs of one host (the SPM, if there is one) from each cluster.</dd>
+  <dt><code>-u USER</code>, <code>--user=USER</code></dt>
+  <dd>Sets the user name for login. The <code>USER</code> is specified in the format <code>user@domain</code>, where <code>user</code> is the user name and <code>domain</code> is the directory services domain in use. The user must exist in directory services and be known to the oVirt Engine.</dd>
+  <dt><code>-r FQDN</code>, <code>--rhevm=FQDN</code></dt>
+  <dd>Sets the fully qualified domain name of the oVirt Engine server from which to collect logs, where <code>FQDN</code> is replaced by the fully qualified domain name of the Engine. It is assumed that the log collector is being run on the same local host as the oVirt Engine; the default value is <code>localhost</code>.</dd>
+  <dt><code>-c CLUSTER</code>, <code>--cluster=CLUSTER</code></dt>
+  <dd>Collects logs from the virtualization hosts in the nominated <code>CLUSTER</code> in addition to logs from the oVirt Engine. The cluster(s) for inclusion must be specified in a comma-separated list of cluster names or match patterns.</dd>
+  <dt><code>-d DATACENTER</code>, <code>--data-center=DATACENTER</code></dt>
+  <dd>Collects logs from the virtualization hosts in the nominated <code>DATACENTER</code> in addition to logs from the oVirt Engine. The data center(s) for inclusion must be specified in a comma-separated list of data center names or match patterns.</dd>
+  <dt><code>-H HOSTS_LIST</code>, <code>--hosts=HOSTS_LIST</code></dt>
+  <dd>Collects logs from the virtualization hosts in the nominated <code>HOSTS_LIST</code> in addition to logs from the oVirt Engine. The hosts for inclusion must be specified in a comma-separated list of host names, fully qualified domain names, or IP addresses. Match patterns are also valid.</dd>
+</dl>
+
+<p><strong>SSH Configuration</strong></p>
+
+<dl>
+  <dt><code>--ssh-port=PORT</code></dt>
+  <dd>Sets <code>PORT</code> as the port to use for SSH connections with virtualization hosts.</dd>
+  <dt><code>-k KEYFILE</code>, <code>--key-file=KEYFILE</code></dt>
+  <dd>Sets <code>KEYFILE</code> as the public SSH key to be used for accessing the virtualization hosts.</dd>
+  <dt><code>--max-connections=MAX_CONNECTIONS</code></dt>
+  <dd>Sets <code>MAX_CONNECTIONS</code> as the maximum concurrent SSH connections for logs from virtualization hosts. The default is <code>10</code>.</dd>
+</dl>
+
+<p><strong>PostgreSQL Database Options</strong></p>
+
+<p>The database user name and database name must be specified, using the <code>pg-user</code> and <code>dbname</code> parameters, if they have been changed from the default values.</p>
+
+<p>Use the <code>pg-dbhost</code> parameter if the database is not on the local host. Use the optional <code>pg-host-key</code> parameter to collect remote logs. The PostgreSQL SOS plugin must be installed on the database server for remote log collection to be successful.</p>
+
+<dl>
+  <dt><code>--no-postgresql</code></dt>
+  <dd>Disables collection of database. The log collector will connect to the oVirt Engine PostgreSQL database and include the data in the log report unless the <code>--no-postgresql</code> parameter is specified.</dd>
+  <dt><code>--pg-user=USER</code></dt>
+  <dd>Sets <code>USER</code> as the user name to use for connections with the database server. The default is <code>postgres</code>.</dd>
+  <dt><code>--pg-dbname=DBNAME</code></dt>
+  <dd>Sets <code>DBNAME</code> as the database name to use for connections with the database server. The default is <code>rhevm</code>.</dd>
+  <dt><code>--pg-dbhost=DBHOST</code></dt>
+  <dd>Sets <code>DBHOST</code> as the host name for the database server. The default is <code>localhost</code>.</dd>
+  <dt><code>--pg-host-key=KEYFILE</code></dt>
+  <dd>Sets <code>KEYFILE</code> as the public identity file (private key) for the database server. This value is not set by default; it is required only where the database does not exist on the local host.</dd>
+</dl>
+
+<h3 id="basic-log-collector-usage">Basic Log Collector Usage</h3>
+
+<p>When the <code>ovirt-log-collector</code> command is run without specifying any additional parameters, its default behavior is to collect all logs from the oVirt Engine and its attached hosts. It will also collect database logs unless the <code>--no-postgresql</code> parameter is added. In the following example, log collector is run to collect all logs from the oVirt Engine and three attached hosts.</p>
+
+<p><strong>Log Collector Usage</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ovirt-log-collector&#x000A;INFO: Gathering oVirt Engine information...&#x000A;INFO: Gathering PostgreSQL the oVirt Engine database and log files from localhost...&#x000A;Please provide REST API password for the admin@internal oVirt Engine user (CTRL+D to abort):&#x000A;About to collect information from 3 hypervisors. Continue? (Y/n):&#x000A;INFO: Gathering information from selected hypervisors...&#x000A;INFO: collecting information from 192.168.122.250&#x000A;INFO: collecting information from 192.168.122.251&#x000A;INFO: collecting information from 192.168.122.252&#x000A;INFO: finished collecting information from 192.168.122.250&#x000A;INFO: finished collecting information from 192.168.122.251&#x000A;INFO: finished collecting information from 192.168.122.252&#x000A;Creating compressed archive...&#x000A;INFO Log files have been collected and placed in /tmp/logcollector/sosreport-rhn-account-20110804121320-ce2a.tar.xz.&#x000A;The MD5 for this file is 6d741b78925998caff29020df2b2ce2a and its size is 26.7M&#x000A;</code></pre></div>
+<h2 id="the-iso-uploader-tool">The ISO Uploader Tool</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The ISO Uploader tool has been deprecated. The oVirt Project recommends uploading ISO images to the data domain with the Administration Portal or with the REST API.&#x000A;</code></pre></div>
+<p>The ISO uploader is a tool for uploading ISO images to the ISO storage domain. It is installed as part of the oVirt Engine.</p>
+
+<p>The ISO uploader command is <code>engine-iso-uploader</code>. You must log in as the <code>root</code> user and provide the administration credentials for the oVirt environment to use this command. The <code>engine-iso-uploader -h</code> command displays usage information, including a list of all valid options for the <code>engine-iso-uploader</code> command.</p>
+
+<h3 id="syntax-for-the-engine-iso-uploader-command">Syntax for the engine-iso-uploader Command</h3>
+
+<p>The basic syntax for the ISO uploader command is:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-iso-uploader options list&#x000A;# engine-iso-uploader options upload file file file&#x000A;</code></pre></div>
+<p>The ISO uploader command supports two actions - <code>list</code> and <code>upload</code>.</p>
+
+<ul>
+  <li>
+    <p>The <code>list</code> action lists the ISO storage domains to which ISO files can be uploaded. The oVirt Engine creates this list on the machine on which the Engine is installed during the installation process.</p>
+  </li>
+  <li>
+    <p>The <code>upload</code> action uploads a single ISO file or multiple ISO files separated by spaces to the specified ISO storage domain. NFS is used by default, but SSH is also available.</p>
+  </li>
+</ul>
+
+<p>You must specify one of the above actions when you use the ISO uploader command. Moreover, you must specify at least one local file to use the <code>upload</code> action.</p>
+
+<p>There are several parameters to further refine the <code>engine-iso-uploader</code> command.</p>
+
+<p><strong>General Options</strong></p>
+
+<dl>
+  <dt><code>--version</code></dt>
+  <dd>Displays the version of the ISO uploader command.</dd>
+  <dt><code>-h</code>, <code>--help</code></dt>
+  <dd>Displays information on how to use the ISO uploader command.</dd>
+  <dt><code>--conf-file=[PATH]</code></dt>
+  <dd>Sets <code>[PATH]</code> as the configuration file the command will to use. The default is <code>/etc/ovirt-engine/isouploader.conf</code>.</dd>
+  <dt><code>--log-file=[PATH]</code></dt>
+  <dd>Sets <code>[PATH]</code> as the specific file name the command will use to write log output. The default is <code>/var/log/ovirt-engine/ovirt-iso-uploader/ovirt-iso-uploader[date].log</code>.</dd>
+  <dt><code>--cert-file=[PATH]</code></dt>
+  <dd>Sets <code>[PATH]</code> as the certificate for validating the engine. The default is <code>/etc/pki/ovirt-engine/ca.pem</code>.</dd>
+  <dt><code>--insecure</code></dt>
+  <dd>Specifies that no attempt will be made to verify the engine.</dd>
+  <dt><code>--nossl</code></dt>
+  <dd>Specifies that SSL will not be used to connect to the engine.</dd>
+  <dt><code>--quiet</code></dt>
+  <dd>Sets quiet mode, reducing console output to a minimum.</dd>
+  <dt><code>-v</code>, <code>--verbose</code></dt>
+  <dd>Sets verbose mode, providing more console output.</dd>
+  <dt><code>-f</code>, <code>--force</code></dt>
+  <dd>Force mode is necessary when the source file being uploaded has the same file name as an existing file in the destination ISO domain. This option forces the existing file to be overwritten.</dd>
+</dl>
+
+<p><strong>oVirt Engine Options</strong></p>
+
+<dl>
+  <dt><code>-u [USER]</code>, <code>--user=[USER]</code></dt>
+  <dd>Specifies the user whose credentials will be used to execute the command. The <code>[USER]</code> is specified in the format <code>[username]</code>@<code>[domain]</code>. The user must exist in the specified domain and be known to the oVirt Engine.</dd>
+  <dt><code>-r [FQDN]</code>, <code>--engine=[FQDN]</code></dt>
+  <dd>Specifies the IP address or fully qualified domain name of the oVirt Engine from which the images will be uploaded. It is assumed that the image uploader is being run from the same machine on which the oVirt Engine is installed. The default value is <code>localhost:443</code>.</dd>
+</dl>
+
+<p><strong>ISO Storage Domain Options</strong></p>
+
+<p>The following options specify the ISO domain to which the images will be uploaded. These options cannot be used together; you must used either the <code>-i</code> option or the <code>-n</code> option.</p>
+
+<dl>
+  <dt><code>-i</code>, <code>--iso-domain=[ISODOMAIN]</code></dt>
+  <dd>Sets the storage domain <code>[ISODOMAIN]</code> as the destination for uploads.</dd>
+  <dt><code>-n</code>, <code>--nfs-server=[NFSSERVER]</code></dt>
+  <dd>Sets the NFS path <code>[NFSSERVER]</code> as the destination for uploads.</dd>
+</dl>
+
+<p><strong>Connection Options</strong></p>
+
+<p>The ISO uploader uses NFS as default to upload files. These options specify SSH file transfer instead.</p>
+
+<dl>
+  <dt><code>--ssh-user=[USER]</code></dt>
+  <dd>Sets <code>[USER]</code> as the SSH user name to use for the upload. The default is <code>root</code>.</dd>
+  <dt><code>--ssh-port=[PORT]</code></dt>
+  <dd>Sets <code>[PORT]</code> as the port to use when connecting to SSH.</dd>
+  <dt><code>-k [KEYFILE]</code>, <code>--key-file=[KEYFILE]</code></dt>
+  <dd>Sets <code>[KEYFILE]</code> as the public key to use for SSH authentication. You will be prompted to enter the password of the user specified with <code>--ssh-user=[USER]</code> if no key is set.</dd>
+</dl>
+
+<h3 id="specifying-an-nfs-server">Specifying an NFS Server</h3>
+
+<p><strong>Uploading to an NFS Server</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-iso-uploader --nfs-server=storage.demo.redhat.com:/iso/path upload RHEL6.0.iso&#x000A;</code></pre></div>
+<h3 id="basic-iso-uploader-usage">Basic ISO Uploader Usage</h3>
+
+<p>The example below demonstrates the ISO uploader and the list parameter. The first command lists the available ISO storage domains; the <code>admin@internal</code> user is used because no user was specified in the command. The second command uploads an ISO file over NFS to the specified ISO domain.</p>
+
+<p><strong>List Domains and Upload Image</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-iso-uploader list&#x000A;Please provide the REST API password for the admin@internal oVirt Engine user (CTRL+D to abort):&#x000A;ISO Storage Domain Name   | Datacenter          | ISO Domain Status&#x000A;ISODomain                 | Default             | active&#x000A;&#x000A;# engine-iso-uploader --iso-domain=[ISODomain] upload [RHEL6.iso]&#x000A;Please provide the REST API password for the admin@internal oVirt Engine user (CTRL+D to abort):&#x000A;</code></pre></div>
+<h3 id="uploading-the-virtio-and-guest-tool-image-files-to-an-iso-storage-domain">Uploading the VirtIO and Guest Tool Image Files to an ISO Storage Domain</h3>
+
+<p>The <code>virtio-win</code> ISO and Virtual Floppy Drive (VFD) images, which contain the VirtIO drivers for Windows virtual machines, and the <code>rhev-tools-setup</code> ISO, which contains the oVirt Guest Tools for Windows virtual machines, are copied to an ISO storage domain upon installation and configuration of the domain.</p>
+
+<p>These image files provide software that can be installed on virtual machines to improve performance and usability. The most recent <code>virtio-win</code> and <code>rhev-tools-setup</code> files can be accessed via the following symbolic links on the file system of the oVirt Engine:</p>
+
+<ul>
+  <li>
+    <p><code>/usr/share/virtio-win/virtio-win.iso</code></p>
+  </li>
+  <li>
+    <p><code>/usr/share/virtio-win/virtio-win_x86.vfd</code></p>
+  </li>
+  <li>
+    <p><code>/usr/share/virtio-win/virtio-win_amd64.vfd</code></p>
+  </li>
+  <li>
+    <p><code>/usr/share/rhev-guest-tools-iso/rhev-tools-setup.iso</code></p>
+  </li>
+</ul>
+
+<p>These image files must be manually uploaded to ISO storage domains that were not created locally by the installation process. Use the <code>engine-iso-uploader</code> command to upload these images to your ISO storage domain. Once uploaded, the image files can be attached to and used by virtual machines.</p>
+
+<p>The example below demonstrates the command to upload the <code>virtio-win.iso</code>, <code>virtio-win_x86.vfd</code>, <code>virtio-win_amd64.vfd</code>, and <code>rhev-tools-setup.iso</code> image files to the <code>ISODomain</code>.</p>
+
+<p><strong>Uploading the VirtIO and Guest Tool Image Files</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-iso-uploader --iso-domain=[ISODomain] upload /usr/share/virtio-win/virtio-win.iso /usr/share/virtio-win/virtio-win_x86.vfd /usr/share/virtio-win/virtio-win_amd64.vfd /usr/share/rhev-guest-tools-iso/rhev-tools-setup.iso&#x000A;</code></pre></div>
+<h2 id="the-engine-vacuum-tools">The Engine Vacuum Tools</h2>
+
+<h3 id="the-engine-vacuum-tool">The Engine Vacuum Tool</h3>
+
+<p>The Engine Vacuum tool maintains PostgreSQL databases by updating tables and removing dead rows, allowing disk space to be reused. See the <a href="https://www.postgresql.org/docs/9.5/static/sql-vacuum.html">PostgreSQL documentation</a> for information about the VACUUM command and its parameters.</p>
+
+<p>The Engine Vacuum command is <code>engine-vacuum</code>. You must log in as the <strong>root</strong> user and provide the administration credentials for the oVirt environment.</p>
+
+<p>Alternatively, the Engine Vacuum tool can be run while using the <code>engine-setup</code> command to customize an existing installation:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ engine-setup&#x000A;...&#x000A;[ INFO  ] Stage: Environment customization&#x000A;...&#x000A;Perform full vacuum on the engine database engine@localhost?&#x000A;This operation may take a while depending on this setup health and the&#x000A;configuration of the db vacuum process.&#x000A;See https://www.postgresql.org/docs/9.5/static/sql-vacuum.html&#x000A;(Yes, No) [No]:&#x000A;</code></pre></div>
+<p>The <strong>Yes</strong> option runs the Engine Vacuum tool in full vacuum verbose mode.</p>
+
+<h3 id="engine-vacuum-modes">Engine Vacuum Modes</h3>
+
+<p>Engine Vacuum has two modes:</p>
+
+<dl>
+  <dt><strong>Standard Vacuum</strong></dt>
+  <dd>Frequent standard vacuuming is recommended.
+
+    <p>Standard vacuum removes dead row versions in tables and indexes and marks the space as available for future reuse. Frequently updated tables should be vacuumed on a regular basis. However, standard vacuum does not return the space to the operating system.</p>
+
+    <p>Standard vacuum, with no parameters, processes every table in the current database.</p>
+  </dd>
+  <dt><strong>Full Vacuum</strong></dt>
+  <dd>Full vacuum is not recommended for routine use, but should only be run when a significant amount of space needs to be reclaimed from within the table.
+
+    <p>Full vacuum compacts the tables by writing a new copy of the table file with no dead space, thereby enabling the operating system to reclaim the space. Full vacuum can take a long time.</p>
+
+    <p>Full vacuum requires extra disk space for the new copy of the table, until the operation completes and the old copy is deleted. Because full vacuum requires an exclusive lock on the table, it cannot be run in parallel with other uses of the table.</p>
+  </dd>
+</dl>
+
+<h3 id="syntax-for-the-engine-vacuum-command">Syntax for the engine-vacuum Command</h3>
+
+<p>The basic syntax for the engine-vacuum command is:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-vacuum&#x000A;&#x000A;# engine-vacuum option&#x000A;</code></pre></div>
+<p>Running the engine-vacuum command with no options performs a standard vacuum.</p>
+
+<p>There are several parameters to further refine the engine-vacuum command.</p>
+
+<p><strong>General Options</strong></p>
+
+<dl>
+  <dt><code>-h --help</code></dt>
+  <dd>Displays information on how to use the engine-vacuum command.</dd>
+  <dt><code>-a</code></dt>
+  <dd>Runs a standard vacuum, analyzes the database, and updates the optimizer statistics.</dd>
+  <dt><code>-A</code></dt>
+  <dd>Analyzes the database and updates the optimizer statistics, without vacuuming.</dd>
+  <dt><code>-f</code></dt>
+  <dd>Runs a full vacuum.</dd>
+  <dt><code>-v</code></dt>
+  <dd>Runs in verbose mode, providing more console output.</dd>
+  <dt><code>-t table_name</code></dt>
+  <dd>Vacuums a specific table or tables.
+
+    <p># engine-vacuum -f -v -t vm_dynamic -t vds_dynamic</p>
+  </dd>
+</dl>
+
+<p><strong>Prev:</strong> <a href="chap-Event_Notifications">Chapter 17: Event Notifications</a><br />
+<strong>Next:</strong> <a href="chap-Log_Files">Chapter 19: Log Files</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-utilities">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Utilities.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Utilities.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

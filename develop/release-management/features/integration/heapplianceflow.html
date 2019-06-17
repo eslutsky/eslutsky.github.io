@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+HEApplianceFlow &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/integration/">Integration</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="he-appliance-flow">HE Appliance Flow</h1>
+
+<h2 id="ovirt-hosted-engine-appliance-flow">oVirt hosted-engine appliance flow</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>This feature will provide a more convenient way to deploy oVirt self-hosted-engine creating the engine VM from a pre-installed appliance to be configured on fly. This can save a lot time and make the setup easier.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Simone Tiraboschi (stirabos)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#116;&#105;&#114;&#097;&#098;&#111;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#116;&#105;&#114;&#097;&#098;&#111;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: tiraboschi</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>This feature is about deploying oVirt hosted-engine setup in a more convenient and automatizable way. In order to deploy hosted-engine, currently the mainstream flow means:</p>
+
+<ol>
+  <li>create a VM booting from an ISO image</li>
+  <li>connect to that VM to install the OS and eventually updated it</li>
+  <li>reboot that VM</li>
+  <li>connect again, download ovirt-engine rpms</li>
+  <li>launch engine-setup and answer a few question (some of them already have a response on the host side but you need to type it again)</li>
+  <li>go back to the host to complete the hosted-engine setup</li>
+</ol>
+
+<p>The whole process could take a few hours.</p>
+
+<p>Hosted-engine automated setup with the appliance flow means:</p>
+
+<ol>
+  <li>ask a few question more (but they can be automated via an answerfile as well) regarding engine-setup on hosted-engine-setup side</li>
+  <li>generate an aswerfile and inject it into the appliance via cloud-init</li>
+  <li>automatically launch engine-setup on the appliance via cloud-init; the setup will be fully unattended</li>
+  <li>the output of engine-setup will be redirected on a virtio-serial port to get shown inside hosted-engine-setup without the need for ssh console, virsh console or remote viewer. Using a virtio serial port instead of an ssh connection means that we are going to get some output also if the network wasn't properly set-up for the new VM.</li>
+</ol>
+
+<p>The whole process could take a few minutes (excluding initial download time).</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<ul>
+  <li>Hosted-engine deployment becomes easier and quicker.</li>
+  <li>Hosted-engine deployment can be fully automated which means that we could have continuous integration on that.</li>
+</ul>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p>The appliance jobs need to provide the correct images. Both OVA and RPM (the rpm is simply a wrapper for the OVA) could be download from:
+  <a href="http://jenkins.ovirt.org/job/ovirt-appliance_ovirt-3.6_build-artifacts-el7-x86_64/lastSuccessfulBuild/">http://jenkins.ovirt.org/job/ovirt-appliance_ovirt-3.6_build-artifacts-el7-x86_64/lastSuccessfulBuild/</a></p>
+
+<p>The RPM is also available in the oVirt repo: the user could simply install them via yum and hosted-engine-setup should automatically detect them. <strong>NOTE:</strong> The installation may take some time due to the size of the RPM.</p>
+
+<p><code>[root@hostedEngine] yum install ovirt-engine-appliance</code></p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<ul>
+  <li>Cloud-init reference: <a href="https://cloudinit.readthedocs.org/en/latest/">https://cloudinit.readthedocs.org/en/latest/</a></li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<h4 id="prerequisites">Prerequisites</h4>
+<ul>
+  <li>Make sure your host and your virtual machine support nested virtualization. You can find detailed instructions here:     <br />
+http://community.redhat.com/blog/2013/08/testing-ovirt-3-3-with-nested-kvm/.
+After setting nested virtualization in the host, reboot it.</li>
+  <li>If you are opting for a DHCP network configuration (and not static) you must have a resolvable MAC address and DHCP name.
+    <h4 id="manual-setup-on-hosted-engine-side">Manual setup on hosted-engine side</h4>
+  </li>
+</ul>
+
+<p>Launch hosted-engine –deploy as usual</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  [root@c71ghe1 ~]# hosted-engine --deploy &#x000A;  [ INFO  ] Stage: Initializing&#x000A;  [ INFO  ] Generating a temporary VNC password.&#x000A;  [ INFO  ] Stage: Environment setup&#x000A;            Continuing will configure this host for serving as hypervisor and create a VM where you have to install oVirt Engine afterwards.&#x000A;            Are you sure you want to continue? (Yes, No)[Yes]: &#x000A;            Configuration files: []&#x000A;            Log file: /var/log/ovirt-hosted-engine-setup/ovirt-hosted-engine-setup-20150527003826-ger99j.log&#x000A;            Version: otopi-1.4.0_master (otopi-1.4.0-0.0.master.20150525193239.git66c59b4.el7)&#x000A;  [ INFO  ] Hardware supports virtualization&#x000A;  [ INFO  ] Bridge ovirtmgmt already created&#x000A;  [ INFO  ] Stage: Environment packages setup&#x000A;  [ INFO  ] Stage: Programs detection&#x000A;  [ INFO  ] Stage: Environment setup&#x000A;  [ INFO  ] Stage: Environment customization&#x000A;           &#x000A;            --== STORAGE CONFIGURATION ==--&#x000A;           &#x000A;            During customization use CTRL-D to abort.&#x000A;</code></pre></div>
+<p>It should work on all the possible storage backends.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Please specify the storage you would like to use (glusterfs, iscsi, fc, nfs3, nfs4)[nfs3]: nfs4&#x000A;            Please specify the full shared storage connection path to use (example: host:/path): 192.168.1.115:/Virtual/exthe7&#x000A;  [ INFO  ] Installing on first host&#x000A;            Please provide storage domain name. [hosted_storage]: &#x000A;            Local storage datacenter name is an internal name&#x000A;            and currently will not be shown in engine's admin UI.&#x000A;            Please enter local datacenter name [hosted_datacenter]: &#x000A;           &#x000A;            --== SYSTEM CONFIGURATION ==--&#x000A;           &#x000A;           &#x000A;            --== NETWORK CONFIGURATION ==--&#x000A;           &#x000A;            iptables was detected on your computer, do you wish setup to configure it? (Yes, No)[Yes]: &#x000A;            Please indicate a pingable gateway IP address [192.168.1.1]: &#x000A;           &#x000A;            --== VM CONFIGURATION ==--&#x000A;</code></pre></div>
+<p>Choose disk to boot using the appliance.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Please specify the device to boot the VM from (cdrom, disk, pxe) [cdrom]: disk&#x000A;</code></pre></div>
+<p>Choose to use cloud-init to automatically configure the appliance.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Would you like to use cloud-init to customize the appliance on the first boot (Yes, No)[Yes]?&#x000A;</code></pre></div>
+<p>You could provide a custom cloud-init no-cloud ISO image for complex configuration or you can simply have hosted-engine-setup generating one for you on flight.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Would you like to generate on-fly a cloud-init no-cloud ISO image&#x000A;            or do you have an existing one (Generate, Existing)[Generate]? &#x000A;</code></pre></div>
+<p>Configure your appliance</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Please provide the FQDN you would like to use for the engine appliance.&#x000A;            Note: This will be the FQDN of the engine VM you are now going to launch,&#x000A;            it should not point to the base host or to any other existing machine.&#x000A;            Engine VM FQDN: (leave it empty to skip): topolino.localdomain&#x000A;</code></pre></div>
+<p>If everything is OK and you don't need any other setup action on the engine VM, hosted-engine-setup could automatically start engine-setup for you on the appliance in order to silently setup the engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Automatically execute engine-setup on the engine appliance on first boot (Yes, No)[Yes]? &#x000A;            Automatically restart the engine VM as a monitored service after engine-setup (Yes, No)[Yes]? &#x000A;            Enter root password that will be used for the engine appliance (leave it empty to skip): &#x000A;            Confirm appliance root password: &#x000A;            Please provide the domain name you would like to use for the engine appliance.&#x000A;            Engine VM domain: [localdomain]&#x000A;</code></pre></div>
+<p>The appliance networking by default will get configured by DHCP but you need to know in advance the hostname (the host should be able to resolve it) so you need a DHCP reservation (you could force the appliance MAC address from here) with DHCP-DNS integration. Otherwise you could choose Static configuration and configure your appliance networking (including DNS, static entry in /etc/hosts…) from here.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            How should the engine VM network should be configured (DHCP, Static)[DHCP]? static&#x000A;            Please enter the IP address to be used for the engine VM [192.168.1.2]: 192.168.1.184&#x000A;  [ INFO  ] The engine VM will be configured to use 192.168.1.184/24&#x000A;            Please provide a comma-separated list of IP addresses of domain name servers for the engine VM&#x000A;            Engine VM DNS (leave it empty to skip) [192.168.1.1,0.0.0.0]: 192.168.1.1,8.8.8.8&#x000A;            Add a line for this host to /etc/hosts on the engine VM?&#x000A;            Note: ensuring that this host could resolve the engine VM hostname is still up to you&#x000A;            (Yes, No)[No] yes&#x000A;</code></pre></div>
+<p>Please select the appliance path (WIP: the appliance should be distributed as an RPM and it should propose the correct path as a default)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Please specify path to OVF archive you would like to use [None]: /mnt/ovirt.ova&#x000A;  [ INFO  ] Checking OVF archive content (could take a few minutes depending on archive size)&#x000A;  [ INFO  ] Checking OVF XML content (could take a few minutes depending on archive size)&#x000A;  [WARNING] OVF does not contain a valid image description, using default.&#x000A;</code></pre></div>
+<p>You could customize the memory and CPU requirements of you appliance</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            Please specify the memory size of the appliance in MB [Defaults to OVF value: 16384]: 4096&#x000A;            Please specify an alias for the Hosted Engine image [hosted_engine]: &#x000A;            The following CPU types are supported by this host:&#x000A;              - model_SandyBridge: Intel SandyBridge Family&#x000A;              - model_Westmere: Intel Westmere Family&#x000A;              - model_Nehalem: Intel Nehalem Family&#x000A;              - model_Penryn: Intel Penryn Family&#x000A;              - model_Conroe: Intel Conroe Family&#x000A;            Please specify the CPU type to be used by the VM [model_SandyBridge]: &#x000A;  [WARNING] Minimum requirements for disk size not met&#x000A;</code></pre></div>
+<p>If you opted for DHCP adressing you should be sure to have a correct DHCP reservation for your appliance.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            You may specify a unicast MAC address for the VM or accept a randomly generated default [00:16:3e:1e:02:c1]: &#x000A;            Please specify the console type you would like to use to connect to the VM (vnc, spice) [vnc]: &#x000A;           &#x000A;            --== HOSTED ENGINE CONFIGURATION ==--&#x000A;           &#x000A;            Enter the name which will be used to identify this host inside the Administrator Portal [hosted_engine_1]: &#x000A;            Enter 'admin@internal' user password that will be used for accessing the Administrator Portal: &#x000A;            Confirm 'admin@internal' user password: &#x000A;            Please provide the name of the SMTP server through which we will send notifications [localhost]: &#x000A;            Please provide the TCP port number of the SMTP server [25]: &#x000A;            Please provide the email address from which notifications will be sent [root@localhost]: &#x000A;            Please provide a comma-separated list of email addresses which will get notifications [root@localhost]: &#x000A;  [ INFO  ] Stage: Setup validation&#x000A;           &#x000A;            --== CONFIGURATION PREVIEW ==--&#x000A;           &#x000A;            Engine FQDN                        : topolino.localdomain&#x000A;            Bridge name                        : ovirtmgmt&#x000A;            SSH daemon port                    : 22&#x000A;            Firewall manager                   : iptables&#x000A;            Gateway address                    : 192.168.1.1&#x000A;            Host name for web application      : hosted_engine_1&#x000A;            Host ID                            : 1&#x000A;            Image alias                        : hosted_engine&#x000A;            Image size GB                      : 10&#x000A;            GlusterFS Share Name               : hosted_engine_glusterfs&#x000A;            GlusterFS Brick Provisioning       : False&#x000A;            Storage connection                 : 192.168.1.115:/Virtual/exthe7&#x000A;            Console type                       : vnc&#x000A;            Memory size MB                     : 4096&#x000A;            MAC address                        : 00:16:3e:1e:02:c1&#x000A;            Boot type                          : disk&#x000A;            Number of CPUs                     : 4&#x000A;            OVF archive (for disk boot)        : /mnt/ovirt.ova&#x000A;            Restart engine VM after engine-setup: True&#x000A;            CPU Type                           : model_SandyBridge&#x000A;           &#x000A;            Please confirm installation settings (Yes, No)[Yes]: &#x000A;  [ INFO  ] Stage: Transaction setup&#x000A;  [ INFO  ] Stage: Misc configuration&#x000A;  [ INFO  ] Stage: Package installation&#x000A;  [ INFO  ] Stage: Misc configuration&#x000A;  [ INFO  ] Configuring libvirt&#x000A;  [ INFO  ] Configuring VDSM&#x000A;  [ INFO  ] Starting vdsmd&#x000A;  [ INFO  ] Waiting for VDSM hardware info&#x000A;  [ INFO  ] Creating Storage Domain&#x000A;  [ INFO  ] Creating Storage Pool&#x000A;  [ INFO  ] Connecting Storage Pool&#x000A;  [ INFO  ] Verifying sanlock lockspace initialization&#x000A;  [ INFO  ] Creating VM Image&#x000A;  [ INFO  ] Extracting disk image from OVF archive (could take a few minutes depending on archive size)&#x000A;  [ INFO  ] Validating pre-allocated volume size&#x000A;  [ INFO  ] Uploading volume to data domain (could take a few minutes depending on archive size)&#x000A;  [ INFO  ] Image successfully imported from OVF&#x000A;  [ INFO  ] Image not uploaded to data domain&#x000A;  [ INFO  ] Disconnecting Storage Pool&#x000A;  [ INFO  ] Start monitoring domain&#x000A;  [ INFO  ] Configuring VM&#x000A;  [ INFO  ] Updating hosted-engine configuration&#x000A;  [ INFO  ] Stage: Transaction commit&#x000A;  [ INFO  ] Stage: Closing up&#x000A;  [ INFO  ] Creating VM&#x000A;</code></pre></div>
+<p>You could still connect with remote-viewer</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>            You can now connect to the VM with the following command:&#x000A;             /bin/remote-viewer vnc://localhost:5900&#x000A;            Use temporary password "3379rNnj" to connect to vnc console.&#x000A;            Please note that in order to use remote-viewer you need to be able to run graphical applications.&#x000A;            This means that if you are using ssh you have to supply the -Y flag (enables trusted X11 forwarding).&#x000A;            Otherwise you can run the command from a terminal in your preferred desktop environment.&#x000A;            If you cannot run graphical applications you can connect to the graphic console from another host or connect to the console using the following command:&#x000A;            virsh -c qemu+tls://c71ghe1.localdomain/system console HostedEngine&#x000A;            If you need to reboot the VM you will need to start it manually using the command:&#x000A;            hosted-engine --vm-start&#x000A;            You can then set a temporary password using the command:&#x000A;            hosted-engine --add-console-password&#x000A;</code></pre></div>
+<p>But if you choose to have hosted-engine launching engine-setup for you, you could see engine setup output here. In this case engine-setup should be fully unattended.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  [ INFO  ] Running engine-setup on the appliance&#x000A;            |- [ INFO  ] Stage: Initializing&#x000A;            |- [ INFO  ] Stage: Environment setup&#x000A;            |-           Configuration files: ['/etc/ovirt-engine-setup.conf.d/10-packaging-jboss.conf', '/etc/ovirt-engine-setup.conf.d/10-packaging.conf', '/root/ovirt-engine-answers', '/root/heanswers.conf']&#x000A;            |-           Log file: /var/log/ovirt-engine/setup/ovirt-engine-setup-20150526224609-k1cybk.log&#x000A;            |-           Version: otopi-1.4.0_master (otopi-1.4.0-0.0.master.20150423125505.git08ea44e.el7)&#x000A;            |- [ INFO  ] Stage: Environment packages setup&#x000A;            |- [ INFO  ] Stage: Programs detection&#x000A;            |- [ INFO  ] Stage: Environment setup&#x000A;            |- [ INFO  ] Stage: Environment customization&#x000A;            |-          &#x000A;            |-           --== PRODUCT OPTIONS ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== PACKAGES ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== ALL IN ONE CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== NETWORK CONFIGURATION ==--&#x000A;            |-          &#x000A;            |- [ ERROR ] Host name is not valid: topolino.localdomain did not resolve into an IP address&#x000A;            |- [ INFO  ] firewalld will be configured as firewall manager.&#x000A;            |- [ ERROR ] Host name is not valid: topolino.localdomain did not resolve into an IP address&#x000A;            |-          &#x000A;            |-           --== DATABASE CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== OVIRT ENGINE CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== STORAGE CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== PKI CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== APACHE CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== SYSTEM CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== MISC CONFIGURATION ==--&#x000A;            |-          &#x000A;            |-          &#x000A;            |-           --== END OF CONFIGURATION ==--&#x000A;            |-          &#x000A;            |- [ INFO  ] Stage: Setup validation&#x000A;            |- [WARNING] Cannot validate host name settings, reason: cannot resolve own name 'topolino.localdomain'&#x000A;            |- [WARNING] Less than 16384MB of memory is available&#x000A;            |-          &#x000A;            |-           --== CONFIGURATION PREVIEW ==--&#x000A;            |-          &#x000A;            |-           Application mode                        : virt&#x000A;            |-           Firewall manager                        : firewalld&#x000A;            |-           Update Firewall                         : True&#x000A;            |-           Host FQDN                               : topolino.localdomain&#x000A;            |-           Default SAN wipe after delete           : False&#x000A;            |-           Engine database secured connection      : False&#x000A;            |-           Engine database host                    : localhost&#x000A;            |-           Engine database user name               : engine&#x000A;            |-           Engine database name                    : engine&#x000A;            |-           Engine database port                    : 5432&#x000A;            |-           Engine database host name validation    : False&#x000A;            |-           Engine installation                     : True&#x000A;            |-           PKI organization                        : localdomain&#x000A;            |-           Configure local Engine database         : True&#x000A;            |-           Set application as default page         : True&#x000A;            |-           Configure Apache SSL                    : True&#x000A;            |-           Configure WebSocket Proxy               : True&#x000A;            |-           Engine Host FQDN                        : topolino.localdomain&#x000A;            |- [ INFO  ] Stage: Transaction setup&#x000A;            |- [ INFO  ] Stopping engine service&#x000A;            |- [ INFO  ] Stopping ovirt-fence-kdump-listener service&#x000A;            |- [ INFO  ] Stopping websocket-proxy service&#x000A;            |- [ INFO  ] Stage: Misc configuration&#x000A;            |- [ INFO  ] Stage: Package installation&#x000A;            |- [ INFO  ] Stage: Misc configuration&#x000A;            |- [ INFO  ] Initializing PostgreSQL&#x000A;            |- [ INFO  ] Creating PostgreSQL 'engine' database&#x000A;            |- [ INFO  ] Configuring PostgreSQL&#x000A;            |- [ INFO  ] Creating/refreshing Engine database schema&#x000A;            |- [ INFO  ] Creating CA&#x000A;            |- [ INFO  ] Configuring WebSocket Proxy&#x000A;            |- [ INFO  ] Generating post install configuration file '/etc/ovirt-engine-setup.conf.d/20-setup-ovirt-post.conf'&#x000A;            |- [ INFO  ] Stage: Transaction commit&#x000A;            |- [ INFO  ] Stage: Closing up&#x000A;            |-          &#x000A;            |-           --== SUMMARY ==--&#x000A;            |-          &#x000A;            |- [WARNING] Less than 16384MB of memory is available&#x000A;            |-           SSH fingerprint: BC:40:1F:C9:50:E1:9B:2A:08:FE:E6:5B:29:BB:E4:49&#x000A;            |-           Internal CA 6F:D2:D0:70:F6:FC:EF:19:06:29:23:8B:4E:48:23:8C:18:F5:89:6D&#x000A;            |-           Note! If you want to gather statistical information you can install Reports and/or DWH: `          |-               `[`http://www.ovirt.org/Ovirt_DWH`](/Ovirt_DWH) `          |-               `[`http://www.ovirt.org/Ovirt_Reports`](/Ovirt_Reports)&#x000A;            |-           Web access is enabled at: `          |-               `[`http://topolino.localdomain:80/ovirt-engine`](http://topolino.localdomain:80/ovirt-engine) `          |-               `[`https://topolino.localdomain:443/ovirt-engine`](https://topolino.localdomain:443/ovirt-engine)&#x000A;            |-           Please use the user "admin" and password specified in order to login&#x000A;            |-          &#x000A;            |-           --== END OF SUMMARY ==--&#x000A;            |-          &#x000A;            |- [ INFO  ] Starting engine service&#x000A;            |- [ INFO  ] Restarting httpd&#x000A;            |- [ INFO  ] Stage: Clean up&#x000A;            |-           Log file is located at /var/log/ovirt-engine/setup/ovirt-engine-setup-20150526224609-k1cybk.log&#x000A;            |- [ INFO  ] Generating answer file '/var/lib/ovirt-engine/setup/answers/20150526224723-setup.conf'&#x000A;            |- [ INFO  ] Stage: Pre-termination&#x000A;            |- [ INFO  ] Stage: Termination&#x000A;            |- [ INFO  ] Execution of setup completed successfully&#x000A;            |- HE_APPLIANCE_ENGINE_SETUP_SUCCESS&#x000A;</code></pre></div>
+<p>Hosted-engine-setup will detect the success of the failure (en specific exit codes or after a long timeout) of engine-setup. Than conclude as usual.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  [ INFO  ] Engine-setup successfully completed &#x000A;  [ ERROR ] Engine is still unreachable&#x000A;  [ INFO  ] Engine is still not reachable, waiting...&#x000A;  [ INFO  ] Engine replied: DB Up!Welcome to Health Status!&#x000A;  [ INFO  ] Connecting to the Engine&#x000A;            Enter the name of the cluster to which you want to add the host (Default) [Default]: &#x000A;  [ INFO  ] Waiting for the host to become operational in the engine. This may take several minutes...&#x000A;  [ INFO  ] Still waiting for VDSM host to become operational...&#x000A;  [ INFO  ] Still waiting for VDSM host to become operational...&#x000A;  [ INFO  ] The VDSM Host is now operational&#x000A;  [ INFO  ] Shutting down the engine VM&#x000A;  [ INFO  ] Enabling and starting HA services&#x000A;            Hosted Engine successfully set up&#x000A;  [ INFO  ] Stage: Clean up&#x000A;  [ INFO  ] Generating answer file '/var/lib/ovirt-hosted-engine-setup/answers/answers-20150527005531.conf'&#x000A;  [ INFO  ] Generating answer file '/etc/ovirt-hosted-engine/answers.conf'&#x000A;  [ INFO  ] Stage: Pre-termination&#x000A;  [ INFO  ] Stage: Termination&#x000A;</code></pre></div>
+<h4 id="fully-unattended-setup">Fully unattended setup</h4>
+
+<p>You could launch hosted-engine –deploy appending an answerfile; the setup should be fully automated.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  hosted-engine --deploy --config-append=/root/test.conf&#x000A;</code></pre></div>
+<p>Your answer file should look like:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  [environment:default]&#x000A;  OVEHOSTED_CORE/screenProceed=none:None&#x000A;  OVEHOSTED_CORE/deployProceed=bool:True&#x000A;  OVEHOSTED_CORE/confirmSettings=bool:True&#x000A;  OVEHOSTED_NETWORK/fqdn=str:topolino.localdomain&#x000A;  OVEHOSTED_NETWORK/bridgeName=str:ovirtmgmt&#x000A;  OVEHOSTED_NETWORK/firewallManager=str:iptables&#x000A;  OVEHOSTED_NETWORK/gateway=str:192.168.1.1&#x000A;  OVEHOSTED_ENGINE/clusterName=str:Default&#x000A;  OVEHOSTED_STORAGE/storageDatacenterName=str:hosted_datacenter&#x000A;  OVEHOSTED_STORAGE/domainType=str:nfs4&#x000A;  OVEHOSTED_STORAGE/glusterBrick=none:None&#x000A;  OVEHOSTED_STORAGE/imgAlias=str:hosted_engine&#x000A;  OVEHOSTED_STORAGE/LunID=none:None&#x000A;  OVEHOSTED_STORAGE/imgSizeGB=int:10&#x000A;  OVEHOSTED_STORAGE/iSCSIPortalIPAddress=none:None&#x000A;  OVEHOSTED_STORAGE/iSCSITargetName=none:None&#x000A;  OVEHOSTED_STORAGE/glusterProvisionedShareName=str:hosted_engine_glusterfs&#x000A;  OVEHOSTED_STORAGE/iSCSIPortalPort=none:None&#x000A;  OVEHOSTED_STORAGE/storageDomainName=str:hosted_storage&#x000A;  OVEHOSTED_STORAGE/glusterProvisioningEnabled=bool:False&#x000A;  OVEHOSTED_STORAGE/iSCSIPortal=none:None&#x000A;  OVEHOSTED_STORAGE/storageType=none:None&#x000A;  OVEHOSTED_STORAGE/storageDomainConnection=str:192.168.1.115:/Virtual/exthe7&#x000A;  OVEHOSTED_STORAGE/iSCSIPortalUser=none:None&#x000A;  OVEHOSTED_VDSM/consoleType=str:vnc&#x000A;  OVEHOSTED_VM/vmMemSizeMB=str:4096&#x000A;  OVEHOSTED_VM/vmMACAddr=str:00:16:3e:1e:02:c1&#x000A;  OVEHOSTED_VM/emulatedMachine=str:pc&#x000A;  OVEHOSTED_VM/vmBoot=str:disk&#x000A;  OVEHOSTED_VM/vmVCpus=str:4&#x000A;  OVEHOSTED_VM/ovfArchive=str:/mnt/ovirt.ova&#x000A;  OVEHOSTED_VM/vmCDRom=none:None&#x000A;  OVEHOSTED_VM/automateVMShutdown=bool:True&#x000A;  OVEHOSTED_VM/cloudinitInstanceDomainName=str:localdomain&#x000A;  OVEHOSTED_VM/cloudinitExecuteEngineSetup=bool:True&#x000A;  OVEHOSTED_VM/cloudinitInstanceHostName=str:topolino.localdomain&#x000A;  OVEHOSTED_VM/cloudinitVMStaticCIDR=str:192.168.1.184/24&#x000A;  OVEHOSTED_VM/cloudInitISO=str:generate&#x000A;  OVEHOSTED_VM/cloudinitVMETCHOSTS=bool:True&#x000A;  OVEHOSTED_VM/cloudinitVMDNS=str:192.168.1.1,8.8.8.8&#x000A;  OVEHOSTED_VDSM/spicePkiSubject=str:O=localdomain, CN=c71ghe1.localdomain&#x000A;  OVEHOSTED_VDSM/pkiSubject=str:/C=EN/L=Test/O=Test/CN=Test&#x000A;  OVEHOSTED_VDSM/caSubject=str:/C=EN/L=Test/O=Test/CN=TestCA&#x000A;  OVEHOSTED_VDSM/cpu=str:model_SandyBridge&#x000A;  OVEHOSTED_NOTIF/smtpPort=str:25&#x000A;  OVEHOSTED_NOTIF/smtpServer=str:localhost&#x000A;  OVEHOSTED_NOTIF/sourceEmail=str:root@localhost&#x000A;  OVEHOSTED_NOTIF/destEmail=str:root@localhost&#x000A;  OVEHOSTED_VM/cloudinitRootPwd=str:yourtestpwd&#x000A;  OVEHOSTED_ENGINE/adminPassword=str:yourtestpwd&#x000A;  OVEHOSTED_ENGINE/appHostName=str:hosted_engine_1&#x000A;</code></pre></div>
+<p>On each run hosted-engine-setup will generate its corresponded answerfile; please not that it will not include the latest three lines of this example (so you need to add them if you want a fully automated setup) and it will include all the storage related UUID which could be randomly generated on a fresh setup. Simply add 'OVEHOSTED_VM/cloudinitRootPwd=str:' if you want to skip the question regarding the appliance root password but you don't want to set one.</p>
+
+<h4 id="additional-notes">Additional Notes</h4>
+
+<p>If you are going to test is using a virtual machine for the host creating a nested virtual machine for the engine VM, please:</p>
+
+<ul>
+  <li>Enable nested virtualization on the external hypervisor</li>
+  <li>Disable no-mac-spoof filter on the external hypervisor; if you are using oVirt as your external hypervisor, you can proceed following this instructions: <a href="https://github.com/oVirt/vdsm/tree/master/vdsm_hooks/macspoof">https://github.com/oVirt/vdsm/tree/master/vdsm_hooks/macspoof</a></li>
+</ul>
+
+<h3 id="contingency-plan">Contingency Plan</h3>
+
+<p>None</p>
+
+<h3 id="release-notes">Release Notes</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  == oVirt Hosted-engine appliance flow ==&#x000A;  An easy and quick way to deploy oVirt hosted-engine configuring an almost ready to use appliance.&#x000A;</code></pre></div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/integration/heapplianceflow.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/integration/heapplianceflow.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 15:05 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

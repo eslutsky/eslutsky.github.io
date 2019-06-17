@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+PortMirroring &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="port-mirroring">Port Mirroring</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The purpose of the feature is to allow mirroring network traffic to a specific VM</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Shahar Havivi (Shaharh)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#104;&#097;&#118;&#105;&#118;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#104;&#097;&#118;&#105;&#118;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>In progress of defining the requirements from the ovirt engine</li>
+  <li>VDSM - patch sent (mirror mode only): <a href="http://gerrit.ovirt.org/#change,956">http://gerrit.ovirt.org/#change,956</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>The port mirroring feature is about allowing a certain VM NIC to monitor the network traffic of a specific logical network, on the host the VM resides on. The method for doing that is to mirror all the VM network traffic on a specific host to a specific VM running on that host. (As opposed to using in-lining/redirect - which is the ability to redirect all the traffic of VMs in a network to a single VM)</p>
+
+<h2 id="user-work-flows">User work-flows</h2>
+
+<ol>
+  <li>Upon creating/editing a VM NIC:
+    <ul>
+      <li>Choose the logical network of the NIC (same as today)</li>
+      <li>Choose whether this NIC should get mirrored traffic</li>
+    </ul>
+  </li>
+  <li>It is recommended that the VM containing this NIC will be pinned to a single host (the host which we would like to monitor). One will probably want to define such a VM for each host in the cluster.</li>
+</ol>
+
+<p>Notes:</p>
+
+<ol>
+  <li>A VM NIC resides only on VM Networks, thus port mirroring is only supported on these networks.</li>
+  <li>We shouldn't limit the VM to be pinned to host, although it is the common use-case.</li>
+  <li>More than one VM can monitor the same logical network</li>
+  <li>A VM can monitor more than one logical network</li>
+  <li>It will be supported when when hot-plugging/unplugging a nic (can set an offline nic to be in mirrored mode, and then activate it)</li>
+</ol>
+
+<h2 id="permissions">Permissions</h2>
+
+<ol>
+  <li>Permissions support
+    <ul>
+      <li>Add a "Manipulate port mirroring" action group, which means the user can check/uncheck the port mirroring flag on the VM NIC.</li>
+      <li>No pre-defined role will be added for that. In order to use this feature administrators will have to define a custom role containing this action group, and assign it to a user on the DC level.</li>
+      <li>A user which has this permission on the DC level, will be able to check this flag for every logical network in the DC, on every cluster (assuming he has permissions on the cluster/VM, of course).</li>
+      <li>In the engine-core we will test for this permission on the network level, although for now it will only inherit the permission from the DC, as we won't enable setting this permission via the UI/API.</li>
+      <li>The role will allow users to check the port mirroring flag on the VM NIC. However, everyone with edit permissions on the VM will be able to uncheck it.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="importexporttemplates">Import/Export/Templates</h2>
+
+<ol>
+  <li>This flag will not be exported/imported.</li>
+  <li>This flag will not be a part of a VM template</li>
+</ol>
+
+<h2 id="ui-mockups">UI mockups</h2>
+
+<p>Will be available soon.</p>
+
+<h2 id="rest-api">REST API</h2>
+
+<p>The only change is the ability to set whether the VM NIC should get mirrored traffic or not, so we add the following element to the NIC type:</p>
+
+<ul>
+  <li>
+    <xs:element name="mirror_to_port" type="xs:boolean" minOccurs="0" />
+  </li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>The ability to integrate the security world with the virtualization one, allowing to easily monitor and secure networks in a virtualized environment, same as done today in non-virtualized environments.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/portmirroring.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/portmirroring.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

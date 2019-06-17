@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+S3 suspend &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="s4s3-suspend">S4/S3 suspend</h1>
+
+<h2 id="summary">Summary</h2>
+
+<ul>
+  <li>Allow S3 and S4 power management options to be controlled per VM in addition to current suspend function</li>
+  <li>Support this feature in webadmin, power user portal, REST API and CLI</li>
+  <li>Still keep the current suspend type as default. Later the suspend type can be set automatically based on guest OS type (not all guest may support S3/S4)</li>
+</ul>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Frantisek Kobzik (FKobzik)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#107;&#111;&#098;&#122;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#102;&#107;&#111;&#098;&#122;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>PM Requirements : Andrew Cathrow (ACathrow)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#099;&#097;&#116;&#104;&#114;&#111;&#119;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#099;&#097;&#116;&#104;&#114;&#111;&#119;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="affected-roles">Affected roles</h3>
+
+<p>Roles that can manipulate the suspend options for following entities:</p>
+
+<ol>
+  <li>VM, Template, VM Pool
+    <ul>
+      <li>SuperUser, PowerUser, ClusterAdmin, DataCenterAdmin.</li>
+    </ul>
+  </li>
+  <li>VM
+    <ul>
+      <li>ad 1,</li>
+      <li>UserVmManager, VmCreator.</li>
+    </ul>
+  </li>
+  <li>Template
+    <ul>
+      <li>ad 1,</li>
+      <li>TemplateAdmin, TemplateCreator, TemplateOwner.</li>
+    </ul>
+  </li>
+  <li>VM Pool
+    <ul>
+      <li>ad 1,</li>
+      <li>VmPoolAdmin.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="webadminpower-user-portal">Webadmin/Power User Portal</h3>
+
+<p>Affected dialogs</p>
+
+<ul>
+  <li>New/edit VM dialog</li>
+  <li>New/edit VM pool dialog</li>
+  <li>Edit template dialog</li>
+</ul>
+
+<p>Changes</p>
+
+<ul>
+  <li>New subtab in affected dialogs with suspend options represented by three radio buttons (S3, S4, or standard "old" suspend)</li>
+  <li>Admin/power user is able to change suspend function behavior for given VM/pool/template by selecting one of the radio buttons</li>
+  <li>Default value should be still standard suspend.</li>
+</ul>
+
+<p>Behavior</p>
+
+<ul>
+  <li>The suspend function (e.g.triggered by "pause button") will perform chosen type of suspend</li>
+</ul>
+
+<h3 id="rest-api">REST API</h3>
+
+<p>Need new element suspend_type of following resources:</p>
+
+<ul>
+  <li>Virtual machine</li>
+  <li>Template</li>
+</ul>
+
+<h3 id="vdsm">VDSM</h3>
+
+<p>the support for hibernation has been already added, see <a href="http://gerrit.ovirt.org/#/c/1121/">http://gerrit.ovirt.org/#/c/1121/</a></p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/s3-suspend.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/s3-suspend.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+engine NIC health check &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="engine-nic-health-check">Engine NIC health check</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Fencing can occur on healthy hosts, just as a result of failing NIC of engine or other problem while communicating with hosts. Fencing should occur after most of these potential problems are checked and unconfirmed. This feature aims at engine nics health.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Martin Mucha (mmucha)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#109;&#117;&#099;&#104;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#109;&#117;&#099;&#104;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: mmucha at #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>In case that specific NIC(s) of engine is 'not healhy', QoS will be improved, since unhurt hosts will not be (improperly) fenced. NIC is reported as not healthy, when it was not present at all, or it's status was anything else but up at least once for given period of time. This feature does not solve routing problems, defective hw, or configuration issues, when improper fence still can occur regardless of this feature.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<ul>
+  <li>engine will periodically check health of it's own nics</li>
+  <li>gathered data over last period is recorded, and stored in db, just for case engine restart so we cannot lose that data. Data are stored in table:</li>
+</ul>
+
+<p>CREATE TABLE engine_nics_health ( id CHARACTER VARYING(255) NOT NULL PRIMARY KEY, healthy BOOLEAN NOT NULL, last_failure TIMESTAMP NOT NULL);</p>
+
+<p>where id is name of NIC and last_failure is moment when given nic become unhealthy. From this table is fed hashmap on startup and all successive queries proceed in memory only. Only when nic change it's health, db is updated.</p>
+
+<ul>
+  <li>if there's need to fence some host, due to its unresponsiveness, it will be performed if and only if there wasn't any problem in any given (by configuration) engine NIC during last N minutes. Check for NIC status will be performed each 5 seconds. If there's fence request, it will be performed only if during last N minutes all NICs was always up. Number of minutes wasn't decided yet, see Opened Issues section.</li>
+  <li>User denotes NICs to be periodically checked using engine-config property "EngineNics", only NICs specified here will be scanned. Multiple NICs are separated by comma. If engine machine contains multiple NICs, but only some of them are used by engine, then user will specify only significant NICs, others won't be scanned. By default "EngineNics" property is unset, NICs won't be scanned at all, providing backward compatibility. If inexisting NICs are provided i "EngineNics" property, they're simply ignored.</li>
+  <li>regular scanning will be implemented using quartz job</li>
+  <li>for simplicity reasons NIC status will be read using java.net.NetworkInterface#isUp. This method does not return actual NIC status, but we do not need that at this moment and do not want to add new dependency to the project. As a sideeffect of java.net.NetworkInterface#isUp NICs without IP address will not be considered as valid ones as well as not being able to get current status.</li>
+  <li>check, whether engine NICs are healthy and fencing should proceed will be done in org.ovirt.engine.core.bll.VdsEventListener#vdsNotResponding and org.ovirt.engine.core.bll.VdsNotRespondingTreatmentCommand#shouldFencingBeSkipped</li>
+  <li>frequency of NIC checking can be specified via engine-config property "EngineNicsHealthCheckDelay" in seconds grade.</li>
+  <li>time interval during which there must be no problems to allow fencing can be specified via engine-config property "EngineNicsHaveToBeUpAtLeast" in seconds grade. Suggestions for better name are welcomed.</li>
+</ul>
+
+<h2 id="ux">UX</h2>
+
+<p>This feature options currently cannot be set from gui, since there's no 'engine' related tab to accommodate this feature. NICs to be monitored has to be setup via engine-config.</p>
+
+<p>Example: Depending where you've installed oVirt to you can issue either:</p>
+
+<p>$HOME/ovirt-engine/bin/engine-config -s EngineNics="eno1,eno2" or /usr/local/ovirt-engine/bin/engine-config -s EngineNics="eno1,eno2"</p>
+
+<h2 id="opened-issues">Opened Issues</h2>
+
+<ul>
+  <li>for how long (n minutes) all monitored NICs must be always up so the fencing can occur?</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/engine-nic-health-check.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/engine-nic-health-check.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 9 Nov 2017 15:21 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

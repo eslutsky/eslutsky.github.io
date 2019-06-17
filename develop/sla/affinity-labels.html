@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Affinity labels &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="affinity-labels">Affinity labels</h1>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: <a href="user:msivak">Martin Sivak</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="feature-requests">Feature requests</h2>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1254818">https://bugzilla.redhat.com/show_bug.cgi?id=1254818</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1266041">https://bugzilla.redhat.com/show_bug.cgi?id=1266041</a></li>
+</ul>
+
+<h2 id="user-stories">User stories</h2>
+
+<ol>
+  <li>Some hosts have specific hardware that is needed for certain VMs and the VMs must be placed on those hosts</li>
+  <li>A company uses software that is license limited to a certain number of physical machines, but does not care about the number of VMs. All VMs with that software must be limited to the same physical hosts to obey that condition.</li>
+</ol>
+
+<h2 id="current-situation">Current situation</h2>
+
+<ol>
+  <li>Each VM can be pinned to multiple specific hosts with the given HW. It will start on one of the listed hosts and no migration is enabled.</li>
+  <li>VM to VM affinity is supported and can be used, but it only tries to put all those VMs on the same host. Subcluster is not supported.</li>
+</ol>
+
+<h2 id="feature-goals">Feature goals</h2>
+
+<p><em>There already is an existing Tag functionality in the engine, but we can’t reuse the backend code since the user facing functionality won’t be removed on time. We want to deprecate the old behaviour gradually and without disturbing current users. This forces us to create our own parallel implementation that will be almost the same, but will allow us to do changes to behaviour.</em></p>
+
+<p>There will be no hierarchy support for labels. Users can simulate hierarchy using naming conventions (eg.: storage::iscsi::fast)</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Users will be able to create a logical sub-cluster of VMs and Hosts that should help them to accomplish the two described user stories.</p>
+
+<h2 id="feature-design">Feature design</h2>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<p>A new entity Label will be added to the database with the basic CRUD storage procedures and a view to allow bulk retrieval of labels by id, name or attached object(s).</p>
+
+<h3 id="rest-api">REST API</h3>
+
+<p>Basic manipulation of affinity labels:</p>
+
+<ul>
+  <li>/affinitylabels (GET, POST)</li>
+  <li>/affinitylabels/:id: (GET, PUT, DELETE)</li>
+</ul>
+
+<p>Assignment operations on labels:</p>
+
+<ul>
+  <li>/affinitylabels/:id:/vms (GET, POST)</li>
+  <li>
+    <p>/affinitylabels/:id:/vms/:id: (GET, DELETE)</p>
+  </li>
+  <li>/affinitylabels/:id:/hosts (GET, POST)</li>
+  <li>/affinitylabels/:id:/hosts/:id: (GET, DELETE)</li>
+</ul>
+
+<p>Assignment operations on entities:</p>
+
+<ul>
+  <li>/vms/:vmid:/affinitylabels (GET, POST)</li>
+  <li>
+    <p>/vms/:vmid:/affinitylabels/:id: (GET, DELETE)</p>
+  </li>
+  <li>/hosts/:hostid:/affinitylabels (GET, POST)</li>
+  <li>/hosts/:vmid:/affinitylabels/:id: (GET, DELETE)</li>
+</ul>
+
+<h3 id="gui">GUI</h3>
+
+<p>A <a href="/develop/release-management/features/sla/affinity-labels-management-via-webadmin">GUI</a> for affinity labels management was made available as of version 4.1.</p>
+
+<h3 id="permissions">Permissions</h3>
+
+<p>Currently only the system admin and users with Tag management permissions (the same the old tagging feature uses) can create or manipulate labels.</p>
+
+<h3 id="vm-scheduling">VM scheduling</h3>
+
+<p>A new scheduling policy unit LabelFilterPolicyUnit takes care of the label affinity relationship during scheduling and must be enabled for this feature to have any effect.</p>
+
+<p>Default cluster policies will have the unit enabled by default.</p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>The feature has no impact on installation or upgrade. It will become immediately available after the proper engine version is installed.</p>
+
+<p>Custom cluster policies might need to have the new policy unit added by the user to enable the label based filtering.</p>
+
+<h3 id="user-work-flows">User work-flows</h3>
+
+<p>The user will generaly use REST API to create a new label and then attach entities (VMs and Hosts) to it by POSTing to the relevant subcollections.</p>
+
+<h2 id="testing">Testing</h2>
+
+<p><a href="https://bugzilla.redhat.com/attachment.cgi?id=1164031">Basic sanity test of labels for one VM and one Host</a></p>
+
+<p>This script can be used to do basic sanity testing of the affinity label functionality. It requires a running ovirt-engine (preconfigured values - ip 127.0.0.1:8080, admin@internal:letmein) with one VM (does not have to be running) and one Host.</p>
+
+<h2 id="contingency-plan">Contingency Plan</h2>
+
+<p>The feature is ready.</p>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  == Affinity labels ==&#x000A;  Affinity label support was added to REST API for hosts and VMs.&#x000A;  A VM can only be scheduled on a host that is labelled with all&#x000A;  the affinity labels the VM has. Any extra labels on the host&#x000A;  make no difference.&#x000A;</code></pre></div>
+<h2 id="open-issues">Open Issues</h2>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/sla/affinity-labels.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/sla/affinity-labels.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Editing Virtual Machines &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/vmm-guide/">Vmm-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="editing-virtual-machines">Editing Virtual Machines</h1>
+
+<h2 id="editing-virtual-machine-properties">Editing Virtual Machine Properties</h2>
+
+<p>Changes to storage, operating system, or networking parameters can adversely affect the virtual machine. Ensure that you have the correct details before attempting to make any changes. Virtual machines can be edited while running, and some changes (listed in the procedure below) will be applied immediately. To apply all other changes, the virtual machine must be shut down and restarted.</p>
+
+<p><strong>Editing Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Select the virtual machine to be edited.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change settings as required.</p>
+
+    <p>Changes to the following settings are applied immediately:</p>
+
+    <ul>
+      <li>
+        <p><strong>Name</strong></p>
+      </li>
+      <li>
+        <p><strong>Description</strong></p>
+      </li>
+      <li>
+        <p><strong>Comment</strong></p>
+      </li>
+      <li>
+        <p><strong>Optimized for</strong> (Desktop/Server/High Performance)</p>
+      </li>
+      <li>
+        <p><strong>Delete Protection</strong></p>
+      </li>
+      <li>
+        <p><strong>Network Interfaces</strong></p>
+      </li>
+      <li>
+        <p><strong>Memory Size</strong> (Edit this field to hot plug virtual memory.)</p>
+      </li>
+      <li>
+        <p><strong>Virtual Sockets</strong> (Edit this field to hot plug CPUs.)</p>
+      </li>
+      <li>
+        <p><strong>Use custom migration downtime</strong></p>
+      </li>
+      <li>
+        <p><strong>Highly Available</strong></p>
+      </li>
+      <li>
+        <p><strong>Priority for Run/Migration queue</strong></p>
+      </li>
+      <li>
+        <p><strong>Disable strict user checking</strong></p>
+      </li>
+      <li>
+        <p><strong>Icon</strong></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>If the <strong>Next Start Configuration</strong> pop-up window appears, click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>Some changes are applied immediately. All other changes are applied when you shut down and restart your virtual machine.  Until then, an orange icon (<img alt="" width="15" height="15" src="/images/vmm-guide/7278.png?1560777613" />) appears as a reminder of the pending changes.</p>
+
+<h2 id="network-interfaces">Network Interfaces</h2>
+
+<h3 id="adding-a-new-network-interface">Adding a New Network Interface</h3>
+
+<p>You can add multiple network interfaces to virtual machines. Doing so allows you to put your virtual machine on multiple logical networks.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** You can create an overlay network for your virtual machines, isolated from the hosts, by defining a logical network that is not attached to the physical interfaces of the host. For example, you can create a DMZ environment, in which the virtual machines communicate among themselves over the bridge created in the host.&#x000A;&#x000A;The overlay network uses OVN, which must be installed as an external network provider.&#x000A;</code></pre></div>
+<p><strong>Adding Network Interfaces to Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Network Interfaces</strong> tab .</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> of the network interface.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Profile</strong> and the <strong>Type</strong> of the network interface from the drop-down lists. The <strong>Profile</strong> and <strong>Type</strong> drop-down lists are populated in accordance with the profiles and network types available to the cluster and the network interface cards available to the virtual machine.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Custom MAC address</strong> check box and enter a MAC address for the network interface card as required.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new network interface is listed in the <strong>Network Interfaces</strong> tab in the details pane of the virtual machine. The <strong>Link State</strong> is set to <strong>Up</strong> by default when the network interface card is defined on the virtual machine and connected to the network.</p>
+
+<h3 id="editing-a-network-interface">Editing a Network Interface</h3>
+
+<p>In order to change any network settings, you must edit the network interface. This procedure can be performed on virtual machines that are running, but some actions can be performed only on virtual machines that are not running.</p>
+
+<p><strong>Editing Network Interfaces</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Network Interfaces</strong> tab and select the network interface to edit.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change settings as required. You can specify the <strong>Name</strong>, <strong>Profile</strong>, <strong>Type</strong>, and <strong>Custom MAC address</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="hot-plugging-a-network-interface">Hot Plugging a Network Interface</h3>
+
+<p>You can hot plug network interfaces. Hot plugging means enabling and disabling devices while a virtual machine is running.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The guest operating system must support hot plugging network interfaces.&#x000A;</code></pre></div>
+<p><strong>Hot Plugging Network Interfaces</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Network Interfaces</strong> tab and select the network interface to hot plug.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Set the <strong>Card Status</strong> to <strong>Plugged</strong> to enable the network interface, or set it to <strong>Unplugged</strong> to disable the network interface.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="removing-a-network-interface">Removing a Network Interface</h3>
+
+<p><strong>Removing Network Interfaces</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Network Interfaces</strong> tab and select the network interface to remove.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="blacklisting-network-interfaces">Blacklisting Network Interfaces</h3>
+
+<p>You can configure the ovirt-guest-agent on a virtual machine to ignore certain NICs. This prevents IP addresses associated with network interfaces created by certain software from appearing in reports. You must specify the name and number of the network interface you want to blacklist (for example, eth0, docker0).</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** You must blacklist NICs on the virtual machine before the guest agent is started for the first time.&#x000A;</code></pre></div>
+<p><strong>Blacklisting Network Interfaces</strong></p>
+
+<ol>
+  <li>
+    <p>In the <code>/etc/ovirt-guest-agent.conf</code> configuration file on the virtual machine, insert the following line, with the NICs to be ignored separated by spaces:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ignored_nics = first_NIC_to_ignore second_NIC_to_ignore&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Start the agent:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl start ovirt-guest-agent&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Some virtual machine operating systems automatically start the guest agent during installation.</p>
+
+    <p>If your virtual machine’s operating system automatically starts the guest agent or if you need to configure the blacklist on many virtual machines, use the configured virtual machine as a template for creating additional virtual machines.</p>
+  </li>
+</ol>
+
+<h2 id="virtual-disks">Virtual Disks</h2>
+
+<h3 id="adding-a-new-virtual-disk">Adding a New Virtual Disk</h3>
+
+<p>You can add multiple virtual disks to a virtual machine.</p>
+
+<p><strong>Image</strong> is the default type of disk. You can also add a <strong>Direct LUN</strong> disk or a <strong>Cinder</strong> (OpenStack Volume) disk. <strong>Image</strong> disk creation is managed entirely by the Engine. <strong>Direct LUN</strong> disks require externally prepared targets that already exist. <strong>Cinder</strong> disks require access to an instance of OpenStack Volume that has been added to the oVirt environment using the <strong>External Providers</strong> window. Existing disks are either floating disks or shareable disks attached to virtual machines.</p>
+
+<p><strong>Adding Disks to Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disks</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Use the appropriate radio buttons to switch between <strong>Image</strong>, <strong>Direct LUN</strong>, or <strong>Cinder</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Size(GB)</strong>, <strong>Alias</strong>, and <strong>Description</strong> for the new disk.</p>
+  </li>
+  <li>
+    <p>Use the drop-down lists and check boxes to configure the disk.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new disk appears in the details pane after a short time.</p>
+
+<h3 id="attaching-an-existing-disk-to-a-virtual-machine">Attaching an Existing Disk to a Virtual Machine</h3>
+
+<p>Floating disks are disks that are not associated with any virtual machine.</p>
+
+<p>Floating disks can minimize the amount of time required to set up virtual machines. Designating a floating disk as storage for a virtual machine makes it unnecessary to wait for disk preallocation at the time of a virtual machine's creation.</p>
+
+<p>Floating disks can be attached to a single virtual machine, or to multiple virtual machines if the disk is shareable.</p>
+
+<p>Once a floating disk is attached to a virtual machine, the virtual machine can access it.</p>
+
+<p><strong>Attaching Virtual Disks to Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disks</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Attach</strong>.</p>
+  </li>
+  <li>
+    <p>Select one or more virtual disks from the list of available disks and select the required interface from the <strong>Interface</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p><strong>Note:</strong> No Quota resources are consumed by attaching virtual disks to, or detaching virtual disks from, virtual machines.</p>
+  </li>
+</ol>
+
+<h3 id="extending-the-available-size-of-a-virtual-disk">Extending the Available Size of a Virtual Disk</h3>
+
+<p>You can extend the available size of a virtual disk while the virtual disk is attached to a virtual machine. Resizing a virtual disk does not resize the underlying partitions or file systems on that virtual disk. Use the <code>fdisk</code> utility to resize the partitions and file systems as required.</p>
+
+<p><strong>Extending the Available Size of Virtual Disks</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disks</strong> tab and select the disk to edit.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a value in the <code>Extend size by(GB)</code> field.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The target disk's status becomes <code>locked</code> for a short time, during which the drive is resized. When the resizing of the drive is complete, the status of the drive becomes <code>OK</code>.</p>
+
+<h3 id="hot-plugging-a-virtual-disk">Hot Plugging a Virtual Disk</h3>
+
+<p>You can hot plug virtual machine disks. Hot plugging means enabling or disabling devices while a virtual machine is running.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The guest operating system must support hot plugging virtual disks.&#x000A;</code></pre></div>
+<p><strong>Hot Plugging Virtual Disks</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disks</strong> tab and select the virtual disk to hot plug.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Activate</strong> to enable the disk, or click <strong>More Actions</strong> → <strong>Deactivate</strong> to disable the disk.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="removing-a-virtual-disk-from-a-virtual-machine">Removing a Virtual Disk from a Virtual Machine</h3>
+
+<p><strong>Removing Virtual Disks From Virtual Machines</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disks</strong> tab and select the virtual disk to remove.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Deactivate</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Remove Permanently</strong> check box to completely remove the virtual disk from the environment. If you do not select this option - for example, because the disk is a shared disk - the virtual disk will remain in <strong>Storage</strong> → <strong>Disks</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>If the disk was created as block storage, for example iSCSI, and the <strong>Wipe After Delete</strong> check box was selected when creating the disk, you can view the log file on the host to confirm that the data has been wiped after permanently removing the disk. See "Settings to Wipe Virtual Disks After Deletion" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a>.</p>
+
+<p>If the disk was created as block storage, for example iSCSI, and the <strong>Discard After Delete</strong> check box was selected on the storage domain before the disk was removed, a <code>blkdiscard</code> command is called on the logical volume when it is removed and the underlying storage is notified that the blocks are free. A <code>blkdiscard</code> is also called on the logical volume when a virtual disk is removed if the virtual disk is attached to at least one virtual machine with the <strong>Enable Discard</strong> check box selected.</p>
+
+<h3 id="importing-a-disk-image-from-an-imported-storage-domain">Importing a Disk Image from an Imported Storage Domain</h3>
+
+<p>Import floating virtual disks from an imported storage domain using the <strong>Disk Import</strong> tab of the details pane.</p>
+
+<p>This procedure requires access to the Administration Portal.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Only QEMU-compatible disks can be imported into the Engine.&#x000A;</code></pre></div>
+<p><strong>Importing a Disk Image</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click an imported storage domain to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click <strong>Disk Import</strong>.</p>
+  </li>
+  <li>
+    <p>Select one or more disk images and click <strong>Import</strong> to open the <strong>Import Disk(s)</strong> window.</p>
+  </li>
+  <li>
+    <p>Select the appropriate <strong>Disk Profile</strong> for each disk.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to import the selected disks.</p>
+  </li>
+</ol>
+
+<h3 id="importing-an-unregistered-disk-image-from-an-imported-storage-domain">Importing an Unregistered Disk Image from an Imported Storage Domain</h3>
+
+<p>Import floating virtual disks from a storage domain using the <strong>Disk Import</strong> tab of the details pane. Floating disks created outside of a oVirt environment are not registered with the Engine. Scan the storage domain to identify unregistered floating disks to be imported.</p>
+
+<p>This procedure requires access to the Administration Portal.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Only QEMU-compatible disks can be imported into the Engine.&#x000A;</code></pre></div>
+<p><strong>Importing a Disk Image</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Scan Disks</strong> so that the Engine can identify unregistered disks..</p>
+  </li>
+  <li>
+    <p>Select an unregistered disk name and click <strong>Disk Import</strong>.</p>
+  </li>
+  <li>
+    <p>Select one or more disk images and click <strong>Import</strong> to open the <strong>Import Disk(s)</strong> window.</p>
+  </li>
+  <li>
+    <p>Select the appropriate <strong>Disk Profile</strong> for each disk.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to import the selected disks.</p>
+  </li>
+</ol>
+
+<h2 id="virtual-memory">Virtual Memory</h2>
+
+<h3 id="hot-plugging-virtual-memory">Hot Plugging Virtual Memory</h3>
+
+<p>You can hot plug virtual memory. Hot plugging means enabling or disabling devices while a virtual machine is running. Each time memory is hot plugged, it appears as a new memory device in the <strong>Vm Devices</strong> tab in the details pane, up to a maximum of 16. When the virtual machine is shut down and restarted, these devices are cleared from the <strong>Vm Devices</strong> tab without reducing the virtual machine's memory, allowing you to hot plug more memory devices.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** This feature is currently not supported for the self-hosted engine Engine virtual machine.&#x000A;</code></pre></div>
+<p><strong>Hot Plugging Virtual Memory</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a running virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>System</strong> tab.</p>
+  </li>
+  <li>
+    <p>Edit the <strong>Memory Size</strong> by entering the total amount required. Memory can be added in multiples of 256 MB. By default, the maximum memory allowed for the virtual machine is set to 4x the memory size specified. Though the value is changed in the user interface, the maximum value is not hot plugged, and you will see the pending changes icon. To avoid that, you can change the maximum memory back to the original value.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p>This action opens the <strong>Next Start Configuration</strong> window, as the <strong>MemSizeMb</strong> value will not change until the virtual machine is restarted. However, the hot plug action is triggered by the change to the <strong>Memory Size</strong> value, which can be applied immediately.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The virtual machine's <strong>Defined Memory</strong> is updated in the <strong>General</strong> tab in the details pane. You can see the newly added memory device in the <strong>Vm Devices</strong> tab in the details pane.</p>
+
+<h3 id="hot-unplugging-virtual-memory">Hot Unplugging Virtual Memory</h3>
+
+<p>You can hot unplug virtual memory. Hot unplugging means disabling devices while a virtual machine is running.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:**&#x000A;&#x000A;* Only memory added with hot plugging can be hot unplugged.&#x000A;&#x000A;* The virtual machine operating system must support memory hot unplugging.&#x000A;&#x000A;* The virtual machines must not have a memory balloon device enabled. This feature is disabled by default.&#x000A;&#x000A;* All blocks of the hot-plugged memory must be set to **online_movable** in the virtual machine’s device management rules. In virtual machines running up-to-date versions of Enterprise Linux or CoreOS, this rule is set by default. For information on device management rules, consult the documentation for the virtual machine’s operating system.&#x000A;&#x000A;If any of these conditions are not met, the memory hot unplug action may fail or cause unexpected behavior.&#x000A;</code></pre></div>
+<p><strong>Hot Unplugging Virtual Memory</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a running virtual machine.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Vm Devices</strong> tab.</p>
+  </li>
+  <li>
+    <p>In the <strong>Hot Unplug</strong> column, click <strong>Hot Unplug</strong> beside the memory device to be removed.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> in the <strong>Memory Hot Unplug</strong> window.</p>
+  </li>
+</ol>
+
+<p>The <strong>Physical Memory Guaranteed</strong> value for the virtual machine is decremented automatically if necessary.</p>
+
+<h2 id="hot-plugging-vcpus">Hot Plugging vCPUs</h2>
+
+<p>You can hot plug vCPUs. Hot plugging means enabling or disabling devices while a virtual machine is running.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Hot unplugging a vCPU is only supported if the vCPU was previously hot plugged. A virtual machine’s vCPUs cannot be hot unplugged to less vCPUs than it was originally created with.&#x000A;</code></pre></div>
+<p>The following prerequisites apply:</p>
+
+<ul>
+  <li>
+    <p>The virtual machine’s <strong>Operating System</strong> must be explicitly set in the <strong>New Virtual Machine</strong> or <strong>Edit Virtual Machine</strong> window.</p>
+  </li>
+  <li>
+    <p>The virtual machine’s operating system must support CPU hot plug. See the table below for support details.</p>
+  </li>
+  <li>
+    <p>Windows virtual machines must have the guest agents installed.</p>
+  </li>
+</ul>
+
+<p><strong>Hot Plugging vCPUs</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a running virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>System</strong> tab.</p>
+  </li>
+  <li>
+    <p>Change the value of <strong>Virtual Sockets</strong> as required.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Operating System Support Matrix for vCPU Hot Plug</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operating System</th>
+      <th>Version</th>
+      <th>Architecture</th>
+      <th>Hot Plug Supported</th>
+      <th>Hot Unplug Supported</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Enterprise Linux Atomic Host 7</td>
+      <td> </td>
+      <td>x86</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Enterprise Linux 6.3+</td>
+      <td> </td>
+      <td>x86</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Enterprise Linux 7.0+</td>
+      <td> </td>
+      <td>x86</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Enterprise Linux 7.3+</td>
+      <td> </td>
+      <td>PPC64</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2008</td>
+      <td>All</td>
+      <td>x86</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2008</td>
+      <td>Standard, Enterprise</td>
+      <td>x64</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2008</td>
+      <td>Datacenter</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2008 R2</td>
+      <td>All</td>
+      <td>x86</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2008 R2</td>
+      <td>Standard, Enterprise</td>
+      <td>x64</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2008 R2</td>
+      <td>Datacenter</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2012</td>
+      <td>All</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2012 R2</td>
+      <td>All</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows Server 2016</td>
+      <td>Standard, Datacenter</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 7</td>
+      <td>All</td>
+      <td>x86</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 7</td>
+      <td>Starter, Home, Home Premium, Professional</td>
+      <td>x64</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 7</td>
+      <td>Enterprise, Ultimate</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 8.x</td>
+      <td>All</td>
+      <td>x86</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 8.x</td>
+      <td>All</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 10</td>
+      <td>All</td>
+      <td>x86</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Microsoft Windows 10</td>
+      <td>All</td>
+      <td>x64</td>
+      <td>Yes</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="pinning-a-virtual-machine-to-multiple-hosts">Pinning a Virtual Machine to Multiple Hosts</h2>
+
+<p>Virtual machines can be pinned to multiple hosts. Multi-host pinning allows a virtual machine to run on a specific subset of hosts within a cluster, instead of one specific host or all hosts in the cluster. The virtual machine cannot run on any other hosts in the cluster even if all of the specified hosts are unavailable. Multi-host pinning can be used to limit virtual machines to hosts with, for example, the same physical hardware configuration.</p>
+
+<p>A virtual machine that is pinned to multiple hosts cannot be live migrated, but in the event of a host failure, any virtual machine configured to be highly available is automatically restarted on one of the other hosts to which the virtual machine is pinned.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** High availability is not supported for virtual machines that are pinned to a single host.&#x000A;</code></pre></div>
+<p><strong>Pinning Virtual Machines to Multiple Hosts</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a running virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Host</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Specific Host(s)</strong> radio button under <strong>Start Running On</strong> and select two or more hosts from the list.</p>
+  </li>
+  <li>
+    <p>Select <strong>Do not allow migration</strong> from the <strong>Migration Options</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click the <strong>High Availability</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Highly Available</strong> check box.</p>
+  </li>
+  <li>
+    <p>Select <strong>Low</strong>, <strong>Medium</strong>, or <strong>High</strong> from the <strong>Priority</strong> drop-down list. When migration is triggered, a queue is created in which the high priority virtual machines are migrated first. If a cluster is running low on resources, only the high priority virtual machines are migrated.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="viewing-virtual-machines-pinned-to-a-host">Viewing Virtual Machines Pinned to a Host</h2>
+
+<p>You can use the <strong>Virtual Machines</strong> tab of a host to view virtual machines pinned to that host, even while the virtual machines are offline.</p>
+
+<p>Virtual machines that are pinned to only one host will shut down rather than migrate when that host becomes inactive. You can use the <strong>Pinned to Host</strong> list to see which virtual machines will be affected, and which virtual machines will require a manual restart after the host becomes active again.</p>
+
+<p><strong>Viewing Virtual Machines Pinned to a Host</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click a host name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Virtual Machines</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Pinned to Host</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="changing-the-cd-for-a-virtual-machine">Changing the CD for a Virtual Machine</h2>
+
+<p>You can change the CD accessible to a virtual machine while that virtual machine is running, using ISO images that have been uploaded to the data domain of the virtual machine’s cluster.</p>
+
+<p><strong>Changing the CD for a Virtual Machine</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a running virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Change CD</strong>.</p>
+  </li>
+  <li>
+    <p>Select an option from the drop-down list:</p>
+
+    <ul>
+      <li>
+        <p>Select an ISO file from the list to eject the CD currently accessible to the virtual machine and mount that ISO file as a CD.</p>
+      </li>
+      <li>
+        <p>Select <strong>[Eject]</strong> from the list to eject the CD currently accessible to the virtual machine.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="smart-card-authentication">Smart Card Authentication</h2>
+
+<p>Smart cards are an external hardware security feature, most commonly seen in credit cards, but also used by many businesses as authentication tokens. Smart cards can be used to protect oVirt virtual machines.</p>
+
+<p><strong>Enabling Smart Cards</strong></p>
+
+<ol>
+  <li>
+    <p>Ensure that the smart card hardware is plugged into the client machine and is installed according to manufacturer's directions.</p>
+  </li>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Console</strong> tab and select the <strong>Smartcard enabled</strong> check box.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Run the virtual machine by clicking the <strong>Console</strong> icon. Smart card authentication is now passed from the client hardware to the virtual machine.</p>
+
+    <p><strong>Important:</strong> If the Smart card hardware is not correctly installed, enabling the Smart card feature will result in the virtual machine failing to load properly.</p>
+  </li>
+</ol>
+
+<p><strong>Disabling Smart Cards</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Console</strong> tab, and clear the <strong>Smartcard enabled</strong> check box.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Configuring Client Systems for Smart Card Sharing</strong></p>
+
+<ol>
+  <li>
+    <p>Smart cards may require certain libraries in order to access their certificates. These libraries must be visible to NSS library, which <code>spice-gtk</code> uses to provide the smart card to the guest. NSS expects the libraries to provide the PKCS #11 interface.</p>
+  </li>
+  <li>
+    <p>Make sure that the module architecture matches spice-gtk/remote-viewer's architecture. For instance, if you have only the 32b PKCS #11 library available, you must install the 32b build of virt-viewer in order for smart cards to work.</p>
+  </li>
+</ol>
+
+<p><strong>Configuring EL clients with CoolKey Smart Card Middleware</strong></p>
+
+<p>CoolKey Smart Card middleware is a part of Enterprise Linux. Install the <code>Smart card support</code> group. If the Smart Card Support group is installed on a Enterprise Linux system, smart cards are redirected to the guest when Smart Cards are enabled. The following command installs the <code>Smart card support</code> group:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # yum groupinstall "Smart card support"&#x000A;</code></pre></div>
+<p><strong>Configuring EL clients with Other Smart Card Middleware</strong></p>
+
+<p>Register the library in the system's NSS database. Run the following command as root:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # modutil -dbdir /etc/pki/nssdb -add "module name" -libfile /path/to/library.so&#x000A;</code></pre></div>
+<p><strong>Configuring Windows Clients</strong></p>
+
+<p>The oVirt Project does not provide PKCS #11 support to Windows clients. Libraries that provide PKCS #11 support must be obtained from third-parties. When such libraries are obtained, register them by running the following command as a user with elevated privileges:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    modutil -dbdir %PROGRAMDATA%\pki\nssdb -add "module name" -libfile C:\Path\to\module.dll&#x000A;</code></pre></div>
+<p><strong>Prev:</strong> <a href="chap-Additional_Configuration">Chapter 4: Additional Configuration</a> <br />
+<strong>Next:</strong> <a href="chap-Administrative_Tasks">Chapter 6: Administrative Tasks</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/virtual_machine_management_guide/chap-editing_virtual_machines">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/vmm-guide/chap-Editing_Virtual_Machines.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/vmm-guide/chap-Editing_Virtual_Machines.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

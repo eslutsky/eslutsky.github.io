@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Network QoS &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="network-qos">Network QoS</h1>
+
+<h4 id="summary">Summary</h4>
+
+<p>Network Quality of Service feature will be added to oVirt from version 3.3 and will support cluster version 3.3 or higher.
+The feature will allow the user to limit the inbound and outbound network traffic in virtual NIC level.
+In order to define more natural coupling of the QoS to a VNIC we define a new concept called <strong><a href="Features/Vnic_Profiles">VNIC Profile</a></strong>. The VNIC profile will be introduced in oVirt 3.3 to all clusters and will wrap few of the properties currently defined directly on the VNIC</p>
+
+<h4 id="owner">Owner</h4>
+
+<ul>
+  <li>Name: <a href="user:omasad">Ofri Masad</a></li>
+  <li>Email: <omasad at="" redhat="" dot="" com=""></omasad></li>
+</ul>
+
+<h4 id="current-status">Current status</h4>
+
+<ul>
+  <li>Status: Network QoS done.</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h4 id="detailed-description">Detailed Description</h4>
+
+<p>Traffic shaping is a very common practice in network management. Traffic shaping allows the network administrator to prevent over consumption of network resources by limiting the bandwidth in several layers. Current implementation of libvirt allows limiting the bandwidth in the virtual NIC level for both inbound and outbound traffic. The Network QoS on oVirt make use of that API and allows the network administrator to define network limitations on specific VNICs.</p>
+
+<p>The QoS properties are properties which defines the traffic shaping applied on the virtual NIC . QoS properties currently include:</p>
+
+<ul>
+  <li>Inbound
+    <ul>
+      <li>Average - long-term limit around which traffic should float (Mbps)</li>
+      <li>Peak - the maximum allowed bandwidth during burst (Mbps)</li>
+      <li>Burst - The burst size (Mb)</li>
+    </ul>
+  </li>
+  <li>Outbound
+    <ul>
+      <li>Average - long-term limit around which traffic should float (Mbps)</li>
+      <li>Peak - the maximum allowed bandwidth during burst (Mbps)</li>
+      <li>Burst - The burst size (Mb)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>For example: if average is set to 100 units, peak to 200 and burst to 50, after sending those 50 units of data at rate 200, the rate will fall down to 100.</p>
+
+<p>Traffic shaping using the Network QoS feature will be available only for oVirt networks at this stage. Externally provided networks (such as Quantum) may be supported in future extensions.</p>
+
+<h4 id="benefit-to-ovirt">Benefit to oVirt</h4>
+
+<p>We would like to expose to the user the ability to configure the Network Quality of Service (QoS) properties of each virtual NIC. The Network QoS feature will add this ability to the engine.</p>
+
+<h2 id="design-and-implementation">Design and Implementation</h2>
+
+<p>see : <a href="/Features/Design/Network_QoS_-_detailed_design Implementation details">http://www.ovirt.org/Features/Design/Network_QoS_-_detailed_design Implementation details</a> for detailed design</p>
+
+<h4 id="gui">GUI</h4>
+
+<p>The UI for setting of QoS properties will be added to the Add/Edit Profile dialog.
+ <strong>Network QoS sub tab</strong>
+<img alt="" title="fig:Qos_new_tab.png" src="/images/Qos_new_tab.png" /></p>
+
+<p>The Network QoS will be added as sub tab of Data Center (administrator port6al only) . The administrator will be able to Add/Remove/Edit Network QoS entities. The QoS name and all 6 properties will be viewed in the table.</p>
+
+<p><strong>Add/Edit Network QoS dialog</strong>
+<img alt="" title="fig:Qos_neq_dialog.png" src="/images/Qos_neq_dialog.png" /></p>
+
+<p>The Add/Edit Network QoS dialog will include text field for name and six text fields for the values.
+The administrator could enable/disable the QoS properties (for each inbound / outbound). Disabled QoS will mean no limitation on the traffic in this direction
+Once inbound/outbound was enabled all three field must be filled (This will be verified before allowing to close the dialog). The Peak and Burst fields will be automatically filled when entering Average value (and could be edited manually).</p>
+
+<h4 id="backend">Backend</h4>
+
+<p>We define a new entity called "NetworkQoS" - the QoS properties will be contained in this object.
+A NetworkQoS object will be added to NetworkProfile entity.
+see : <a href="/Features/Design/Network_QoS_-_detailed_design Implementation details">http://www.ovirt.org/Features/Design/Network_QoS_-_detailed_design Implementation details</a> for detailed design</p>
+
+<h4 id="db-change">DB Change</h4>
+
+<p>Add network_qos table.
+see : <a href="/Features/Design/Network_QoS_-_detailed_design Implementation details">http://www.ovirt.org/Features/Design/Network_QoS_-_detailed_design Implementation details</a> for detailed design</p>
+
+<h4 id="rest-api">REST API</h4>
+
+<p>Not supported in this version</p>
+
+<h4 id="vdsm">VDSM</h4>
+
+<p>libvirt version 1.0.1 or higher is required to enable the QoS feature (vdsm 3.3 will use higher version).</p>
+
+<ul>
+  <li>Add support of QoS properties in VDSM API: run VM, hot plug and update VM device verbs (update in schema)</li>
+  <li>Add support in the vnic object and the vnic to_xml()</li>
+</ul>
+
+<p>see : <a href="/Features/Design/Network_QoS_-_detailed_design Implementation details">http://www.ovirt.org/Features/Design/Network_QoS_-_detailed_design Implementation details</a> for detailed design</p>
+
+<h3 id="tests">Tests</h3>
+
+<h4 id="expected-unit-tests">Expected unit-tests</h4>
+
+<ul>
+  <li>Unit test for Dao - Unit test for Commands (add/update/remove) - Unit test for query</li>
+</ul>
+
+<h3 id="special-considerations">Special considerations</h3>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<ul>
+  <li>Dependent on the feature <a href="/Features/Vnic_Profiles">Vnic Profiles</a></li>
+</ul>
+
+<p>Affected ovirt projects:</p>
+
+<ul>
+  <li>API</li>
+  <li>backend</li>
+  <li>Webadmin</li>
+  <li>User Portal</li>
+</ul>
+
+<p>Others projects:</p>
+
+<ul>
+  <li>vdsm</li>
+</ul>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<ul>
+  <li>See: <a href="http://libvirt.org/formatdomain.html#elementQoS">http://libvirt.org/formatdomain.html#elementQoS</a> for documentation of the VM level network QoS XML.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/sla/network-qos.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/sla/network-qos.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

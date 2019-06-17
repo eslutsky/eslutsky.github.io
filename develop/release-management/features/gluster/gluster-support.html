@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Gluster Support &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-support">Gluster Support</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature provides support for provisioning and managing Gluster based storage clusters in oVirt. Inital support was added to oVirt 3.1. glusterfs repo is available at <a href="http://download.gluster.org/pub/gluster/glusterfs/">http://download.gluster.org/pub/gluster/glusterfs/</a></p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Shireesh Anjal <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#110;&#106;&#097;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#110;&#106;&#097;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner: Gilad Chaplik <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#103;&#099;&#104;&#097;&#112;&#108;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#103;&#099;&#104;&#097;&#112;&#108;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>REST Component owner: Shireesh Anjal</li>
+      <li>Engine Component owner: Shireesh Anjal</li>
+      <li>VDSM Component owner: Balamurugan Arumugam <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#098;&#097;&#114;&#117;&#109;&#117;&#103;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#098;&#097;&#114;&#117;&#109;&#117;&#103;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>QA Owner: Ujjwala Thimmaiah <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#117;&#106;&#106;&#119;&#097;&#108;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#117;&#106;&#106;&#119;&#097;&#108;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status: Available since oVirt 3.2</li>
+  <li>Last updated date: ,</li>
+  <li>Requires : glusterfs &gt;= 3.3</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>This feature will introduce the capability of creating a storage cluster based on GlusterFS from the oVirt UI. Administrator will be able to perform Gluster management fuctionality like:</p>
+
+<ul>
+  <li>Create a cluster with Gluster capabilities</li>
+  <li>Create Gluster volumes on any cluster that exposes Gluster capabilities</li>
+  <li>Add / remove bricks to / from Gluster volumes</li>
+  <li>Perform volume operations like
+    <ul>
+      <li>start</li>
+      <li>stop</li>
+      <li>rebalance</li>
+      <li>replace-brick</li>
+    </ul>
+  </li>
+  <li>Configure volumes by setting / changing "Volume Options"</li>
+  <li>Monitor status of Gluster volumes and bricks</li>
+</ul>
+
+<h3 id="approach">Approach</h3>
+
+<p>With this feature, oVirt will start supporting multiple services exposed by the cluster. These services may require different monitoring and bootstrapping strategies for hosts of the cluster. It will also require conditionally displaying / hiding certain UI components based on the services supported by the cluster. These will be achieved by:</p>
+
+<ul>
+  <li>Mapping the services supported by a cluster in the database</li>
+  <li>Using strategy pattern for arriving at the appropriate monitoring strategy for a host based on the services exposed by it's cluster</li>
+  <li>Enhancing the webadmin UI to display / hide appropriate components based on services supported by the cluster in context</li>
+  <li>Enhancing the bootstrapping mechanism in VDSM to perform different steps based on the service(s) requested</li>
+</ul>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<h4 id="gluster-volume">Gluster Volume</h4>
+
+<p>Gluster Volume is a new searchable entity in the system, which has following properties:</p>
+
+<ul>
+  <li>Volume ID</li>
+  <li>Cluster ID (Cluster to which the volume belongs)</li>
+  <li>Name</li>
+  <li>Type</li>
+  <li>Replica Count</li>
+  <li>Stripe Count</li>
+  <li>Transport Type</li>
+  <li>Access Protocols (list)</li>
+  <li>Bricks (list)</li>
+  <li>Options (list)</li>
+</ul>
+
+<h4 id="gluster-brick">Gluster Brick</h4>
+
+<p>Brick is the building block of a volume, and has following properties:</p>
+
+<ul>
+  <li>Server</li>
+  <li>Brick Directory</li>
+</ul>
+
+<h4 id="gluster-volume-option">Gluster Volume Option</h4>
+
+<p>An Option is a configuration on the Volume, that can fine-tune the way a Volume behaves e.g. The value of the option "auth.allow" defines the IP addresses of the client machines that should be allowed to access the Volume. It has following properties:</p>
+
+<ul>
+  <li>Option Key</li>
+  <li>Option Value</li>
+</ul>
+
+<h4 id="cluster">Cluster</h4>
+
+<p>The Cluster entity will be enhanced to capture information about the services it exposes. e.g. A cluster can expose</p>
+
+<ul>
+  <li>Virtualization Service</li>
+  <li>Gluster Service</li>
+  <li>Both</li>
+</ul>
+
+<h3 id="user-interface">User Interface</h3>
+
+<p>New tabs, nodes and screens related to Gluster will be added to the User Interface. These will be displayed only when the Cluster in context supports Gluster service. Similarly, the existing Virtualization related UI components will be displayed only if the Cluster in context supports Virtualization service. Following are the new UI components related to Gluster:</p>
+
+<ul>
+  <li>New tab "Gluster Volumes" at Cluster level.</li>
+  <li>New node "Gluster Volumes" in the system tree under the Cluster node
+    <ul>
+      <li>displayed only if the cluster supports Gluster service</li>
+      <li>Every Gluster Volume will be displayed as a child node under "Gluster Volumes"</li>
+    </ul>
+  </li>
+  <li>Main tabs when user selects a Volume in the system tree
+    <ul>
+      <li>General</li>
+      <li>Bricks</li>
+      <li>Options</li>
+      <li>Permissions</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Same tabs will also be displayed as sub-tabs when user selects a volume from the "Gluster Volumes" tab.</p>
+
+<ul>
+  <li>Actions on "Gluster Volumes" tab:
+    <ul>
+      <li>New</li>
+      <li>Start</li>
+      <li>Stop</li>
+      <li>Delete</li>
+      <li>Add Bricks</li>
+      <li>Remove Bricks</li>
+      <li>Migrate Brick</li>
+      <li>Rebalance</li>
+      <li>Add Option</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Except the "New" option, all others will also be available from the "Gluster Volume -&gt; General" sub-tab</p>
+
+<ul>
+  <li>Actions on "Bricks" tab / sub-tab:
+    <ul>
+      <li>Add Bricks</li>
+      <li>Remove Bricks</li>
+      <li>Migrate Brick</li>
+    </ul>
+  </li>
+  <li>Actions on "Options" tab / sub-tab:
+    <ul>
+      <li>Add</li>
+      <li>Edit</li>
+      <li>Reset to default (selected option)</li>
+    </ul>
+  </li>
+  <li>New dialog boxes
+    <ul>
+      <li>New Gluster Volume</li>
+      <li>Add Bricks to Volume</li>
+      <li>New Gluster Volume -&gt; Choose Bricks (re-used from Volume -&gt; Add Bricks)</li>
+      <li>Migrate Brick of a Volume</li>
+      <li>Add / Modify Volume Option</li>
+    </ul>
+  </li>
+  <li>Modified screens
+    <ul>
+      <li>Cluster creation screen will have two checkboxes for "Gluster" and "Virtualization", with at least one selection mandatory</li>
+      <li>Gluster related events will be added to the Event Notifications subscription screen</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="audit">Audit</h3>
+
+<p>All operations that result in creation, modification or deletion of Gluster Volumes, and any errors that may occur during the same will be audited. The audit log messages will be available in the "Events" tab.</p>
+
+<h3 id="notifications">Notifications</h3>
+
+<p>All the Gluster related events that are audited will be available to be subscribed for email notifications. A new category "GlusterVolume" will be added to the notification subscription screen with following events:</p>
+
+<ul>
+  <li>Gluster Volume created</li>
+  <li>Gluster Volume creation failed</li>
+  <li>Gluster Volume deleted</li>
+  <li>Gluster Volume deletion failed</li>
+  <li>Gluster Volume started</li>
+  <li>Gluster Volume start failed</li>
+  <li>Gluster Volume stopped</li>
+  <li>Gluster Volume stop failed</li>
+  <li>Brick(s) added to Gluster Volume</li>
+  <li>Brick(s) addition to Gluster Volume failed</li>
+  <li>Brick(s) removed from Gluster Volume</li>
+  <li>Brick(s) removal from Gluster Volume failed</li>
+  <li>Gluster Volume Option set</li>
+  <li>Gluster Volume Option set failed</li>
+  <li>Gluster Volume Replace Brick started</li>
+  <li>Gluster Volume Replace Brick start failed</li>
+  <li>Gluster Volume Replace Brick aborted</li>
+  <li>Gluster Volume Replace Brick abort failed</li>
+  <li>Gluster Volume Replace Brick paused</li>
+  <li>Gluster Volume Replace Brick pause failed</li>
+  <li>Gluster Volume Replace Brick committed</li>
+  <li>Gluster Volume Replace Brick commit failed</li>
+  <li>Gluster Volume Rebalance started</li>
+  <li>Gluster Volume Rebalance start failed</li>
+  <li>Gluster Volume Rebalance stopped</li>
+  <li>Gluster Volume Rebalance stop failed</li>
+</ul>
+
+<h3 id="host-bootstrapping-vdsm">Host Bootstrapping (VDSM)</h3>
+
+<p>The host bootstrapping feature of VDSM will be enhanced to support bootstrapping based on the service(s) requested from the host.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   SELinux should be set to permissive on the node running gluster&#x000A;</code></pre></div>
+<h3 id="roles">Roles</h3>
+
+<p>A new pre-defined role "Gluster Admin" will be introduced with permissions for all Gluster Management actions.</p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>When upgrading from an existing installation, all existing clusters will be mapped to only the "Virtualization" service by default.</p>
+
+<h2 id="benefits-to-ovirt">Benefits to oVirt</h2>
+
+<p>oVirt would be able to provision Gluster storage. This would also enable a tighter KVM - Gluster integration which would enable virtualization admins to leverage the scale-out storage capabilities of Gluster.</p>
+
+<h2 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h2>
+
+<p>Affected oVirt projects:</p>
+
+<ul>
+  <li>Engine-core</li>
+  <li>Webadmin</li>
+  <li>VDSM</li>
+  <li>API</li>
+  <li>CLI</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p>GlusterFS : <a href="http://www.gluster.org/community/documentation/index.php/Main_Page">http://www.gluster.org/community/documentation/index.php/Main_Page</a></p>
+
+<h2 id="future-work">Future Work</h2>
+
+<ul>
+  <li>LVM Configuration - Planned in 3.6</li>
+  <li>Support for managing Gluster clusters in AWS environment</li>
+  <li>Support for Gluster Unified File and Object Storage</li>
+  <li>Support for Hardware RAID configuration</li>
+  <li>Gluster Volume monitoring with Gluster top commands</li>
+  <li>Gluster Volume Quota configuration</li>
+  <li>Gluster snapshot management - Planned in 3.6</li>
+  <li>Log management</li>
+  <li>Reporting</li>
+</ul>
+
+<p><a href="/develop/release-management/features/">Gluster Support</a> <a href="/develop/release-management/releases/3.2/feature/">Gluster Support</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/gluster-support.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/gluster-support.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

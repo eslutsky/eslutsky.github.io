@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Headless VM &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="headless-vm">Headless VM</h1>
+
+<h3 id="summary">Summary</h3>
+
+<p>Support Headless VMs in oVirt by adding an option to run a VM without any graphical console, for cases in which a graphical console is not needed for accessing this VM. This Headless VM will run without graphical and Video devices.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Sharon Gratch (sgratch)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#103;&#114;&#097;&#116;&#099;&#104;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#103;&#114;&#097;&#116;&#099;&#104;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>Before this feature was implemented, oVirt Engine always added at least one graphical console to a running VM. Although this is right for most use cases, some VMs are required to run without graphical consoles from the start or after the initial setup. The reason for that can be due to host limitations or according to VM usage requirements (e.g. Real-Time VM).</p>
+
+<p>This feature adds a flexible, very simple to manage and reversible option to start a Headless VM at any time via Engine and still keep an option to access the VM for setup or administrative purposes if needed.</p>
+
+<h3 id="usage">Usage</h3>
+
+<ul>
+  <li>
+    <p>Setting a VM as Headless can be done to new or existed VM at any time and it is a reversible option, meaning that a Headless VM can be switched to non-Headless and vice versa.</p>
+  </li>
+  <li>
+    <p>Setting the VM as Headless can be done via the UI by checking/un-checking a new "Headless Mode" checkbox field added to the Console tab of the VM dialog (in advanced mode). In case of a running VM, this configuration change will require a VM restart.</p>
+  </li>
+  <li>
+    <p>A Headless VM Template or Pool or Instance Type can also be created the same way as a VM, so in case the user wants to create or edit a VM to become Headless, he can also choose a Template, Pool or Instance type which are configured as Headless and "inherit" this property for that specific VM.</p>
+  </li>
+  <li>
+    <p>Invoking a graphic console via the Engine is disabled for a Headless VM and so are all options in the "Console Options" dialog.</p>
+  </li>
+  <li>
+    <p>In case of a new created VM, the user has two options to access this VM via oVirt for managing:</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Enable the oVirt Serial Console for this VM.</p>
+  </li>
+  <li>
+    <p>Manage the VM via a required graphic console only on its first run by using the "Run Once" dialog, which enables 
+to run a Headless VM as non-Headless only for the first run. 
+A checkbox is added to the "Run Once" dialog and let the user choose how he wants to run this VM for the first 
+time only and with which Graphic Protocol (SPICE or VNC).</p>
+  </li>
+</ol>
+
+<ul>
+  <li>In case of editing an already running VM to become Headless, the user should verify the following before restarting this VM and applying the Headless mode:</li>
+</ul>
+
+<ol>
+  <li>
+    <p>How to access the VM, if needed. Options can be to enable the oVirt Serial Console, or install SSH or any 
+other service for command line access.</p>
+  </li>
+  <li>
+    <p>What is the IP of this VM, if needed, since if the Guest-Agent is not installed then the oVirt Engine won't 
+know The VM IP.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>This feature works on all cluster levels.</li>
+</ul>
+
+<p>Note that all of the scenarios described above can be done via oVirt WebAdmin or UserPortal and in the future also via the REST API and oVirt SDK.</p>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h4 id="webadminuserportal-ui">WebAdmin/UserPortal UI</h4>
+
+<ul>
+  <li>
+    <p>The Console side-tab of the VM dialog (in advanced mode) was re-arranged and divided to "Graphical Console" and "Serial Console" properties and a "Headless Mode" checkbox was added under the "Graphical Console" section. In case the "Headless Mode" is checked, all other Graphical Console properties are disabled/grayed out. The SPICE USB controller is disabled only if the "Serial Console" is disabled for the VM. The "Serial Console" is handled as before and is not depended on the VM Headless mode.</p>
+  </li>
+  <li>
+    <p>In case of a Headless VM, the "Graphics Column" and the "General" sub-tab display the "Graphics protocol" and "Video Type" values as "None".</p>
+  </li>
+  <li>
+    <p>Invoking a graphic console and using the "Console Options" dialog are disabled.</p>
+  </li>
+  <li>
+    <p>Under the "VM devices" sub-tab no video or graphic devices are displayed in case of a Headless VM.</p>
+  </li>
+  <li>
+    <p>All those changes are also relevant for VM Template, VM Pool and Instance Type dialogs and the Headless Mode configuration is supported for all actions relevant for those entities including create a VM from a Template and create a Template from a VM.</p>
+  </li>
+  <li>
+    <p>An option of "Headless mode" was added to the Console section of the "Run Once" dialog and the user can choose the console configuration for the first run of a VM (headless or not): as non-Headless with VNC graphic protocol, as Non-Headless with SPICE graphic protocol or as Headless.</p>
+  </li>
+</ul>
+
+<h4 id="backend">Backend</h4>
+
+<p>No new property was added to the VM object and marking a VM as Headless is done by using existing properties. 
+In case of Headless VM / Template / Pool / Instance Type:</p>
+
+<ol>
+  <li>
+    <p>The VM (VMStatic object) set the defaultDisplayType property to "none" value.</p>
+  </li>
+  <li>
+    <p>The VM (VMDynamic object) set the graphicsInfos property (spice_port, spice_ip, vnc_port, vnc_ip, spice_tls_port etc) to null values.</p>
+  </li>
+  <li>
+    <p>All Video and graphic devices are removed for that VM.</p>
+  </li>
+</ol>
+
+<h4 id="db">DB</h4>
+
+<p>No changes in the DB</p>
+
+<h4 id="rest-api">REST API</h4>
+
+<p>There is currently partial support for Headless VMs in oVirt API.
+The only option supported is editing an existing VM or Template or Instance-Type and change it via oVirt API to Headless/non-Headless.
+This is done by using REST API with the "vms/&lt;vm-id&gt;/graphicsconsoles" extension.</p>
+<h5 id="usage-1">Usage:</h5>
+<ol>
+  <li>
+    <p>In case an existing VM or Template or Instance-Type is non-Headless and you want to change it to Headless, 
+ you need to remove all graphics console devices for this entity by calling the following API:</p>
+
+    <p>DELETE  ..api/instancetypes/&lt;instancetype-id&gt;\/graphicsconsoles/&lt;console-id&gt;</p>
+
+    <p>or</p>
+
+    <p>DELETE  ..api/templates/&lt;template-id&gt;/graphicsconsoles/&lt;console-id&gt;</p>
+
+    <p>or</p>
+
+    <p>DELETE  ..api/vms/&lt;vm-id&gt;/graphicsconsoles/&lt;console-id&gt;</p>
+
+    <p>while &lt;console-id&gt; is the ID of the graphics console you wish to remove (Spice or VNC).</p>
+
+    <p>When the last graphics console is removed - the VM becomes Headless</p>
+  </li>
+  <li>
+    <p>In case an existing VM or Template or Instance-Type is Headless and you wish to change it to non-Headless, 
+ you need to add a graphics cosnole device for this entity by calling the following APIs:</p>
+
+    <p>POST  ..api/instancetypes/&lt;instancetype-id&gt;/graphicsconsoles</p>
+
+    <p>&lt;graphics_console&gt;
+ &lt;protocol&gt;type&lt;/protocol&gt;
+ &lt;/graphics_console&gt;</p>
+
+    <p>or</p>
+
+    <p>POST  ..api/templates/&lt;template-id&gt;/graphicsconsoles</p>
+
+    <p>&lt;graphics_console&gt;
+ &lt;protocol&gt;type&lt;/protocol&gt;
+ &lt;/graphics_console&gt;</p>
+
+    <p>or</p>
+
+    <p>POST  ..api/vms/&lt;vm-id&gt;/graphicsconsoles</p>
+
+    <p>&lt;graphics_console&gt;
+ &lt;protocol&gt;type&lt;/protocol&gt;
+ &lt;/graphics_console&gt;</p>
+
+    <p>while "type" can be "spice" or "vnc".</p>
+  </li>
+  <li>
+    <p>For creating a new Headless VM, you need to create a VM via the API (please see REST API documentation - https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.1-beta/html/rest_api_guide/). The VM will be created as non-Headless by default. Then use action 1 described above to change the VM from non-Headless to Headless</p>
+  </li>
+</ol>
+
+<h3 id="status">Status</h3>
+
+<ul>
+  <li>Target Release: Ovirt 4.1</li>
+  <li>Status: All is merged (Backward compatibility is fully supported).</li>
+  <li>REST API full support Target Release: Ovirt 4.2 (please see https://bugzilla.redhat.com/show_bug.cgi?id=1406394)</li>
+</ul>
+
+<h3 id="limitations">Limitations</h3>
+
+<ul>
+  <li>The ability to access the Headless VM and obtaining the VM IP are not automatically supported -
+In case a VM is currently running in Ovirt in a Headless mode, without a serial console enabled and without Guest-Agent installed, the user won't be able to obtain an access or login to that VM and also won't be able to check for the VM IP via the Ovirt Engine. 
+There is no warning for such cases in which no guest-agent is running or no serial console enabled and no ssh key installed and it's the user responsibility to manage it in advance (either by enabling the serial console or by manage the VM on it's first run via the "run Once" dialog which enables to run a Headless VM as non-Headless only for the first run).</li>
+  <li>
+    <p>Prior to  running a VM with a Headless mode, the Grub configuration for this VM should be set to console mode since otherwise the Grub will cause the guest OS boot process to hang.</p>
+
+    <p>Setting the Grub configuration into console mode is done by commenting out the spashimage flag in the Grub menu configuration file, e.g:</p>
+
+    <p>#splashimage=(hd0,0)/grub/splash.xpm.gz serial –unit=0 –speed=9600 –parity=no –stop=1 terminal –timeout=2 serial</p>
+  </li>
+  <li>There is currently partial support for Headless VMs in oVirt API. Therefore whenever using REST API to edit or create graphics console properties by setting the &lt;display&gt; attribute properties and not by using the  "vms\/&lt;vm-id&gt;/graphicsconsoles" extension, the Headless mode of the VM/Template/Instance-Type may be wrongly set. Therefore it is recommended to always set the required Headless or non-Headless state only via the "vms/&lt;vm-id&gt;/graphicsconsoles" extension. This limitation is planned to be fixed for oVirt 4.2.</li>
+</ul>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/headless-vm.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/headless-vm.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 28 Mar 2017 16:51 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

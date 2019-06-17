@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+NtpSupport &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ntp-support">Ntp Support</h1>
+
+<h2 id="adding-ntp-support">Adding NTP Support</h2>
+
+<h3 id="feature-necessity">Feature necessity</h3>
+
+<p>KVM is very sensitive to time issues especially when migrating a VM between 2 hosts with a big time gap. In a large deployment we need to make sure that the time is synched on all the hosts in the setup.</p>
+
+<h3 id="feture-description">Feture Description</h3>
+
+<p>The intent is to use the organization's NTP server to sync time on all the hosts in ovirt setup. The Info should be obtained from the user during the installation, and pupulated/configured on all the hosts in an ovirt system through bootstrap &amp; registration.</p>
+
+<h3 id="assumptions">Assumptions</h3>
+
+<ul>
+  <li>Organizations will prefer using their own NTP server rather than install a new one for ovirt.</li>
+  <li>The NTP server should be configured only once (during ovirt installation), and populated to all hosts through bootstrap and registration.</li>
+  <li>Changing the NTP server after engine installation is not supported - and will require manuall steps to sync it to all the hosts in the setup.</li>
+  <li>The NTP server is accesible from all the hosts</li>
+  <li>This is not retro active - this will only apply to new hosts that are added to the system</li>
+</ul>
+
+<h3 id="what-needs-to-be-done">What needs to be done</h3>
+
+<h5 id="ovirt-setup">ovirt-setup</h5>
+
+<ul>
+  <li>Need to extract NTP server details from user during the installation</li>
+  <li>If NTP client is setup on ovirt-server then default to this value</li>
+  <li>The NTP config should be optional</li>
+  <li>Need to update the ntp server in vdc_option table</li>
+  <li>Need to configure the ovirt-server ntp to sync with the NTP server</li>
+</ul>
+
+<h5 id="database">DataBase</h5>
+
+<ul>
+  <li>need to add the NTP server configuration to the vdc_options table</li>
+</ul>
+
+<h5 id="engineboostrapregistration-code">Engine:boostrap:registration code</h5>
+
+<ul>
+  <li>Need to utilize this new NTP config option (if given) during bootstrap</li>
+  <li>Need to utilize this new NTP config option (if given) during registration/approval</li>
+  <li>Need to add support for the optional NTP server in vds_installer.py</li>
+</ul>
+
+<h5 id="vdsm-bootstrap">vdsm-bootstrap</h5>
+
+<ul>
+  <li>vdsm-bootstrap - should support configuring NTP on any host bootstrapped</li>
+  <li>bootstrapping code now has to support ovirt-node as well</li>
+</ul>
+
+<h5 id="vdsm-registration">vdsm-registration</h5>
+
+<ul>
+  <li>The registration code should support the optional NTP configuration</li>
+  <li>need to utilize ovirt functions</li>
+</ul>
+
+<h4 id="optional-additional-tasks">Optional Additional tasks</h4>
+
+<ul>
+  <li>VDSM to report the configured NTP servers</li>
+  <li>
+    <p>Engine to alert on:</p>
+
+    <p>* mismatch in hypervisor's NTP configuration.
+  * time diff from ovirt-engine service is greater than X (x = config param ???)</p>
+  </li>
+  <li>UI - display the reported NTP configureation</li>
+  <li>Add a new ovirt-setup-lugin package to enable configuring the ovirt-engine server to NTP server.</li>
+  <li>At regular interval (config setting) check time difference between ovirt-engine and nodes and raise alert (add notification)</li>
+</ul>
+
+<h3 id="questions">Questions</h3>
+
+<ul>
+  <li>Should we support more than 1 NTP server ? Answer: NTP requires 2 server to work at all and recommends at least 3 NTP servers.</li>
+  <li>Should we expose this config through the ovirt-config utility ? Yes</li>
+  <li>should we skip the NTP config if the NTP server is not accessible on bootstrap : No</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/ntpsupport.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/ntpsupport.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

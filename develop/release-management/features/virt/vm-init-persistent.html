@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+vm-init-persistent &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vm-init-persistent">vm-init-persistent</h1>
+
+<h2 id="vm-init-persistent-1">VM-Init Persistent</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>This Feature will allow persistent of Windows Sysprep and Cloud-Init data to the Database. By persisting the data Admin can create a template with VM-Init data that which will enable initialize VMs with relevant Data.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Shahar Havivi</li>
+  <li>Email: shaharh@redhatdotcom</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>Currently we are persisting the Timezone and Domain for Sysprep Windows based machines and Cloud-init data via Run-Once dialog. We want to be able to add more granularity to Sysprep such as saving a Windows serial key and persisting the current Cloud-init data that we have via the Run-Once dialog. The VM-Init section will have its own tab in Add/Edit VM and will stay the same for the Run-Once dialog.</p>
+
+<p>By adding a new table for initialization purpose of VMs the Domain field will move from vm_static table (VmBase business object) to the vm_init table (VmInit business object). We will have two forms of time-zone, The one that we currently have in vm_static will move to the System tab section in Add/Edit VM, this will represent the time-zone of the BIOS, the one that is represented in the qemu command line, The new time-zone that vm_init table have will represent the VM operating system time-zone.</p>
+
+<h3 id="vm-init-table">VM-Init Table</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     vm_id&#x000A;     host_name&#x000A;     domain&#x000A;     authorized_keys&#x000A;     regenerate_keys&#x000A;     time_zone&#x000A;     dns_servers&#x000A;     dns_search_domains&#x000A;     networks&#x000A;     password&#x000A;     winkey&#x000A;     custom_script&#x000A;</code></pre></div>
+<h3 id="custom-script">Custom Script</h3>
+
+<p>Custom Script enable Cloud-Init the ability to add custom YAML sections (which is concatenated to the YAML generated by oVirt) such as adding file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  write_files:&#x000A;  -   content: |&#x000A;          # THIS IS MY TEXT FILE&#x000A;          Some Content for my file&#x000A;      path: /tmp/myfile&#x000A;      permissions: '0644'&#x000A;</code></pre></div>
+<p>More inforamation please refer to <a href="http://cloudinit.readthedocs.org/en/latest/topics/examples.html#yaml-examples">Cloud-Init</a> Documentations.</p>
+
+<p><strong>Please note that an error in custom script will cause the Cloud-Init loading failure.</strong></p>
+
+<h3 id="ux-design">UX Design</h3>
+
+<p><a href="/develop/release-management/proposals/cloud-init/">UX Design page</a></p>
+
+<p><img alt="" width="494" height="791" src="/images/wiki/Cloud_init.png?1560777613" /></p>
+
+<p><img alt="" width="494" height="367" src="/images/wiki/Cloud_init_collapsed.png?1560777613" /></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/vm-init-persistent.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/vm-init-persistent.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

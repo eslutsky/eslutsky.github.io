@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+UCS Integration &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ucs-integration">UCS Integration</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Cisco's Unified Computing System (UCS) is a solution for managing a lot of datacenter aspects, from blade's firmware to network cards number and addresses on the hosts and the VMs. It has a management service (UCS-M) that allows the administrator to easily set up configurations to apply to the hardware of the datacenter.</p>
+
+<p>UCS hosts have network cards that can expose N pseudo physical Network Interface Cards, optionally (and usually) as ethernet cards. Those pseudo ethernet cards are called Virtual Functions (VFs) and when they are not configured they are blank devices, i.e., they lack mac address and any connectivity to the network fabric. One particular benefit of the virtual functions is that they can be connected to the guest's operating system offering a superior network performance, since the Host OS is not involved and parts are hardware accelerated.</p>
+
+<p>In terms of networking the configuration for a nic is set in UCS-M in entities called vNic Templates. A vNic template allows you to specify network attributes for the nics created from it such as: - Quality of Service, - VLANs: One can specify the default tag and the tags it should let through, - MTU, - MAC Pool: The network administrator can define several pools of MAC addresses in UCS-M from which a template can draw addresses from.</p>
+
+<p>When a vNic Template applies only to host nics it is called vNic profile. When it also applies to VM vNics an entity is created in UCS-M called *Port Profile*.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Antoni Segura Puimedon (APuimedo)</li>
+  <li>Email: apuimedo aT redhat.com</li>
+</ul>
+
+<h2 id="ovirtucs-m-networking-integration-state-prior-to-this-feature">oVirt/UCS-M networking integration state prior to this feature</h2>
+
+<p>USC virtual functions used to be reported to Engine as regular nics. VFs that have not been configured via UCS-M to have a mac address and connectivity are still reported, despite their uselessness for Host networking.</p>
+
+<p>There was a now-deprecated Vdsm hook, <a href="http://resources.ovirt.org/releases/3.3/rpm/EL/6/noarch/vdsm-hook-vmfex-4.13.0-11.el6.noarch.rpm">vdsm-hook-vmfex</a> that after being installed on each host, takes action upon VM creation and migration that:</p>
+
+<ul>
+  <li>Sets up a pool of virtual functions (thanks to the pool, migration is possible. As far as there are unused devices in the pool, we can assign a vnic to a virtual function).</li>
+  <li>Assigns the Engine-specified MAC address to a virtual function from the pool.</li>
+  <li>Specifies a <em>Port Profile</em> the virtual function should adopt.</li>
+  <li>Creates a macvtap device connected to the virtual function and replaces the VM nic definition with it.</li>
+</ul>
+
+<p>For the hook to work, one must manually specify the VM custom properties with</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  {'XX:XX:XX:XX:XX:XX': 'port_profile_name1',&#x000A;   'YY:YY:YY:YY:YY:YY': 'port_profile_name2'}&#x000A;</code></pre></div>
+<p>The profile names should first be defined in UCS-M following Cisco's <a href="http://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/sw/vm_fex/kvm/gui/config_guide/2-1/b_GUI_KVM_VM-FEX_UCSM_Configuration_Guide_2_1/b_GUI_KVM_VM-FEX_UCSM_Configuration_Guide_2_1_chapter_010.html#task_1892A1847A4F45F6A6363B98091AF61A">instructions</a>. The administrator must then manually copy the port profile names from UCS-M and the MAC addresses assigned by the engine and write the above dictionary.</p>
+
+<p>This old hook vdsm-hook-vmfex should not be used. It has been deprecated in favor of vdsm-hook-vmfex-dev ("New Hook" below).</p>
+
+<h2 id="current-status">Current status</h2>
+
+<p>Level IV completed and released.</p>
+
+<h2 id="integration-levels">Integration levels</h2>
+
+<p>Considering the current level of integration (using the current vdsm-hook-vmfex) as level 3. The proposed levels of this feature are:</p>
+
+<h3 id="level-iv-a-new-hook">Level IV: "A New Hook"</h3>
+
+<p>This level of integration consists of reworking the existing vdsm-hook-vmfex so that the oVirt administrator can set up the integration at the guest device level instead of at the VM level. The advantage of this is that only the port profile will need to be specified (since the MAC address is already part of the VM's NIC properties given by the Engine).</p>
+
+<p>Things done:</p>
+
+<ul>
+  <li><a href="http://gerrit.ovirt.org/#/c/22559/">Filter out unused virtual functions from being reported as nics</a>.</li>
+  <li><a href="http://gerrit.ovirt.org/#/c/22529/">Clone and refactor the current hook to use custom device properties and to run "before_device_create" and "before_device_hotplug"</a>.</li>
+</ul>
+
+<p>You can get the hook resulting from this integration level <a href="http://plain.resources.ovirt.org/releases/3.4/rpm/el6/noarch/vdsm-hook-vmfex-dev-4.14.6-0.el6.noarch.rpm">here</a></p>
+
+<h4 id="installation">Installation</h4>
+
+<ul>
+  <li>
+    <p>Use the engine-config to append the appropriate custom property:</p>
+
+    <p> sudo engine-config -s CustomDeviceProperties=
+   '{type=interface;prop={vmfex=^[a-zA-Z0-9_.-]{2,32}$}}'</p>
+  </li>
+  <li>
+    <p>Verify that the vmfex_dev custom device propertes were properly added:</p>
+
+    <p>   sudo engine-config -g CustomDeviceProperties</p>
+  </li>
+</ul>
+
+<h4 id="usage">Usage</h4>
+
+<ul>
+  <li>
+    <p>Define an oVirt vNIC profile and set one of its custom properites to "vmfex" with the value of the name of UCS port profile. For instance:</p>
+
+    <p>      vmfex: myPortProfileId</p>
+  </li>
+  <li>
+    <p>Attach the oVirt vNIC profile to a VM vNIC. When the VM runs, the vNIC with the vmfex custom device, the xml definition of which might originally look like:</p>
+  </li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;interface type='bridge'&gt;&#x000A;    &lt;mac address='&lt;mac&gt;'/&gt;&#x000A;    &lt;model type='virtio'/&gt;&#x000A;    &lt;source bridge='&lt;logical network&gt;'/&gt;&#x000A;&lt;/interface&gt;&#x000A;</code></pre></div>
+<p>will be transformed into:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;interface type='network'&gt;&#x000A;    &lt;mac address='&lt;mac&gt;'/&gt;&#x000A;    &lt;source network='direct-pool'/&gt;&#x000A;    &lt;virtualport type='802.1Qbh'&gt;&#x000A;        &lt;parameters profileid='&lt;Port Profile id&gt;'/&gt;&#x000A;    &lt;/virtualport&gt;&#x000A;    &lt;model type='virtio'/&gt;&#x000A;&lt;/interface&gt;&#x000A;</code></pre></div>
+<h2 id="current-status-1">Current status</h2>
+
+<p>Level V completed and released as vdsm-hook-vmfex-dev</p>
+
+<h3 id="level-v-the-network-provider-strikes-back">Level V: "The Network provider strikes back"</h3>
+
+<p>This level of integration builds on top of the work that was laid out for the Neutron integration, i.e., Network providers, so that we can use the UCS-M API (it exposes all entities via XML HTTP requests) to retrieve the port profiles defined in the system. These port profiles would be available for selection in the VM nic creation dialog.</p>
+
+<p>Things to be done:</p>
+
+<ul>
+  <li>Implement a Network provider that talks to UCS-M via its XML RPC.</li>
+  <li>Make the scheduler aware of virtual function availability for scheduling VMs that use the integration. (This could be retrieved from the hosts' Vdsm or maybe from UCS-M as part of the vnic-conn-policy, specifically its dynamic eth attribute. The former has the benefit of helping non-UCS sriov setups.).</li>
+</ul>
+
+<h3 id="level-vi-the-return-of-the-port-profile">Level VI: "The return of the Port Profile"</h3>
+
+<p>This level of integration would make it possible for the oVirt Engine to go from simply retrieving Port Profiles to exporting oVirt networks to UCS-M as Port Profiles.</p>
+
+<ul>
+  <li>Define a good matching abstraction between oVirt's QoS and UCS's.</li>
+  <li>Extend the network provider for creating profiles in UCS-M.</li>
+</ul>
+
+<h3 id="level-vii-working-title-the-rise-of-the-host">Level VII: "Working title: The rise of the Host"</h3>
+
+<p>It is left for future planning, but the basic idea would be to be able to use the networks of the UCS Network provider from level V and apply them to host virtual functions from the oVirt API/GUI.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/ucs-integration.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/ucs-integration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+ResourceUsageGraph &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="resource-usage-graph">Resource Usage Graph</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Implement a line chart showing a short history of the resource usage.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Tomas Jelinek (TJelinek)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#084;&#074;&#101;&#108;&#105;&#110;&#101;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#084;&#074;&#101;&#108;&#105;&#110;&#101;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 3.6</li>
+  <li>Status: done</li>
+</ul>
+
+<h2 id="background">Background</h2>
+
+<p>Up until now, the resource (CPU, memory, network) usage of the VM was shown only as a current state with no historical view.</p>
+
+<p>It would be good to replace the current visualization with a line chart.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>To store the short term history the vm_statistics table has been enriched by the following fields:</p>
+
+<ul>
+  <li>cpu_usage_history</li>
+  <li>memory_usage_history</li>
+  <li>network_usage_history</li>
+</ul>
+
+<p>This fields are defined as TEXT and the values in them are stored as one comma separated string of values in percentage, for example: "19,20,34,0,0,1"</p>
+
+<p>The amount of values which are stored in this fields are regulated by <strong>UsageHistoryLimit</strong> from <strong>vdc_options</strong>. For example, if the UsageHistoryLimit is 3 and the current value is "1,2,3" and the new value of 4 comes, the result will be "2,3,4".</p>
+
+<h2 id="frontend">Frontend</h2>
+
+<p>A line chart will be added (implemented using the HTML5 canvas with a fallback to the old way of visualizing if the browser does not support it) The widget's specific behavior (in case the browser supports HTML5 canvas):</p>
+
+<ul>
+  <li>the widget draws a line chart ending with a green triangle (if the last value is smaller than 70), orange square (if smaller than 95) and a red dot (if bigger than 95)</li>
+  <li>next to the chart is a the last value of the chart written in form of N% (e.g. 75%). If the value is &gt;= 95, it is red and bold</li>
+  <li>if the num of progress values is smaller than the amount fitting into the drawing area but does not start with 0, the values are prepended by '0' e.g. the chart will start from 0</li>
+  <li>if the num of progress values is bigger than the amount fitting into the drawing area, beginning of the values are cut</li>
+  <li>the distance between two points has to be between the 4px and 15px (calculated according to the width of the drawing area and num of of points in the chart) - e.g. the bigger the drawing area the more points can fit in. It will also react to table column resize.</li>
+  <li>if no points fit into the drawing area, only the number is shown</li>
+</ul>
+
+<p>Please see the mockup attached (please note that the line endings are random in the mockup):</p>
+
+<p><img alt="" width="1329" height="480" src="/images/wiki/ResourceUsageGraphMockup.png?1560777612" /></p>
+
+<h2 id="testing">Testing</h2>
+
+<h2 id="test-case-1">Test Case 1</h2>
+
+<ul>
+  <li>Have a VM which is turned off</li>
+  <li>Verify the line charts reset to 0</li>
+</ul>
+
+<h2 id="test-case-2">Test Case 2</h2>
+
+<ul>
+  <li>Have a VM running some while so the charts are showing something</li>
+  <li>Turn the VM off using webadmin</li>
+  <li>Verify the charts are reset to 0</li>
+</ul>
+
+<h2 id="test-case-3">Test Case 3</h2>
+
+<ul>
+  <li>Have a VM running some while so the charts are showing something</li>
+  <li>Kill the qemu process of the VM</li>
+  <li>Verify the charts are reset to 0</li>
+</ul>
+
+<h2 id="test-case-4">Test Case 4</h2>
+
+<ul>
+  <li>Have a VM running for some time so it has, say, 10 values shown in the CPU usage chart shown</li>
+  <li>Make the CPU usage column small that not all the values fit in</li>
+  <li>Verify that only the subpart of the values are in</li>
+</ul>
+
+<h2 id="test-case-5">Test Case 5</h2>
+
+<ul>
+  <li>Have a VM running for some time so it has, say, 10 values shown in the CPU usage chart shown</li>
+  <li>Make the CPU usage column large that all the values fit in</li>
+  <li>Verify that all of the values are in</li>
+</ul>
+
+<h2 id="test-case-6">Test Case 6</h2>
+
+<ul>
+  <li>Have a VM running for some time so it has, say, 10 values shown in the CPU usage chart shown</li>
+  <li>Make the CPU usage column very small</li>
+  <li>Verify that only the number showing the actual usage is shown</li>
+</ul>
+
+<h2 id="test-case-7">Test Case 7</h2>
+
+<ul>
+  <li>Have a VM running for some time and has a changing values in the CPU usage</li>
+  <li>Verify that when the CPU usage is under 70%, the line chart ends with a green triangle, if between 70 and 95 than orange square and if above 95 a red dot</li>
+  <li>Also verify that if the current value is under 95% the number showing the actual value is not bold while when above 95 it is red and bold</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/resourceusagegraph.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/resourceusagegraph.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

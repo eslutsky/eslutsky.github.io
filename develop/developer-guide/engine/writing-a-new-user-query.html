@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Writing A New User Query &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/engine/">Engine</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="writing-a-new-user-query">Writing a New User Query</h1>
+
+<h2 id="what-are-user-queries">What Are User Queries?</h2>
+
+<p><a href="/develop/release-management/features/infra/user-portal-permissions/">User queries</a> are, in a nutshell, queries that can be run a regular user, without requiring admin permissions.</p>
+
+<h2 id="the-general-case">The General Case</h2>
+
+<p>In the general case, your query will call one of the DAOs, which, in turn, will call a stored procedure in the database. When writing a User Query, there are several aspects you must address.</p>
+
+<h3 id="permission-view">Permission View</h3>
+
+<p>Each entity with managed permissions has its own flattened view of user permissions called <code>user_OBJECT_NAME_permissions_view</code> (e.g., VM permissions are listed in <code>user_vm_permissions_view</code>).
+Notes:</p>
+
+<ol>
+  <li>The view only lists <strong>user</strong> permissions. A user that has administrator permissions on an object will not be represented here.</li>
+  <li>The view flattens object hierarchies. E.g., if a user should be able to query a VM since he has permissions on the Storage Pool containing it, that user permission will appear in the VM view. You do not have to handle it yourself.</li>
+  <li>The view flattens group hierarchies. E.g., if a user should be able to query a VM since a group he's contained in has permissions on the VM, that user permission will appear in the VM view. You do not have to handle it yourself.</li>
+</ol>
+
+<h3 id="stored-procedure">Stored Procedure</h3>
+
+<p>The stored procedure should, besides the parameters involved in the query's logic, contain two more parameters - a UUID <code>user_id</code> and a BOOLEAN <code>is_filtered</code> flag. If <code>is_filtered</code> is <code>TRUE</code> only the objects the user has permissions on should be returned. If it's <code>FALSE</code>, the <code>user_id</code> should be ignored.</p>
+
+<p>The query inside the stored procedure should have a part of the where clause which represents this, as follows:</p>
+
+<div class="highlight"><pre class="highlight sql"><code><span class="k">Create</span> <span class="k">or</span> <span class="k">replace</span> <span class="k">FUNCTION</span> <span class="n">GetImagesByVmGuid</span><span class="p">(</span><span class="n">v_vm_guid</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">v_user_id</span> <span class="n">UUID</span><span class="p">,</span> <span class="n">v_is_filtered</span> <span class="n">BOOLEAN</span><span class="p">)</span>&#x000A;<span class="k">RETURNS</span> <span class="k">SETOF</span> <span class="n">vm_images_view</span>&#x000A;   <span class="k">AS</span> <span class="err">$</span><span class="k">procedure</span><span class="err">$</span>&#x000A;<span class="k">BEGIN</span>&#x000A;      <span class="k">RETURN</span> <span class="n">QUERY</span> <span class="k">SELECT</span> <span class="o">*</span>&#x000A;      <span class="k">FROM</span> <span class="n">vm_images_view</span>&#x000A;      <span class="k">WHERE</span>&#x000A;      <span class="n">vm_guid</span> <span class="o">=</span> <span class="n">v_vm_guid</span>&#x000A;      <span class="k">AND</span> <span class="p">(</span><span class="k">NOT</span> <span class="n">v_is_filtered</span> <span class="k">OR</span> <span class="k">EXISTS</span> <span class="p">(</span><span class="k">SELECT</span> <span class="mi">1</span>&#x000A;                                        <span class="k">FROM</span>   <span class="n">user_vm_permissions_view</span>&#x000A;                                        <span class="k">WHERE</span>  <span class="n">user_id</span> <span class="o">=</span> <span class="n">v_user_id</span> <span class="k">AND</span> <span class="n">entity_id</span> <span class="o">=</span> <span class="n">v_vm_guid</span><span class="p">));</span>&#x000A;&#x000A;<span class="k">END</span><span class="p">;</span> <span class="err">$</span><span class="k">procedure</span><span class="err">$</span>&#x000A;<span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>&#x000A;</code></pre></div>
+<h3 id="dao">DAO</h3>
+
+<p>The DAO should contain two overloaded methods - one with the <code>userID</code> and <code>isFiltered</code> parameters and one without, which assumes its run as an administrator and passes <code>null</code> and <code>false</code>, respectively, to the first flavor.</p>
+
+<p>E.g.:</p>
+
+<div class="highlight"><pre class="highlight java"><code><span class="nd">@Override</span>&#x000A;<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">DiskImage</span><span class="o">&gt;</span> <span class="nf">getAllForVm</span><span class="o">(</span><span class="n">Guid</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>&#x000A;    <span class="k">return</span> <span class="nf">getAllForVm</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>&#x000A;<span class="o">}</span>&#x000A;&#x000A;<span class="nd">@Override</span>&#x000A;<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">DiskImage</span><span class="o">&gt;</span> <span class="nf">getAllForVm</span><span class="o">(</span><span class="n">Guid</span> <span class="n">id</span><span class="o">,</span> <span class="n">Guid</span> <span class="n">userID</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">isFiltered</span><span class="o">)</span> <span class="o">{</span>&#x000A;    <span class="n">MapSqlParameterSource</span> <span class="n">parameterSource</span> <span class="o">=</span> <span class="n">getCustomMapSqlParameterSource</span><span class="o">()</span>&#x000A;            <span class="o">.</span><span class="na">addValue</span><span class="o">(</span><span class="s">"vm_guid"</span><span class="o">,</span> <span class="n">id</span><span class="o">).</span><span class="na">addValue</span><span class="o">(</span><span class="s">"user_id"</span><span class="o">,</span> <span class="n">userID</span><span class="o">).</span><span class="na">addValue</span><span class="o">(</span><span class="s">"is_filtered"</span><span class="o">,</span> <span class="n">isFiltered</span><span class="o">);</span>&#x000A;&#x000A;    <span class="k">return</span> <span class="nf">groupImagesStorage</span><span class="o">(</span><span class="n">getCallsHandler</span><span class="o">().</span><span class="na">executeReadList</span><span class="o">(</span><span class="s">"GetImagesByVmGuid"</span><span class="o">,</span>&#x000A;                <span class="n">fullDiskImageRowMapper</span><span class="o">,</span>&#x000A;                <span class="n">parameterSource</span><span class="o">));</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre></div>
+<h3 id="query">Query</h3>
+
+<p>The <code>userID</code> parameter is available by the <code>getUserID()</code> method. The <code>isFiltered</code> parameter is available from the query parameters by the <code>isFiltered()</code> method.</p>
+
+<p>E.g.:</p>
+
+<div class="highlight"><pre class="highlight java"><code><span class="nd">@Override</span>&#x000A;<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">executeQueryCommand</span><span class="o">()</span> <span class="o">{</span>&#x000A;    <span class="n">getQueryReturnValue</span><span class="o">().</span><span class="na">setReturnValue</span><span class="o">(</span>&#x000A;        <span class="n">getDbFacade</span><span class="o">().</span><span class="na">getDiskImageDAO</span><span class="o">().</span><span class="na">getAllForVm</span><span class="o">(</span><span class="n">getParameters</span><span class="o">().</span><span class="na">getVmId</span><span class="o">(),</span> <span class="n">getUserID</span><span class="o">(),</span> <span class="n">getParameters</span><span class="o">().</span><span class="na">isFiltered</span><span class="o">())</span>&#x000A;    <span class="o">);</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre></div>
+<h3 id="vdcquerytype">VdcQueryType</h3>
+
+<p>In order for your new query to be treated as a User Query, add a new entry for it in the VdcQueryType enum, with the optional parameter. E.g.:</p>
+
+<div class="highlight"><pre class="highlight java"><code><span class="o">...</span>&#x000A;<span class="n">GetAllDisksByVmId</span><span class="o">(</span><span class="n">VdcQueryAuthType</span><span class="o">.</span><span class="na">User</span><span class="o">),</span>&#x000A;<span class="o">...</span>&#x000A;</code></pre></div>
+<h4 id="testing-your-query">Testing your Query</h4>
+
+<p>A test case should be written for each new query. You can use the guidelines in the <a href="/develop/dev-process/unit-testing-utilities/testing-queries/">Testing Queries</a> article.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/engine/writing-a-new-user-query.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/engine/writing-a-new-user-query.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 28 Nov 2016 13:49 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

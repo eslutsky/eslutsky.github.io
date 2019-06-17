@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Fencing refactoring &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="fencing-refactoring">Fencing refactoring</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The goal of this fencing refactoring is to clean up the code and provide those features:</p>
+
+<ul>
+  <li>Make SSH Soft Fencing part of Non Responding Treatment</li>
+  <li>Refactor fencing related code to be more reliable, readable, covered by unit tests and we could provided ability to enable/disable SSH Soft Fencing, Kdump detection and Power Management Restart per host</li>
+  <li>Refactor Power Management tab in Host Detail to ease management of multiple power management agents</li>
+</ul>
+
+<p>Following bugs are associated with fencing refactoring:</p>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1182510">#1182510 - [RFE] - Fencing refactoring</a></li>
+  <li><a href="https://bugzilla.redhat.com/1198628">#1198628 - [RFE] - Refactoring of Power Management tab in Host Detail</a></li>
+</ul>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Martin Peřina</li>
+  <li>Email: mperina@redhat.com</li>
+</ul>
+
+<h2 id="status">Status</h2>
+
+<p>Following parts were finished and they will be part of oVirt 3.6 release:</p>
+
+<ul>
+  <li>Make SSH Soft Fencing part of Non Responding Treatment</li>
+  <li>Refactor fencing related code to be more reliable, readable, covered by unit tests</li>
+  <li>Refactor Power Management tab in Host Detail to ease management of multiple power management agents</li>
+</ul>
+
+<p>Following parts were not finished and they were postponed to oVirt 4 release:</p>
+
+<ul>
+  <li>Ability to enable/disable SSH Soft Fencing, Kdump detection and Power Management Restart per host</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Non Responding Treatment in oVirt &lt;= 3.5 is described <a href="../../../../images/wiki/Current-whole-process.png"> here</a>. Following changes are planned for oVirt 3.6:</p>
+
+<ul>
+  <li>Non Responding Treatment will be executed for any host when host status is changed to <strong>NonResponsive</strong> (in oVirt &lt;= 3.5 SSH Soft Fencing execution is enabled for all hosts and Non Responding Treatment execution is enabled only for hosts with <strong>Virt</strong> capabilities, in oVirt 3.6 only SSH Soft Fencing step will be executed for <strong>Gluster</strong> only hosts).</li>
+  <li>The delay between host status <strong>Up</strong> is changed to <strong>NonResponsive</strong> is defined on page <a href="/develop/developer-guide/engine/automatic-fencing/#automatic-fencing">Automatic Fencing</a>.</li>
+  <li>Non Responding Treatment will contain by default 3 steps (they can be enabled/disabled per host):
+    <ol>
+      <li><strong>SSH Soft Fencing</strong></li>
+      <li><strong>Kdump Detection</strong></li>
+      <li><strong>Power Management Restart</strong></li>
+    </ol>
+  </li>
+</ul>
+
+<p>So in oVirt 3.6 whole Non Responding Treatment will be <a href="../../../../images/wiki/New-whole-process.png"> simplified</a> using configurable <a href="../../../../images/wiki/Fence-sequence-definition.png"> steps</a>.</p>
+
+<h3 id="database-structure">Database structure</h3>
+
+<p>To hold information about Non Responding Treatment steps table <code>fence_sequence_steps</code> will be created:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>NULL</th>
+      <th>PK</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>step_name</td>
+      <td>VARCHAR(25)</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>One of <code>SSH</code>, <code>KDUMP</code>, <code>PM</code></td>
+    </tr>
+    <tr>
+      <td>vds_id</td>
+      <td>UUID</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>Existing host ID</td>
+    </tr>
+    <tr>
+      <td>step_order</td>
+      <td>SMALLINT</td>
+      <td>N</td>
+      <td>N</td>
+      <td>Order of the step</td>
+    </tr>
+    <tr>
+      <td>step_enabled</td>
+      <td>BOOLEAN</td>
+      <td>N</td>
+      <td>N</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Each host will own one record in this table, which will be created during 1st host deploy or during oVirt upgrade. Also during oVirt upgrade value of existing column <code>vds_static.pm_detect_kdump</code> will converted into <code>KDUMP</code> step in <code>fence_sequence_steps</code> table.</p>
+
+<h3 id="webadmin-ui">Webadmin UI</h3>
+
+<p>New <a href="../../../../images/wiki/Fence-refactoring-host-availability-tab.png"> Host Availability</a> tab will be added into <strong>Host detail</strong> dialog. This tab will contain check boxes for all steps to enabled/disable each step for the specific host. And it will also contain other options related to host availability.</p>
+
+<p><a href="../../../../images/wiki/Fence-refactoring-power-management-tab.png"> Power Management</a> tab will be refactored to ease handling of multiple power management agents.</p>
+
+<h3 id="rest-api">REST API</h3>
+
+<ul>
+  <li>
+    <p>Existing Fence Sequence Steps for a host can be listed using URL <code>/api/hosts/{id}/fence-sequence-steps</code>:
+    <fence-sequence-steps>
+      <fence-sequence-step>
+        <name>Name</name>
+        <order>1</order>
+        <enabled>1</enabled>
+      <fence-sequence-step>
+    ...
+    &lt;/fence-sequence-steps&gt;</fence-sequence-step></fence-sequence-step></fence-sequence-steps></p>
+  </li>
+  <li>To enable or disable Fence Sequence Step <code>PUT</code> operation using URL <code>/api/hosts/{id}/fence-sequence-steps/{name}</code> with <code>enabled</code> parameter can be executed.</li>
+  <li>Other operation like creating and removing step is not currently supported.</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Testing of the feature can be divided to fencing flow testing and new Power Management UI testing.</p>
+
+<h3 id="fencing-flow-testing">Fencing flow testing</h3>
+
+<p>Huge part of fencing related code were refactored so all fencing related flows should be tested for regressions. Here are test which was tested prior to merging the code:</p>
+
+<ul>
+  <li>Testing fence agent options (for all possible host/custer/DC combinations)</li>
+  <li>Testing manual Start/Stop/Restart PM actions for the host</li>
+  <li>Testing SSH Soft Fencing</li>
+  <li>Testing Kdump integration</li>
+  <li>Testing Non Responding Treatment</li>
+</ul>
+
+<p>Also prior to merging new code following bugs were successfully tested for regressions: 1149235 1141514 1149235 1140098 1145321 1129381 1133611 1070674 1131411 1120829 1122473 1114977 1093742 878662 1005756 1064860 1099903 1090800 961753 1054778 1044089 917039 1048356</p>
+
+<h3 id="new-power-management-tab-ui-testing">New Power Management tab UI testing</h3>
+
+<p>Following feature should be tested:</p>
+
+<ul>
+  <li>Ability to add/edit/remove fence agents options</li>
+  <li>Ability to add multiple sequential fence agents</li>
+  <li>Ability to add multiple concurrent fence agents</li>
+  <li>Ability to mix sequential/concurrent fence agents</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/fencing-refactoring.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/fencing-refactoring.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+PKI &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="pki">PKI</h1>
+
+<p>oVirt project uses PKI for various of tasks, this article outlines the PKI usage and is correct for versions 3.2, 3.3.</p>
+
+<h2 id="channels">Channels</h2>
+
+<h3 id="ovirt-enginesslvdsm">ovirt-engine–SSL–&gt;vdsm</h3>
+
+<p>During the deployment of a host as hypervisor a certificate is enrolled using engine's internal CA.</p>
+
+<p>The communication between ovirt-engine and host is performed using mutually authenticated SSL session based on engine certificate and vdsm certificate.</p>
+
+<p>Due to legacy issue, the protocol that is being used is SSLv3 and not TLS.</p>
+
+<p>Caveats: vdsm does not perform revocation check, current setup does not support intermediate certificates.</p>
+
+<h3 id="ovirt-enginesshhosts">ovirt-engine–SSH–&gt;hosts</h3>
+
+<p>ovirt-engine is capable of authenticating using its certificate public key to hosts using SSH protocol. This feature is optional for generic hosts, and mandatory during deploy post registration and upgrade of ovirt-node distribution.</p>
+
+<p>Caveats: ovirt-engine does not perform revocation check, current setup does not support intermediate certificates.</p>
+
+<h3 id="ovirt-enginessldatabase">ovirt-engine–SSL–&gt;database</h3>
+
+<p>Based on connection setting, the database connection can use SSL, the trusted certificate authority are the jre trusted certificate authorities at $JAVA_HOME/lib/security/cacerts.</p>
+
+<h3 id="ovirt-engine-database-fields">ovirt-engine database fields</h3>
+
+<p>Sensitive database fields are encrypted using engine certificate, it should have used own certificate but due to legacy reasons it remained the same.</p>
+
+<h3 id="usersslapacheajpovirt-engine">User–SSL–&gt;apache–AJP–&gt;ovirt-engine</h3>
+
+<p>User access ovirt-engine via web browser using TLS/SSL via apache web server. By default the certificate enrolled is issued by the internal engine CA, but this certificate can be replaced by any 3rd party certificate without limiting the functionality.</p>
+
+<p>Replacing certificate can be done using manually configuration of the mod_ssl, or by replacing the following files within /etc/pki/ovirt-engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  apache-ca.pem&#x000A;  keys/apache.p12&#x000A;  keys/apache.key.nopass&#x000A;  certs/apache.cer&#x000A;</code></pre></div>
+<h3 id="usersslspiceqemu">User–SSL–&gt;spice(qemu)</h3>
+
+<p>qemu is configured to use the same certificate as vdsm, which is due to legacy design and is somewhat incorrect as unlike vdsm this certificate is exposed to end users.</p>
+
+<p>During session initiation the internal engine certificate authority is sent to the spice client as trusted root so session can be established.</p>
+
+<p>Caveats: current setup does not support intermediate certificates.</p>
+
+<h3 id="libvirtssllibvirt-or-qemusslqemu">libvirt–SSL–&gt;libvirt or qemu–SSL–&gt;qemu</h3>
+
+<p>Used for migration, mutual authentication using vdsm certificate.</p>
+
+<p>Caveats: current setup does not support intermediate certificates.</p>
+
+<h3 id="ovirt-nodesslovirt-engine">ovirt-node–SSL–&gt;ovirt-engine</h3>
+
+<p>Used for registration protocol, the web certificate is pulled out of the SSL handshake and trusted based on fingerprint. Then SSH public key (engine certificate public key) is retrieved and installed for root user.</p>
+
+<p>Caveats:ovirt-node does not perform revocation check.</p>
+
+<h3 id="log-collectorsshhosts">log-collector–SSH–&gt;hosts</h3>
+
+<p>Uses the same method and keys of ovirt-engine to access hosts.</p>
+
+<h2 id="expiration">Expiration</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Default</th>
+      <th>Configuration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Engine internal CA</td>
+      <td>15 years</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Engine Certificates</td>
+      <td>15 years</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>VDSM Certificates</td>
+      <td>5 years</td>
+      <td>VdsCertificateValidityInYears at engine config</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="file-locations">File locations</h2>
+
+<h3 id="ovirt-engine">ovirt-engine</h3>
+
+<p>All files are relative to /etc/pki/ovirt-engine.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>File</th>
+      <th>Description</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Engine internal CA</td>
+      <td>ca.pem</td>
+      <td>Certificate pem encoded.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>private/ca.pem</td>
+      <td>Internal CA private key <strong>SENSITIVE!</strong></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Apache artifacts</td>
+      <td>apache-ca.pem</td>
+      <td>Apache trusted CA, by default same as ca.pem</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>keys/apache.p12</td>
+      <td>Key bundle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>keys/apache.key.nopass</td>
+      <td>Extracted from keys/apache.p12 used by mod_ssl</td>
+      <td>Can be replaced by 3rd party certificate by apache configuration, do not override this file.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>certs/apache.cer</td>
+      <td>Extracted from keys/apache.p12 used by mod_ssl</td>
+      <td>Can be replaced by 3rd party certificate by apache configuration, do not override this file.</td>
+    </tr>
+    <tr>
+      <td>Engine artifacts</td>
+      <td>keys/engine.p12</td>
+      <td>used by engine for ssh and ssl authentication against hosts and vdsm, also used to encrypt database fields.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>keys/engine_id_rsa</td>
+      <td>Extracted from keys/engine.p12 used by various components that should not access private key.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>certs/engine.cer</td>
+      <td>Extracted from keys/engine.p12 used by log-collector.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>.truststore</td>
+      <td>JKS containing trusted certificate authorities for engine.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Jboss artifacts</td>
+      <td>keys/jboss.p12</td>
+      <td>Used for jboss ssl in ovirt-engine-3.2, for debug only at ovirt-engine-3.3</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>websocket-proxy artifacts</td>
+      <td>keys/websocket-proxy.p12</td>
+      <td>Key bundle</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>websocket-proxy artifacts</td>
+      <td>keys/websocket-proxy.key.nopass</td>
+      <td>Extracted from keys/websocket-proxy.p12 as python does not know how to work with PKCS#12.</td>
+      <td>Can be overridden by 3rd party certificate key by /etc/ovirt-engine/ovirt-websocket-proxy.conf.d/20-pki.conf::SSL_KEY.</td>
+    </tr>
+    <tr>
+      <td>websocket-proxy artifacts</td>
+      <td>certs/websocket-proxy.cer</td>
+      <td>Extracted from keys/websocket-proxy.p12 as python does not know how to work with PKCS#12.</td>
+      <td>Can be overridden by 3rd party certificate chain (end certificate first) by /etc/ovirt-engine/ovirt-websocket-proxy.conf.d/20-pki.conf::SSL_CERTIFICATE.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="vdsm">vdsm</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>File</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>vdsm</td>
+      <td>/etc/pki/vdsm/certs/cacert.pem</td>
+      <td>trusted engine certificate, engine internal CA</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>/etc/pki/vdsm/certs/vdsmcert.pem</td>
+      <td>vdsm certificate</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>/etc/pki/vdsm/keys/vdsmkey.pem</td>
+      <td>vdsm key.</td>
+    </tr>
+    <tr>
+      <td>qemu/libvirt</td>
+      <td>/etc/pki/vdsm/libvirt-spice/ca-cert.pem</td>
+      <td>qemu spice pki store, same as vdsm ca.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>/etc/pki/vdsm/libvirt-spice/server-key.pem</td>
+      <td>qemu spice pki store, same as vdsm key.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>/etc/pki/vdsm/libvirt-spice/server-cert.pem</td>
+      <td>qemu spice pki store, same as vdsm certificate.</td>
+    </tr>
+    <tr>
+      <td>libvirt</td>
+      <td>/etc/pki/libvirt/clientcert.pem</td>
+      <td>libvirt certificate, same as vdsm certificate.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>/etc/pki/libvirt/private/clientkey.pem</td>
+      <td>libvirt key, same as vdsm key.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td>/etc/pki/CA/cacert.pem</td>
+      <td>libvirt trust store.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="services">Services</h2>
+
+<h3 id="ovirt-engine-1">ovirt-engine</h3>
+
+<p>Servlet:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  /ovirt-engine/services/pki-resource?resource=RESOURCE&amp;format=FORMAT&#x000A;</code></pre></div>
+<h4 id="resource">RESOURCE</h4>
+
+<ul>
+  <li>ca-certificate</li>
+  <li>engine-certificate</li>
+</ul>
+
+<h4 id="format">FORMAT</h4>
+
+<ul>
+  <li>X509-PEM</li>
+  <li>X509-PEM-CA</li>
+  <li>OPENSSH-PUBKEY</li>
+</ul>
+
+<h2 id="caveats">Caveats</h2>
+
+<ul>
+  <li>Internal engine CA does not support revocation.</li>
+  <li>Engine does not allow certificate management, for example revocation of hosts that are removed.</li>
+  <li>Engine/vdsm do not support renewal protocol of certificates.</li>
+  <li>vdsm does not support revocation protocol (crl, ocsp), engine (java) support is not enabled.</li>
+  <li>Unsupported installation of internal CA on separate computer.</li>
+  <li>No protocol for CA interaction to allow using different CA implementations.</li>
+  <li>Certificate of database encryption should be separate certificate.</li>
+  <li>Certificate of spice SSL should be separate certificate.</li>
+  <li>Engine does not validate vdsm's certificate's name to match remote address.</li>
+  <li>vdsm does not validate peer certificate name, nor revocation.</li>
+  <li>vdsClient does not validate peer certificate name nor revocation.</li>
+</ul>
+
+<h2 id="see-also">See Also</h2>
+
+<ul>
+  <li><a href="/develop/release-management/features/infra/pkireduce/">Features/PKIReduce</a></li>
+</ul>
+
+<p>Author: –Alon Bar-Lev (Alonbl) (<a href="User talk:Alonbl">talk</a>) 02:24, 1 July 2014 (GMT)</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/pki.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/pki.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

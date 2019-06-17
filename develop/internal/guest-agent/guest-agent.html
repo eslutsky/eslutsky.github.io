@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt guest agent &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/internal/">Internal</a></li>
+<li><a href="/develop/internal/guest-agent/">Guest-agent</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<!-- TODO: Content review -->
+
+<h1 id="ovirt-guest-agent">oVirt-guest-agent</h1>
+
+<p>The agent is an application which run as a background process inside the guest, it communicates with Vdsm over a vioserial device.
+It provides:</p>
+
+<h2 id="information">Information</h2>
+
+<p>The agent provides the following information:</p>
+
+<ul>
+  <li><strong>Machine name</strong> – Show the virtual machine's host name.</li>
+  <li><strong>Operating system version</strong> – Show the operating system's version. Linux: this value is the kernel version. Windows: it is the Windows version name (e.g. Windows XP or Windows 7).</li>
+  <li><strong>Installed applications</strong> – List in installed applications. Linux: application list is set using the configuration file. Windows: installed applications list is based on value read from registry.</li>
+  <li><strong>Available RAM</strong> – The amount of unused physical memory. This value probably includes memory like cache, or else the memory usage will always be (or near) 100% usage.</li>
+  <li><strong>Logged in users</strong> – List of all logged-in users.</li>
+  <li><strong>Active user</strong> – The user that is currently using the virtual machine's "physical hardware". Redundant because RHEV-M is treating the SPICE's ticket owner as the active user.</li>
+  <li><strong>Disks usage</strong> – VM disks utilization.</li>
+  <li><strong>Network interfaces</strong> – Internal guest network mapping (MAC, name, ipv4, ipv6).</li>
+  <li><strong>FQDN</strong> – Reports the configured (F)ully (Q)ualified (D)omain (N)ame of the guest os</li>
+</ul>
+
+<h2 id="notifications">Notifications</h2>
+
+<p>The agent notify on the following events:</p>
+
+<ul>
+  <li><strong>Power up</strong> – Sent when the agent is started.</li>
+  <li><strong>Power down</strong> – Unused.</li>
+  <li><strong>Heartbeat</strong> – The message sent every few second to notify that the agent is running. The notification includes the guest's available RAM.</li>
+  <li><strong>User info</strong> – Active user has changed.</li>
+  <li><strong>Session lock</strong> – Desktop was locked (Windows).</li>
+  <li><strong>Session unlock</strong> – Desktop was unlocked (Windows).</li>
+  <li><strong>Session logoff</strong> – A user was logged off (Windows).</li>
+  <li><strong>Session logon</strong> – A user was logged on (Windows).</li>
+  <li><strong>Agent uninstalled</strong> – Agent was removed from the system. This is not sent by the agent itself but by the agent's (un-)installer.</li>
+</ul>
+
+<h2 id="actions">Actions</h2>
+
+<p>The following actions can be requested from the agent:</p>
+
+<ul>
+  <li><strong>Lock screen</strong> – Request locking the user's desktop.</li>
+  <li><strong>Login</strong> – Perform a login on the user's behalf.</li>
+  <li><a href="guest-agent-automatic-login-rhel6">Automatic login on RHEL</a></li>
+  <li><a href="guest-agent-automatic-login-windows">Automatic login on Microsoft's Windows</a></li>
+  <li><strong>Logoff</strong> – Log off the active user.</li>
+  <li><strong>Shutdown</strong> – Shut down the virtual machine.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/internal/guest-agent/guest-agent.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/internal/guest-agent/guest-agent.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

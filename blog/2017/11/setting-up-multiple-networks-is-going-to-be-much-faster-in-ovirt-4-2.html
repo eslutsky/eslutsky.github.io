@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Setting up multiple networks is going to be much faster in oVirt 4.2 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Petr Horáček' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Setting up multiple networks is going to be much faster in oVirt 4.2' property='og:title'>
+<meta content='Assume you have an oVirt cluster with hundreds of VM networks. Now you add a
+new host to the cluster. In order for it to move to the Operational state,
+it must have all required networks attached to it. The easiest way to do it is
+to attach networks to a label, and then place that label on a NIC of the added
+host. However, if there are too many networks, Engine could fail to setup them
+all at once. This is caused by a slow VDSM setupNetworks call that is not able
+to finish within the 180 seconds long vdsTimeout of Engine.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/11/setting-up-multiple-networks-is-going-to-be-much-faster-in-ovirt-4-2.html' property='og:url'>
+<meta content='2017-11-05T09:00:00Z' property='article:published_time'>
+<meta content='phoracek' property='article:author:username'>
+<meta content='4.2.0' property='article:tag'>
+<link href='/blog/tag/4.2.0.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='network' property='article:tag'>
+<link href='/blog/tag/network.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ovirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Setting up multiple networks is going to be much faster in oVirt 4.2' name='twitter:title'>
+<meta content='Assume you have an oVirt cluster with hundreds of VM networks. Now you add a
+new host to the cluster. In order for it to move to the Operational state,
+it must have all required networks attached to it. The easiest way to do it is
+to attach networks to a label, and then place that label on a NIC of the added
+host. However, if there are too many networks, Engine could fail to setup them
+all at once. This is caused by a slow VDSM setupNetworks call that is not able
+to finish within the 180 seconds long vdsTimeout of Engine.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>11</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Setting up multiple networks is going to be much faster in oVirt 4.2
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/phoracek.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/phoracek/">Petr Horáček</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-11-05T09:00:00Z'>
+Sunday  5 November 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Assume you have an oVirt cluster with hundreds of VM networks. Now you add a
+new host to the cluster. In order for it to move to the <code>Operational</code> state,
+it must have all required networks attached to it. The easiest way to do it is
+to attach networks to a label, and then place that label on a NIC of the added
+host. However, if there are too many networks, Engine could fail to setup them
+all at once. This is caused by a slow VDSM setupNetworks call that is not able
+to finish within the 180 seconds long <code>vdsTimeout</code> of Engine.</p>
+
+<p></p>
+
+<p>VDSM performance changes would be included in ovirt-4.2, currently in
+ovirt-master.</p>
+
+<p>Initscripts performance <a href="https://github.com/fedora-sysv/initscripts/pull/132/commits/cf896bf9310a902912e0c6a4c4be5581ba8a1135">patch</a> is targeted for EL 7.5.</p>
+
+<p>The following table shows maximal number of networks that can be handled within
+the vdsTimeout. The measured setupNetworks command handles one network with
+static IP and <strong>N</strong> VLAN+bridge networks with no IP. Edit covered a move of all
+networks from one NIC to another.</p>
+
+<p>Please note that given numbers are for reference only.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>installed</th>
+      <th style="text-align: center">N</th>
+      <th style="text-align: right">add</th>
+      <th style="text-align: right">edit</th>
+      <th style="text-align: right">del</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ovirt-4.2</td>
+      <td style="text-align: center">190</td>
+      <td style="text-align: right"><strong>180s</strong></td>
+      <td style="text-align: right">127s</td>
+      <td style="text-align: right">67s</td>
+    </tr>
+    <tr>
+      <td>ovirt-4.2 and patched initscripts</td>
+      <td style="text-align: center">350</td>
+      <td style="text-align: right">138s</td>
+      <td style="text-align: right"><strong>176s</strong></td>
+      <td style="text-align: right">89s</td>
+    </tr>
+    <tr>
+      <td>ovirt-4.1</td>
+      <td style="text-align: center">150</td>
+      <td style="text-align: right"><strong>179s</strong></td>
+      <td style="text-align: right">164s</td>
+      <td style="text-align: right">93s</td>
+    </tr>
+    <tr>
+      <td>ovirt-4.1 and patched initscripts</td>
+      <td style="text-align: center">215</td>
+      <td style="text-align: right">111s</td>
+      <td style="text-align: right"><strong>172s</strong></td>
+      <td style="text-align: right">79s</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The best improvement could be achieved with the initiscripts <a href="https://github.com/fedora-sysv/initscripts/pull/132/commits/cf896bf9310a902912e0c6a4c4be5581ba8a1135">patch</a>. It is
+not distributed in repositories yet, but you can apply it manually without much
+effort. However, even with bare ovirt-4.2 there is a significant speed-up.</p>
+
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/4-2-0.html">4.2.0</a></li>
+<li><a href="../../tag/network.html">network</a></li>
+<li><a href="../../tag/ovirt.html">ovirt</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-11-05-setting-up-multiple-networks-is-going-to-be-much-faster-in-ovirt-4-2.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-11-05-setting-up-multiple-networks-is-going-to-be-much-faster-in-ovirt-4-2.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 5 Nov 2017 10:30 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

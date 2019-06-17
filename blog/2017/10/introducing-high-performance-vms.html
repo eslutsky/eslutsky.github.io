@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Introducing High Performance Virtual Machines &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='jmarks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Introducing High Performance Virtual Machines' property='og:title'>
+<meta content='Bringing high performance virtual machines to oVirt!
+
+Introducing a new VM type in oVirt 4.2.0 Alpha. A newly added checkbox in the all-new Administration Portal delivers the highest possible virtual machine performance, very close to bare metal.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/10/introducing-high-performance-vms.html' property='og:url'>
+<meta content='2017-10-02T11:00:00Z' property='article:published_time'>
+<meta content='jmarks' property='article:author:username'>
+<meta content='4.2.0' property='article:tag'>
+<link href='/blog/tag/4.2.0.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='high performance VMs' property='article:tag'>
+<link href='/blog/tag/high performance vms.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Introducing High Performance Virtual Machines' name='twitter:title'>
+<meta content='Bringing high performance virtual machines to oVirt!
+
+Introducing a new VM type in oVirt 4.2.0 Alpha. A newly added checkbox in the all-new Administration Portal delivers the highest possible virtual machine performance, very close to bare metal.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>10</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Introducing High Performance Virtual Machines
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/jmarks.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/jmarks/">jmarks</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-10-02T11:00:00Z'>
+Monday  2 October 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Bringing high performance virtual machines to oVirt!</p>
+
+<p>Introducing a new VM type in oVirt 4.2.0 Alpha. A newly added checkbox in the all-new Administration Portal delivers the highest possible virtual machine performance, very close to bare metal.</p>
+
+<p></p>
+
+<h4 id="what-does-it-do">What does it do?</h4>
+
+<p>Some of the magic includes:</p>
+
+<ul>
+  <li>Enable Pass-Through Host CPU</li>
+  <li>Enable IO Threads, Num Of IO Threads = 1</li>
+  <li>Set the IO and Emulator threads pinning topology</li>
+</ul>
+
+<p>For the full feature set, see the very detailed <a href="/develop/release-management/features/virt/high-performance-vm/">High Performance VM feature page</a></p>
+
+<h4 id="count-me-in-how-do-i-set-it-up">Count me in! How do I set it up?</h4>
+<p>Simple. Go to the <strong>Administration Portal</strong> and from the vertical menu select <strong>Compute</strong> &gt; <strong>Virtual machines</strong>. Click the <strong>New VM</strong> tab to open up the New Virtual Machine dialog box. In the General tab next to the <strong>Optimized for</strong> field, click the drop down menu and select <strong>High Performance</strong>. Click <strong>OK</strong>. Depending on your current configurations, a smart pop-up may open with a list of additional recommended manual configurations, specific to your setup. To address these recommended changes, click <strong>Cancel</strong>.</p>
+
+<p><em>New Virtual Machine dialog box with the High Performance VM type highlighted</em>
+<img alt="" width="1918" height="909" src="/images/intro-admin/adminportal_compute_vms_new_highperformance.png?1560777613" /></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/4-2-0.html">4.2.0</a></li>
+<li><a href="../../tag/high-performance-vms.html">high performance VMs</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-10-02-introducing-high-performance-vms.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-10-02-introducing-high-performance-vms.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 16 Nov 2017 17:23 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

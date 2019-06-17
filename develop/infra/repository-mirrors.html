@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Repository mirrors &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="repository-mirrors">Repository mirrors</h1>
+
+<h2 id="mirroring-ovirt-repositories">Mirroring oVirt repositories</h2>
+
+<p>Do you want to become a mirror? Do you have some bandwidth to spare?</p>
+
+<p>Drop us a line at <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#105;&#110;&#102;&#114;&#097;&#064;&#111;&#118;&#105;&#114;&#116;&#046;&#111;&#114;&#103;">infa</a> and tell us about yourself! You just need to pass us a public ssh key, and once set up you'll be able to rsync from our site with the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   rsync -rltHvvP mirror@resources.ovirt.org:/var/www/html destination/dir&#x000A;</code></pre></div>
+<p>After some validation we will add your site to this page and to the mirrorlist!</p>
+
+<p><strong>Thanks a lot for your bandwidth!</strong></p>
+
+<h2 id="for-admins">For admins</h2>
+
+<p>We have a simple setup to allow mirroring of the oVirt repositories. Right now the mirroring is done through ssh with rsync. You'll find in <strong>resources.ovirt.org</strong> a user named <strong>mirror</strong>, that's the user that the mirrors should use, you'll see that it has a lot of entries under <em>~/.ssh/authorized_keys</em>, there each entry is restricted to run only a specific command that allows them to rsync the repo directory.</p>
+
+<h3 id="adding-a-mirror">Adding a mirror</h3>
+
+<p>To add a mirror you just need to add it's public ssh key in <em>~mirror/.ssh/authorized_keys</em>, with the command restriction as the other entries. Then when the mirror is confirmed you can add it to the mirrorlist (<em>resources.ovirt.org:/var/www/html/pub/yum-repo/mirrorlist</em>) and to this wiki.</p>
+
+<h2 id="current-mirrors">Current mirrors</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Location</th>
+      <th>URLs</th>
+      <th>Contact</th>
+      <th>Other</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="http://www.nluug.nl">NLUUG</a></td>
+      <td>The Netherlands (Amsterdam)</td>
+      <td><a href="http://ftp.nluug.nl/os/Linux/virtual/ovirt/">http</a> <a href="ftp://ftp.nluug.nl/pub/os/Linux/virtual/ovirt/">ftp</a></td>
+      <td>ftpmirror-beheer_at_nluug.nl</td>
+      <td>Syncing on all odd hours, bandwidth is currently 4 Gb/s and we do IPV4 and IPV6</td>
+    </tr>
+    <tr>
+      <td><a href="http://www.snt.utwente.nl/">Studenten Net Twente (SNT)</a></td>
+      <td>The Netherlands</td>
+      <td><a href="http://ftp.snt.utwente.nl/pub/software/ovirt/">http</a> <a href="ftp://ftp.snt.utwente.nl/pub/software/ovirt/">ftp</a></td>
+      <td>ftpcom at snt.utwente.nl</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><a href="http://www.gtlib.gatech.edu/">Georgia Tech Software Library (GTlib)</a></td>
+      <td>United States (Georgia)</td>
+      <td><a href="http://www.gtlib.gatech.edu/pub/oVirt/pub/">http</a> <a href="ftp://www.gtlib.gatech.edu/pub/oVirt/pub/">ftp</a></td>
+      <td>gtlib_at_gtlib.gatech.edu</td>
+      <td>rsync service: &lt;rsync://rsync.gtlib.gatech.edu/oVirt/&gt;</td>
+    </tr>
+    <tr>
+      <td><a href="http://www.ibiblio.org/">ibiblio</a></td>
+      <td>United States (North Carolina)</td>
+      <td><a href="http://mirrors.ibiblio.org/ovirt/pub/">http</a> <a href="ftp://mirrors.ibiblio.org/ovirt/pub/">ftp</a></td>
+      <td>cmpalmer_at_ibiblio.org</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><a href="http://www.rit.edu">Rochester Institute of Technology</a></td>
+      <td>United States (New York)</td>
+      <td><a href="http://mirrors.rit.edu/ovirt/pub/">http</a> <a href="ftp://mirrors.rit.edu/ovirt/pub/">ftp</a></td>
+      <td>pfmeec_at_rit.edu</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><a href="http://duke.edu">Duke University</a></td>
+      <td>United States (North Carolina)</td>
+      <td><a href="http://mirror.linux.duke.edu/ovirt/pub/">http</a></td>
+      <td>drew.stinnett_at_duke.edu</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><a href="http://www.plusline.net/en/">Plus.line AG</a></td>
+      <td>Germany (Frankfurt)</td>
+      <td><a href="http://ftp.plusline.net/ovirt/">http</a> <a href="ftp://ftp.plusline.net/pub/ovirt/">ftp</a></td>
+      <td>ftp-admin_at_plusline.net</td>
+      <td>rsync service: &lt;rsync://ftp.plusline.net/ovirt/&gt;</td>
+    </tr>
+    <tr>
+      <td><a href="http://www.slu.cz">Silesian University in Opava</a></td>
+      <td>Czech Republic (Opava)</td>
+      <td><a href="http://mirror.slu.cz/ovirt/">http</a> <a href="ftp://mirror.slu.cz/ovirt/">ftp</a></td>
+      <td>jiri_slezka_at_slu_cz</td>
+      <td>1Gbps, IPv6 ready</td>
+    </tr>
+    <tr>
+      <td><a href="http://mirror.isoc.org.il/">ISOC-IL</a></td>
+      <td>Israel</td>
+      <td><a href="http://mirror.isoc.org.il/pub/ovirt/">http</a> <a href="ftp://mirror.isoc.org.il/pub/ovirt/">ftp</a></td>
+      <td>mirrormaster_at_isoc_org_il</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><a href="https://www.nfrance.com/">NFrance Conseil</a></td>
+      <td>France</td>
+      <td><a href="http://ovirt.repo.nfrance.com/">http</a></td>
+      <td>network_at_nfrance_com</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/repository-mirrors.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/repository-mirrors.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

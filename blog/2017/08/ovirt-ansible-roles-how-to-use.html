@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How to use oVirt Ansible roles &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='omachace' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How to use oVirt Ansible roles' property='og:title'>
+<meta content='The recent post, An Introduction to Ansible Roles, discussed the new roles that were introduced in the oVirt 4.1.6 release. This follow-up post will explain how to set up and use Ansible roles, using either Ansible Galaxy or oVirt Ansible Roles RPM.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/08/ovirt-ansible-roles-how-to-use.html' property='og:url'>
+<meta content='2017-08-16T15:00:00Z' property='article:published_time'>
+<meta content='omachace' property='article:author:username'>
+<meta content='Ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Automation' property='article:tag'>
+<link href='/blog/tag/automation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Configuration management' property='article:tag'>
+<link href='/blog/tag/configuration management.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Roles' property='article:tag'>
+<link href='/blog/tag/roles.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How to use oVirt Ansible roles' name='twitter:title'>
+<meta content='The recent post, An Introduction to Ansible Roles, discussed the new roles that were introduced in the oVirt 4.1.6 release. This follow-up post will explain how to set up and use Ansible roles, using either Ansible Galaxy or oVirt Ansible Roles RPM.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>08</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How to use oVirt Ansible roles
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/omachace.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/omachace/">omachace</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-08-16T15:00:00Z'>
+Wednesday 16 August 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>The recent post, <a href="/blog/2017/07/ovirt-ansible-roles-an-introduction/">An Introduction to Ansible Roles</a>, discussed the new roles that were introduced in the oVirt 4.1.6 release. This follow-up post will explain how to set up and use Ansible roles, using either Ansible Galaxy or oVirt Ansible Roles RPM.</p>
+
+<p></p>
+
+<h2 id="ansible-galaxy">Ansible Galaxy</h2>
+
+<p>To make life easier, <a href="https://galaxy.ansible.com/">Ansible Galaxy</a> stores multiple Ansible roles, including oVirt Ansible roles. To install the roles, perform the next steps:</p>
+
+<p>To install roles on your local machine, run the following command:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>ansible-galaxy install ovirt.ovirt-ansible-roles&#x000A;</code></pre></div>
+<p>This will install your roles into directory <code>/etc/ansible/roles/ovirt.ovirt-ansible-roles/</code>.</p>
+
+<p>By default, Ansible only searches for roles in <code>/etc/ansible/roles/</code> directory and your current working directory.</p>
+
+<p>To change the directories where Ansible looks for roles, modify the <code>roles_path</code> option of <code>[defaults]</code> section in <code>ansible.cfg</code> configuration file.</p>
+
+<p>The default location of this file is in <code>/etc/ansible/ansible.cfg</code>.</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>sed <span class="nt">-i</span> <span class="s1">'s|#roles_path    = /etc/ansible/roles|roles_path = /etc/ansible/roles:/etc/ansible/roles/ovirt.ovirt-ansible-roles/roles|'</span>  /etc/ansible/ansible.cfg&#x000A;</code></pre></div>
+<p>For more information on changing the directories where Ansible searches for roles, see the Ansible documentation pages.</p>
+
+<p>Copy one of the examples from the directory <code>/etc/ansible/roles/ovirt.ovirt-ansible-roles/examples/</code> into your working directory, then modify the needed variables and run the playbook.</p>
+
+<h2 id="ovirt-ansible-roles-rpm">oVirt Ansible Roles RPM</h2>
+
+<p>In the latest oVirt repositories you can find the <code>ovirt-ansible-roles</code> package. To make the oVirt repositories available, install <code>ovirt-release</code> RPM:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>yum install <span class="nt">-y</span> http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm&#x000A;</code></pre></div>
+<p>oVirt release repository now provides <code>ovirt-ansible-roles</code> package:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>yum install <span class="nt">-y</span> ovirt-ansible-roles&#x000A;</code></pre></div>
+<p>The structure of the <code>ovirt-ansible-roles</code> package is as follows:</p>
+
+<ul>
+  <li><strong>/usr/share/ansible/roles</strong> - stores the roles</li>
+  <li><strong>/usr/share/doc/ovirt-ansible-roles/</strong> - stores the examples, a basic overview and the licence</li>
+  <li><strong>/usr/share/doc/ansible/roles/{role_name}</strong> - stores the documentation specific to the role</li>
+</ul>
+
+<p>Copy one of the examples from the directory <code>/usr/share/doc/ovirt-ansible-roles/examples</code> into your working directory, then modify the needed variables and run the playbook.</p>
+
+<h2 id="an-example-of-tweaking-and-running-the-playbook">An Example of Tweaking and Running the Playbook</h2>
+
+<h3 id="create-example-playbook">Create Example Playbook</h3>
+
+<p>Running the example from Galaxy or RPM is bit different. Therefore, please follow the relevant instructions.</p>
+
+<h4 id="ansible-galaxy-1">Ansible Galaxy</h4>
+
+<p>The following steps assume that: you followed the steps on how to install the roles from Galaxy, your roles are installed in <code>/etc/ansible/roles/ovirt.ovirt-ansible-roles/roles/</code>, and you have tweaked <code>ansible.cfg</code> to look for those roles.</p>
+
+<p>Run a role called <code>ovirt-image-template</code> to download the qcow2 image and create a template from it.</p>
+
+<p>Copy the <code>ovirt-image-template</code> role example. In this example we will use <code>/tmp</code> as the working directory:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cd</span> /tmp&#x000A;<span class="nv">$ </span>cp /etc/ansible/roles/ovirt.ovirt-ansible-roles/examples/ovirt_image_template.yml <span class="nb">.</span>&#x000A;</code></pre></div>
+<h4 id="ovirt-ansible-roles-rpm-1">oVirt Ansible Roles RPM</h4>
+<p>The following steps assume that: you followed the instructions on how to install the roles from RPM, and your roles are already installed in <code>/usr/share/ansible/roles</code>.</p>
+
+<p>Run a role called <code>ovirt-image-template</code> to download the qcow2 image and create a template from it.</p>
+
+<p>Copy the <code>ovirt-image-template</code> role example. In this example I will use <code>/tmp</code> as the working directory:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cd</span> /tmp&#x000A;<span class="nv">$ </span>cp /usr/share/doc/ovirt-ansible-roles/examples/ovirt_image_template.yml <span class="nb">.</span>&#x000A;</code></pre></div>
+<h3 id="tweaking-and-running-the-playbook">Tweaking and Running the Playbook</h3>
+
+<p>Modify the variables to reflect your needs:</p>
+
+<div class="highlight"><pre class="highlight yaml"><code><span class="nn">---</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">oVirt image template</span>&#x000A;  <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>&#x000A;  <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>&#x000A;  <span class="na">gather_facts</span><span class="pi">:</span> <span class="no">false</span>&#x000A;&#x000A;  <span class="na">vars_files</span><span class="pi">:</span>&#x000A;    <span class="c1"># Contains encrypted `engine_password` varibale using ansible-vault</span>&#x000A;    <span class="pi">-</span> <span class="s">passwords.yml</span>&#x000A;&#x000A;  <span class="na">vars</span><span class="pi">:</span>&#x000A;    <span class="na">engine_url</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/api</span>&#x000A;    <span class="na">engine_user</span><span class="pi">:</span> <span class="s">admin@internal</span>&#x000A;    <span class="na">engine_cafile</span><span class="pi">:</span> <span class="s">/etc/pki/ovirt-engine/ca.pem</span>&#x000A;&#x000A;    <span class="na">qcow_url</span><span class="pi">:</span> <span class="s">https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2</span>&#x000A;    <span class="na">template_cluster</span><span class="pi">:</span> <span class="s">testcluster</span>&#x000A;    <span class="na">template_name</span><span class="pi">:</span> <span class="s">centos7_template</span>&#x000A;    <span class="na">template_memory</span><span class="pi">:</span> <span class="s">2GiB</span>&#x000A;    <span class="na">template_cpu</span><span class="pi">:</span> <span class="s">2</span>&#x000A;    <span class="na">template_disk_size</span><span class="pi">:</span> <span class="s">10GiB</span>&#x000A;    <span class="na">template_disk_storage</span><span class="pi">:</span> <span class="s">nfs</span>&#x000A;&#x000A;  <span class="na">roles</span><span class="pi">:</span>&#x000A;    <span class="pi">-</span> <span class="s">ovirt-image-template</span>&#x000A;</code></pre></div>
+<p>Create a file with an oVirt engine user password:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cat </span>passwords.yml&#x000A;engine_password: youruserpassword&#x000A;</code></pre></div>
+<p>Encrypt the file with an oVirt user password. You will be asked for a vault password:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>ansible-vault encrypt passwords.yml&#x000A;New Vault password:&#x000A;Confirm New Vault password:&#x000A;</code></pre></div>
+<p><code>Encryption successful</code> will confirm that you have encrypted the file.</p>
+
+<p>Ensure you have installed Python SDK on your machine because you will run your playbook on localhost:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>yum install <span class="nt">-y</span> python-ovirt-engine-sdk4&#x000A;</code></pre></div>
+<p>If you use Galaxy and don't have oVirt repositories you can install Python SDK from pip:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>pip install ovirt-engine-sdk-python&#x000A;</code></pre></div>
+<p>Run the playbook:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>ansible-playbook <span class="nt">--ask-vault-pass</span> ovirt_image_template.yml&#x000A;</code></pre></div>
+<p>That's it. After the <code>ansible-playbook</code> command completes successfully, you will have deployed a template using the qcow2 image."</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/ansible.html">Ansible</a></li>
+<li><a href="../../tag/automation.html">Automation</a></li>
+<li><a href="../../tag/configuration-management.html">Configuration management</a></li>
+<li><a href="../../tag/roles.html">Roles</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-08-16-ovirt-ansible-roles-how-to-use.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-08-16-ovirt-ansible-roles-how-to-use.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 28 Sep 2017 14:15 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

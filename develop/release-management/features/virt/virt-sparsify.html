@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Virt-Sparsify &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h2 id="summary">Summary</h2>
+<p>This feature enables the user to run <a href="http://libguestfs.org/virt-sparsify.1.html">virt-sparsify</a> utility on the virtual machine disks. <code>virt-sparsify</code> removes unused space from a disk image and returns it to storage.</p>
+
+<h2 id="owner">Owner</h2>
+<ul>
+  <li>Name: Shmuel Melamud</li>
+  <li>Email: smelamud@redhat.com</li>
+</ul>
+
+<h2 id="detailed-design">Detailed Design</h2>
+<h3 id="vdsm">VDSM</h3>
+
+<p>Previously VDSM supported <code>virt-sparsify</code> in a simple form that created a temporary disk. With the new approach, a temporary disk, location, and extra disk space are not needed, thanks to in-place operation mode of <code>virt-sparsify</code>.</p>
+
+<p>The new <code>SDM.sparsify_volume</code> verb was created that runs virt-sparsify asynchronously using storage jobs mechanism. Storage jobs allow the operation to be performed on any host.</p>
+
+<p>Since <code>virt-sparsify</code> tool cannot leave the volume in corrupted state, there is no need to mark the volume as ILLEGAL before running the tool. Otherwise, if the storage domain becomes unavailable during the operation, the volume will be left in ILLEGAL state and its futher usage will be impossible.</p>
+
+<h3 id="engine">Engine</h3>
+<p>Added <code>SparsifyImageCommand</code> to sparsify the given disk image. This command checks all prerequisites, locks the disk and invokes <code>SparsifyImageVDSCommand</code>. <code>SparsifyImageVDSCommand</code> uses <code>SDM.sparsify_inplace</code> VDSM API call to perform the actual work.</p>
+
+<p>In the REST API, added the <code>sparsify</code> method to <code>DiskService</code> that invokes <code>SparsifyImageCommand</code> on the disk.</p>
+
+<h3 id="ui">UI</h3>
+<p>Added "Sparsify" button to Disks subtab of Virtual Machines main tab. This button opens a confirmation dialog to approve sparsification operation and, after the operation is confirmed, invokes <code>SparsifyImageCommand</code> for the disk selected.</p>
+
+<h3 id="limitations">Limitations</h3>
+<ul>
+  <li>Only the leaf volume of the image (the active snapshot) can be sparsified.</li>
+  <li>If some file existed in previous snapshots and was deleted in the latest snapshot, its space cannot be freed and returned to the storage. In such situations the virtual disk may even become slightly bigger (maximum 0.01% of its size), because sparsification may need more space in the disk's metadata. To sparsify effectively, merge all snapshots before sparsification.</li>
+  <li>The disk cannot have derived disks.</li>
+  <li>If the disk is attached to a VM, it must be down.</li>
+  <li>Direct LUNs cannot be sparsified.</li>
+  <li>Cinder disks cannot be sparsified.</li>
+  <li>Pre-allocated disks cannot be sparsified. <code>virt-sparsify</code> works on pre-allocated disks, but its usage is not justified for this case. User chooses pre-allocated option if she needs better performance, because no additional allocation and no fragmentation will occur when the disk is used. Deallocating some clusters as result of sparsification will overturn this advantage. If user wants to save space at cost of some performance decrease, she can select thin-provisioned option.</li>
+  <li>Disks on NFS storage may be sparsified only if NFS version &gt;= 4.2. <strong>Note</strong> <code>nfs-utils</code> package in RHEL 7.4 contains <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1489262">bug 1489262</a> that prevents NFS storage to be mounted as NFS 4.2. That means that <code>virt-sparsify</code> will not work on NFS partitions if RHEL 7.4 is installed on the host. This bug is fixed in <code>nfs-utils-1.3.0-0.49.el7</code> that is planned to be released with RHEL 7.5. A backport to RHEL 7.4.z is requested also.</li>
+  <li>
+    <p>For an iSCSI volume to be sparsified, support of both host kernel and the actual backing store is required.</p>
+
+    <p>You can verify this support using various SCSI flags reported by the device. These are contained in the SCSI "VPD" data. Run <code>sg_inq</code> and <code>sg_vpd</code> (from <code>sg3_utils</code>) on the device:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> $ sudo sg_inq -p 0xb0 /dev/sda&#x000A; $ sudo sg_vpd -p 0xb2 /dev/sda&#x000A;</code></pre></div>
+    <p>The LBPRZ and various unmap settings are all relevant.</p>
+
+    <p>See also <a href="https://rwmj.wordpress.com/2014/03/11/blkdiscard-blkzeroout-blkdiscardzeroes-blksecdiscard/">https://rwmj.wordpress.com/2014/03/11/blkdiscard-blkzeroout-blkdiscardzeroes-blksecdiscard/</a></p>
+  </li>
+</ul>
+
+<h2 id="future-development">Future Development</h2>
+<ul>
+  <li>Display the actual size of disks (currently we display only the virtual size).</li>
+  <li>Add indication that disk needs to be sparsified, if amount of unused space passes a defined threshold.</li>
+  <li>Added a user-configurable periodic job that sparsifies disks when needed.</li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+<ul>
+  <li>VDSM: Released</li>
+  <li>Engine: Released</li>
+  <li>UI: Released</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/virt-sparsify.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/virt-sparsify.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 12 Feb 2018 21:49 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

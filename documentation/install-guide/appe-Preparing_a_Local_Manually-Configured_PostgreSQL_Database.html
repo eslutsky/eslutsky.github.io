@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Preparing a Local Manually-Configured PostgreSQL Database &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="appendix-e-preparing-a-local-manually-configured-postgresql-database">Appendix E: Preparing a Local Manually-Configured PostgreSQL Database</h1>
+
+<p>You have the option of configuring a local PostgreSQL database on the Engine machine to use as the Engine database. By default, the oVrt Engine’s configuration script, <code>engine-setup</code>, creates and configures the Engine database locally on the Engine machine.</p>
+
+<p>To configure the Engine database on a machine that is separate from the machine where the Engine is installed, see <a href="appe-Preparing_a_Remote_PostgreSQL_Database">Appendix D: Preparing a Remote PostgreSQL Database</a>.</p>
+
+<p>Use this procedure to set up the Engine database with custom values. Set up this database before you configure the Engine; you must supply the database credentials during <code>engine-setup</code>. To set up the database, you must first install the <code>ovirt-engine</code> package on the Engine machine; the <code>postgresql-server</code> package is installed as a dependency.</p>
+
+<p><strong>Note:</strong> The <code>engine-setup</code> and <code>engine-backup --mode=restore</code> commands only support system error messages in the <code>en_US.UTF8</code> locale, even if the system locale is different.</p>
+
+<p>The locale settings in the <code>postgresql.conf</code> file must be set to <code>en_US.UTF8</code>.</p>
+
+<p><strong>Important:</strong> The database name must contain only numbers, underscores, and lowercase letters.</p>
+
+<p><strong>Initializing the PostgreSQL Database</strong></p>
+
+<ol>
+  <li>
+    <p>Install the PostgreSQL server package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install rh-postgresql95 rh-postgresql95-postgresql-contrib&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Initialize the PostgreSQL database, start the <code>postgresql</code> service, and ensure that this service starts on boot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scl enable rh-postgresql95 -- postgresql-setup --initdb&#x000A; # systemctl enable rh-postgresql95-postgresql&#x000A; # systemctl start rh-postgresql95-postgresql&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Connect to the <code>psql</code> command line interface as the <code>postgres</code> user:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # su - postgres -c 'scl enable rh-postgresql95 -- psql'&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create a user for the Engine to use when it writes to and reads from the database. The default user name on the Engine is <code>engine</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# create role *user_name* with login encrypted password '*password*';&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create a database in which to store data about the oVirt environment. The default database name on the Engine is <code>engine</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# create database *database_name* owner *user_name* template template0 encoding 'UTF8' lc_collate 'en_US.UTF-8' lc_ctype 'en_US.UTF-8';&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Connect to the new database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# \c *database_name*&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the <code>uuid-ossp</code> extension:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> *database_name*=# CREATE EXTENSION "uuid-ossp";&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the <code>plpgsql</code> language if it does not exist:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> *database_name*=# CREATE LANGUAGE plpgsql;&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure the database can be accessed remotely by enabling md5 client authentication. Edit the <strong>/var/lib/pgsql/data/pg_hba.conf</strong> file, and add the following line immediately underneath the line starting with <code>local</code> at the bottom of the file, replacing <code>::0/32</code> or <code>::0/128</code> with the IP address of the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> host    *database name*    *user name*    *0.0.0.0/0*  md5&#x000A; host    *database name*    *user name*    *::0/32*     md5&#x000A; host    *database name*    *user name*    *::0/128*    md5&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Update the PostgreSQL server’s configuration. Edit the <strong>/var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf</strong> file and add the following lines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>autovacuum_vacuum_scale_factor='0.01'&#x000A;autovacuum_analyze_scale_factor='0.075'&#x000A;autovacuum_max_workers='6'&#x000A;maintenance_work_mem='65536'&#x000A;max_connections='150'&#x000A;work_mem='8192'&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <code>postgresql</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># systemctl rh-postgresql95-postgresql restart&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Optionally, set up SSL to secure database connections using the instructions at <a href="http://www.postgresql.org/docs/9.5/static/ssl-tcp.html#SSL-FILE-USAGE.">http://www.postgresql.org/docs/9.5/static/ssl-tcp.html#SSL-FILE-USAGE</a>.</p>
+
+<p><strong>Prev:</strong> <a href="appe-Preparing_a_Remote_PostgreSQL_Database">Appendix D: Preparing a Remote PostgreSQL Database</a> <br />
+<strong>Next:</strong> <a href="appe-Installing_the_Websocket_Proxy_on_a_Separate_Machine">Appendix F: Installing the Websocket Proxy on a Separate Machine</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/appe-preparing_a_local_manually-configured_postgresql_database">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/appe-Preparing_a_Local_Manually-Configured_PostgreSQL_Database.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/appe-Preparing_a_Local_Manually-Configured_PostgreSQL_Database.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DetailedExternalTasks &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-external-tasks">Detailed External Tasks</h1>
+
+<h2 id="adding-external-jobssteps-support">Adding External Jobs/Steps Support</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Enable plug-in to inject tasks (Jobs) to the engine application using the REST API, change their statuses and track them from the UI. A task (Job) may have other nesting sub-tasks (Steps) under it.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Feature owner: Eli Mesika (emesika)</p>
+
+    <ul>
+      <li>
+        <p>GUI Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>REST Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>Engine Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>QA Owner: Yaniv Kaul (ykaul)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: emesika@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release: 3.3</li>
+  <li>Status: Design</li>
+  <li>Last updated date: APR 15 2013</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>Enable plug-in to inject tasks (Jobs) to the engine application using the REST API, change their statuses and track them from the UI. A task (Job) may have other nesting sub-tasks (Steps) under it. A Job is actually a container of nexted steps. each Step may have sub-steps under it. A steps represents one of the following:
+ An external command that is invoked and monitored by the plug-in</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    A supported internal command that is invoked by the plug-in and monitored internally by the oVirt engine.&#x000A;</code></pre></div>
+<p>Each Job may have unlimited list of external/internal steps.</p>
+
+<p>The following should be supported:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    Adding a job&#x000A;    Adding a  step to a job or to a step (as sub-step)&#x000A;    Ending a step &#x000A;    Eding a job&#x000A;    Displaying all Jobs&#x000A;    Displaying a specific Job&#x000A;    Displaying all Steps under a specific Job&#x000A;    Dislaying a specific Step under a Job&#x000A;</code></pre></div>
+<p>Job can be in one of the following statuses:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     STARTED   - Job was started&#x000A;     FINISHED  - Job has been finished successfully&#x000A;     FAILED    - Job had failed &#x000A;     ABORTED   - Job was aborted&#x000A;     UNKNOWN   - Job is in unnknown state&#x000A;</code></pre></div>
+<p>Step can be in one of theabove statuses as in Job. In addition Step supports the following Step Types :</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     VALIDATING  - Step is validating the requested operation&#x000A;     EXECUTING   - Step is executing the requested operation&#x000A;     FINALIZING  - Steps is finalysing the requested operation&#x000A;</code></pre></div>
+<h3 id="crud">CRUD</h3>
+
+<p>Adding a flag named <strong>is_external</strong> to both <strong>Job</strong> and <strong>Step</strong> tables
+This flag indicates that the Job/Step was invoked as part of a plug-in operation and may be used in future to filter such jobs/steps</p>
+
+<h4 id="dao">DAO</h4>
+
+<p>Adding <strong>isExternal</strong> flag to both <strong>JobDAODBFacadeImpl</strong> and <strong>StepDAODBFacadeImpl</strong> and wrap it with getter/setter</p>
+
+<h4 id="metadata">Metadata</h4>
+
+<p>Adding <strong>is_external</strong> to <strong>Job</strong> and <strong>Step</strong> metadata in <strong>fixtures.xml</strong></p>
+
+<h3 id="business-logic">Business Logic</h3>
+
+<p>Adding the following to <strong>VdcActionParametersBase</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   jobId   - The Job UUID&#x000A;   stepId  - The parent step UUID&#x000A;</code></pre></div>
+<p>This will be used by plug-ins in order to invoke internal oVirt commands and still let them appaer under the given Job/Step in the <strong>task Monitor</strong>
+In case that such a command is invoked not in the context of an external Job, its <strong>jobId</strong> and <strong>stepId</strong> will be null
+ The ExecutionHandler::getJob is modified to test if the <strong>jobId</strong> and <strong>stepId</strong> are null and according to the result generate a new job or use the given one.</p>
+
+<h4 id="new-supported-commands">New Supported Commands</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  AddExternalJob - Adds an external Job and returns its UUID&#x000A;  EndExternalJob - Ends the given Job&#x000A;  AddExternalStep - Adds an external step to a Job directly or under an existing Step `                  If command is an oVirt internal command, it cpould be added only if it is flagged as `**`Monitored`**&#x000A;  EndExternalStep - Ends the given Step (For steps that represents plug-in operations only)&#x000A;</code></pre></div>
+<h3 id="flow">Flow</h3>
+
+<p><em>Add Job/Step</em> Flow:
+ use api/jobs to add a new job using POST and giving a job <strong>description</strong> as a parameter</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  use api/jobs/`&lt;jobId&gt;`/steps to add a new step using POST and giving a step `**`parentId`**` , `**`parentType`**`, `**`description`**` and `**`status`**` as parameters (The parentId is the UUID of the parent of the new created step, the parentType may be `**`Job`**` or `**`Step`**`)&#x000A;</code></pre></div>
+<p>''List Job(s)/Step(s):
+ use api/jobs to list all jobs</p>
+
+<p><code>use api/jobs/</code><jobId>` to list the job identified by `<jobId>
+`use api/jobs/`<jobId>`/steps to list all steps of the job identified by `<jobId>
+`use api/jobs/`<jobId>`/steps/`<stepId>` to list a specific step identified by `<stepId>` under the job identified by `<jobId></jobId></stepId></stepId></jobId></jobId></jobId></jobId></jobId></p>
+
+<p><em>End Job/Step</em> Flow:
+ use api/jobs/<jobId>/end to end a job using POST and giving a **jobId** **status** and an optional **force** flag</jobId></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  use api/jobs/`&lt;jobId&gt;`/steps/`&lt;stepId&gt;` /end  to end a step using POST and giving a `**`stepId`**` `**`stepType`**` `**`status`**` and an optional `**`force`**` flag&#x000A;</code></pre></div>
+<h3 id="permissions">Permissions</h3>
+
+<h4 id="command-permissions">Command Permissions</h4>
+
+<p>A new permission to access those commands will be added by default only to superuser role. A new role that can inject External Tasks will be added and may be attached/added to any user in the system</p>
+
+<h4 id="permissions-on-entity-instances">Permissions on Entity Instances</h4>
+
+<p>Since each Job may have steps that invoke internal oVirt command or external plug-in comamnds, on internal oVirt command we have already permissions on entities and on external commands it is in teh plug-in scope. So, nothing have to be specifically written in oVirt to support that.</p>
+
+<h3 id="api">API</h3>
+
+<ul>
+  <li>Add the list of <strong>monitored</strong> commands to api/capabilities</li>
+  <li>Add support for job_id and step_id parameters in QueryHelper such that commands can pass job_id and step_id in the URI</li>
+  <li>Add <strong>Job</strong> business entity</li>
+  <li>Add <strong>Step</strong> business entity</li>
+  <li>Adding JobMapper to map backend to REST entities and vice versa</li>
+  <li>Adding StepMapper to map backend to REST entities and vice versa</li>
+  <li>Add JobsResource/BackendJobsResource implementation to handle add() &amp; get operations</li>
+  <li>Add StepsResource/BackendStepsResource implementation to handle add() &amp; get operations</li>
+  <li>Add JobResource/BackendJobResource implementation to handle actions on a specific resource</li>
+  <li>Add StepResource/BackendStepResource implementation to handle actions on a specific resource</li>
+  <li>Add signatures to meta-data file (rsdl_metadata_v-3.1.yaml)</li>
+  <li>Add tests</li>
+</ul>
+
+<p><strong>Note that no update is required.</strong></p>
+
+<h4 id="get">Get</h4>
+
+<p>Add support for the following:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  /api/jobs `/api/jobs/`&lt;job_id&gt;&#x000A;  /api/jobs/`&lt;job_id&gt;`/steps `/api/jobs/`&lt;job_id&gt;`/steps/`&lt;step_id&gt;&#x000A;</code></pre></div>
+<jobs>
+`   `&lt;job id = "xxx" href="api/jobs/xxx&gt;
+`       `<description>`a description`</description>
+`       `<action_type>` the action type`</action_type>
+`       `<status>`[STARTED|FINISHED|FAILED|ABORTED|UNKNOWN]`</status>
+`        `<owner>`the owner`</owner>
+             `<start_time>`...`</start_time>`                
+`       `<end_time>`...`</end_time>
+`       `<last_updated>`...`</last_updated>
+`        `<external>`[true|false]`</external>
+`       `<auto_cleared>`[true|false]`</auto_cleared>
+`   `<job>
+         .....
+&lt;/jobs&gt;
+
+<steps>
+`    `&lt;step id="yyy" href="api/jobs/xxx/steps/yyy&gt;
+              [`<parent_job id="xxx" href="api/jobs/xxx" />` | `<parent_step id="yyy" href="api/jobs/xxx/steps/yyy" />`]
+`        `<description>`a description`</description>
+`        `<type>`[VALIDATING|EXECUTING|FINALIZING]`</type>
+`        `<number>`...`</number>
+`        `<status>`[STARTED|FINISHED|FAILED|ABORTED|UNKNOWN]`</status>
+              `<start_time>`...`</start_time>`                
+`        `<end_time>`...`</end_time>
+`        `<external>`[true|false]`</external>
+`   `&lt;/step&gt;
+         ....
+</steps>
+
+#### Post
+
+Adding a new Job/Step will be implemented by the POST operation
+ Job:
+
+<job>
+`    `<description></description>
+`    `<auto_cleared>`[true|false]`&lt;/auto_cleared]
+   &lt;/job&gt;
+
+Step
+
+<step>
+`    `<description></description>
+`    `<type></type>
+`    `<status>
+`         `<state></state>
+`    `</status>
+</step>
+
+Sub-step
+
+<step>
+`    `<parent_step id="yyy" />
+`    `<description></description>
+`    `<type></type>
+`    `<status>
+`         `<state></state>
+`    `</status>
+</step>
+
+Ending an existing Job/Step will be done via a supported **action** on the Job/Step business entity
+
+      /api/Jobs/`<job_id>`/end - will end the given job
+      /api/Jobs/`<job_id>`/steps/`<step_id>`/end - will end the given step
+
+End a job
+
+<action>
+`  `<status>
+`     `<state>`FAILED`</state>
+        `</status>`&gt;
+`  `<force>`false`</force>
+</action>
+
+End a Step
+
+<action>
+`  `<succeeded>`true`</succeeded>
+</action>
+
+### User Experience
+
+External Jobs and their Steps will be displayen in the oVirt Task Monitor
+
+### Installation/Upgrade
+
+Add additional fields to job and step tables upon upgrade Add the permission(ActionGroup) to manipulate External tasks to other admin roles already defined upon upgrade.
+
+#### User work-flows
+
+### Enforcement
+
+### Dependencies / Related Features and Projects
+
+#### Affected oVirt projects
+
+### Documentation / External references
+
+[RFE](https://bugzilla.redhat.com/show_bug.cgi?id=872719)
+
+[Features/ExternalTasks](Features/ExternalTasks)
+
+### Future directions
+
+[Category: Feature](Category: Feature)
+</step_id></job_id></job_id></auto_cleared></job></job></jobs>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/detailedexternaltasks.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/detailedexternaltasks.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

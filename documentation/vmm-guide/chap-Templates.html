@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Templates &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/vmm-guide/">Vmm-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-7-templates">Chapter 7: Templates</h1>
+
+<p>A template is a copy of a virtual machine that you can use to simplify the subsequent, repeated creation of similar virtual machines. Templates capture the configuration of software, configuration of hardware, and the software installed on the virtual machine on which the template is based. The virtual machine on which a template is based is known as the source virtual machine.</p>
+
+<p>When you create a template based on a virtual machine, a read-only copy of the virtual machine's disk is created. This read-only disk becomes the base disk image of the new template, and of any virtual machines created based on the template. As such, the template cannot be deleted while any virtual machines created based on the template exist in the environment.</p>
+
+<p>Virtual machines created based on a template use the same NIC type and driver as the original virtual machine, but are assigned separate, unique MAC addresses.</p>
+
+<p>You can create a virtual machine directly from <strong>Compute</strong> → <strong>Templates</strong>, as well as from <strong>Compute</strong> → <strong>Virtual Machines</strong>. In <strong>Compute</strong> → <strong>Templates</strong>, select the required template and click New VM. For more information on selecting the settings and controls for the new virtual machine see <a href="Virtual_Machine_General_settings_explained">Virtual Machine General settings explained</a>.</p>
+
+<h2 id="sealing-virtual-machines-in-preparation-for-deployment-as-templates">Sealing Virtual Machines in Preparation for Deployment as Templates</h2>
+
+<p>This section describes procedures for sealing Linux virtual machines and Windows virtual machines. Sealing is the process of removing all system-specific details from a virtual machine before creating a template based on that virtual machine. Sealing is necessary to prevent the same details from appearing on multiple virtual machines created based on the same template. It is also necessary to ensure the functionality of other features, such as predictable vNIC order.</p>
+
+<h3 id="sealing-a-linux-virtual-machine-for-deployment-as-a-template">Sealing a Linux Virtual Machine for Deployment as a Template</h3>
+
+<p>A Linux virtual machine is sealed during the template creation process, by selecting the <strong>Seal Template</strong> check box in the <strong>New Template</strong> window. See “Creating a Template” for details.</p>
+
+<h3 id="sealing-a-windows-virtual-machine-for-deployment-as-a-template">Sealing a Windows Virtual Machine for Deployment as a Template</h3>
+
+<p>A template created for Windows virtual machines must be generalized (sealed) before being used to deploy virtual machines. This ensures that machine-specific settings are not reproduced in the template.</p>
+
+<p><code>Sysprep</code> is used to seal Windows templates before use. Sysprep generates a complete unattended installation answer file. Default values for several Windows operating systems are available in the <strong>/usr/share/ovirt-engine/conf/sysprep/</strong> directory. These files act as templates for <code>Sysprep</code>. The fields in these files can be copied, pasted, and altered as required. This definition will override any values entered into the <strong>Initial Run</strong> fields of the <strong>Edit Virtual Machine</strong> window.</p>
+
+<p>The Sysprep file can be edited to affect various aspects of the Windows virtual machines created from the template that the Sysprep file is attached to. These include the provisioning of Windows, setting up the required domain membership, configuring the hostname, and setting the security policy.</p>
+
+<p>Replacement strings can be used to substitute values provided in the default files in the <strong>/usr/share/ovirt-engine/conf/sysprep/</strong> directory. For example, <code>"&lt;Domain&gt;&lt;![CDATA[$JoinDomain$]]&gt;&lt;/Domain&gt;"</code> can be used to indicate the domain to join.</p>
+
+<h4 id="prerequisites-for-sealing-a-windows-virtual-machine">Prerequisites for Sealing a Windows Virtual Machine</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Do not reboot the virtual machine during this process.&#x000A;</code></pre></div>
+<p>Before starting the Sysprep process, verify that the following settings are configured:</p>
+
+<ul>
+  <li>
+    <p>The Windows Sysprep parameters have been correctly defined.</p>
+  </li>
+  <li>
+    <p>If not, click <strong>Edit</strong> and enter the required information in the <strong>Operating System</strong> and <strong>Domain</strong> fields.</p>
+  </li>
+  <li>
+    <p>The correct product key has been defined in an override file on the Engine.</p>
+  </li>
+</ul>
+
+<p>The override file needs to be created under <code>/etc/ovirt-engine/osinfo.conf.d/</code>, have a filename that puts it after <code>/etc/ovirt-engine/osinfo.conf.d/00-defaults.properties</code>, and end in <code>.properties</code>. For example, <code>/etc/ovirt-engine/osinfo.conf.d/10-productkeys.properties</code>. The last file will have precedent and override any other previous file.</p>
+
+<p>If not, copy the default values for your Windows operating system from <code>/etc/ovirt-engine/osinfo.conf.d/00-defaults.properties</code> into the override file, and input your values in the <code>productKey.value</code> and <code>sysprepPath.value</code> fields.</p>
+
+<p><strong>Windows 7 Default Configuration Values</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># Windows7(11, OsType.Windows, false),false&#x000A;os.windows_7.id.value = 11&#x000A;os.windows_7.name.value = Windows 7&#x000A;os.windows_7.derivedFrom.value = windows_xp&#x000A;os.windows_7.sysprepPath.value = ${ENGINE_USR}/conf/sysprep/sysprep.w7&#x000A;os.windows_7.productKey.value =&#x000A;os.windows_7.devices.audio.value = ich6&#x000A;os.windows_7.devices.diskInterfaces.value.3.3 = IDE, VirtIO_SCSI, VirtIO&#x000A;os.windows_7.devices.diskInterfaces.value.3.4 = IDE, VirtIO_SCSI, VirtIO&#x000A;os.windows_7.devices.diskInterfaces.value.3.5 = IDE, VirtIO_SCSI, VirtIO&#x000A;os.windows_7.isTimezoneTypeInteger.value = false&#x000A;</code></pre></div>
+<h4 id="sealing-a-windows-7-windows-2008-or-windows-2012-template">Sealing a Windows 7, Windows 2008, or Windows 2012 Template</h4>
+
+<p>Seal a Windows 7, Windows 2008, or Windows 2012 template before using the template to deploy virtual machines.</p>
+
+<p><strong>Sealing a Windows 7, Windows 2008, or Windows 2012 Virtual Machine for Deployment as a Template</strong></p>
+
+<ol>
+  <li>
+    <p>On the Windows virtual machine, launch <em>Sysprep</em> from <code>C:\Windows\System32\sysprep\sysprep.exe</code>.</p>
+  </li>
+  <li>
+    <p>Enter the following information into <em>Sysprep</em>:</p>
+
+    <ul>
+      <li>
+        <p>Under <strong>System Cleanup Action</strong>, select <strong>Enter System Out-of-Box-Experience (OOBE)</strong>.</p>
+      </li>
+      <li>
+        <p>Select the <strong>Generalize</strong> check box if you need to change the computer's system identification number (SID).</p>
+      </li>
+      <li>
+        <p>Under <strong>Shutdown Options</strong>, select <strong>Shutdown</strong>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to complete the sealing process; the virtual machine shuts down automatically upon completion.</p>
+  </li>
+</ol>
+
+<p>The Windows 7, Windows 2008, or Windows 2012 template is sealed and ready for deploying virtual machines.</p>
+
+<h2 id="creating-a-template">Creating a Template</h2>
+
+<p>Create a template from an existing virtual machine to use as a blueprint for creating additional virtual machines.</p>
+
+<p>When you create a template, you specify the format of the disk to be raw or QCOW2:</p>
+
+<ul>
+  <li>
+    <p>QCOW2 disks are thin provisioned.</p>
+  </li>
+  <li>
+    <p>Raw disks on file storage are thin provisioned.</p>
+  </li>
+  <li>
+    <p>Raw disks on block storage are preallocated.</p>
+  </li>
+</ul>
+
+<p><strong>Creating a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select the source virtual machine.</p>
+  </li>
+  <li>
+    <p>Ensure the virtual machine is powered down and has a status of <code>Down</code>.</p>
+  </li>
+  <li>
+    <p>Click <strong>More Actions</strong> → <strong>Make Template</strong>. For more details on all fields in the <strong>New Template</strong> window, see  “Explanation of Settings in the New Template Window” in Appendix A.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong>, <strong>Description</strong>, and <strong>Comment</strong> for the template.</p>
+  </li>
+  <li>
+    <p>Select the cluster with which to associate the template from the <strong>Cluster</strong> drop-down list. By default, this is the same as that of the source virtual machine.</p>
+  </li>
+  <li>
+    <p>Optionally, select a CPU profile for the template from the <strong>CPU Profile</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Create as a Template Sub-Version</strong> check box, select a <strong>Root Template</strong>, and enter a <strong>Sub-Version Name</strong> to create the new template as a sub-template of an existing template.</p>
+  </li>
+  <li>
+    <p>In the <strong>Disks Allocation</strong> section, enter an alias for the disk in the <strong>Alias</strong> text field. Select the disk format in the <strong>Format</strong> drop-down, the storage domain on which to store the disk from the <strong>Target</strong> drop-down, and the disk profile in the <strong>Disk Profile</strong> drop-down. By default, these are the same as those of the source virtual machine.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Allow all users to access this Template</strong> check box to make the template public.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Copy VM permissions</strong> check box to copy the permissions of the source virtual machine to the template.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Seal Template</strong> check box (Linux only) to seal the template.</p>
+
+    <p><strong>Note:</strong> Sealing, which uses the virt-sysprep command, removes system-specific details from a virtual machine before creating a template based on that virtual machine. This prevents the original virtual machine’s details from appearing in subsequent virtual machines that are created using the same template. It also ensures the functionality of other features, such as predictable vNIC order. See Appendix B, virt-sysprep Operations for more information.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The virtual machine displays a status of Image Locked while the template is being created. The process of creating a template may take up to an hour depending on the size of the virtual disk and the capabilities of your storage hardware. When complete, the template is added to the Templates tab. You can now create new virtual machines based on the template.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** When a template is made, the virtual machine is copied so that both the existing virtual machine and its template are usable after template creation.&#x000A;</code></pre></div>
+<h2 id="editing-a-template">Editing a Template</h2>
+
+<p>Once a template has been created, its properties can be edited. Because a template is a copy of a virtual machine, the options available when editing a template are identical to those in the <strong>Edit Virtual Machine</strong> window.</p>
+
+<p><strong>Editing a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Templates</strong> and select a template.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the necessary properties. Click <strong>Show Advanced Options</strong> and edit the template’s settings as required. The settings that appear in the <strong>Edit Template</strong> window are identical to those in the <strong>Edit Virtual Machine</strong> window, but with the relevant fields only.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="deleting-a-template">Deleting a Template</h2>
+
+<p>If you have used a template to create a virtual machine using the thin provisioning storage allocation option, the template cannot be deleted as the virtual machine needs it to continue running. However, cloned virtual machines do not depend on the template they were cloned from and the template can be deleted.</p>
+
+<p><strong>Deleting a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Templates</strong> and select a template.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="exporting-templates">Exporting Templates</h2>
+
+<h3 id="migrating-templates-to-the-export-domain">Migrating Templates to the Export Domain</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The export storage domain is deprecated. Storage data domains can be unattached from a data center and imported to another data center in the same environment, or in a different environment. Virtual machines, floating virtual disk images, and templates can then be uploaded from the imported storage domain to the attached data center. See the "Importing Existing Storage Domains" section in the [Administration Guide](/documentation/admin-guide/administration-guide/) for information on importing storage domains.&#x000A;</code></pre></div>
+<p>Export templates into the export domain to move them to another data domain, either in the same oVirt environment, or another one. This procedure requires access to the Administration Portal.</p>
+
+<p><strong>Exporting Individual Templates to the Export Domain</strong></p>
+
+<p>1.Click <strong>Compute</strong> → <strong>Templates</strong> and select a template.</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Export</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Force Override</strong> check box to replace any earlier version of the template on the export domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to begin exporting the template; this may take up to an hour, depending on the virtual machine disk image size and your storage hardware.</p>
+  </li>
+</ol>
+
+<p>Repeat these steps until the export domain contains all the templates to migrate before you start the import process.</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong> and select the export domain.</p>
+  </li>
+  <li>
+    <p>Click the domain name to see the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Template Import</strong> tab to view all exported templates in the export domain.</p>
+  </li>
+</ol>
+
+<h3 id="copying-a-templates-virtual-hard-disk">Copying a Template's Virtual Hard Disk</h3>
+
+<p>If you are moving a virtual machine that was created from a template with the thin provisioning storage allocation option selected, the template's disks must be copied to the same storage domain as that of the virtual machine disk. This procedure requires access to the Administration Portal.</p>
+
+<p><strong>Copying a Virtual Hard Disk</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Disks</strong>.</p>
+  </li>
+  <li>
+    <p>Select the template disk(s) to copy.</p>
+  </li>
+  <li>
+    <p>Click <strong>Copy</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Target</strong> data domain from the drop-down list(s).</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>A copy of the template's virtual hard disk has been created, either on the same, or a different, storage domain. If you were copying a template disk in preparation for moving a virtual hard disk, you can now move the virtual hard disk.</p>
+
+<h2 id="importing-templates">Importing Templates</h2>
+
+<h3 id="importing-a-template-into-a-data-center">Importing a Template into a Data Center</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The export storage domain is deprecated. Storage data domains can be unattached from a data center and imported to another data center in the same environment, or in a different environment. Virtual machines, floating virtual disk images, and templates can then be uploaded from the imported storage domain to the attached data center. See the "Importing Existing Storage Domains" section in the [Administration Guide](/documentation/admin-guide/administration-guide/) for information on importing storage domains.&#x000A;</code></pre></div>
+<p>Import templates from a newly attached export domain. This procedure requires access to the Administration Portal.</p>
+
+<p><strong>Importing a Template into a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong> and select the newly attached export domain.</p>
+  </li>
+  <li>
+    <p>Click the domain name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Template Import</strong> tab and select a template.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import</strong>.</p>
+  </li>
+  <li>
+    <p>Use the drop-down lists to select the <strong>Target Cluster</strong> and <strong>CPU Profile</strong>.</p>
+  </li>
+  <li>
+    <p>Select the template to view its details, then click the <strong>Disks</strong> tab and select the <strong>Storage Domain</strong> to import the template into.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>If the <strong>Import Template Conflict</strong> window appears, enter a <strong>New Name</strong> for the template, or select the <strong>Apply to all</strong> check box and enter a <strong>Suffix to add to the cloned Templates</strong>. Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Close</strong>.</p>
+  </li>
+</ol>
+
+<p>The template is imported into the destination data center. This can take up to an hour, depending on your storage hardware. You can view the import progress in the <strong>Events</strong> tab.</p>
+
+<p>Once the importing process is complete, the templates will be visible in <strong>Compute</strong> → <strong>Templates</strong>. The templates can create new virtual machines, or run existing imported virtual machines based on that template.</p>
+
+<h3 id="importing-a-virtual-disk-image-from-an-openstack-image-service-as-a-template">Importing a Virtual Disk Image from an OpenStack Image Service as a Template</h3>
+
+<p>Virtual disk images managed by an OpenStack Image Service can be imported into the ovirt Engine if that OpenStack Image Service has been added to the Engine as an external provider. This procedure requires access to the Administration Portal.</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Storage</strong> → <strong>Domains</strong> and select the OpenStack Image Service domain.</p>
+  </li>
+  <li>
+    <p>Click the storage domain name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Images</strong> tab and select the image to import.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import</strong>.</p>
+
+    <p><strong>Note:</strong> If you are importing an image from a Glance storage domain, you have the option of specifying the template name.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> into which the virtual disk image will be imported.</p>
+  </li>
+  <li>
+    <p>Select the storage domain in which the virtual disk image will be stored from the <strong>Domain Name</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Optionally, select a <strong>Quota</strong> to apply to the virtual disk image.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Import as Template</strong> check box.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Cluster</strong> in which the virtual disk image will be made available as a template.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The image is imported as a template and is displayed in the <strong>Templates</strong> tab. You can now create virtual machines based on the template.</p>
+
+<h2 id="templates-and-permissions">Templates and Permissions</h2>
+
+<h3 id="managing-system-permissions-for-a-template">Managing System Permissions for a Template</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A template administrator is a system administration role for templates in a data center. This role can be applied to specific virtual machines, to a data center, or to the whole virtualized environment; this is useful to allow different users to manage certain virtual resources.</p>
+
+<p>The template administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Create, edit, export, and remove associated templates.</p>
+  </li>
+  <li>
+    <p>Import and export templates.</p>
+
+    <p><strong>Note:</strong> You can only assign roles and permissions to existing users.</p>
+  </li>
+</ul>
+
+<h3 id="template-administrator-roles-explained">Template Administrator Roles Explained</h3>
+
+<p>The table below describes the administrator roles and privileges applicable to template administration.</p>
+
+<p><strong>ovirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TemplateAdmin</td>
+      <td>Can perform all operations on templates.</td>
+      <td>Has privileges to create, delete and configure a template's storage domain and network details, and to move templates between domains.</td>
+    </tr>
+    <tr>
+      <td>NetworkAdmin</td>
+      <td>Network Administrator</td>
+      <td>Can configure and manage networks attached to templates.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="assigning-an-administrator-or-user-role-to-a-resource">Assigning an Administrator or User Role to a Resource</h3>
+
+<p>Assign administrator or user roles to resources to allow users to access or manage that resource.</p>
+
+<p><strong>Assigning a Role to a Resource</strong></p>
+
+<ol>
+  <li>
+    <p>Use the resource tabs, tree mode, or the search function to find and select the resource in the results list.</p>
+  </li>
+  <li>
+    <p>Click the resource’s name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Permissions</strong> tab to list the assigned users, the user's role, and the inherited permissions for the selected resource.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the name or user name of an existing user into the <strong>Search</strong> text box and click <strong>Go</strong>. Select a user from the resulting list of possible matches.</p>
+  </li>
+  <li>
+    <p>Select a role from the <strong>Role to Assign:</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have assigned a role to a user; the user now has the inherited permissions of that role enabled for that resource.</p>
+
+<h3 id="removing-an-administrator-or-user-role-from-a-resource">Removing an Administrator or User Role from a Resource</h3>
+
+<p>Remove an administrator or user role from a resource; the user loses the inherited permissions associated with the role for that resource.</p>
+
+<p><strong>Removing a Role from a Resource</strong></p>
+
+<ol>
+  <li>
+    <p>Use the resource tabs, tree mode, or the search function to find and select the resource in the results list.</p>
+  </li>
+  <li>
+    <p>Click the resource’s name to go to the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Permissions</strong> tab to list the assigned users, the user's role, and the inherited permissions for the selected resource.</p>
+  </li>
+  <li>
+    <p>Select the user to remove from the resource.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>. The <strong>Remove Permission</strong> window opens to confirm permissions removal.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have removed the user's role, and the associated permissions, from the resource.</p>
+
+<h2 id="using-cloud-init-to-automate-the-configuration-of-virtual-machines">Using Cloud-Init to Automate the Configuration of Virtual Machines</h2>
+
+<p>Cloud-Init is a tool for automating the initial setup of virtual machines such as configuring the host name, network interfaces, and authorized keys. It can be used when provisioning virtual machines that have been deployed based on a template to avoid conflicts on the network.</p>
+
+<p>To use this tool, the <code>cloud-init</code> package must first be installed on the virtual machine. Once installed, the Cloud-Init service starts during the boot process to search for instructions on what to configure. You can then use options in the <strong>Run Once</strong> window to provide these instructions one time only, or options in the <strong>New Virtual Machine</strong>, <strong>Edit Virtual Machine</strong> and <strong>Edit Template</strong> windows to provide these instructions every time the virtual machine starts.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** Alternatively, you can configure Cloud-Init with Ansible, Python, Java, or Ruby.&#x000A;</code></pre></div>
+<h3 id="cloud-init-use-case-scenarios">Cloud-Init Use Case Scenarios</h3>
+<p>Cloud-Init can be used to automate the configuration of virtual machines in a variety of scenarios. Several common scenarios are as follows:</p>
+
+<ul>
+  <li>
+    <p><strong>Virtual Machines Created Based on Templates</strong></p>
+
+    <p>You can use the Cloud-Init options in the <strong>Initial Run</strong> section of the <strong>Run Once</strong> window to initialize a virtual machine that was created based on a template. This allows you to customize the virtual machine the first time that virtual machine is started.</p>
+  </li>
+  <li>
+    <p><strong>Virtual Machine Templates</strong></p>
+
+    <p>You can use the <strong>Use Cloud-Init/Sysprep</strong> options in the <strong>Initial Run</strong> tab of the <strong>Edit Template</strong> window to specify options for customizing virtual machines created based on that template.</p>
+  </li>
+  <li>
+    <p><strong>Virtual Machine Pools</strong></p>
+
+    <p>You can use the <strong>Use Cloud-Init/Sysprep</strong> options in the <strong>Initial Run</strong> tab of the New Pool window to specify options for customizing virtual machines taken from that virtual machine pool. This allows you to specify a set of standard settings that will be applied every time a virtual machine is taken from that virtual machine pool. You can inherit or override the options specified for the template on which the virtual machine is based, or specify options for the virtual machine pool itself.</p>
+  </li>
+</ul>
+
+<h3 id="installing-cloud-init">Installing Cloud-Init</h3>
+
+<p>This procedure describes how to install Cloud-Init on a virtual machine. Once Cloud-Init is installed, you can create a template based on this virtual machine. Virtual machines created based on this template can leverage Cloud-Init functions, such as configuring the host name, time zone, root password, authorized keys, network interfaces, DNS service, etc. on boot.</p>
+
+<p><strong>Installing Cloud-Init</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the virtual machine.</p>
+  </li>
+  <li>
+    <p>Enable the required repositories.</p>
+  </li>
+  <li>
+    <p>Install the <code>cloud-init</code> package and dependencies:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install cloud-init&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="using-cloud-init-to-prepare-a-template">Using Cloud-Init to Prepare a Template</h3>
+
+<p>As long as the <code>cloud-init</code> package is installed on a Linux virtual machine, you can use the virtual machine to make a cloud-init enabled template. Specify a set of standard settings to be included in a template as described in the following procedure or, alternatively, skip the Cloud-Init settings steps and configure them when creating a virtual machine based on this template.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** While the following procedure outlines how to use Cloud-Init when preparing a template, the same settings are also available in the **New Virtual Machine**, **Edit Template**, and **Run Once** windows.&#x000A;</code></pre></div>
+<p><strong>Using Cloud-Init to Prepare a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Templates</strong> and select a template.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Show Advanced Options</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Initial Run</strong> tab and select the <strong>Use Cloud-Init/Sysprep</strong> check box.</p>
+  </li>
+  <li>
+    <p>Enter a host name in the <strong>VM Hostname</strong> text field.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Configure Time Zone</strong> check box and select a time zone from the <strong>Time Zone</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Expand the <strong>Authentication</strong> section.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>Select the <strong>Use already configured password</strong> check box to user the existing credentials, or clear that check box and enter a root password in the <strong>Password</strong> and <strong>Verify Password</strong> text fields to specify a new root password.</p>
+  </li>
+  <li>
+    <p>Enter any SSH keys to be added to the authorized hosts file on the virtual machine in the <strong>SSH Authorized Keys</strong> text area.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Regenerate SSH Keys</strong> check box to regenerate SSH keys for the virtual machine.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>Expand the <strong>Networks</strong> section.</li>
+</ol>
+
+<ul>
+  <li>
+    <p>Enter any DNS servers in the <strong>DNS Servers</strong> text field.</p>
+  </li>
+  <li>
+    <p>Enter any DNS search domains in the <strong>DNS Search Domains</strong> text field.</p>
+  </li>
+  <li>
+    <p>Select the <strong>In-guest Network Interface</strong> check box and use the <strong>+ Add new</strong> and <strong>- Remove selected</strong> buttons to add or remove network interfaces to or from the virtual machine.</p>
+
+    <p><strong>Important:</strong> You must specify the correct network interface name and number (for example, <code>eth0</code>, <code>eno3</code>, <code>enp0s</code>). Otherwise, the virtual machine’s interface connection will be up, but it will not have the <strong>cloud-init</strong> network configuration.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Expand the <strong>Custom Script</strong> section and enter any custom scripts in the <strong>Custom Script</strong> text area.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You can now provision new virtual machines using this template.</p>
+
+<h3 id="using-cloud-init-to-initialize-a-virtual-machine">Using Cloud-Init to Initialize a Virtual Machine</h3>
+
+<p>Use Cloud-Init to automate the initial configuration of a Linux virtual machine. You can use the Cloud-Init fields to configure a virtual machine's host name, time zone, root password, authorized keys, network interfaces, and DNS service. You can also specify a custom script, a script in YAML format, to run on boot. The custom script allows for additional Cloud-Init configuration that is supported by Cloud-Init but not available in the Cloud-Init fields. For more information on custom script examples, see <a href="http://cloudinit.readthedocs.org/en/latest/topics/examples.html">Cloud config examples</a>.</p>
+
+<p><strong>Using Cloud-Init to Initialize a Virtual Machine</strong></p>
+
+<p>This procedure starts a virtual machine with a set of Cloud-Init settings. If the relevant settings are included in the template the virtual machine is based on, review the settings, make changes where appropriate, and click <strong>OK</strong> to start the virtual machine.</p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Run</strong> drop-down button and select  <strong>Run Once</strong>.</p>
+  </li>
+  <li>
+    <p>Expand the <strong>Initial Run</strong> section and select the <strong>Cloud-Init</strong> check box.</p>
+  </li>
+  <li>
+    <p>Enter a host name in the <strong>VM Hostname</strong> text field.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Configure Time Zone</strong> check box and select a time zone from the <strong>Time Zone</strong> drop-down menu.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Use already configured password</strong> check box to use the existing credentials, or clear that check box and enter a root password in the <strong>Password</strong> and <strong>Verify Password</strong> text fields to specify a new root password.</p>
+  </li>
+  <li>
+    <p>Enter any SSH keys to be added to the authorized hosts file on the virtual machine in the <strong>SSH Authorized Keys</strong> text area.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Regenerate SSH Keys</strong> check box to regenerate SSH keys for the virtual machine.</p>
+  </li>
+  <li>
+    <p>Enter any DNS servers in the <strong>DNS Servers</strong> text field.</p>
+  </li>
+  <li>
+    <p>Enter any DNS search domains in the <strong>DNS Search Domains</strong> text field.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Network</strong> check box and use the <strong>+</strong> and <strong>-</strong> buttons to add or remove network interfaces to or from the virtual machine.</p>
+
+    <p><strong>Important:</strong> You must specify the correct network interface name and number (for example, <code>eth0</code>, <code>eno3</code>, <code>enp0s</code>). Otherwise, the virtual machine’s interface connection will be up, but it will not have the <strong>cloud-init</strong> network configuration.</p>
+  </li>
+  <li>
+    <p>Enter a custom script in the <strong>Custom Script</strong> text area. Make sure the values specified in the script are appropriate. Otherwise, the action will fail.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p><strong>Note:</strong> To check if a virtual machine has Cloud-Init installed, select a virtual machine and click the <strong>Applications</strong> sub-tab. Only shown if the guest agent is installed.</p>
+  </li>
+</ol>
+
+<h2 id="using-sysprep-to-automate-the-configuration-of-virtual-machines">Using Sysprep to Automate the Configuration of Virtual Machines</h2>
+
+<p><code>Sysprep</code> is a tool used to automate the setup of Windows virtual machines, for example, configuring host names, network interfaces, authorized keys, set up users, or to connect to Active Directory. <code>Sysprep</code> is installed with every version of Windows.</p>
+
+<p>oVirt enhances <code>Sysprep</code> by exploiting virtualization technology to deploy virtual workstations based on a single template. oVirt builds a tailored auto-answer file for each virtual workstation.</p>
+
+<p>Sysprep generates a complete unattended installation answer file. Default values for several Windows operating systems are available in the <strong>/usr/share/ovirt-engine/conf/sysprep/</strong> directory. You can also create a custom <code>Sysprep</code> file and reference it from the the <strong>osinfo</strong> file in the <strong>/etc/ovirt-engine/osinfo.conf.d/</strong> directory. These files act as templates for <code>Sysprep</code>. The fields in these files can be copied and edited as required. This definition will override any values entered into the <strong>Initial Run</strong> fields of the <strong>Edit Virtual Machine</strong> window.</p>
+
+<p>You can create a custom <code>sysprep</code> file when creating a pool of Windows virtual machines, to accommodate various operating systems and domains.</p>
+
+<p>The override file must be created under <strong>/etc/ovirt-engine/osinfo.conf.d/</strong>, have a filename that puts it after <strong>/etc/ovirt-engine/osinfo.conf.d/00-defaults.properties</strong>, and ends in <strong>.properties</strong>. For example, <strong>/etc/ovirt-engine/osinfo.conf.d/10-productkeys.properties</strong>. The last file will have precedence and override any other previous file.</p>
+
+<p>Copy the default values for your Windows operating system from <strong>/etc/ovirt-engine/osinfo.conf.d/00-defaults.properties</strong> into the override file, and input your values in the <code>productKey.value</code> and <code>sysprepPath.value</code> fields.</p>
+
+<p><strong>Windows 7 Default Configuration Values</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # Windows7(11, OsType.Windows, false),false&#x000A;    os.windows_7.id.value = 11&#x000A;    os.windows_7.name.value = Windows 7&#x000A;    os.windows_7.derivedFrom.value = windows_xp&#x000A;    os.windows_7.sysprepPath.value = ${ENGINE_USR}/conf/sysprep/sysprep.w7&#x000A;    os.windows_7.productKey.value =&#x000A;    os.windows_7.devices.audio.value = ich6&#x000A;    os.windows_7.devices.diskInterfaces.value.3.3 = IDE, VirtIO_SCSI, VirtIO&#x000A;    os.windows_7.devices.diskInterfaces.value.3.4 = IDE, VirtIO_SCSI, VirtIO&#x000A;    os.windows_7.devices.diskInterfaces.value.3.5 = IDE, VirtIO_SCSI, VirtIO&#x000A;    os.windows_7.isTimezoneTypeInteger.value = false&#x000A;</code></pre></div>
+<h3 id="configuring-sysprep-on-a-template">Configuring Sysprep on a Template</h3>
+
+<p>You can use this procedure to specify a set of standard <code>Sysprep</code> settings to include in the template, alternatively you can configure the <code>Sysprep</code> settings when creating a virtual machine based on this template.</p>
+
+<p>Replacement strings can be used to substitute values provided in the default files in the <strong>/usr/share/ovirt-engine/conf/sysprep/</strong> directory. For example, <code>"&lt;Domain&gt;&lt;![CDATA[$JoinDomain$]]&gt;&lt;/Domain&gt;"</code> can be used to indicate the domain to join.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Do not reboot the virtual machine while Sysprep is running.&#x000A;</code></pre></div>
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>The Windows virtual machine parameters have been correctly defined.</p>
+  </li>
+  <li>
+    <p>If not, click <strong>Compute</strong> → <strong>Virtual Machines</strong>, click <strong>Edit</strong>, and enter the required information in the <strong>Operating System</strong> and <strong>Cluster</strong> fields.</p>
+  </li>
+  <li>
+    <p>The correct product key has been defined in an override file on the Engine.</p>
+  </li>
+</ul>
+
+<p><strong>Using Sysprep to Prepare a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Build the Windows virtual machine with the required patches and software.</p>
+  </li>
+  <li>
+    <p>Seal the Windows virtual machine. See “Sealing Virtual Machines in Preparation for Deployment as Templates” above.</p>
+  </li>
+  <li>
+    <p>Create a template based on the Windows virtual machine. See “Creating a Template” above.</p>
+  </li>
+  <li>
+    <p>Update the <code>Sysprep</code> file with a text editor if additional changes are required.</p>
+  </li>
+</ol>
+
+<p>You can now provision new virtual machines using this template.</p>
+
+<h3 id="using-sysprep-to-initialize-a-virtual-machine">Using Sysprep to Initialize a Virtual Machine</h3>
+
+<p>Use <code>Sysprep</code> to automate the initial configuration of a Windows virtual machine. You can use the <code>Sysprep</code> fields to configure a virtual machine’s host name, time zone, root password, authorized keys, network interfaces, and DNS service.</p>
+
+<p><strong>Using Sysprep to Initialize a Virtual Machine</strong></p>
+
+<p>This procedure starts a virtual machine with a set of <code>Sysprep</code> settings. If the relevant settings are included in the template the virtual machine is based on, review the settings and make changes where required.</p>
+
+<ol>
+  <li>
+    <p>Create a new Windows virtual machine based on a template of the required Windows virtual machine. See “Creating a Virtual Machine Based on a Template”.</p>
+  </li>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select the virtual machine.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Run</strong> drop-down button and select <strong>Run Once</strong>.</p>
+  </li>
+  <li>
+    <p>Expand the <strong>Boot Options</strong> section, select the <strong>Attach Floppy</strong> check box, and select the <strong>[sysprep]</strong> option.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Attach CD</strong> check box and select the required Windows ISO from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Move the <strong>CD-ROM</strong> to the top of the <strong>Boot Sequence</strong> field.</p>
+  </li>
+  <li>
+    <p>Configure any further <strong>Run Once</strong> options as required.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="creating-a-virtual-machine-based-on-a-template">Creating a Virtual Machine Based on a Template</h2>
+
+<p>Create virtual machines based on templates. This allows you to create virtual machines that are pre-configured with an operating system, network interfaces, applications and other resources.</p>
+
+<p><strong>Note:</strong> Virtual machines created based on a template depend on that template. This means that you cannot remove that template from the Engine if there is a virtual machine that was created based on that template. However, you can clone a virtual machine from a template to remove the dependency on that template.</p>
+
+<p><strong>Creating a Virtual Machine Based on a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Cluster</strong> on which the virtual machine will run.</p>
+  </li>
+  <li>
+    <p>Select a template from the <strong>Template</strong> list.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong>, <strong>Description</strong>, and any <strong>Comments</strong>, and accept the default values inherited from the template in the rest of the fields. You can change them if needed.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Resource Allocation</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Thin</strong> or <strong>Clone</strong> radio button in the <strong>Storage Allocation</strong> area. If you select <strong>Thin</strong>, the disk format is QCOW2. If you select <strong>Clone</strong>, select either <strong>QCOW2</strong> or <strong>Raw</strong> for disk format.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Target</strong> drop-down list to select the storage domain on which the virtual machine's virtual disk will be stored.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The virtual machine is displayed in the <strong>Virtual Machines</strong> tab.</p>
+
+<h2 id="creating-a-cloned-virtual-machine-based-on-a-template">Creating a Cloned Virtual Machine Based on a Template</h2>
+
+<p>Cloned virtual machines are similar to virtual machines based on templates. However, while a cloned virtual machine inherits settings in the same way as a virtual machine based on a template, a cloned virtual machine does not depend on the template on which it was based after it has been created.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** If you clone a virtual machine from a template, the name of the template on which that virtual machine was based is displayed in the **General** tab of the **Edit Virtual Machine** window for that virtual machine. If you change the name of that template, the name of the template in the **General** tab will also be updated. However, if you delete the template from the Engine, the original name of that template will be displayed instead.&#x000A;</code></pre></div>
+<p><strong>Cloning a Virtual Machine Based on a Template</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Cluster</strong> on which the virtual machine will run.</p>
+  </li>
+  <li>
+    <p>Select a template from the <strong>Based on Template</strong> drop-down menu.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong>, <strong>Description</strong> and any <strong>Comments</strong>. You can accept the default values inherited from the template in the rest of the fields, or change them if required.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Resource Allocation</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Clone</strong> radio button in the <strong>Storage Allocation</strong> area.</p>
+  </li>
+  <li>
+    <p>Select the disk format from the <strong>Format</strong> drop-down list. This affects the speed of the clone operation and the amount of disk space the new virtual machine initially requires.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p><strong>QCOW2</strong> (Default)</p>
+
+    <ul>
+      <li>
+        <p>Faster clone operation</p>
+      </li>
+      <li>
+        <p>Optimized use of storage capacity</p>
+      </li>
+      <li>
+        <p>Disk space allocated only as required</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Raw</strong></p>
+
+    <ul>
+      <li>
+        <p>Slower clone operation</p>
+      </li>
+      <li>
+        <p>Optimized virtual machine read and write operations</p>
+      </li>
+      <li>
+        <p>All disk space requested in the template is allocated at the time of the clone operation</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Use the <strong>Target</strong> drop-down list to select the storage domain on which the virtual machine's virtual disk will be stored.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p><strong>Note:</strong> Cloning a virtual machine may take some time. A new copy of the template's disk must be created. During this time, the virtual machine's status is first <strong>Image Locked</strong>, then <strong>Down</strong>.</p>
+  </li>
+</ol>
+
+<p>The virtual machine is created and displayed in the <strong>Virtual Machines</strong> tab. You can now assign users to it, and can begin using it when the clone operation is complete.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Administrative_Tasks">Chapter 6: Administrative Tasks</a><br />
+<strong>Next:</strong> <a href="appe-Reference_Settings_in_Administration_Portal_and_User_Portal_Windows">Appendix A: Reference Settings in Administration Portal and VM Portal Windows</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/virtual_machine_management_guide/chap-templates">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/vmm-guide/chap-Templates.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/vmm-guide/chap-Templates.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

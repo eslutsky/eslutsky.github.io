@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Testing-acceptance &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="testing-acceptance">Testing-acceptance</h1>
+
+<h2 id="acceptance">Acceptance</h2>
+
+<p>The tests where done on a ovirt 3.3.1 installation. With 2 hypervisors enabled.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test Case</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create a new VM.</td>
+      <td>Success. oVirt selects hypervisor and boots vm.</td>
+    </tr>
+    <tr>
+      <td>Create a new VM from template</td>
+      <td>Success. oVirt selects hypervisor and boots vm.</td>
+    </tr>
+    <tr>
+      <td>Create a new VM, start with “run once” and hostname enabled.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Host name should be changed.</td>
+      <td>Success. But cloud-init should be installed on the template</td>
+    </tr>
+    <tr>
+      <td>Restart vdsmd service without losing ping to vms</td>
+      <td>Success. No Ping was lost</td>
+    </tr>
+    <tr>
+      <td>Restart ovirt-management service without losing ping on vms</td>
+      <td>Success. No Ping was lost</td>
+    </tr>
+    <tr>
+      <td>Move Disk from StoragePool A to StoragePool B.</td>
+      <td>Success, but VM needs to be shut down for this.</td>
+    </tr>
+    <tr>
+      <td>Move VM to other hypervisor for maintenance on hypervisor</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>without losing ping on vms</td>
+      <td>Success</td>
+    </tr>
+    <tr>
+      <td>Pull the plug out hypervisor</td>
+      <td>Success. VM is auto moved to other hypervisor (HA Active).</td>
+    </tr>
+    <tr>
+      <td>VM is unreachable for approx 2m29s. Hypervisor comes back online after approx. 10 min.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Unplanned shutdown of hypervisor. VM Should move to other Hypervisor. Minimum downtime</td>
+      <td>Success. VM is auto moved to other hypervisor (HA Active).</td>
+    </tr>
+    <tr>
+      <td>VM is unreachable for approx 2m29s. Hypervisor comes back online after approx. 10 min.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Restore folder from backup using NetBackup</td>
+      <td>Success. No Issues</td>
+    </tr>
+    <tr>
+      <td>Server Crash. Completely reinstalled and re-added to ovirt.</td>
+      <td>Time taken: +/- 1u30</td>
+    </tr>
+    <tr>
+      <td>Server-crash –&gt; VM’s are migrated to another hypervisor.</td>
+      <td>Success. VM is moved to other Hypervisor. It shutsdown for a moment</td>
+    </tr>
+    <tr>
+      <td>but boots up immediately (HA option needs to be enabled)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Disable 1 Fiber path on the host. Vms should still work.</td>
+      <td>Success. No Downtime. Everything stays up and running</td>
+    </tr>
+    <tr>
+      <td>Disable 2 Fiber Paths. Vms should be migrated to the other Hypervisor</td>
+      <td>Fail. We had to intervene and move the vms manually</td>
+    </tr>
+    <tr>
+      <td>to the other Hypervisor or restore at least one fibre path.</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The last test we did with removing the 2 Fiber channels to the hypervisor… This will put the VM's in a pause state. This is the reason:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  the KVM team advised this would be an unsafe migration. iirc, since IO can be stuck at kernel level,  &lt;br /&gt;pending write to the storage, which would cause corruption if storage is recovered while the VM is now running on another machine. &#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/testing-acceptance.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/testing-acceptance.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

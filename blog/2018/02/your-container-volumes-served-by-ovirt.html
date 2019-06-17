@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Your Container Volumes Served By oVirt &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='rgolan' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Your Container Volumes Served By oVirt' property='og:title'>
+<meta content='Note: &lt; 5 minutes read
+
+
+When running a virtualization workload on oVirt, a VM disk is &#39;natively&#39; a disk somewhere on your network-storage.
+Entering containers world, on Kubernetes(k8s) or OpenShift, there are many options specifically because the workload can be totally stateless, i.e
+they are stored on a host supplied disk and can be removed when the container is terminated. The more interesting case is stateful workloads i.e apps that persist data (think DBs, web servers/services, etc). k8s/OpenShift designed an API to dynamically provision the container storage (volume in k8s terminology).
+
+See the resources section for more details.
+
+In this post I want to cover how oVirt can provide volumes for containers running on k8s/OpenShift cluster.' property='og:description'>
+<meta content='http://ovirt.org/blog/2018/02/your-container-volumes-served-by-ovirt.html' property='og:url'>
+<meta content='2018-02-20T09:01:00Z' property='article:published_time'>
+<meta content='rgolan' property='article:author:username'>
+<meta content='external-storage' property='article:tag'>
+<link href='/blog/tag/external-storage.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='flexdriver' property='article:tag'>
+<link href='/blog/tag/flexdriver.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='kubernetes' property='article:tag'>
+<link href='/blog/tag/kubernetes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='open source virtualization' property='article:tag'>
+<link href='/blog/tag/open source virtualization.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='openshift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt 4.2' property='article:tag'>
+<link href='/blog/tag/ovirt 4.2.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='provisioner' property='article:tag'>
+<link href='/blog/tag/provisioner.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Your Container Volumes Served By oVirt' name='twitter:title'>
+<meta content='Note: &lt; 5 minutes read
+
+
+When running a virtualization workload on oVirt, a VM disk is &#39;natively&#39; a disk somewhere on your network-storage.
+Entering containers world, on Kubernetes(k8s) or OpenShift, there are many options specifically because the workload can be totally stateless, i.e
+they are stored on a host supplied disk and can be removed when the container is terminated. The more interesting case is stateful workloads i.e apps that persist data (think DBs, web servers/services, etc). k8s/OpenShift designed an API to dynamically provision the container storage (volume in k8s terminology).
+
+See the resources section for more details.
+
+In this post I want to cover how oVirt can provide volumes for containers running on k8s/OpenShift cluster.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2018</li>
+<li class='active'>02</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Your Container Volumes Served By oVirt
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/rgolan.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/rgolan/">rgolan</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2018-02-20T09:01:00Z'>
+Tuesday 20 February 2018
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<blockquote>
+  <p>Note: <em>&lt; 5 minutes read</em></p>
+</blockquote>
+
+<p>When running a virtualization workload on oVirt, a VM disk is 'natively' a disk somewhere on your network-storage.<br />
+Entering containers world, on Kubernetes(k8s) or OpenShift, there are many options specifically because the workload can be totally stateless, i.e
+they are stored on a host supplied disk and can be removed when the container is terminated. The more interesting case is <em>stateful workloads</em> i.e apps that persist data (think DBs, web servers/services, etc). k8s/OpenShift designed an API to dynamically provision the container storage (volume in k8s terminology).</p>
+
+<p>See the <a href="#resources">resources</a> section for more details.</p>
+
+<p>In this post I want to cover how oVirt can provide volumes for containers running on k8s/OpenShift cluster.</p>
+
+<p></p>
+
+<h2 id="overview">Overview</h2>
+<p>Consider this: you want to deploy wikimedia as a container, with all its content served from <code>/opt</code>. 
+For that you will create a persistent volume for the container - when we have state to keep and server
+creating a volume makes sense. It is persistent, it exists regardless the container state,
+and you can choose which directory exactly you serve that volume, and that is the most important
+part, k8s/OpenShift gives you an API to determine who will provide the volume that you need.</p>
+
+<p>There are many options, Cinder, AWS, NFS and more. And in case the <em>node</em> that your pod is running on
+is a <em>VM</em> in oVirt, you can use ovirt-flexdriver to attach an oVirt disk and that will
+appear as a device in the node, and will be mounted with filesystem to your request. If you want to know more see the documentation about <a href="https://github.com/kubernetes-incubator/external-storage">kubernetes-incubator/external-storage</a></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    k8s/OpenShift Node          +-------&gt; oVirt Vm&#x000A;+----------------------+&#x000A;|                      |                                  +----------------+&#x000A;|   mediawiki pod      |                                  |                |&#x000A;| +---------------+    |                                  |                |&#x000A;| |               |    |                                  |                |&#x000A;| |               |    |                                  |     oVirt      |&#x000A;| |               |    |                                  |                |&#x000A;| |/srv/mediawiki |    |                                  |                |&#x000A;| +---------------+    |                                  |                |&#x000A;|                      |                                  +----------------+&#x000A;|                      |&#x000A;|                      |&#x000A;|  /dev/pv001 (/srv/mediawiki)  +-------&gt; oVirt Disk&#x000A;|                      |&#x000A;+----------------------+&#x000A;</code></pre></div>
+<h2 id="demo">Demo</h2>
+<p>Checkout this youtube video, that demonstrate how it looks like in <strong>oVirt admin UI</strong>, <strong>kubernetes UI in cockpit</strong>, and some <strong>cli</strong>:</p>
+<iframe width="800" height="600" src="https://www.youtube.com/embed/_E9pUVrI0hs"></iframe>
+
+<h2 id="external-storage-provisioner-and-flexvolume-driver">External Storage Provisioner and Flexvolume driver</h2>
+<p>OpenShift is able to request oVirt these special volumes by deploying ovirt-flexdriver and ovirt-provisioner and following this steps:</p>
+
+<ul>
+  <li>Create a storage class</li>
+  <li>Create a storage claim</li>
+  <li>Create a pod with a volume that refernce the storage claim</li>
+  <li>Run the pod</li>
+</ul>
+
+<p>A storage class will can describe slow or fast data storage that maps to data domains in oVirt</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">kind</span><span class="pi">:</span> <span class="s">StorageClass</span>&#x000A;<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">storage.k8s.io/v1</span>&#x000A;<span class="na">metadata</span><span class="pi">:</span>&#x000A;  <span class="na">name</span><span class="pi">:</span> <span class="s">ovirt-ssd-domain</span>&#x000A;<span class="na">provisioner</span><span class="pi">:</span> <span class="s">external/ovirt</span> &#x000A;<span class="na">parameters</span><span class="pi">:</span>&#x000A;  <span class="na">type</span><span class="pi">:</span> <span class="s">io1</span>&#x000A;  <span class="na">iopsPerGB</span><span class="pi">:</span> <span class="s2">"</span><span class="s">10"</span>&#x000A;  <span class="na">ovirtStorageDomain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">prod-ssd-domain"</span>&#x000A;  <span class="na">fsType</span><span class="pi">:</span> <span class="s">ext4</span>&#x000A;  <span class="na">ovirtDiskFormat</span><span class="pi">:</span> <span class="s2">"</span><span class="s">cow"</span>&#x000A;</code></pre></div>
+<p>When you create a storage claim, ovirt-provisioner will create an oVirt disk for you on the
+specified domain - notice the reference to the storage class:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># storage claim</span>&#x000A;<span class="na">kind</span><span class="pi">:</span> <span class="s">PersistentVolumeClaim</span>&#x000A;<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>&#x000A;<span class="na">metadata</span><span class="pi">:</span>&#x000A;  <span class="na">name</span><span class="pi">:</span> <span class="s">mediawiki-data-ssd-disk</span>&#x000A;  <span class="na">annotations</span><span class="pi">:</span>&#x000A;    <span class="s">volume.beta.kubernetes.io/storage-class</span><span class="pi">:</span> <span class="s">ovirt-ssd-domain</span>&#x000A;<span class="na">spec</span><span class="pi">:</span>&#x000A;  <span class="na">storageClassName</span><span class="pi">:</span> <span class="s">ovirt-ssd-domain</span>&#x000A;  <span class="na">accessModes</span><span class="pi">:</span>&#x000A;    <span class="pi">-</span> <span class="s">ReadWriteOnce</span>&#x000A;  <span class="na">resources</span><span class="pi">:</span>&#x000A;    <span class="na">requests</span><span class="pi">:</span>&#x000A;      <span class="na">storage</span><span class="pi">:</span> <span class="s">1Gi</span>&#x000A;&#x000A;</code></pre></div>
+<p>Once the claim is created, oVirt is creating a 1Gb disk which is not attached to any node yet.</p>
+
+<p>Run a mediawiki pod with so-called flex volume:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span> &#x000A;<span class="na">kind</span><span class="pi">:</span> <span class="s">Pod</span> &#x000A;<span class="na">metadata</span><span class="pi">:</span>&#x000A;  <span class="na">name</span><span class="pi">:</span> <span class="s">mediawiki</span>&#x000A;  <span class="na">labels</span><span class="pi">:</span>&#x000A;    <span class="na">app</span><span class="pi">:</span> <span class="s">ovirt</span> &#x000A;<span class="na">spec</span><span class="pi">:</span>&#x000A;  <span class="na">containers</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="na">image</span><span class="pi">:</span> <span class="s">mediawiki</span> &#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mediawiki</span> &#x000A;    <span class="na">volumeMounts</span><span class="pi">:</span>&#x000A;    <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mediawiki-storage</span>&#x000A;      <span class="na">mountPath</span><span class="pi">:</span> <span class="s2">"</span><span class="s">/data/"</span>&#x000A;  <span class="na">volumes</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">mediawiki-storage</span>&#x000A;    <span class="na">persistentVolumeClaim</span><span class="pi">:</span>&#x000A;      <span class="na">claimName</span><span class="pi">:</span> <span class="s">mediawiki-data-ssd-disk</span>&#x000A;&#x000A;</code></pre></div>
+<p>And now it is the flexvolume driver job to tell oVirt to attach the disk into the node this
+pod is running on, and creat file system on it, as described in the <strong>storage class</strong>, and to mount
+it onto the node. When this is done, the volume is ready and the container can start, with
+the mount set into the <code>/data</code> directory as set by <code>mountPath</code>.</p>
+
+<h2 id="want-to-give-it-a-try-want-to-get-updated-about-this">Want to give it a try? Want to get updated about this?</h2>
+<p>This work as for today (Feb 20th 2018) is in progress and all of it can be found at the <a href="https://github.com/rgolangh/ovirt-flexdriver">ovirt-flexdriver project page</a>
+To <em>deploy</em> <em><strong>ovirt-flexdriver</strong></em> and <em><strong>ovirt-provisioner</strong></em> I created a container with <em>Ansible</em> playbook that takes an inventory
+that has the k8s nodes and k8s master specified, along with the ovirt-engine connection details. The playbook will copy and
+configure both component and get you up and running with just few keystrokes. Find more on deployment in the README.md of <a href="https://github.com/rgolangh/ovirt-flexdriver">project</a>
+and in an up-coming short video demonstrating the deployment.</p>
+
+<blockquote>
+  <p>Note on versions: this should be working against kubernetes 1.9 and oVirt 4.2 but 4.1 should work as well (because the API in use is the same).</p>
+</blockquote>
+
+<h2 id="resources">Resources</h2>
+<ul>
+  <li><a href="https://github.com/rgolangh/ovirt-flexdriver">oVirt flexdriver project page</a></li>
+  <li><a href="https://docs.openshift.org/latest/install_config/persistent_storage/persistent_storage_flex_volume.html">OpenShift flexvolume driver page</a></li>
+</ul>
+
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/external-storage.html">external-storage</a></li>
+<li><a href="../../tag/flexdriver.html">flexdriver</a></li>
+<li><a href="../../tag/kubernetes.html">kubernetes</a></li>
+<li><a href="../../tag/open-source-virtualization.html">open source virtualization</a></li>
+<li><a href="../../tag/openshift.html">openshift</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/ovirt-4-2.html">oVirt 4.2</a></li>
+<li><a href="../../tag/provisioner.html">provisioner</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2018-02-20-your-container-volumes-served-by-ovirt.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2018-02-20-your-container-volumes-served-by-ovirt.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 13 Feb 2019 13:52 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Post-Upgrade Tasks &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/upgrade-guide/">Upgrade-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-8-post-upgrade-tasks">Chapter 8: Post-Upgrade Tasks</h1>
+
+<h2 id="changing-the-cluster-compatibility-version">Changing the Cluster Compatibility Version</h2>
+
+<p>oVirt clusters have a compatibility version. The cluster compatibility version indicates the features of oVirt supported by all of the hosts in the cluster. The cluster compatibility is set according to the version of the least capable host operating system in the cluster.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** To change the cluster compatibility version, you must have first updated all the hosts in your cluster to a level that supports your desired compatibility level.&#x000A;</code></pre></div>
+<p><strong>Procedure</strong></p>
+
+<ol>
+  <li>
+    <p>From the Administration Portal, click <strong>Compute</strong> → <strong>Clusters</strong>.</p>
+  </li>
+  <li>
+    <p>Select the cluster to change.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the <strong>Compatibility Version</strong> to the desired value.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to open the <strong>Change Cluster Compatibility Version</strong> confirmation window.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to confirm.</p>
+
+    <p><strong>Important:</strong> An error message may warn that some virtual machines and templates are incorrectly configured. To fix this error, edit each virtual machine manually. The <strong>Edit Virtual Machine</strong> window provides additional validations and warnings that show what to correct. Sometimes the issue is automatically corrected and the virtual machine’s configuration just needs to be saved again. After editing each virtual machine, you will be able to change the cluster compatibility version.</p>
+  </li>
+</ol>
+
+<p>After you update the cluster’s compatibility version, you must update the cluster compatibility version of all running or suspended virtual machines by restarting them from within the Manager, or using the REST, instead of within the guest operating system. Virtual machines will continue to run in the previous cluster compatibility level until they are restarted. Those virtual machines that require a restart are marked with the Next-Run icon (triangle with an exclamation mark). You cannot change the cluster compatibility version of a virtual machine snapshot that is in preview; you must first commit or undo the preview.</p>
+
+<p>The self-hosted engine virtual machine does not need to be restarted.</p>
+
+<p>You have updated the compatibility version of the cluster. Once you have updated the compatibility version of all clusters in a data center, you can then change the compatibility version of the data center itself.</p>
+
+<h2 id="changing-the-data-center-compatibility-version">Changing the Data Center Compatibility Version</h2>
+
+<p>oVirt data centers have a compatibility version. The compatibility version indicates the version of oVirt that the data center is intended to be compatible with. All clusters in the data center must support the desired compatibility level.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** To change the data center compatibility version, you must have first updated all the clusters in your data center to a level that supports your desired compatibility level.&#x000A;</code></pre></div>
+<p><strong>Procedure</strong></p>
+
+<ol>
+  <li>
+    <p>From the Administration Portal, <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Select the data center to change from the list displayed.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the <strong>Compatibility Version</strong> to the desired value.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to open the <strong>Change Data Center Compatibility Version</strong> confirmation window.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to confirm.</p>
+  </li>
+</ol>
+
+<p>You have updated the compatibility version of the data center.</p>
+
+<h2 id="replacing-sha-1-certificates-with-sha-256-certificates">Replacing SHA-1 Certificates with SHA-256 Certificates</h2>
+
+<p>oVirt 4.2 uses SHA-256 signatures, which provide a more secure way to sign SSL certificates than SHA-1.Newly installed 4.2 systems do not require any special steps to enable oVirt’s public key infrastructure (PKI) to use SHA-256 signatures. However, for upgraded systems one of the following is recommended:</p>
+
+<ul>
+  <li>
+    <p>Option 1: Prevent warning messages from appearing in your browser when connecting to the Administration Portal. These warnings may either appear as pop-up windows or in the browser’s <strong>Web Console</strong> window. This option is not required if you already replaced the oVirt Engine’s Apache SSL certificate after the upgrade. However, if the certificate was signed with SHA-1, you should replace it with an SHA-256 certificate.</p>
+  </li>
+  <li>
+    <p>Option 2: Replace the SHA-1 certificates throughout the system with SHA-256 certificates.</p>
+  </li>
+</ul>
+
+<p><strong>Preventing Warning Messages from Appearing in the Browser</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Engine machine as the root user.</p>
+  </li>
+  <li>
+    <p>Check whether <strong>/etc/pki/ovirt-engine/openssl.conf</strong> includes the line <code>default_md = sha256</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cat /etc/pki/ovirt-engine/openssl.conf&#x000A;</code></pre></div>
+    <p>If it still includes default_md = sha1, back up the existing configuration and change the default to sha256:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp -p /etc/pki/ovirt-engine/openssl.conf /etc/pki/ovirt-engine/openssl.conf."$(date +"%Y%m%d%H%M%S")"&#x000A; # sed -i 's/^default_md = sha1/default_md = sha256/' /etc/pki/ovirt-engine/openssl.conf&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Define the certificate that should be re-signed:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # names="apache"&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For self-hosted engine environments, log in to one of the self-hosted engine nodes and enable global maintenance:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-maintenance --mode=global&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>On the Manager, re-sign the Apache certificate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> for name in $names; do&#x000A;     subject="$(&#x000A;         openssl \&#x000A;             x509 \&#x000A;             -in /etc/pki/ovirt-engine/certs/"${name}".cer \&#x000A;             -noout \&#x000A;             -subject \&#x000A;         | sed \&#x000A;             's;subject= \(.\*\);\1;' \&#x000A;     )"&#x000A;    /usr/share/ovirt-engine/bin/pki-enroll-pkcs12.sh \&#x000A;         --name="${name}" \&#x000A;         --password=mypass \&#x000A;         --subject="${subject}" \&#x000A;         --keep-key&#x000A; done&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the <strong>httpd</strong> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart httpd&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For self-hosted engine environments, log in to one of the self-hosted engine nodes and disable global maintenance:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-maintenance --mode=none&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Connect to the Administration Portal to confirm that the warning no longer appears.</p>
+  </li>
+  <li>
+    <p>If you previously imported a CA or https certificate into the browser, find the certificate(s), remove them from the browser, and reimport the new CA certificate. Install the certificate authority according to the instructions provided by your browser. To get the certificate authority’s certificate, navigate to http://your-manager-fqdn/ovirt-engine/services/pki-resource?resource=ca-certificate&amp;format=X509-PEM-CA, replacing your-manager-fqdn with the fully qualified domain name (FQDN).</p>
+  </li>
+</ol>
+
+<p><strong>Replacing All Signed Certificates with SHA-256</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the Engine machine as the root user.</p>
+  </li>
+  <li>
+    <p>Check whether <strong>/etc/pki/ovirt-engine/openssl.conf</strong> includes the line <code>default_md = sha256</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cat /etc/pki/ovirt-engine/openssl.conf&#x000A;</code></pre></div>
+    <p>If it still includes <code>default_md = sha1</code>, back up the existing configuration and change the default to <code>sha256</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp -p /etc/pki/ovirt-engine/openssl.conf /etc/pki/ovirt-engine/openssl.conf."$(date +"%Y%m%d%H%M%S")"&#x000A; # sed -i 's/^default_md = sha1/default_md = sha256/' /etc/pki/ovirt-engine/openssl.conf&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Re-sign the CA certificate by backing it up and creating a new certificate in <strong>ca.pem.new</strong>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp -p /etc/pki/ovirt-engine/private/ca.pem /etc/pki/ovirt-engine/private/ca.pem."$(date +"%Y%m%d%H%M%S")"&#x000A; # openssl x509 -signkey /etc/pki/ovirt-engine/private/ca.pem -in /etc/pki/ovirt-engine/ca.pem -out /etc/pki/ovirt-engine/ca.pem.new -days 3650 -sha256&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Replace the existing certificate with the new certificate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # mv /etc/pki/ovirt-engine/ca.pem.new /etc/pki/ovirt-engine/ca.pem&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Define the certificates that should be re-signed:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # names="engine apache websocket-proxy jboss imageio-proxy"&#x000A;</code></pre></div>
+    <p>If you replaced the oVirt Engine SSL Certificate after the upgrade, run the following instead:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # names="engine websocket-proxy jboss imageio-proxy"&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For self-hosted engine environments, log in to one of the self-hosted engine nodes and enable global maintenance:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-maintenance --mode=global&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>On the Engine, re-sign the certificates:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> for name in $names; do&#x000A;    subject="$(&#x000A;         openssl \&#x000A;             x509 \&#x000A;             -in /etc/pki/ovirt-engine/certs/"${name}".cer \&#x000A;             -noout \&#x000A;             -subject \&#x000A;         | sed \&#x000A;             's;subject= \(.\*\);\1;' \&#x000A;         )"&#x000A;      /usr/share/ovirt-engine/bin/pki-enroll-pkcs12.sh \&#x000A;             --name="${name}" \&#x000A;             --password=mypass \&#x000A;             --subject="${subject}" \&#x000A;             --keep-key&#x000A; done&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restart the following services:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart httpd&#x000A; # systemctl restart ovirt-engine&#x000A; # systemctl restart ovirt-websocket-proxy&#x000A; # systemctl restart ovirt-imageio-proxy&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For self-hosted engine environments, log in to one of the self-hosted engine nodes and disable global maintenance:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-maintenance --mode=none&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Connect to the Administration Portal to confirm that the warning no longer appears.</p>
+  </li>
+  <li>
+    <p>If you previously imported a CA or https certificate into the browser, find the certificate(s), remove them from the browser, and reimport the new CA certificate. Install the certificate authority according to the instructions provided by your browser. To get the certificate authority’s certificate, navigate to http://your-manager-fqdn/ovirt-engine/services/pki-resource?resource=ca-certificate&amp;format=X509-PEM-CA, replacing your-manager-fqdn with the fully qualified domain name (FQDN).</p>
+  </li>
+  <li>
+    <p>Enroll the certificates on the hosts. Repeat the following procedure for each host.</p>
+  </li>
+</ol>
+
+<p>i. In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+
+<p>ii. Select the host and click <strong>Management</strong> → <strong>Maintenance</strong>.</p>
+
+<p>iii. Once the host is in maintenance mode, click <strong>Installation</strong> → <strong>Enroll Certificate</strong>.</p>
+
+<p>iv. Click <strong>Management</strong> → <strong>Activate</strong>.</p>
+
+<h2 id="updating-ovn-providers-installed-in-ovirt-41">Updating OVN Providers Installed in oVirt 4.1</h2>
+
+<p>If you installed an Open Virtual Network (OVN) provider in oVirt 4.1, you must manually edit its configuration for oVirt 4.2.</p>
+
+<p><strong>Updating an OVN Provider’s Networking Plugin</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong> and select the OVN provider.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Networking Plugin</strong> text field and select <strong>oVirt Network Provider for OVN</strong> from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Upgrading_a_Remote_Database_Environment_from_4.1_to_oVirt_4.2">Chapter 7: Upgrading a Remote Database Environment from 4.1 to oVirt 4.2</a><br />
+<strong>Next:</strong> <a href="chap-Updates_between_Minor_Releases/">Chapter 9: Updates Between Minor Releases</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/upgrade_guide/chap-post-upgrade_tasks">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/upgrade-guide/chap-Post-Upgrade_Tasks.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/upgrade-guide/chap-Post-Upgrade_Tasks.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

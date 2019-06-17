@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Higher performance for oVirt Python SDK &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='omachace' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Higher performance for oVirt Python SDK' property='og:title'>
+<meta content='Python SDK version 4.1.4 introduced support for sending asynchronous requests and HTTP pipelining.
+
+This blog post explains those terms and will show you an example how to use the Python SDK in an asynchronous manner.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/05/higher-performance-for-python-sdk.html' property='og:url'>
+<meta content='2017-05-18T12:30:00Z' property='article:published_time'>
+<meta content='omachace' property='article:author:username'>
+<meta content='api' property='article:tag'>
+<link href='/blog/tag/api.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='async' property='article:tag'>
+<link href='/blog/tag/async.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='ovirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='pipelining' property='article:tag'>
+<link href='/blog/tag/pipelining.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='python' property='article:tag'>
+<link href='/blog/tag/python.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='sdk' property='article:tag'>
+<link href='/blog/tag/sdk.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Higher performance for oVirt Python SDK' name='twitter:title'>
+<meta content='Python SDK version 4.1.4 introduced support for sending asynchronous requests and HTTP pipelining.
+
+This blog post explains those terms and will show you an example how to use the Python SDK in an asynchronous manner.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>05</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Higher performance for oVirt Python SDK
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/omachace.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/omachace/">omachace</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-05-18T12:30:00Z'>
+Thursday 18 May 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Python SDK version 4.1.4 introduced support for sending asynchronous requests and HTTP pipelining.</p>
+
+<p>This blog post explains those terms and will show you an example how to use the Python SDK in an asynchronous manner.</p>
+
+<p></p>
+
+<h2 id="asynchronous-requests">Asynchronous Requests</h2>
+
+<p>When using asynchronous requests, the client sends the request and defines a method (usually called <code>callback</code>), which should be called after the response is received but the client is not waiting for the response. In order for SDK to work in an asynchronous fashion, we introduced two new features to our SDK: multiple connections and HTTP pipelining.</p>
+
+<p>These features provide significant value when the user wishes to fetch the inventory of the oVirt system. The time to fetch the inventory may be significantly decreased, too. A comparison of the synchronous and asynchronous requests folows.</p>
+
+<h3 id="multiple-connections">Multiple Connections</h3>
+
+<p>Previously the SDK used only a single open connection that sequentially sent the requests according to user program and always waited for the server response for corresponding request.</p>
+
+<p>In the new version of the SDK, the user can specify the number of connections the SDK should create to the server, and the specific requests created by user program uses those connections in parallel.</p>
+
+<h3 id="http-pipelining">HTTP Pipelining</h3>
+
+<p>As you can see at the image below, the HTTP requests are executed sequentially by default. The next request in order can be executed, when the previous request is received.</p>
+
+<p>With HTTP pipelining, a client can send multiple requests without waiting for ther server response. Only idempotent HTTP methods can be pipelined.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>With pipelining disabled            With pipelining enabled&#x000A;&#x000A;       |     |                            |      |&#x000A;       | \   |                            | \    |&#x000A;       |  \  |                            |  \   |&#x000A;       |   \ |                            | \ \  |&#x000A;       |    \|                            |  \ \ |&#x000A;       |    /|                            |   \ \|&#x000A;       |   / |                            |    \/| &#x000A;       |  /  |                            |    /\|&#x000A;CLIENT | /   | SERVER              CLIENT |   / /| SERVER&#x000A;       | \   |                            |  / / |&#x000A;       |  \  |                            | / /  |&#x000A;       |   \ |                            |/ /   |&#x000A;       |    \|                            | /    |&#x000A;       |    /|                            |      |&#x000A;       |   / |                            &#x000A;       |  /  |                            &#x000A;       | /   |                            &#x000A;</code></pre></div>
+<h2 id="sdk-implementation">SDK Implementation</h2>
+
+<p>In order not to break the backward compatibility of the SDK, we have introduced a new Boolean parameter called <code>wait</code>, to the methods of SDK services.</p>
+
+<p>The default value is <code>True</code>, so it's working in synchronous fashion. If the user sends the <code>wait=False</code>, the SDK will send a request specified by user program and will return the <code>Future</code> object,
+which is defined as follows:</p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="k">class</span> <span class="nc">Future</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>&#x000A;    <span class="s">"""&#x000A;    Instances of this class are returned for operations that specify the&#x000A;    `wait=False` parameter.&#x000A;    """</span>&#x000A;&#x000A;    <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>&#x000A;        <span class="s">"""&#x000A;        Waits till the result of the operation that created this future is&#x000A;        available.&#x000A;        """</span>&#x000A;</code></pre></div>
+<p>The user will need to call the <code>wait</code> method in order to wait for the response. The <code>wait</code> method returns the resulting object.</p>
+
+<h2 id="example">Example</h2>
+
+<p>This example will fetch all the VMs in oVirt and also fetch relevant VM data like network interfaces, disks and permissions. The additional data of the VM are fetched asynchronously.</p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="kn">import</span> <span class="nn">ovirtsdk4</span> <span class="k">as</span> <span class="n">sdk</span>&#x000A;&#x000A;<span class="n">connection</span> <span class="o">=</span> <span class="n">sdk</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span>&#x000A;    <span class="n">url</span><span class="o">=</span><span class="s">'https://example.engine.com/ovirt-engine/api'</span><span class="p">,</span>&#x000A;    <span class="n">username</span><span class="o">=</span><span class="s">'admin@internal'</span><span class="p">,</span>&#x000A;    <span class="n">password</span><span class="o">=</span><span class="s">'123456'</span><span class="p">,</span>&#x000A;    <span class="n">ca_files</span><span class="o">=</span><span class="s">'ca.pem'</span><span class="p">,</span>&#x000A;    <span class="n">connections</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>&#x000A;    <span class="n">pipeline</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>&#x000A;<span class="p">)</span>&#x000A;&#x000A;<span class="n">system_service</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">system_service</span><span class="p">()</span>&#x000A;&#x000A;<span class="n">vms_service</span> <span class="o">=</span> <span class="n">system_service</span><span class="o">.</span><span class="n">vms_service</span><span class="p">()</span>&#x000A;<span class="n">vms</span> <span class="o">=</span> <span class="n">system_service</span><span class="o">.</span><span class="n">vms_service</span><span class="p">()</span><span class="o">.</span><span class="nb">list</span><span class="p">()</span>&#x000A;&#x000A;<span class="n">futures</span> <span class="o">=</span> <span class="p">{}</span>&#x000A;<span class="k">for</span> <span class="n">vm</span> <span class="ow">in</span> <span class="n">vms</span><span class="p">:</span>&#x000A;    <span class="n">vm_service</span> <span class="o">=</span> <span class="n">vms_service</span><span class="o">.</span><span class="n">vm_service</span><span class="p">(</span><span class="n">vm</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>&#x000A;    <span class="n">disks_future</span> <span class="o">=</span> <span class="n">vm_service</span><span class="o">.</span><span class="n">disk_attachments_service</span><span class="p">()</span><span class="o">.</span><span class="nb">list</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>&#x000A;    <span class="n">nics_future</span> <span class="o">=</span> <span class="n">vm_service</span><span class="o">.</span><span class="n">nics_service</span><span class="p">()</span><span class="o">.</span><span class="nb">list</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>&#x000A;    <span class="n">perms_future</span> <span class="o">=</span> <span class="n">vm_service</span><span class="o">.</span><span class="n">permissions_service</span><span class="p">()</span><span class="o">.</span><span class="nb">list</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>&#x000A;    <span class="n">futures</span><span class="p">[</span><span class="n">vm</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">disks_future</span><span class="p">,</span> <span class="n">nics_future</span><span class="p">,</span> <span class="n">perms_future</span><span class="p">]</span>&#x000A;&#x000A;<span class="k">for</span> <span class="n">vm_name</span><span class="p">,</span> <span class="n">vm_resources</span> <span class="ow">in</span> <span class="n">futures</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>&#x000A;    <span class="k">for</span> <span class="n">resource</span> <span class="ow">in</span> <span class="n">vm_resources</span><span class="p">:</span>&#x000A;        <span class="n">resource</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>&#x000A;&#x000A;<span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>&#x000A;</code></pre></div>
+<p>You can check another <a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/asynchronous_inventory.py">example</a> in the git repository of the oVirt Python SDK, under the <a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/">examples</a> sub directory.</p>
+
+<h2 id="benchmark">Benchmark</h2>
+
+<p>I performed a small benchmark test on my small oVirt setup with about 100 virtual machines and
+executed the example above, with the following result:</p>
+
+<div class="highlight"><pre class="highlight shell"><code>omachace ~ <span class="nv">$ </span><span class="nb">time </span>python sync.py &#x000A;&#x000A;real   0m4.746s&#x000A;user   0m4.109s&#x000A;sys    0m0.447s&#x000A;&#x000A;omachace ~ <span class="nv">$ </span><span class="nb">time </span>python async.py &#x000A;&#x000A;real   0m2.569s&#x000A;user   0m2.015s&#x000A;sys    0m0.179s&#x000A;</code></pre></div>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/api.html">api</a></li>
+<li><a href="../../tag/async.html">async</a></li>
+<li><a href="../../tag/ovirt.html">ovirt</a></li>
+<li><a href="../../tag/pipelining.html">pipelining</a></li>
+<li><a href="../../tag/python.html">python</a></li>
+<li><a href="../../tag/sdk.html">sdk</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-05-18-higher-performance-for-python-sdk.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-05-18-higher-performance-for-python-sdk.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 18 May 2017 11:52 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

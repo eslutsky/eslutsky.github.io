@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Trusted compute pools &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="trusted-compute-pools">Trusted Compute Pools</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Trusted Compute Pools provide a way for Administrator to deploy VMs on trusted hosts.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Gang Wei (gwei3)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#103;&#097;&#110;&#103;&#046;&#119;&#101;&#105;&#064;&#105;&#110;&#116;&#101;&#108;&#046;&#099;&#111;&#109;">&#103;&#097;&#110;&#103;&#046;&#119;&#101;&#105;&#064;&#105;&#110;&#116;&#101;&#108;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Status: Merged
+    <ul>
+      <li>Engine change: <a href="http://gerrit.ovirt.org/#/c/14605/">http://gerrit.ovirt.org/#/c/14605/</a></li>
+      <li>Webadmin change: <a href="http://gerrit.ovirt.org/#/c/14611/">http://gerrit.ovirt.org/#/c/14611/</a></li>
+      <li>REST api change: <a href="http://gerrit.ovirt.org/#/c/14692/">http://gerrit.ovirt.org/#/c/14692/</a></li>
+      <li>OVF change: <a href="http://gerrit.ovirt.org/#/c/14729/">http://gerrit.ovirt.org/#/c/14729/</a></li>
+      <li>left-overs for notification and some corner case handling
+        <ul>
+          <li><a href="http://gerrit.ovirt.org/#/c/16595/">http://gerrit.ovirt.org/#/c/16595/</a></li>
+          <li><a href="http://gerrit.ovirt.org/#/c/16596/">http://gerrit.ovirt.org/#/c/16596/</a></li>
+          <li><a href="http://gerrit.ovirt.org/#/c/16598/">http://gerrit.ovirt.org/#/c/16598/</a></li>
+          <li><a href="http://gerrit.ovirt.org/#/c/16600/">http://gerrit.ovirt.org/#/c/16600/</a></li>
+          <li><a href="http://gerrit.ovirt.org/#/c/16987/">http://gerrit.ovirt.org/#/c/16987/</a></li>
+          <li><a href="http://gerrit.ovirt.org/#/c/16990/">http://gerrit.ovirt.org/#/c/16990/</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Last updated date: Sept 16, 2013</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>The feature will allow data center administrator to build trusted computing pools based on H/W-based security features, such as Intel Trusted Execution Technology (TXT). Combining attestation done by a separate entity (i.e. "remote attestation"), the administrator can ensure that verified measurement of software be running in hosts, thus they can establish the foundation for the secure enterprise stack. Such remote attestation services can be developed by using SDK provided by OpenAttestation project.</p>
+
+<p>Remote Attestation server performs host verification through following steps:</p>
+
+<ol>
+  <li>
+    <p>Hosts boot with Intel TXT technology enabled</p>
+  </li>
+  <li>
+    <p>The hosts' BIOS, hypervisor and OS are measured</p>
+  </li>
+  <li>
+    <p>These measured data is sent to Attestation server when challenged by attestation server</p>
+  </li>
+  <li>
+    <p>Attestation server verifies those measurements against good/known database to determine hosts' trustworthiness</p>
+  </li>
+</ol>
+
+<p><img alt="" width="800" height="394" src="/images/wiki/Figure10.png?1560777613" />
+ By far, we got following implementation approach for TCP feature:</p>
+
+<ul>
+  <li>Approach: trust property in cluster level policy. The biggest benefits are VM migration can work without specific changes, and no performance impact for VM creation.</li>
+</ul>
+
+<h4 id="frontend-changes">Frontend changes</h4>
+
+<p>Divide cluster policy side tab into two sections, "scheduling policy" and "additional properties". "Enable Trusted Service" checkbox must be selected to create a trusted cluster.</p>
+
+<p><img alt="" src="/images/wiki/figure9.png" /></p>
+
+<h4 id="backend-changes">Backend changes</h4>
+
+<ol>
+  <li>Add attestation check logic in "InitVdsOnUpCommand.java" to initialize status of each host before active, this java file can be found in this path org.ovirt.engine.core.bll.</li>
+</ol>
+
+<ul>
+  <li>The first time when this host add into a trust cluster, call attestation server to determine the real status (untrusted , trusted) of the VDS (physical host), the host will be in "up" status if get "trusted" result from attestation server, or else, set this host as non-operational status.</li>
+  <li>When host is down for a different reason and up again, attestation check logic will be triggered also.</li>
+  <li>Call SetNonOperationalVdsCommand with a new NonOperationalReason. This command will try to migrate all VMs from the host and then set it non-operational. In the case of another trusted host existed in trust cluster, all of the VMs will try to migrate to that trusted host. For the non-migrational VMs, keep these VMs running.</li>
+</ul>
+
+<ol>
+  <li>Activate a trusted host by admin {optional}</li>
+</ol>
+
+<p>Admin can activate an untrusted host manually after getting a positive response from attestation server manually. This is optional as host’s status changes only under the conditional of reboot, host’s reboot and invoke InitVdsOnUpCommand will call attestation server again.</p>
+
+<p>In the UI there is an "Activate" option. What still needs to be added is the checking with the attestation server to make sure that whether this host is trusted and this cluster is defined as 'Trusted'. If so, only trusted host will succeed in the activate command (a proper Audit Log error in case the host failed to activate due to trust issue.) Check logic will be added in VdsManager:activate ().</p>
+
+<p>Code path is “ovirt-engine/backend/manager/modules/vdsbroker/src/main/java/org/ovirt/engine/core/vdsbroker/” where the re-activation process begins.</p>
+
+<h4 id="ovf-related-changes">OVF related changes</h4>
+
+<p>When the VM created in the trusted cluster was exported as OVF file, OVF file should have a new flag to indicate this VM should be running in a trusted cluster. Key relevant classes include OvfTemplateReader.java, OvfTemplateWriter.java, OvfVmReader.java and OvfVmWriter.java. We define this new property in export file as “trusted_service”. When importing a 'trusted' VM into an untrusted cluster, two cases should be considered.</p>
+
+<ul>
+  <li>The admin is doing a mistake and chooses the wrong cluster, alert information will be triggered.</li>
+  <li>The admin has a real case where he wants the VM to run in an 'untrusted' cluster.</li>
+</ul>
+
+<h4 id="restful-api">Restful API</h4>
+
+<p>Create a trusted cluster via restful API, curl command may like this.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  curl -v -u "admin@internal:abc123" -H "Content-type: application/xml" -d '`&lt;cluster&gt;&lt;name&gt;`my_trust_cluster`&lt;/name&gt;&lt;data_center&gt;&lt;name&gt;`"Default"`&lt;/name&gt;&lt;/data_center&gt;` `&lt;version minor="2" major="3"/&gt;` `&lt;cpu id="Intel SandyBridge Family"/&gt;&lt;trusted_service&gt;`true`&lt;/trusted_service&gt;&lt;/cluster&gt;`' '`[`http://engine`](http://engine)`.***.com:80/api/clusters'&#x000A;</code></pre></div>
+<p>Key relevant modification includes api.xsd and ClusterMapper.java.</p>
+
+<h4 id="database-change">Database change</h4>
+
+<p>Trust cluster need a new property named as “trusted_service” to indicate this is a trusted cluster. Relevant tables / views include vds_groups, vm_templates_view and vms.</p>
+
+<h4 id="high-availability">High Availability</h4>
+
+<p>Not to implement in the first version.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>This is a new feature, it will bring higher security level for data center managed with oVirt.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>None.</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li><a href="/documentation/sla/trusted-compute-pools-deployment/">Trusted compute pools deployment</a></li>
+  <li><a href="https://github.com/OpenAttestation/OpenAttestation.git">https://github.com/OpenAttestation/OpenAttestation.git</a></li>
+  <li><a href="http://en.wikipedia.org/wiki/Trusted_Execution_Technology">http://en.wikipedia.org/wiki/Trusted_Execution_Technology</a></li>
+</ul>
+
+<h2 id="test-cases">Test cases</h2>
+
+<h3 id="create-a-trusted-cluster">Create a trusted cluster</h3>
+
+<ol>
+  <li>go to the <strong>Clusters</strong> tab</li>
+  <li>click on the <strong>New</strong> button</li>
+  <li>set cluster <strong>Name</strong></li>
+  <li>select <strong>Enable Virt Service</strong> checkbox</li>
+  <li>select <strong>Enable Trusted Service</strong> checkbox</li>
+  <li>click ok</li>
+  <li>if user has not configured the attestation server, check whether to give the user a notification</li>
+  <li>make sure configure correctly it, then click ok</li>
+</ol>
+
+<h3 id="add-a-trusted-host">Add a trusted host</h3>
+
+<p>Dependens on <a href="#Create_a_trusted_cluster">#Create a trusted cluster</a></p>
+
+<ol>
+  <li>go to the <strong>Hosts</strong> tab</li>
+  <li>click on <strong>New</strong> button</li>
+  <li>set host <strong>Name</strong> and <strong>Address</strong>, and make sure the host is trusted attested by attestation server</li>
+  <li>select a trusted cluster as a cluster</li>
+  <li>click ok</li>
+</ol>
+
+<h3 id="add-an-untrusted-host">Add an untrusted host</h3>
+
+<p>Dependens on <a href="#Create_a_trusted_cluster">#Create a trusted cluster</a></p>
+
+<ol>
+  <li>open the <strong>Hosts</strong> tab</li>
+  <li>click on <strong>New</strong> button</li>
+  <li>set host <strong>Name</strong> and <strong>Address</strong>, and make sure the host is untrusted attested by attestation server</li>
+  <li>select a trusted cluster as a cluster</li>
+  <li>click ok</li>
+</ol>
+
+<h3 id="reboot-the-trusted-host">Reboot the trusted host</h3>
+
+<p>Dependens on <a href="#Create_a_trusted_cluster">#Create a trusted cluster</a> , and <a href="#Add_a_trusted_host">#Add a trusted host</a></p>
+
+<ol>
+  <li>go to the <strong>Hosts</strong> tab</li>
+  <li>reboot the host in the trusted cluster(s) manually</li>
+  <li>after the host start, right click <strong>Confirm 'Host has been rebooted</strong>'</li>
+  <li>check whether the host is <strong>Up</strong> status</li>
+</ol>
+
+<h3 id="reboot-the-untrusted-host">Reboot the untrusted host</h3>
+
+<p>Dependens on <a href="#Create_a_trusted_cluster">#Create a trusted cluster</a> , and <a href="#Add_an_untrusted_host">#Add an untrusted host</a></p>
+
+<ol>
+  <li>go to the "Hosts" tab</li>
+  <li>reboot the host in the untrusted cluster(s) manually</li>
+  <li>after the host start, right click <strong>Confirm 'Host has been rebooted</strong>'</li>
+  <li>check whether the host is <strong>Nonoperational</strong> status</li>
+</ol>
+
+<h3 id="reboot-engine">Reboot engine</h3>
+
+<p>Dependens on <a href="#Create_a_trusted_cluster">#Create a trusted cluster</a> , <a href="#Add_a_trusted_host">#Add a trusted host</a>, and <a href="#Add_an_untrusted_host">#Add an untrusted host</a></p>
+
+<ol>
+  <li>make sure there are at least two hosts in the trusted cluster(s), and one is trusted and the other is untrusted</li>
+  <li>restart the engine service</li>
+  <li>back to the <em>' Hosts</em>' tab, and check the hosts' status.</li>
+  <li>the trusted host(s) status change from <strong>Nonoperational</strong> to <strong>Up</strong>; the untrusted host(s) is always <strong>Nonoperational</strong></li>
+</ol>
+
+<h3 id="create-a-truster-cluster-via-restful-api">Create a truster cluster via restful API</h3>
+
+<ol>
+  <li>Exec command: curl -v -u "admin@internal:abc123" -H "Content-type: application/xml" -d '<cluster><name>my_trust_cluster</name><data_center><name>"Default"</name></data_center> <version minor="2" major="3"></version> <cpu id="Intel SandyBridge Family"></cpu><trusted_service>true</trusted_service></cluster>' '<a href="http://engine">http://engine</a>.***.com:80/api/clusters'</li>
+  <li>go to the <strong>Clusters</strong> tab</li>
+  <li>choose the trusted cluster that has just been created , and here is <strong>my_trust_cluster</strong></li>
+  <li>click <strong>Edit</strong> button</li>
+  <li>check if <strong>Enable Trusted Service</strong> is checked</li>
+</ol>
+
+<h3 id="create-a-trusted-vm">Create a trusted VM</h3>
+
+<p>Dependens on <a href="#Create_a_trusted_cluster">#Create a trusted cluster</a> , and <a href="#Add_a_trusted_host">#Add a trusted host</a></p>
+
+<ol>
+  <li>go to <strong>Virtual Machines</strong> tab</li>
+  <li>click on <strong>New</strong> button</li>
+  <li>choose a trusted cluster as a cluster, here you need make sure the trusted host is <strong>Up</strong> status</li>
+  <li>click ok</li>
+</ol>
+
+<h3 id="export-a-vm">Export a VM</h3>
+
+<ol>
+  <li>open <strong>Virtual Machines</strong> tab</li>
+  <li>right click the trusted host and choose <strong>Export</strong></li>
+  <li>go to <strong>Storage</strong> tab, import a new trusted VM</li>
+</ol>
+
+<h3 id="export-template">Export template</h3>
+
+<ol>
+  <li>Open <strong>Template</strong> tab, choose the template and click <strong>Export</strong></li>
+  <li>Open <strong>Storage</strong> tab, import a new template</li>
+</ol>
+
+<h3 id="run-the-exported-vm">Run the exported VM</h3>
+
+<ol>
+  <li>open <strong>Virtual Machines</strong> tab, choose the exported VM</li>
+  <li>right click the VM and run this VM</li>
+</ol>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/trusted-compute-pools.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/trusted-compute-pools.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

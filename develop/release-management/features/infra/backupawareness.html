@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+BackupAwareness &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="backup-awareness">Backup Awareness</h1>
+
+<h2 id="adding-backup-awareness-to-ovirt">Adding Backup Awareness to oVirt</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>The feature will enable to track backups done using engine-backup utility and to alert the administrator if a pre-configurable time had passed from the last successful backup.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Eli Mesika (MyUser)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: emesika@redhat.com</li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<p>Currently backups are offered only as best practice, there is no alert or event that informs the user that no backup was done or that a long time passed from the last successful backup and he should backup the application database again. In case of an accident, this may lead to long engine downtime and lots of efforts restoring the engine DB if no backup was done or only an old backup exists</p>
+
+<h3 id="use-case">Use Case</h3>
+
+<p>In case that no full (db and files) backup exists or that only an old backup is available, the system will generate warning events informing the admin that the application data is at risk in case of corruption. The event will encourage the administrator to use perform a backup of the data using his own tools or using engine-backup. The administrator can ignore this warning but it will not be deleted from the audit log until a successful full backup is available or the user disables this feature on his own risk (The feature is enabled by default).</p>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>1)Adding a new table engine_backup_log with the following columns</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   scope varchar&#x000A;   done_at datetime with time stamp &#x000A;   is_passed boolean &#x000A;   output_message text&#x000A;   fqdn varchar&#x000A;   log_path text&#x000A;</code></pre></div>
+<p>2)Adding Entity, DAO and tests for engine_backup_log the DAO should implement only 'get' since all insertions are done via engine-backup</p>
+
+<p>3)Adding two configuration variable (available from engine-config)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   BackupCheckPeriodInHours the period on which we check for a fresh backup - default : 6, set to -1 to disable this feature &#x000A;   BackupAlertPeriodInDays the max number of days allowed without a fresh backup - default 1&#x000A;</code></pre></div>
+<p>4)Adding a quartz job that will awake every BackupPeriodInHours and check for the last backup available, according to that it will set/clear the appropriate warning</p>
+
+<p>5) Adding events of ENGINE_BACKUP_STARTED and ENGINE_BACKUP_COMPLETED and ENGINE_BACKUP_FAILED to be used by engine-backup to record backup activity</p>
+
+<h3 id="interface-to-engine-backup">Interface to engine-backup</h3>
+
+<p>engine-backup should call the following procedure upon start/complete/fail</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   LogEngineBackupEvent(scope, done_at , status,  output_message, fqdn, log_path)&#x000A;   scope is  {db,dwhdb,reportsdb,files}&#x000A;   done_at is the current time&#x000A;   status is -1 for failure , 0 for started and 1 for completed &#x000A;   output_message includes the error message raised in case that the operation failed&#x000A;   fqdn - fqdn the user configured when running engine-setup&#x000A;   log_path - the full log file name&#x000A;</code></pre></div>
+<h3 id="events-raised">Events Raised</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   ENGINE_BACKUP_FAILED - backup operation failed &#x000A;   ENGINE_BACKUP_STARTED - backup operation had started &#x000A;   ENGINE_BACKUP_COMPLETED - backup operation completed&#x000A;</code></pre></div>
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>The benefit to oVirt is a clear indication in case of luck of backups and a minimal engine downtime in case of corruption</p>
+
+<h3 id="assumptions">Assumptions</h3>
+
+<p>engine-backup is used as the backup utility
+engine-backup should support in engine-backup for the exclude option in pg_dump utility (-T), the excluded table should be written in the engine-config configuration and include all task, job. commands and compensation tables
+engine-backup will send audit log message when starting, succeeding and failing the backup</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  The engine-backup utility will keep on backup whatever it does today, this document uses DB backup but will work the same if engine-backup was used to backup files as well.&#x000A;</code></pre></div>
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p>Bug ID:</p>
+
+<ul>
+  <li>
+    <hr />
+  </li>
+</ul>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p>See also <a href="/develop/release-management/features/integration/engine-backup/">Ovirt-engine-backup</a>.</p>
+
+<h3 id="testing">Testing</h3>
+
+<p>TBD</p>
+
+<h3 id="contingency-plan">Contingency Plan</h3>
+
+<p>TBD</p>
+
+<h3 id="release-notes">Release Notes</h3>
+
+<p>TBD</p>
+
+<p><a href="/develop/release-management/features/">BackupAwareness</a> <a href="/develop/release-management/releases/3.6/proposed-feature/">BackupAwareness</a> <a href="Category:oVirt 3.6 Feature">BackupAwareness</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/backupawareness.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/backupawareness.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 28 Sep 2017 06:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

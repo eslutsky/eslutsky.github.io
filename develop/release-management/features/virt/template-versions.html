@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Template Versions &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="template-versions">Template Versions</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>We would like to have ability to create new version for a template,
+for example with OS or other software updates.</p>
+
+<p>this means that when creating VM from a template,
+user could also select the version of the template to use,
+by default it will be the latest version.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Omer Frenkel</li>
+  <li>Email: ofrenkel@redhat.com</li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status: Design</li>
+  <li>Target release: 3.4</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>This feature will allow adding new versions to existing templates,
+There will be two methods to create a version for a template:</p>
+
+<ul>
+  <li>by selecting a vm and using it to create a new version to a template.</li>
+  <li>by editing a template, and when saving, selecting save as version.</li>
+</ul>
+
+<p>Version of template could be deleted if no vms are using it (same as current delete template logic). If a base template is deleted, all its versions will be deleted as well.</p>
+
+<p>When creating a vm from template, the user will also select the version of the template to use, or 'latest'.
+Stateless vms and vms from vm-pool that are using 'latest' version, will use new version automatically on new runs.</p>
+
+<p>We should not allow creating version of a version (nested version, just one level of versioning).
+Nested versioning could be confusing, and currently there is no good use case to support that.</p>
+
+<p><strong>Use Case</strong></p>
+
+<p>The most interesting use case is for VM-Pools, where vms are stateless.</p>
+
+<ul>
+  <li>admin can create pool of vms from template (from a specific version or 'latest')</li>
+  <li>after some time create a new version for the template</li>
+  <li>if the pool is from 'latest', pool is updated to use new version of template</li>
+  <li>
+    <p>from this point, every vm that is taken from the pool will have the new version.</p>
+
+    <p>vms in use will not be affected immediately.</p>
+  </li>
+</ul>
+
+<p><strong>New Functionality</strong></p>
+
+<p><em>Create Template Version</em></p>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>A template's version is a template that is linked to its base (original) template.</li>
+  <li>A new property for template - 'version_name' allowing the user to name the version</li>
+  <li>A new property for template - 'version' to save its version</li>
+  <li>A new property for vm - 'version' to save the version it is using, null means latest</li>
+  <li>On upgrade all templates will get version 1</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Change queries to return only latest template object for each template</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Templates sub tabs (general, discs, nics) should show information of latest version</li>
+  <li>Change VM and storage sub tab in Templates main tab to show information of all versions</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>When a new template version is created:
+    <ul>
+      <li>find all stateless vms created from the template that use 'latest' version</li>
+      <li>recreate them, keeping: ID, name, description, cluster, comment, stateless flag</li>
+      <li>find all vm-pools that are using the template with 'latest' version</li>
+      <li>recreate all down vms</li>
+      <li>for each vm that moves to down, if there is a new version, recreate it</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ui">UI</h3>
+
+<ul>
+  <li>add an option to select template version when creating vm, by default latest should be selected</li>
+</ul>
+
+<h3 id="rest-api">REST API</h3>
+
+<p><strong>Templates management usecase: For each template version we have a separate REST entity of template.</strong></p>
+
+<ul>
+  <li>GET :</li>
+</ul>
+
+<p>new section <version> will be introduced to include all 3 properties: version number, version name and base template id (GUID) for base templates: base will have base id empty, base version numbering = 1</version></p>
+
+<ul>
+  <li>POST: (add new template version)</li>
+</ul>
+
+<p>The version section is optional because user might be creating a base template (which is a regular template as in previous versions of ovirt)
+If version section will be defined, user will have to fill the following fields:
+<em>base_template</em> - required to fill (a template object with id of the base template). Not filling it will result with error and the request will fail. Filling a non existing base template id will also fail the request.
+<em>version_name</em> - optional
+<em>version_number</em> should not be filled by the user. (it's calculated by the engine), if user fills it, it will be ignored
+ <strong>Example for adding a template version</strong> - this section should be added as part of body inside the template element. The relevant url is: api/templates</p>
+
+<version>
+` `<base_template id="1c4f1c18-030f-4a78-9b61-e17ca1d45cb0" />
+` `<version_name>`"second template for lab"`</version_name>
+</version>
+
+<ul>
+  <li>PUT: (update a template version)</li>
+</ul>
+
+<p>Only the version name can be updated. No update is supported for version section in 3.4 for base template id nor numbering.</p>
+
+<p>Example for editing a template's version name: (add the version part inside the template element in the request body) Relevant api is the same as updating a template : api/templates/<templateId></templateId></p>
+
+<version>
+         `<version_name>`"new name of this version"`</version_name>` 
+</version>
+
+<p><strong>VMs usecase</strong></p>
+
+<p>template field continues to be reused and will contain version details where applicable.
+VM will have a new use_latest_template_version boolean property that is relevant for stateless VMs. It indicates whether the latest template version should be used.
+User will be able to pass it when creating or updating a VM. If user will try to create a new stateful VM with this property set to true, an error will be returned.
+When doing GET, this property will be propagated from backend, set to 'false' for stateful VMs.
+ <strong>REST relevant patches</strong>
+<a href="http://gerrit.ovirt.org/#/c/23453/">http://gerrit.ovirt.org/#/c/23453/</a>
+<a href="http://gerrit.ovirt.org/#/c/23560/">http://gerrit.ovirt.org/#/c/23560/</a></p>
+
+<h3 id="db">DB</h3>
+
+<ul>
+  <li>2 new fields for vm_static:
+    <ul>
+      <li>template_version - int - save a numeric, sequential, version number of the template
+        <ul>
+          <li>for template its automatic handled during add template, not user changeable.</li>
+          <li>for vm this is the selected templated, null marks 'use latest'</li>
+        </ul>
+      </li>
+      <li>template_version_name - varchar - for template, save the name of version as entered by the user</li>
+    </ul>
+  </li>
+  <li>Reuse of existing field in vm_static - vmt_guid to save the base template id</li>
+</ul>
+
+<h2 id="ui-mock-ups">UI Mock-Ups</h2>
+
+<ul>
+  <li>templates grid view with versioned templates:</li>
+</ul>
+
+<p><img alt="" width="1016" height="215" src="/images/wiki/Tm_vr_template.png?1560777612" /></p>
+
+<ul>
+  <li>new template dialog</li>
+</ul>
+
+<p><img alt="" width="731" height="414" src="/images/wiki/Tm_vr_create_template.png?1560777612" /></p>
+
+<ul>
+  <li>new vm dialog</li>
+</ul>
+
+<p><img alt="" width="919" height="277" src="/images/wiki/Tm_vr_new_vm.png?1560777612" /></p>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>Test case: <strong>Create new version for template</strong>
+    <ul>
+      <li>setup:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Create vm and install some OS (Fedora/RHEL/Ubuntu)</p>
+
+<p>Create a template from the vm.</p>
+
+<ul>
+  <li>
+    <ul>
+      <li>test:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Create a new vm from this template.</p>
+
+<p>Install some new software (like vim) on this new vm.</p>
+
+<p>Create new version to the template from this vm.</p>
+
+<p>Create new vm from the template and make sure to select latest version</p>
+
+<p>Make sure new software actually there</p>
+
+<ul>
+  <li>Test case: <strong>New version for VM Pool</strong>
+    <ul>
+      <li>setup:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Create VM Pool from template with some OS installed, with at least 2 vms</p>
+
+<p>Have 1 vm taken (used by a user)</p>
+
+<ul>
+  <li>
+    <ul>
+      <li>test:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Create new version to the template as explained in previous test</p>
+
+<p>Take vm2, make sure its the new version</p>
+
+<p>return vm1 to the pool, and take it again, make sure its the new version</p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<ul>
+  <li>create version from any vm or only vm created from this template? from last version?</li>
+  <li>automatically use latest template with stateless vm -</li>
+</ul>
+
+<p>this will "reset" the vm configuration - delete all existing snapshots of the vm (as disks need to be re-created), if any, and other customization..
+do we want to let user choose if to auto update stateless vms (check box)?</p>
+
+<ul>
+  <li>saving version number - add new column or use name column?</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/template-versions.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/template-versions.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

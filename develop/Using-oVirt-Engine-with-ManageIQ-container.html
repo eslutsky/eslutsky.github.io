@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using oVirt Engine with a PostgreSQL container. &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<p>The base environment is CentOS 7.</p>
+
+<p>oVirt Engine is assumed to running as per the configuration in oVirt Engine with a PostgreSQL container.</p>
+
+<p>Alternatively you may have both PostgreSQL and oVirt installed locally on your machine, so long as you are able
+to log into the oVirt Engine successfully.</p>
+
+<h3 id="steps">Steps</h3>
+
+<ol>
+  <li>Make sure that the Docker service is running:</li>
+</ol>
+
+<p><code>$ sudo service docker start</code></p>
+
+<p>or</p>
+
+<p><code>$ sudo systemctl start docker.service</code></p>
+
+<ol>
+  <li>
+    <p>Use the Docker image of ManageIQ available at Docker Hub: https://hub.docker.com/r/manageiq/manageiq/</p>
+
+    <p>Pull the Docker image as follows:</p>
+  </li>
+</ol>
+
+<p><code>$ sudo docker pull manageiq/manageiq:fine-3</code></p>
+
+<p>At present, the tag is <code>fine:3</code> but that changes with time, so to be sure go to https://manageiq/download to see what the latest tag is.</p>
+
+<ol>
+  <li>Run the container</li>
+</ol>
+
+<p><code>$ sudo docker run --name ovirt-manageiq --privileged -d -p 8443:443 manageiq/manageiq:fine-3</code></p>
+
+<p>Note: Trying to access the container via <code>https://localhost:8443</code> will raise a "Secure Connection Failed" error.</p>
+
+<p>Waiting a few moments and trying again will show you the "Insecure Connection" warning. Click on the "Advanced" button and 
+add an exception for the site. Confirming the exception should bring you to the ManageIQ Login page.</p>
+
+<p>Default login for ManageIQ:</p>
+
+<p>user: <code>admin</code></p>
+
+<p>password: <code>smartvm</code></p>
+
+<ol>
+  <li>Change Options</li>
+</ol>
+
+<p>Click on 'Admininstrator' and then select 'Configuration' to change how the appliance behaves:</p>
+<ol>
+  <li>
+    <p>Select the appliance to configure</p>
+
+    <p>CFME Region: Region 0 → Zones → Zone: Default zone(current) → Server: EVM<a href="current">1</a> should be selected by default.</p>
+
+    <p>The hostname and IP address of the appliance will be shown here, be careful as in some cases this will be the internal IP address and not the one you connected to.</p>
+
+    <p>You can change the Company Name to whatever you want, the change will be reflected in the interface. 
+ Change it to ManageIQ
+ Select your time zone, and, if you want, you can change the language default.</p>
+  </li>
+  <li>
+    <p>Adding oVirt Engine as a provider to ManageIQ:
+Compute -&gt; Infrastructure -&gt; Providers
+Click on 'Configuration'. Select 'Add a new infrastructure provider'.</p>
+    <ul>
+      <li>Hostname of the both the provider and the C &amp; U database should be the IP address of the 
+Docker container that has oVirt Engine's database.</li>
+      <li>API port for the provider should be that of oVirt Engine (443) and that of the C &amp; U database should be 
+5432 (for PostgreSQL).</li>
+      <li>Remember to specify the correct database name, owner and password for the C &amp; U database 
+(e.g. if you configured oVirt to have a database and owner called <code>engine</code>, be sure to use the same for the 
+C &amp; U database for ManageIQ along with the associated credentials).</li>
+    </ul>
+  </li>
+</ol>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/Using-oVirt-Engine-with-ManageIQ-container.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/Using-oVirt-Engine-with-ManageIQ-container.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 15 Dec 2018 19:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

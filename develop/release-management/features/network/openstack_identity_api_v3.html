@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Support OpenStack Identity API v3 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="support-openstack-identity-api-v3">Support OpenStack Identity API v3</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p><a href="https://web.archive.org/web/20180103081650/https://developer.openstack.org/api-ref/identity/v2/">OpenStack Identity API v2.0</a> is not only deprecated, it is even
+removed from the current <a href="https://developer.openstack.org/api-ref/identity/">OpenStack Identity API specification</a> and replaced
+by the OpenStack Identity API v3.</p>
+
+<p>oVirt Engine requires the OpenStack Identity API to access external logical
+networks provided by <a href="https://ovirt.org/develop/release-management/features/network/osn-integration/">OpenStack Neutron</a> or <a href="https://ovirt.org/develop/release-management/features/network/external-network-provider/">OVN</a>, to access images from
+<a href="https://ovirt.org/develop/release-management/features/storage/glance-integration/">OpenStack Glance</a> and volumes from <a href="https://ovirt.org/develop/release-management/features/storage/cinder-integration/">OpenStack Cinder</a>.</p>
+
+<p>Support for OpenStack Identity API v3 in oVirt Engine will <a href="https://bugzilla.redhat.com/1598391">enable Engine to
+access services from OpenStack Neutron</a> which does
+<a href="https://blueprints.launchpad.net/keystone/+spec/removed-as-of-queens">not support Identity API v2.0 anymore</a>.
+To achieve this only Engine's OpenStack Network Provider will be updated,
+other providers like OpenStack Image, OpenStack Block Storage, and External
+Network Provider will continue with Identity API v2.0.</p>
+
+<p>The <a href="https://www.ovirt.org/develop/release-management/features/network/ovirt-ovn-provider/">oVirt OVN Provider</a> provides the OpenStack Identity API for
+<a href="https://www.ovirt.org/develop/release-management/features/network/ovirt-ovn-provider/#authentication-and-authorization-at-the-provider">authentication</a>, but will continue with OpenStack Identity API v2.0.</p>
+
+<p>Related patches can be found on <a href="https://gerrit.ovirt.org/#/q/topic:keystone_v3">gerrit topic:keystone_v3</a>.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>
+    <p>Name: <a href="https://github.com/dominikholler">Dominik Holler</a></p>
+  </li>
+  <li>
+    <p>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#104;&#111;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#104;&#111;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></p>
+  </li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>This section shows the difference between the versions v2.0 and v3 of OpenStack
+Identity API and what this implies for oVirt.</p>
+
+<p>The OpenStack Identity API is used in oVirt to get or provide a token, which is
+required to use the other OpenStack APIs, e.g. Networking API.</p>
+
+<h3 id="openstack-identity-api-v20">OpenStack Identity API v2.0</h3>
+
+<p>A typical request to get a token in OpenStack Identity API v2.0 is a HTTP <code>POST</code>
+to <code>/v2.0/tokens</code> with the content:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>{&#x000A;  "auth": {&#x000A;    "passwordCredentials": {&#x000A;      "username": "admin"&#x000A;      "password": "c314d360aab94a5f"&#x000A;     },&#x000A;    "tenantName": "demo",&#x000A;  }&#x000A;}&#x000A;</code></pre></div><p>The <code>tenantName</code> is supported for external providers for oVirt Engine, but
+ignored in oVirt Provider OVN. The most relevant part of the response is like
+the following:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>{&#x000A;  "access": {&#x000A;    "token": {&#x000A;      "id": "aaaaa-bbbbb-ccccc-dddd"&#x000A;    }&#x000A;  }&#x000A;}&#x000A;</code></pre></div>
+<h3 id="openstack-identity-api-v3">OpenStack Identity API v3</h3>
+
+<p>Most relevant changes in the data model in version v3 are:</p>
+<ul>
+  <li>"Tenants" are now known as "projects"</li>
+  <li>"Domains": a high-level container for projects, users and groups</li>
+  <li>User, group and project names only have to be unique within their owning domain</li>
+  <li>Tokens explicitly represent user+project or user+domain pairs</li>
+  <li>The token is returned the X-Subject-Token response header</li>
+</ul>
+
+<p>A typical request to get a token in OpenStack Identity API v3 is a HTTP <code>POST</code>
+to <code>/v3/auth/tokens</code> with the content:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>{&#x000A;  "auth" : {&#x000A;    "identity" : {&#x000A;      "methods" : [ "password" ],&#x000A;      "password" : {&#x000A;        "user" : {&#x000A;          "domain" : {&#x000A;            "name" : "Default"&#x000A;          },&#x000A;          "name" : "admin",&#x000A;          "password" : "c314d360aab94a5f"&#x000A;        }&#x000A;      }&#x000A;    },&#x000A;    "scope" : {&#x000A;      "project" : {&#x000A;        "domain" : {&#x000A;          "name" : "Default"&#x000A;        },&#x000A;        "name" : "admin"&#x000A;      }&#x000A;    }&#x000A;  }&#x000A;}&#x000A;</code></pre></div><p>The <code>scope</code> might be not required, e.g. if a default project is configured for
+the user. The relevant part of the response looks like this:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>HTTP/1.1 201 Created&#x000A;X-Subject-Token: gAAAAABbH3sSGLgtxvoHyYDLZd6fSuserBHG2P-3TdykaYnq-eYo7aUBdZK0I&#x000A;Vary: X-Auth-Token&#x000A;Content-Type: application/json&#x000A;&#x000A;{"token": ... }&#x000A;</code></pre></div>
+<h3 id="implementation-in-ovirt-engine">Implementation in oVirt Engine</h3>
+
+<p>To support OpenStack Identity API v3 oVirt engine has to be extended to handle
+the user domain name, the project name and the domain name of the project.
+This requires changes in webadmin, REST-API, the database and the
+TokenProvider in the backend.</p>
+
+<p>The version of the OpenStack Identity API is derived from the authentication
+URL. If the authentication URL ends with "/v3" or "/v3/", OpenStack Identity
+API v3 will be used, else OpenStack Identity API v2.0 to ensure backward
+compatibility.</p>
+
+<p>The default ovirt-provider-ovn has not be modified, because the OpenStack
+Identity API v2.0 is not removed.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>oVirt Engine requires an updated version of <a href="https://github.com/woorea/openstack-java-sdk">OpenStack Java SDK 3.2.x</a> to
+accessing OpenStack Identity API v3.</p>
+
+<h2 id="limitations">Limitations</h2>
+
+<p>OpenStack Identity API provides a catalog of multiple endpoints, which
+provides the URL to access the OpenStack service. This feature does change
+the current implementation in oVirt Engine, which requires the user to specify
+this URL manually.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Support for OpenStack Identity API v3 in oVirt Engine is required to enable 
+access to services from <a href="https://blueprints.launchpad.net/keystone/+spec/removed-as-of-queens">OpenStack instances which does not support Identity
+API v2.0, especially the OpenStack releases since Qeens.</a></p>
+
+<h2 id="user-experience">User Experience</h2>
+
+<h3 id="webadmin">Webadmin</h3>
+
+<p>The "Add Provider" popup has to provide inputs for the new properties user
+domain name, the project name and the domain name of the project.
+To avoid inconsistency between the authentication URL and the API version, the
+authentication URL is built from the protocol, host name, API port and version.</p>
+
+<p><img alt="add a new provider" src="/images/../../../../images/features/network/openstack_idendity_api-add-dialog-provider.png" /></p>
+
+<p>Please note, that the OpenStack user requires permissions to create ports on the
+network.</p>
+
+<h3 id="engine-setup">Engine-Setup</h3>
+
+<p>The ovirt-provider-ovn external provider which is configured by engine-setup is
+not modified and continues to use OpenStack Identity API v2.0, because of the
+Engine and the OVN provider has to support OpenStack Identity API v2.0 for the
+sake of backward compatibility anyway and switching to OpenStack Identity API
+v3 would be no improvement but introduce the risk of new implementation bugs.</p>
+
+<h2 id="rest-api">REST-API</h2>
+<p>The REST-API is extended to handle the user domain name, the project name and
+the domain name of the project like the following:</p>
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;openstack_network_provider</span> <span class="na">href=</span><span class="s">"/ovirt-engine/api/openstacknetworkproviders/123"</span> <span class="na">id=</span><span class="s">"123"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;actions&gt;</span>&#x000A;    <span class="nt">&lt;link</span> &#x000A;      <span class="na">href=</span><span class="s">"/ovirt-engine/api/openstacknetworkproviders/123/testconnectivity"</span>&#x000A;      <span class="na">rel=</span><span class="s">"testconnectivity"</span> <span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;link</span>&#x000A;      <span class="na">href=</span><span class="s">"/ovirt-engine/api/openstacknetworkproviders/123/importcertificates"</span>&#x000A;      <span class="na">rel=</span><span class="s">"importcertificates"</span><span class="nt">/&gt;</span>&#x000A;  <span class="nt">&lt;/actions&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>OpenStack Neutron<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;description&gt;</span>network provider for OpenStack<span class="nt">&lt;/description&gt;</span>&#x000A;  <span class="nt">&lt;link</span>&#x000A;    <span class="na">href=</span><span class="s">"/ovirt-engine/api/openstacknetworkproviders/123/networks"</span>&#x000A;    <span class="na">rel=</span><span class="s">"networks"</span><span class="nt">/&gt;</span>&#x000A;  <span class="nt">&lt;link</span>&#x000A;    <span class="na">href=</span><span class="s">"/ovirt-engine/api/openstacknetworkproviders/123/certificates"</span>&#x000A;    <span class="na">rel=</span><span class="s">"certificates"</span><span class="nt">/&gt;</span>&#x000A;  <span class="nt">&lt;url&gt;</span>http://192.168.122.104:9696<span class="nt">&lt;/url&gt;</span>&#x000A;  <span class="nt">&lt;auto_sync&gt;</span>true<span class="nt">&lt;/auto_sync&gt;</span>&#x000A;  <span class="nt">&lt;read_only&gt;</span>false<span class="nt">&lt;/read_only&gt;</span>&#x000A;  <span class="nt">&lt;type&gt;</span>external<span class="nt">&lt;/type&gt;</span>&#x000A;  <span class="nt">&lt;unmanaged&gt;</span>false<span class="nt">&lt;/unmanaged&gt;</span>&#x000A;  <span class="nt">&lt;requires_authentication&gt;</span>true<span class="nt">&lt;/requires_authentication&gt;</span>&#x000A;  <span class="nt">&lt;authentication_url&gt;</span>http://192.168.122.104:5000/v3<span class="nt">&lt;/authentication_url&gt;</span>&#x000A;  <span class="nt">&lt;username&gt;</span>admin@internal<span class="nt">&lt;/username&gt;</span>&#x000A;  <span class="nt">&lt;project_name&gt;</span>admin<span class="nt">&lt;/project_name&gt;</span><span class="c">&lt;!-- Added --&gt;</span>&#x000A;  <span class="nt">&lt;user_domain_name&gt;</span>Default<span class="nt">&lt;/user_domain_name&gt;</span><span class="c">&lt;!-- Added --&gt;</span>&#x000A;  <span class="nt">&lt;project_domain_name&gt;</span>Default<span class="nt">&lt;/project_domain_name&gt;</span><span class="c">&lt;!-- Added --&gt;</span>&#x000A;<span class="nt">&lt;/openstack_network_provider&gt;</span>&#x000A;</code></pre></div>
+<h2 id="installationupgrade">Installation/Upgrade</h2>
+
+<p>No effect on new installations of oVirt Engine.
+On upgrade, it has to be ensured that the authentication URL has the expected
+format to be splitted like proposed in <a href="#webadmin">Webadmin</a>.</p>
+
+<h2 id="follow-up-features">Follow-Up Features</h2>
+
+<h3 id="implementation-in-ovirt-provider-ovn">Implementation in oVirt Provider OVN</h3>
+<p>To support OpenStack Identity API v3 the oVirt Provider OVN to be extended to
+handle requests to <code>/v3/auth/tokens</code>. The <code>scope</code> can be ignored, like the
+<code>tenantName</code>.
+In oVirt Provider OVN's OpenStack Identity API v2.0 implementation the
+user name has to match the following format:
+<code>&lt;admin_username&gt;[@&lt;fqdn&gt;]@&lt;ovirt_profile&gt;</code>, while the optional <code>&lt;fqdn&gt;</code> is
+the Active Directory or LDAP domain. For the reason of consistency, this format
+is kept in the OpenStack Identity API v3 implementation and the <code>user.domain</code>
+is ignored.</p>
+
+<h2 id="documentation--external-references">Documentation &amp; External references</h2>
+
+<p><a href="https://developer.openstack.org/api-ref/identity/">OpenStack Identity API Specification</a></p>
+
+<p><a href="https://ovirt.org/develop/release-management/features/network/osn-integration/">oVirt OpenStack Neutron Integration</a></p>
+
+<p><a href="https://ovirt.org/develop/release-management/features/network/external-network-provider/">oVirt OVN Integration</a></p>
+
+<p><a href="https://ovirt.org/develop/release-management/features/storage/glance-integration/">oVirt Glance Integration</a></p>
+
+<p><a href="https://ovirt.org/develop/release-management/features/storage/cinder-integration/">oVirt Cinder Integration</a></p>
+
+<p><a href="https://www.ovirt.org/develop/release-management/features/network/ovirt-ovn-provider/">oVirt Provider OVN</a></p>
+
+<p><a href="https://www.ovirt.org/develop/release-management/features/network/ovirt-ovn-provider/#authentication-and-authorization-at-the-provider">Authentication and Authorization at the oVirt Provider OVN</a></p>
+
+<p><a href="https://web.archive.org/web/20180103081650/https://developer.openstack.org/api-ref/identity/v2/">OpenStack Identity API v2.0</a></p>
+
+<p><a href="https://github.com/woorea/openstack-java-sdk">OpenStack Java SDK</a></p>
+
+<p><a href="https://trello.com/c/3LN6xSIT/257-engine-support-keystone-v3">Trello</a></p>
+
+<p><a href="https://gerrit.ovirt.org/#/q/topic:keystone_v3">Related patches</a></p>
+
+<p><a href="https://blueprints.launchpad.net/keystone/+spec/removed-as-of-queens">Blueprint for tracking things being removed in the Queens release</a></p>
+
+<p><a href="https://bugzilla.redhat.com/1598391">RFE - Certify OVN from OSP 13 via Neutron API with external OSP provider.</a></p>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="ovirt-engine">oVirt Engine</h3>
+
+<p>It has to be ensured, that all already available OpenStack related tests of
+oVirt Engine are still succeeding, to ensure that already available OpenStack
+Identity API v2.0 has no regressions. This might be the case because a new
+minor version of <a href="https://github.com/woorea/openstack-java-sdk">OpenStack Java SDK</a> is used.</p>
+
+<p>To test the OpenStack Identity API v3, all already available tests of OpenStack
+network provider can be duplicated to use OpenStack Qeens (keystone 13).</p>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  == Support OpenStack Identity API v3 ==&#x000A;  oVirt Engine is able to access external Networks provided by OpenStack&#x000A;  Qeens Neutron&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/openstack_identity_api_v3.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/openstack_identity_api_v3.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 11 Sep 2018 11:24 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

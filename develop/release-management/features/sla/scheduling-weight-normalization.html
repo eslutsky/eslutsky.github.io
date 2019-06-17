@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Normalizing scheduling policy weights &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h2 id="normalizing-scheduling-policy-weights">Normalizing scheduling policy weights</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>The currently used weight policy units do not use any common result value range. Each unit reports numbers as needed and this causes issues with user configured preferences (policy unit multiplier), because for example memory (very high numbers) always wins over CPU (0-100).</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: <a href="user:msivak">Martin Sivák</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h4 id="comparing-the-current-cpu-and-memory-weight-units">Comparing the current CPU and memory weight units</h4>
+
+<p>I selected the CPU vs. memory balancing to demonstrate the issue and the possible fix.</p>
+
+<p>The CPU load policy unit is currently not effective as the weight values used are too low (0-100) and the memory policy unit almost always overrules the CPU (2**31 - max scheduling memory in MB). The factor value the user can assign to the policy units is confusing for this reason, because 2x memory weight has a huge impact, but 1000x CPU weight is still not enough to overrule memory.</p>
+
+<h4 id="weight-normalization-algorithms">Weight normalization algorithms</h4>
+
+<p>As you see in the CPU and memory example we have to either normalize the weights reported by all policy units (either manually in the code or automatically) or use some different reduction step.</p>
+
+<p>I was reading a bit and the three basic normalization options we can use are:</p>
+
+<ul>
+  <li>Using percentage of hardcoded maximum values for each policy unit</li>
+  <li>Using percentage of the maximum reported value (during the scheduling attempt) of a policy unit</li>
+  <li>Using rank (sorting reported weights and awarding points according to the position; my example calculation computes rank as number of hosts that are better than the ranked one)</li>
+</ul>
+
+<p>All three options have advantages and disadvantages. Hardcoded maximum is obviously a problem for future memory size values, dynamic maximum depends on which hosts make it into the weighting step and rank does not do a good job when there are huge gaps in weight values.</p>
+
+<p>Personally I am in favour of testing rank though as it is future proof and the factor multiplier has predictable results (and we already have the code too).</p>
+
+<h4 id="algorithm-results-comparison">Algorithm results comparison</h4>
+
+<p>This is a simple case where all three algorithms report the same result. That won’t always be so.</p>
+
+<ul>
+  <li>CPU, factor 10 (hardcoded maximum 100%)</li>
+  <li>Memory, factor 1 (hardcoded maximum 4096 MB)</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Host / Metric</th>
+      <th>CPU load</th>
+      <th>Occupied memory</th>
+      <th>Normalized (lower is better)</th>
+      <th>Normalized dynamic (lower is better)</th>
+      <th>Ranked (lower is better)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Host A</td>
+      <td>90</td>
+      <td>1024 MB</td>
+      <td>10 * 90 + 25 = 925</td>
+      <td>10 * 100 + 25 = 1025</td>
+      <td>10 * 2 + 0 = 20</td>
+    </tr>
+    <tr>
+      <td>Host B</td>
+      <td>50</td>
+      <td>2048 MB</td>
+      <td>10 * 50 + 50 = 550</td>
+      <td>10 * 55 + 50 = 600</td>
+      <td>10 * 1 + 1 = 11</td>
+    </tr>
+    <tr>
+      <td>Host C</td>
+      <td>10</td>
+      <td>4096 MB</td>
+      <td>10 * 10 + 100 = 200</td>
+      <td>10 * 11 + 100 = 210</td>
+      <td>10 * 0 + 2 = 2</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>The multiplier factor in the Scheduling policy edit dialog will become predictable. This will also allow the user to fine tune his preferences (for example: CPU vs. memory vs. weak affinity rules).</p>
+
+<h3 id="implementation-details">Implementation details</h3>
+
+<h4 id="scheduling-process-changes">Scheduling process changes</h4>
+
+<p>The existing policy units won't be affected. The normalization process will be done by adding an extra step to the current Filter / Weight sequence. It will become Filter / Weight / Select.</p>
+
+<h4 id="user-experience">User Experience</h4>
+
+<p>No changes to the UI or REST will be necessary, this change will be totally transparent.</p>
+
+<h4 id="installationupgrade">Installation/Upgrade</h4>
+
+<p>Users using the weight multipliers might need to update them to reasonable values.</p>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p>This normalization is needed as a ground work for all weak affinity features, including host affinity and Rack based balancing.</p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1207255">Bug: Soft negative affinity</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1306263">Bug: Normalize policy unit weights</a></li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<p>Basic sanity checks for scheduling VMs are needed. The internal weighting rules were never really exposed so a slight change in behaviour might not be even noticed.</p>
+
+<p>The selection step result is visible in the DEBUG log (logger name: org.ovirt.engine.core.bll.scheduling.policyunits.RankSelectorPolicyUnit) in a CSV table form. Each row represents one weight unit and columns representing hosts have two walues: rank (higher is better), raw weight returned by policy unit.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>2016-12-01 18:03:18,299+01 DEBUG [org.ovirt.engine.core.bll.scheduling.policyunits.RankSelectorPolicyUnit] (org.ovirt.thread.pool-6-thread-49) [ceadae95-bc68-4ae7-ac85-55b610194981] Ranking selector:&#x000A;*;factor;4adcef93-a088-437e-ac0d-479046deae71;;5bec53b1-548a-4f3a-beee-ee55c9180b34;;71d65d53-bd3d-4028-b5f8-ec4f4f276394;&#x000A;98e92667-6161-41fb-b3fa-34f820ccbc4b;1;2;1;2;1;2;1&#x000A;84e6ddee-ab0d-42dd-82f0-c297779db567;1;2;1;2;1;2;1&#x000A;7db4ab05-81ab-42e8-868a-aee2df483edb;1;2;4;0;5;2;4&#x000A;7f262d70-6cac-11e3-981f-0800200c9a66;1;2;0;2;0;2;0&#x000A;591cdb81-ba67-45b4-9642-e28f61a97d57;1;2;10000;2;10000;2;10000&#x000A;4134247a-9c58-4b9a-8593-530bb9e37c59;1;2;1;2;1;0;47&#x000A;</code></pre></div>
+<p>Testing with many different VMs might reveal interesting situations though.</p>
+
+<h3 id="contingency-plan">Contingency Plan</h3>
+
+<p>The feature is ready and only needs to be enabled.</p>
+
+<h3 id="release-notes">Release Notes</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  == Scheduling multipliers changed ==&#x000A;  The impact of scheduling multipliers was changed as the underlying weight values were normalized. Please check that the values you use represent the real relative value of importance instead of empirical number that you used to get the desired behaviour in the past.&#x000A;</code></pre></div>
+<h3 id="comments-and-discussion">Comments and Discussion</h3>
+
+<p>Please use the devel@ovirt.org mailinglist for discussing this feature.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/scheduling-weight-normalization.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/scheduling-weight-normalization.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 5 Dec 2016 13:16 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

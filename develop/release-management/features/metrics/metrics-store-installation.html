@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Metrics Store - Installation Guide &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/metrics/">Metrics</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ovirt-metrics---installation-guide">oVirt Metrics - Installation Guide</h1>
+
+<p><a href="../../../../images/wiki/oVirtMetricsDataFlow.jpg"><img alt="oVirt Metrics data flow" width="960" height="540" src="/images/wiki/oVirtMetricsDataFlow.jpg?1560777613" /></a></p>
+
+<h2 id="ovirt-metrics-store">oVirt metrics store</h2>
+
+<p>The oVirt metrics store is based on OpenShift Logging (Elasticsearch, Kibana, Fluentd, Curator).</p>
+
+<h2 id="ovirt-metrics-store-setup">oVirt Metrics Store Setup</h2>
+
+<p><strong>Note:</strong> Currently, the oVirt Metrics Store should be installed on a new machine, separate from the engine.
+It can be installed on a dedicated VM.</p>
+
+<h3 id="metrics-store-machine-prerequisites">Metrics Store Machine Prerequisites</h3>
+
+<p>For an oVirt environment with 50 hosts:</p>
+<ul>
+  <li>4 CPU cores, 16GB RAM memory .</li>
+  <li>We recommends using SSD disks.</li>
+  <li>CentOS 7.5.</li>
+  <li>Preallocated 500GB partition - It will be used for persistent storage. Use a partition other than root (/) to avoid filling up the partition, for example, /var.</li>
+  <li>
+    <p>Add the Metrics Store Machine FQDN to your enterprise hostname resolution system, for example, DNS and add a wildcard dns prefix for this address.</p>
+  </li>
+  <li>Please make sure to follow the <a href="https://docs.openshift.org/latest/install_config/install/prerequisites.html#hardware">OpenShift <code>masters</code> prerequisites</a></li>
+</ul>
+
+<h3 id="update-configyml-file">Update config.yml file</h3>
+
+<ol>
+  <li>
+    <p>Copy  /etc/ovirt-engine-metrics/config.yml.example  to config.yml.</p>
+
+    <p>On the oVirt engine machine, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp /etc/ovirt-engine-metrics/config.yml.example /etc/ovirt-engine-metrics/config.yml&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Update the file /etc/ovirt-engine-metrics/config.yml located on the engine machine, with the following lines:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # vi /etc/ovirt-engine-metrics/config.yml.d/config.yml&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Update the values to match the details of your specific environment:</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p><code>ovirt_env_name:</code> <strong>Please update this variable</strong>.</p>
+
+    <p>Environment name. It is used to identify data collected in a single central
+store, sent from more than one oVirt engine.</p>
+
+    <p>Use the following convention:</p>
+
+    <ul>
+      <li>Include only alphanumeric characters and hyphens ( "-" ).</li>
+      <li>Name cannot begin with a hyphen or a number, or end with a hyphen.</li>
+      <li>Maximum of 49 characters. Wildcard patterns (e.g. ovirt-metrics*) cannot be used.</li>
+    </ul>
+  </li>
+  <li>
+    <p><code>elasticsearch_host:</code> (required - no default value)</p>
+
+    <p>Address or hostname (FQDN) of the Elasticsearch server host.</p>
+  </li>
+</ul>
+
+<h2 id="variables--for-installing-the-ovirt-metrics-store">Variables  for installing the oVirt metrics store</h2>
+
+<ul>
+  <li><code>openshift_distribution:</code>(default: <code>origin</code>)</li>
+  <li><code>openshift_ansible_files_path:</code>(default: <code>/root</code>)</li>
+  <li><code>ovirt_elasticsearch_mounted_storage_path:</code>(default:<code>/var/lib</code>)</li>
+  <li><code>engine_url:</code>(Mandatory. No default )</li>
+  <li><code>engine_user:</code>(Mandatory. No default )`</li>
+  <li><code>engine_password:</code>(Mandatory. No default )</li>
+  <li><code>engine_insecure:</code>(default: <code>true</code>)</li>
+  <li><code>engine_cafile:</code>(No default )</li>
+  <li><code>public_hosted_zone:</code>(No default )</li>
+  <li><code>create_host_entry:</code>(default: <code>false</code> )</li>
+  <li><code>root_password:</code>(default: <code>admin</code>)</li>
+  <li><code>ovirt_cluster_name:</code>(default: <code>Default</code>)</li>
+  <li><code>openshift_ovirt_storage_domain_name:</code>(default: <code>hosted_storage</code>)</li>
+  <li><code>openshift_ovirt_bastion_machine_name:</code>(default: <code>metrics-store-installer</code>)</li>
+  <li><code>openshift_ovirt_all_in_one:</code>(default: <code>true</code>)</li>
+  <li><code>number_of_openshift_master_vms:</code>(default: <code>1</code>)</li>
+  <li><code>number_of_openshift_node_vms:</code>(default: <code>0</code>)</li>
+  <li><code>number_of_openshift_compute_vms:</code>(default: <code>0</code>)</li>
+  <li><code>number_of_openshift_lb_vms:</code>(default: <code>0</code>)</li>
+  <li><code>openshift_logging_es_cluster_size:</code>(default: 1)</li>
+  <li><code>openshift_logging_es_number_of_replicas:</code>(default: 0)</li>
+  <li><code>elasticsearch_disk_size:</code>(default: <code>500GiB</code>)</li>
+  <li><code>openshift_logging:</code> (default:<code>true</code>)</li>
+  <li><code>template_name:</code> (default:<code>rhelguest76</code>)</li>
+  <li><code>template_memory:</code> (default:<code>4GiB</code>)</li>
+  <li><code>template_cpu:</code> (default:2)</li>
+</ul>
+
+<h3 id="additional-mandatory-variables-for-red-hat-virtualization">Additional mandatory variables for Red Hat Virtualization:</h3>
+
+<ul>
+  <li><code>qcow_url:</code>( No default )</li>
+  <li><code>rhsub_user:</code>( No default )</li>
+  <li><code>rhsub_pass:</code>( No default )</li>
+  <li><code>rhsub_pool:</code>( default: [] )</li>
+  <li><code>qcow_url:</code> ( No default )</li>
+  <li><code>rhsub_user:</code> ( No default )</li>
+  <li><code>rhsub_pass:</code> ( No default )</li>
+  <li><code>rhsub_pool:</code> ( No default )</li>
+  <li><code>openshift_rhsub_pool:</code> ( No default )</li>
+  <li><code>oreg_auth_user:</code> ( No default )</li>
+  <li><code>oreg_auth_password:</code> ( No default )</li>
+</ul>
+
+<h3 id="run-ovirt-metrics-store-installation-playbook">Run ovirt-metrics-store-installation playbook</h3>
+
+<p>This playbook creates the vm(s) and generates the files required for the metrics store installation and copies them
+to the metrics store machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # /usr/share/ovirt-engine-metrics/setup/ansible/configure_ovirt_machines_for_metrics.sh \&#x000A;    --playbook=ovirt-metrics-store-installation.yml&#x000A;</code></pre></div>
+<h3 id="metrics-store-installation">Metrics Store Installation</h3>
+
+<p>Please follow the metrics store installation instructions: <a href="https://www.ovirt.org/develop/release-management/features/metrics/setting-up-viaq-logging/">Metrics Store setup on top of OpenShift</a></p>
+
+<p>Once you have finished this step, you should have:</p>
+
+<ul>
+  <li>Kibana - <a href="https://kibana.{elasticsearch_host}">https://kibana.{elasticsearch_host}</a></li>
+  <li>OpenShift portal - <a href="https://{elasticsearch_host}:8443">https://{elasticsearch_host}:8443</a></li>
+</ul>
+
+<h2 id="ovirt-hypervisors-and-engine-setup">oVirt Hypervisors and Engine Setup</h2>
+
+<p>Please follow the instructions: <a href="https://www.ovirt.org/develop/release-management/features/metrics/hypervisors-and-engine-setup">Deploy Collectd and Rsyslog on Hypervisors and Engine</a></p>
+
+<h2 id="example-dashboards">Example Dashboards</h2>
+
+<p>Kibana should be available at <a href="https://kibana.{elasticsearch_host}">https://kibana.{elasticsearch_host}</a></p>
+
+<p>Dashboard examples include <code>System Dashboard</code>, <code>Hosts Dashboard</code>, <code>VMs Dashboard</code>, <code>Processes Dashboard</code>.</p>
+
+<p>If you wish to import dashboards example, you will need to import visualization and dashboards manually from the Kibana UI.</p>
+
+<ol>
+  <li>
+    <p>Copy the /etc/ovirt-engine-metrics/dashboards-examples directory to your local machine.</p>
+  </li>
+  <li>
+    <p>Go to the Kibana UI, to the <code>setting</code> tab -&gt; <code>indices</code>.</p>
+  </li>
+  <li>
+    <p>In the Kibana UI, go to the <code>setting</code> tab -&gt; <code>objects</code>.</p>
+  </li>
+  <li>
+    <p>Import the <code>Searches</code>.</p>
+  </li>
+  <li>
+    <p>Import the <code>Visualizations</code>.</p>
+  </li>
+</ol>
+
+<p><strong>Note:</strong> If you get an error while loading the <code>Visualizations</code>, check your hosts and make sure Collectd and Rsyslog services are running with no errors. After that try loading the <code>Visualizations</code> again.</p>
+
+<ol>
+  <li>
+    <p>Import the <code>Dashboards</code>.</p>
+  </li>
+  <li>
+    <p>Select the <code>project.ovirt-metrics-&lt;ovirt-env-name&gt;.&lt;uuid&gt;</code> index.</p>
+  </li>
+  <li>
+    <p>Press the orange button, <code>Refresh field list</code>.</p>
+  </li>
+  <li>
+    <p>Do steps 7 and 8 for the <code>project.ovirt-logs-&lt;ovirt-env-name&gt;.&lt;uuid&gt;</code> index.</p>
+  </li>
+</ol>
+
+<p>You are done! Go to the <code>Dashboard</code> tab in the Kibana UI and choose a dashboard.</p>
+
+<p>Currently there are 3 example dashboards:</p>
+
+<ul>
+  <li>
+    <p>System Dashboard - https://kibana.{elasticsearch_host}/app/kibana#/dashboard/System-Dashboard</p>
+  </li>
+  <li>
+    <p>Hosts Dashboard - https://kibana.{elasticsearch_host}/app/kibana#/dashboard/Hosts-Dashboard</p>
+  </li>
+  <li>
+    <p>VMs Dashboard - https://kibana.{elasticsearch_host}/app/kibana#/dashboard/VMs-Dashboard</p>
+  </li>
+</ul>
+
+<h3 id="viewing-saved-dashboards">Viewing Saved Dashboards</h3>
+
+<p>Once you have created and saved a dashboard, or imported the sample dashboards, you can display them in the Dashboard tab:</p>
+
+<ol>
+  <li>Click the Dashboard tab.</li>
+  <li>Click the Load Saved Dashboard button to display a list of saved dashboards.</li>
+  <li>Click a saved dashboard to load and view it.</li>
+</ol>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/metrics/metrics-store-installation.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/metrics/metrics-store-installation.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 17 Feb 2019 21:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

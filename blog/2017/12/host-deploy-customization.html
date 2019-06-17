@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Customizing the host deploy process &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='omachace' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Customizing the host deploy process' property='og:title'>
+<meta content='In 4.2 release we have introduced a possibility to customize the host-deploy process by running the Ansible post-tasks after the host-deploy process successfully finishes.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/12/host-deploy-customization.html' property='og:url'>
+<meta content='2017-12-08T15:00:00Z' property='article:published_time'>
+<meta content='omachace' property='article:author:username'>
+<meta content='Ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Automation' property='article:tag'>
+<link href='/blog/tag/automation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Configuration management' property='article:tag'>
+<link href='/blog/tag/configuration management.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='firewalld' property='article:tag'>
+<link href='/blog/tag/firewalld.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='host-deploy' property='article:tag'>
+<link href='/blog/tag/host-deploy.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Customizing the host deploy process' name='twitter:title'>
+<meta content='In 4.2 release we have introduced a possibility to customize the host-deploy process by running the Ansible post-tasks after the host-deploy process successfully finishes.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>12</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Customizing the host deploy process
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/omachace.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/omachace/">omachace</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-12-08T15:00:00Z'>
+Friday  8 December 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>In 4.2 release we have introduced a possibility to customize the host-deploy process by running the Ansible post-tasks after the host-deploy process successfully finishes.</p>
+
+<p></p>
+
+<h2 id="the-reason">The reason</h2>
+<p>Prior to oVirt 4.2 release administrators could customize host's firewall rules using <code>engine-config</code> option <code>IPTablesConfigSiteCustom</code>.
+Unfortunately writing custom <code>iptables</code> rules into string value to be used in <code>engine-config</code> was very user unfriendly and using <code>engine-config</code> to provide custom
+<code>firewalld</code> rules would be even much worse. Because of above we have introduced Ansible integration as a part of host deploy flow, which allows administrators to
+add any custom actions executed on the host during host deploy flow.</p>
+
+<h2 id="special-tasks-file">Special tasks file</h2>
+
+<p>As part of this role we also include additional tasks, which could be written by the user, to modify the host-deploy
+process for example to open some more FirewallD ports.</p>
+
+<p>Those additional tasks can be added to following file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml&#x000A;</code></pre></div>
+<p>This post-task file is executed as part of host-deploy process just before setup network invocation.</p>
+
+<h2 id="example">Example</h2>
+<p>An example post-tasks file is provided by ovirt-engine installation, at following location:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>/etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml.example&#x000A;</code></pre></div>
+<p>This is just an example file, to add some task into host deploy flow, you need to create below mentioned file and add some proper Ansible custom tasks:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ touch /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml&#x000A;</code></pre></div>
+<p>Now let's add some tasks which should be executed on the host.
+Note that you can call any Ansible task, not only firewalld task.</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh"> &gt;&gt; /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml&#x000A;&gt; ---&#x000A;&gt; - name: Enable custom firewall port&#x000A;&gt;   firewalld:&#x000A;&gt;     port: "12345/tcp"&#x000A;&gt;     permanent: yes&#x000A;&gt;     immediate: yes&#x000A;&gt;     state: enabled&#x000A;&gt;&#x000A;&gt; - name: Print debug information&#x000A;&gt;   debug:&#x000A;&gt;     msg: "My custom tasks was successfully executed!"&#x000A;&gt; EOF&#x000A;</span></code></pre></div>
+<p>When you add new host or reinstall an existing host, you may see the installation logs in <code>/var/log/ovirt-engine/host-deploy/</code> directory.
+Ansible specific log files has <code>-ansible</code> suffix. In events view you can see relevant log file path for the specific host installation or
+reinstallation.</p>
+
+<p>Note that host's firewall type <code>iptables</code> is deprecated in version 4.2 and will be removed in version 4.3</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/ansible.html">Ansible</a></li>
+<li><a href="../../tag/automation.html">Automation</a></li>
+<li><a href="../../tag/configuration-management.html">Configuration management</a></li>
+<li><a href="../../tag/firewalld.html">firewalld</a></li>
+<li><a href="../../tag/host-deploy.html">host-deploy</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-12-08-host-deploy-customization.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-12-08-host-deploy-customization.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 8 Dec 2017 14:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

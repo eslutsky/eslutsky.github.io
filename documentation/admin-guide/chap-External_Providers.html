@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+External Providers &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-11-external-providers">Chapter 11: External Providers</h1>
+
+<h2 id="introduction-to-external-providers-in-ovirt">Introduction to External Providers in oVirt</h2>
+
+<p>In addition to resources managed by the oVirt Engine itself, oVirt can also take advantage of resources managed by external sources. The providers of these resources, known as external providers, can provide resources such as virtualization hosts, virtual machine images, and networks.</p>
+
+<p>oVirt currently supports the following external providers:</p>
+
+<dl>
+  <dt>Foreman for Host Provisioning</dt>
+  <dd>Foreman is a tool for managing all aspects of the life cycle of both physical and virtual hosts. In oVirt, hosts managed by Foreman can be added to and used by the oVirt Engine as virtualization hosts. After you add a Foreman instance to the Engine, the hosts managed by the Foreman instance can be added by searching for available hosts on that Foreman instance when adding a new host.</dd>
+  <dt>OpenStack Image Service (Glance) for Image Management</dt>
+  <dd>OpenStack Image Service provides a catalog of virtual machine images. In oVirt, these images can be imported into the oVirt Engine and used as floating disks or attached to virtual machines and converted into templates. After you add an OpenStack Image Service to the Engine, it appears as a storage domain that is not attached to any data center. Virtual machine disks in a oVirt environment can also be exported to an OpenStack Image Service as virtual machine disk images.</dd>
+  <dt>OpenStack Networking (Neutron) for Network Provisioning</dt>
+  <dd>OpenStack Networking provides software-defined networks. In oVirt, networks provided by OpenStack Networking can be imported into the oVirt Engine and used to carry all types of traffic and create complicated network topologies. After you add OpenStack Networking to the Engine, you can access the networks provided by OpenStack Networking by manually importing them.</dd>
+  <dt>OpenStack Volume (Cinder) for Storage Management</dt>
+  <dd>OpenStack Volume provides persistent block storage management for virtual hard drives. The OpenStack Cinder volumes are provisioned by Ceph Storage. In oVirt, you can create disks on OpenStack Volume storage that can be used as floating disks or attached to virtual machines. After you add OpenStack Volume to the Engine, you can create a disk on the storage provided by OpenStack Volume.</dd>
+  <dt>VMware for Virtual Machine Provisioning</dt>
+  <dd>Virtual machines created in VMware can be converted using V2V (<code>virt-v2v</code>) and imported into an oVirt environment. After you add a VMware provider to the Engine, you can import the virtual machines it provides. V2V conversion is performed on a designated proxy host as part of the import operation.</dd>
+  <dt>Xen for Virtual Machine Provisioning</dt>
+  <dd>Virtual machines created in Xen can be converted using V2V (<code>virt-v2v</code>) and imported into an oVirt environment. After you add a Xen host to the Engine, you can import the virtual machines it provides. V2V conversion is performed on a designated proxy host as part of the import operation.</dd>
+  <dt>KVM for Virtual Machine Provisioning</dt>
+  <dd>Virtual machines created in KVM can be imported into an oVirt environment. After you add a KVM host to the Engine, you can import the virtual machines it provides.</dd>
+  <dt>Open Virtual Network (OVN) for Network Provisioning</dt>
+  <dd>Open Virtual Network (OVN) is an Open vSwitch (OVS) extension that provides software-defined networks. After you add OVN to the Manager, you can import existing OVN networks, and create new OVN networks from the Engine. You can also automatically install OVN on the Engine using <code>engine-setup</code>.</dd>
+  <dt>External Network Provider for Network Provisioning</dt>
+  <dd>Supported external sofware-defined network providers include any provider that implements the OpenStack Neutron REST API. Unlike OpenStack Networking (Neutron), the Neutron agent is not used as the virtual interface driver implementation on the host. Instead, the virtual interface driver needs to be provided by the implementer of the external network provider.</dd>
+</dl>
+
+<p>All external resource providers are added using a single window that adapts to your input. You must add the resource provider before you can use the resources it provides in your oVirt environment.</p>
+
+<h2 id="adding-external-providers">Adding External Providers</h2>
+
+<h3 id="adding-a-foreman-instance-for-host-provisioning">Adding a Foreman Instance for Host Provisioning</h3>
+
+<p>Add a Foreman instance for host provisioning to the oVirt Engine. oVirt 4.2 is supported with Foreman 6.1.</p>
+
+<p><strong>Adding a Foreman Instance for Host Provisioning</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>Foreman/Satellite</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the machine on which the Foreman instance is installed in the <strong>Provider URL</strong> text field. You do not need to specify a port number.</p>
+
+    <p><strong>Important:</strong> IP addresses cannot be used to add a Foreman instance.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Requires Authentication</strong> check box.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Username</strong> and <strong>Password</strong> for the Foreman instance. You must use the same user name and password as you would use to log in to the Foreman provisioning portal.</p>
+  </li>
+  <li>
+    <p>Test the credentials:</p>
+
+    <p>i. Click <strong>Test</strong> to test whether you can authenticate successfully with the Foreman instance using the provided credentials.</p>
+
+    <p>ii. If the Foreman instance uses SSL, the <strong>Import provider certificates</strong> window opens; click <strong>OK</strong> to import the certificate that the Foreman instance provides.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have added the Foreman instance to the oVirt Engine, and can work with the hosts it provides.</p>
+
+<h3 id="adding-an-openstack-image-glance-instance-for-image-management">Adding an OpenStack Image (Glance) Instance for Image Management</h3>
+
+<p>Add an OpenStack Image (Glance) instance for image management to the oVirt Engine.</p>
+
+<p><strong>Adding an OpenStack Image (Glance) Instance for Image Management</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>OpenStack Image</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the machine on which the OpenStack Image instance is installed in the <strong>Provider URL</strong> text field.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Requires Authentication</strong> check box and enter the <strong>Username</strong>, <strong>Password</strong>, <strong>Tenant Name</strong>, and <strong>Authentication URL</strong> for the OpenStack Image instance. You must use the user name and password for the OpenStack Image user registered in Keystone, the tenant of which the OpenStack Image instance is a member, and the URL and port of the Keystone server.</p>
+  </li>
+  <li>
+    <p>Test the credentials:</p>
+
+    <p>i. Click <strong>Test</strong> to test whether you can authenticate successfully with the OpenStack Image instance using the provided credentials.</p>
+
+    <p>ii. If the OpenStack Image instance uses SSL, the <strong>Import provider certificates</strong> window opens; click <strong>OK</strong> to import the certificate that the OpenStack Image instance provides.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> **Important:** You must import the certificate that the OpenStack Image instance provides to ensure the Engine can communicate with the instance.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have added the OpenStack Image instance to the oVirt Engine, and can work with the images it provides.</p>
+
+<h3 id="adding-an-openstack-networking-neutron-instance-for-network-provisioning">Adding an OpenStack Networking (Neutron) Instance for Network Provisioning</h3>
+
+<p>Add an OpenStack Networking (Neutron) instance for network provisioning to the oVirt Engine. To add other third-party network providers that implement the OpenStack Neutron REST API, see <a href="Adding_an_External_Network_Provider">Adding an External Network Provider</a>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** oVirt supports RDO versions 8, 9, 10, 11, and 12 as external network providers.&#x000A;</code></pre></div>
+<p>To use neutron networks, hosts must have the neutron agents configured. You can configure the agents manually, or use the RDO director to deploy the Networker role, before adding the network node to the Engine as a host. Using the director is recommended. Automatic deployment of the neutron agents through the <strong>Network Provider</strong> tab in the <strong>New Host</strong> window is not supported.</p>
+
+<p>Although network nodes and regular hosts can be used in the same cluster, virtual machines using neutron networks can only run on network nodes.</p>
+
+<p><strong>Adding a Network Node as a Host</strong></p>
+
+<ol>
+  <li>
+    <p>Use the RDO director to deploy the Networker role on the network node.</p>
+  </li>
+  <li>
+    <p>Enable the oVirt repositories.</p>
+  </li>
+  <li>
+    <p>Install the Openstack Networking hook:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install vdsm-hook-openstacknet&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Add the network node to the Engine as a host.</p>
+
+    <p><strong>Important:</strong> Do not select the OpenStack Networking provider from the <strong>Network Provider</strong> tab. This is currently not supported.</p>
+  </li>
+  <li>
+    <p>Remove the firewall rule that rejects ICMP traffic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # iptables -D INPUT -j REJECT --reject-with icmp-host-prohibited&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Adding an OpenStack Networking (Neutron) Instance for Network Provisioning</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>OpenStack Networking</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Ensure that <strong>Open vSwitch</strong> is selected in the <strong>Networking Plugin</strong> field.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the machine on which the OpenStack Networking instance is installed in the <strong>Provider URL</strong> text field, followed by the port number. The <strong>Read-Only</strong> check box is selected by default. This prevents users from modifying the OpenStack Networking instance.</p>
+
+    <p><strong>Important:</strong> You must leave the <strong>Read-Only</strong> check box selected for your setup to be supported by Red Hat.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Requires Authentication</strong> check box and enter the <strong>Username</strong>, <strong>Password</strong>, <strong>Tenant Name</strong>, and <strong>Authentication URL</strong> for the OpenStack Networking instance. You must use the user name and password for the OpenStack Networking user registered in Keystone, the tenant of which the OpenStack Networking instance is a member, and the URL and port of the Keystone server.</p>
+  </li>
+  <li>
+    <p>Test the credentials:</p>
+
+    <p>i. Click <strong>Test</strong> to test whether you can authenticate successfully with the OpenStack Networking instance using the provided credentials.</p>
+
+    <p>ii. If the OpenStack Networking instance uses SSL, the <strong>Import provider certificates</strong> window opens; click <strong>OK</strong> to import the certificate that the OpenStack Networking instance provides to ensure the Engine can communicate with the instance.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Agent Configuration</strong> tab.</p>
+  </li>
+  <li>
+    <p>Enter a comma-separated list of interface mappings for the Open vSwitch agent in the <strong>Interface Mappings</strong> field.</p>
+  </li>
+  <li>
+    <p>Select the message broker type that the OpenStack Networking instance uses from the <strong>Broker Type</strong> list.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the host on which the message broker is hosted in the <strong>Host</strong> field.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Port</strong> by which to connect to the message broker. This port number will be 5762 by default if the message broker is not configured to use SSL, and 5761 if it is configured to use SSL.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Username</strong> and <strong>Password</strong> of the OpenStack Networking user registered in the message broker instance.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have added the OpenStack Networking instance to the oVirt Engine. Before you can use the networks it provides, import the networks into the Engine. See <a href="Importing_Networks">Importing Networks</a>.</p>
+
+<h3 id="adding-an-openstack-volume-cinder-instance-for-storage-management">Adding an OpenStack Volume (Cinder) Instance for Storage Management</h3>
+
+<p>Add an OpenStack Volume (Cinder) instance for storage management to the oVirt Engine. The OpenStack Cinder volumes are provisioned by Ceph Storage.</p>
+
+<p><strong>Adding an OpenStack Block Storage (Cinder) Instance for Storage Management</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>OpenStack Block Storage</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> to which OpenStack Volume Block Storage volumes will be attached.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the machine on which the OpenStack Block Storage instance is installed, followed by the port number, in the <strong>Provider URL</strong> text field.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Requires Authentication</strong> check box and enter the <strong>Username</strong>, <strong>Password</strong>, <strong>Tenant Name</strong>, and <strong>Authentication URL</strong> for the OpenStack Block Storage instance. You must use the user name and password for the OpenStack Block Storage user registered in Keystone, the tenant of which the OpenStack Block Storage instance is a member, and the URL, port, and API version of the Keystone server.</p>
+  </li>
+  <li>
+    <p>Click <strong>Test</strong> to test whether you can authenticate successfully with the OpenStack Block Storage instance using the provided credentials.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>If client Ceph authentication (<code>cephx</code>) is enabled, you must also complete the following steps. The <code>cephx</code> protocol is enabled by default.</p>
+
+    <p>i. On your Ceph server, create a new secret key for the <code>client.cinder</code> user using the <code>ceph auth get-or-create</code> command. If a key already exists for the <code>client.cinder</code> user, retrieve it using the same command.</p>
+
+    <p>ii. In the Administration Portal, select the newly-created Cinder external provider from the <strong>Providers</strong> list.</p>
+
+    <p>iii. Click the <strong>Authentication Keys</strong> tab.</p>
+
+    <p>iv. Click <strong>New</strong>.</p>
+
+    <p>v. Enter the secret key in the <strong>Value</strong> field.</p>
+
+    <p>vi. Copy the automatically-generated <strong>UUID</strong>, or enter an existing UUID in the text field.</p>
+
+    <p>vii. On your Cinder server, add the UUID from the previous step and the <code>cinder</code> user to <code>/etc/cinder/cinder.conf</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    rbd_secret_uuid = UUID&#x000A;    rbd_user = cinder&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>See <a href="Creating_Unassociated_Virtual_Machine_Hard_Disks">Creating Unassociated Virtual Machine Hard Disks</a> for more information about creating a OpenStack Volume (Cinder) disk.</p>
+
+<h3 id="adding-a-vmware-instance-as-a-virtual-machine-provider">Adding a VMware Instance as a Virtual Machine Provider</h3>
+
+<p>Add a VMware vCenter instance to import virtual machines from VMware to the oVirt Engine.</p>
+
+<p>oVirt uses V2V to convert VMware virtual machines to the correct format before they are imported. The <code>virt-v2v</code> package must be installed on at least one host. The <code>virt-v2v</code> package is available by default on oVirt Nodes and is installed on Enterprise Linux hosts as a dependency of VDSM when added to the oVirt environment. Enterprise Linux hosts must be Enterprise Linux 7.2 or later.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The `virt-v2v` package is not available on ppc64le architecture; these hosts cannot be used as proxy hosts.&#x000A;</code></pre></div>
+<p><strong>Adding a VMware vCenter Instance as a Virtual Machine Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>VMware</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> into which VMware virtual machines will be imported, or select <strong>Any Data Center</strong> to instead specify the destination data center during individual import operations.</p>
+  </li>
+  <li>
+    <p>Enter the IP address or fully qualified domain name of the VMware vCenter instance in the <strong>vCenter</strong> field.</p>
+  </li>
+  <li>
+    <p>Enter the IP address or fully qualified domain name of the host from which the virtual machines will be imported in the <strong>ESXi</strong> field.</p>
+  </li>
+  <li>
+    <p>Enter the name of the data center in which the specified ESXi host resides in the <strong>Data Center</strong> field.</p>
+  </li>
+  <li>
+    <p>If you have exchanged the SSL certificate between the ESXi host and the Engine, leave <strong>Verify server's SSL certificate</strong> checked to verify the ESXi host's certificate. If not, clear the check box.</p>
+  </li>
+  <li>
+    <p>Select a host in the chosen data center with <code>virt-v2v</code> installed to serve as the <strong>Proxy Host</strong> during virtual machine import operations. This host must also be able to connect to the network of the VMware vCenter external provider. If you selected <strong>Any Data Center</strong> above, you cannot choose the host here, but instead can specify a host during individual import operations.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Username</strong> and <strong>Password</strong> for the VMware vCenter instance. The user must have access to the VMware data center and ESXi host on which the virtual machines reside.</p>
+  </li>
+  <li>
+    <p>Test the credentials:</p>
+
+    <p>i. Click <strong>Test</strong> to test whether you can authenticate successfully with the VMware vCenter instance using the provided credentials.</p>
+
+    <p>ii. If the VMware vCenter instance uses SSL, the <strong>Import provider certificates</strong> window opens; click <strong>OK</strong> to import the certificate that the VMware vCenter instance provides.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** You must import the certificate that the VMware vCenter instance provides to ensure the Engine can communicate with the instance.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>To import virtual machines from the VMware external provider, see "Importing a Virtual Machine from a VMware Provider" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+
+<h3 id="1126-adding-a-xen-host-as-a-virtual-machine-provider">11.2.6. Adding a Xen Host as a Virtual Machine Provider</h3>
+
+<p>Add a Xen host to import virtual machines from Xen to Red Hat Virtualization Manager.</p>
+
+<p>oVirt uses V2V to convert Xen virtual machines to the correct format before they are imported. The <code>virt-v2v</code> package must be installed on at least one host. The <code>virt-v2v</code> package is available by default on oVirt Nodes and is installed on Enterprise Linux hosts as a dependency of VDSM when added to the oVirt environment. Enterprise Linux hosts must be Red Hat Enterprise Linux 7.2 or later.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The `virt-v2v` package is not available on ppc64le architecture; these hosts cannot be used as proxy hosts.&#x000A;</code></pre></div>
+<p><strong>Adding a Xen Instance as a Virtual Machine Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Enable public key authentication between the proxy host and the Xen host:</p>
+
+    <p>i. Log in to the proxy host and generate SSH keys for the <strong>vdsm</strong> user.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # sudo -u vdsm ssh-keygen&#x000A;</code></pre></div>
+    <p>ii. Copy the <strong>vdsm</strong> user’s public key to the Xen host. The proxy host’s <strong>known_hosts</strong> file will also be updated to include the host key of the Xen host.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # sudo -u vdsm ssh-copy-id root@xenhost.example.com&#x000A;</code></pre></div>
+    <p>iii. Log in to the Xen host to verify that the login works correctly.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # sudo -u vdsm ssh root@xenhost.example.com&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>XEN</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> into which Xen virtual machines will be imported, or select <strong>Any Data Center</strong> to specify the destination data center during individual import operations.</p>
+  </li>
+  <li>
+    <p>Enter the URI of the Xen host in the <strong>URI</strong> field.</p>
+  </li>
+  <li>
+    <p>Select a host in the chosen data center with <code>virt-v2v</code> installed to serve as the <strong>Proxy Host</strong> during virtual machine import operations. This host must also be able to connect to the network of the Xen external provider. If you selected <strong>Any Data Center</strong> above, you cannot choose the host here, but instead can specify a host during individual import operations.</p>
+  </li>
+  <li>
+    <p>Click <strong>Test</strong> to test whether you can authenticate successfully with the Xen host.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>To import virtual machines from a Xen external provider, see "Importing a Virtual Machine from a Xen Host" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+
+<h3 id="adding-a-kvm-host-as-a-virtual-machine-provider">Adding a KVM Host as a Virtual Machine Provider</h3>
+
+<p>Add a KVM host to import virtual machines from KVM to oVirt Engine.</p>
+
+<p><strong>Adding a KVM Host as a Virtual Machine Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Enable public key authentication between the proxy host and the Xen host:</p>
+
+    <p>i. Log in to the proxy host and generate SSH keys for the <strong>vdsm</strong> user.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # sudo -u vdsm ssh-keygen&#x000A;</code></pre></div>
+    <p>ii. Copy the <strong>vdsm</strong> user’s public key to the KVM host. The proxy host’s <strong>known_hosts</strong> file will also be updated to include the host key of the KVM host.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # sudo -u vdsm ssh-copy-id root@kvmhost.example.com&#x000A;</code></pre></div>
+    <p>iii. Log in to the KVM host to verify that the login works correctly.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # sudo -u vdsm ssh root@kvmhost.example.com&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>KVM</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Data Center</strong> into which KVM virtual machines will be imported, or select <strong>Any Data Center</strong> to specify the destination data center during individual import operations.</p>
+  </li>
+  <li>
+    <p>Enter the URI of the KVM host in the <strong>URI</strong> field.</p>
+  </li>
+  <li>
+    <p>Select a host in the chosen data center to serve as the <strong>Proxy Host</strong> during virtual machine import operations. This host must also be able to connect to the network of the KVM external provider. If you selected <strong>Any Data Center</strong> in the Data Center field above, you cannot choose the host here. The field is greyed out and shows <strong>Any Host in Data Center</strong>. Instead you can specify a host during individual import operations.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Requires Authentication</strong> check box and enter the <strong>Username</strong> and <strong>Password</strong> for the KVM host. The user must have access to the KVM host on which the virtual machines reside.</p>
+  </li>
+  <li>
+    <p>Click <strong>Test</strong> to test whether you can authenticate successfully with the KVM host using the provided credentials.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>To import virtual machines from a KVM external provider, see "Importing a Virtual Machine from a KVM Host" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+
+<h3 id="adding-open-virtual-network-ovn-as-an-external-network-provider">Adding Open Virtual Network (OVN) as an External Network Provider</h3>
+
+<p>Open Virtual Network (OVN) enables you to create networks without adding VLANs or changing the infrastructure. OVN is an Open vSwitch (OVS) extension that enables support for virtual networks by adding native OVS support for virtual L2 and L3 overlays.</p>
+
+<p>You can either install a new OVN network provider or add an existing one.</p>
+
+<p>You can also connect an OVN network to a native Red Hat Virtualization network. See the “Connecting an OVN Network to a Physical Network” section for more information.</p>
+
+<p>A Neutron-like REST API is exposed by ovirt-provider-ovn, enabling you to create networks, subnets, ports, and routers. These overlay networks enable communication among the virtual machines.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** OVN is supported as an external provider by ManageIQ, using the OpenStack (Neutron) API.&#x000A;</code></pre></div>
+<p>For more information on OVS and OVN, see the OVS documentation at http://docs.openvswitch.org/en/latest/ and http://openvswitch.org/support/dist-docs/.</p>
+
+<h4 id="installing-a-new-ovn-network-provider">Installing a New OVN Network Provider</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Warning:** If the openvswitch package is already installed and if the version is 1:2.6.1 (version 2.6.1, epoch 1), the OVN installation will fail when it tries to install the latest openvswitch package. See the Doc Text in BZ#1505398 for the details and a workaround.&#x000A;</code></pre></div>
+<p>When you install OVN using engine-setup, the following steps are automated:</p>
+
+<ul>
+  <li>
+    <p>Setting up an OVN central server on the Manager machine.</p>
+  </li>
+  <li>
+    <p>Adding OVN to oVirt as an external network provider.</p>
+  </li>
+  <li>
+    <p>Setting the <strong>Default</strong> cluster’s default network provider to <code>ovirt-provider-ovn</code>.</p>
+  </li>
+  <li>
+    <p>Configuring hosts to communicate with OVN when added to the cluster.</p>
+  </li>
+</ul>
+
+<p>If you use a preconfigured answer file with <code>engine-setup</code>, you can add the following entry to install OVN:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>OVESETUP_OVN/ovirtProviderOvn=bool:True I **Installing a New OVN Network Provider**&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Install OVN on the Engine using <code>engine-setup</code>. During the installation, engine-setup asks the following questions:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # Install ovirt-provider-ovn(Yes, No) [Yes]?:&#x000A;</code></pre></div>  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>If <code>Yes</code>, <code>engine-setup</code> installs <code>ovirt-provider-ovn</code>. If <code>engine-setup</code> is updating a system, this prompt only appears if <code>ovirt-provider-ovn</code> has not been installed previously.</p>
+  </li>
+  <li>
+    <p>If <code>No</code>, you will not be asked again on the next run of <code>engine-setup</code>. If you want to see this option, run <code>engine-setup --reconfigure-optional-components</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # Use default credentials (admin@internal) for ovirt-provider-ovn(Yes, No) [Yes]?:&#x000A;</code></pre></div>
+    <p>If <code>Yes</code>, <code>engine-setup</code> uses the default engine user and password specified earlier in the setup process. This option is only available during new installations.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # oVirt OVN provider user[admin]:&#x000A;  # oVirt OVN provider password[empty]:&#x000A;</code></pre></div>
+    <p>You can use the default values or specify the oVirt OVN provider user and password.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** To change the authentication method later, you can edit the `/etc/ovirt-provider-ovn/conf.d/10_engine_setup.conf` file, or create a new `/etc/ovirt-provider-ovn/conf.d/20_engine_setup.conf` file. Restart the` ovirt-provider-ovn` service for the change to take effect. See https://github.com/oVirt/ovirt-provider-ovn/blob/master/README.adoc for more information about OVN authentication.&#x000A;</code></pre></div>  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Add hosts to the <strong>Default</strong> cluster. Hosts added to this cluster are automatically configured to communicate with OVN. To add new hosts, “Adding a Host to the Red Hat Virtualization Manager” in Chapter 7.</p>
+
+    <p>To configure your hosts to use an existing, non-default network, see the “Configuring Hosts for an OVN Tunnel Network” section.</p>
+  </li>
+  <li>
+    <p>Add networks to the <strong>Default</strong> cluster; see Section 6.1.2, “Creating a New Logical Network in a Data Center or Cluster” and select the <strong>Create on external provider</strong> check box. <code>ovirt-provider-ovn</code> is selected by default.</p>
+
+    <p>To connect the OVN network to a native oVirt network, select the <strong>Connect to physical network</strong> check box and specify the Red Hat Virtualization network to use. See the “Connecting an OVN Network to a Physical Network” section for more information and prerequisites.</p>
+  </li>
+</ol>
+
+<p>You can now create virtual machines that use OVN networks.</p>
+
+<h4 id="adding-an-existing-ovn-network-provider">Adding an Existing OVN Network Provider</h4>
+
+<p>Adding an existing OVN central server as an external network provider in Red Hat Virtualization involves the following key steps:</p>
+
+<ul>
+  <li>
+    <p>Install the OVN provider, a proxy used by the Manager to interact with OVN. The OVN provider can be installed on any machine, but must be able to communicate with the OVN central server and the Manager.</p>
+  </li>
+  <li>
+    <p>Add the OVN provider to Red Hat Virtualization as an external network provider.</p>
+  </li>
+  <li>
+    <p>Create a new cluster that uses OVN as its default network provider. Hosts added to this cluster are automatically configured to communicate with OVN.</p>
+  </li>
+</ul>
+
+<p><strong>Prerequisites</strong></p>
+
+<p>The following packages are required by the OVN provider and must be available on the provider machine:</p>
+
+<ul>
+  <li>
+    <p>openvswitch-ovn-central</p>
+  </li>
+  <li>
+    <p>openvswitch</p>
+  </li>
+  <li>
+    <p>openvswitch-ovn-common</p>
+  </li>
+  <li>
+    <p>python-openvswitch</p>
+  </li>
+</ul>
+
+<p>If these packages are not available from the repositories already enabled on the provider machine, they can be downloaded from the OVS website: http://openvswitch.org/download/.</p>
+
+<p><strong>Adding an Existing OVN Network Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Install and configure the OVN provider.</p>
+
+    <p>i. Install the provider on the provider machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-provider-ovn&#x000A;</code></pre></div>
+    <p>ii. If you are not installing the provider on the same machine as the Engine, add the following entry to the <code>/etc/ovirt-provider-ovn/conf.d/10_engine_setup.conf</code> file (create this file if it does not already exist):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [OVIRT]&#x000A; ovirt-host=https://Manager_host_name&#x000A;&#x000A;This is used for authentication, if authentication is enabled.&#x000A;</code></pre></div>
+    <p>iii. If you are not installing the provider on the same machine as the OVN central server, add the following entry to the <code>/etc/ovirt-provider-ovn/conf.d/10_engine_setup.conf</code> file (create this file if it does not already exist):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [OVN REMOTE]&#x000A; ovn-remote=tcp:OVN_central_server_IP:6641&#x000A;</code></pre></div>
+    <p>iv. Open ports 9696, 6641, and 6642 in the firewall to allow communication between the OVN provider, the OVN central server, and the Manager. This can be done either manually or by adding the ovirt-provider-ovn and ovirt-provider-ovn-central services to the appropriate zone:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # firewall-cmd --zone=ZoneName --add-service=ovirt-provider-ovn --permanent&#x000A; # firewall-cmd --zone=ZoneName --add-service=ovirt-provider-ovn-central --permanent&#x000A; # firewall-cmd --reload&#x000A;</code></pre></div>
+    <p>v. Start and enable the service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl start ovirt-provider-ovn&#x000A; # systemctl enable ovirt-provider-ovn&#x000A;</code></pre></div>
+    <p>vi. Configure the OVN central server to listen to requests from ports 6642 and 6641:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ovn-sbctl set-connection ptcp:6642&#x000A; # ovn-nbctl set-connection ptcp:6641&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>External Network Provider</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Networking Plugin</strong> text box and select <strong>oVirt Network Provider for OVN</strong> from the drop-down menu.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the OVN provider in the <strong>Provider URL</strong> text field, followed by the port number. If the OVN provider and the OVN central server are on separate machines, this is the URL of the provider machine, not the central server. If the OVN provider is on the same machine as the Manager, the URL can remain the default http://localhost:9696.</p>
+  </li>
+  <li>
+    <p>Clear the <strong>Read-Only</strong> check box to allow creating new OVN networks from the oVrt Engine.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Requires Authentication</strong> check box and enter the <strong>Username</strong>, <strong>Password</strong>, <strong>Tenant Name</strong>, and <strong>Authentication URL</strong> for the OVN instance.</p>
+
+    <p>The authentication method must be configured in the <code>/etc/ovirt-provider-ovn/conf.d/10_engine_setup.conf</code> file (create this file if it does not already exist). Restart the <code>ovirt-provider-ovn</code> service for the change to take effect. See https://github.com/oVirt/ovirt-provider-ovn/blob/master/README.adoc for more information about OVN authentication.</p>
+  </li>
+  <li>
+    <p>Test the credentials:</p>
+
+    <p>i. Click <strong>Test</strong> to test whether you can authenticate successfully with OVN using the provided credentials.</p>
+
+    <p>ii. If the OVN instance uses SSL, the <strong>Import provider certificates</strong> window opens; click <strong>OK</strong> to import the certificate that the OVN instance provides to ensure the Engine can communicate with the instance.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Create a new cluster that uses OVN as its default network provider. See “Creating a New Cluster” in <a href="chap-Clusters">Chapter 5: Clusters</a> and select the OVN network provider from the <strong>Default Network Provider</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Add hosts to the cluster. Hosts added to this cluster are automatically configured to communicate with OVN. To add new hosts, see “Adding a Host to the oVirt Engine” in <a href="chap-Hosts">Chapter 7: Hosts</a>.</p>
+  </li>
+  <li>
+    <p>Import or add OVN networks to the new cluster. To import networks, see Section 6.3.1, “Importing Networks From External Providers”. To create new networks using OVN, see “Creating a New Logical Network in a Data Center or Cluster” in <a href="chap-Logical_Networks">Chapter 6: Logical Networks</a>], and select the <strong>Create on external provider</strong> check box. <code>ovirt-provider-ovn</code> is selected by default.</p>
+  </li>
+</ol>
+
+<p>To configure your hosts to use an existing, non-default network, see the “Configuring Hosts for an OVN Tunnel Network” section.</p>
+
+<p>To connect the OVN network to a native oVirt network, select the <strong>Connect to physical network</strong> check box and specify the oVirt network to use. See the “Connecting an OVN Network to a Physical Network” section for more information and prerequisites.</p>
+
+<p>You can now create virtual machines that use OVN networks.</p>
+
+<h4 id="configuring-hosts-for-an-ovn-tunnel-network">Configuring Hosts for an OVN Tunnel Network</h4>
+
+<p>You can configure your hosts to use an existing network, other than the default <code>ovirtmgmt</code> network, with the <code>ovirt-provider-ovn-driver</code> Ansible playbook. The network must be accessible to all the hosts in the cluster.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The `ovirt-provider-ovn-driver` Ansible playbook updates existing hosts. If you add new hosts to the cluster, you must run the playbook again.&#x000A;</code></pre></div>
+<p><strong>Configuring Hosts for an OVN Tunnel Network</strong></p>
+
+<ol>
+  <li>
+    <p>On the Engine machine, go to the <strong>playbooks</strong> directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cd /usr/share/ovirt-engine/playbooks&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the <code>ansible-playbook</code> command with the following parameters:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ansible-playbook --private-key=/etc/pki/ovirt-engine/keys/engine_id_rsa -i /usr/share/ovirt-engine-metrics/bin/ovirt-engine-hosts-ansible-inventory --extra-vars " cluster_name=_Cluster_Name_ ovn_central=_OVN_Central_IP_ ovn_tunneling_interface=_VDSM_Network_Name_" ovirt-provider-ovn-driver.yml&#x000A;</code></pre></div>
+    <p><strong>Updating Hosts with <code>ansible-playbook</code></strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ansible-playbook --private-key=/etc/pki/ovirt-engine/keys/engine_id_rsa -i /usr/share/ovirt-engine-metrics/bin/ovirt-engine-hosts-ansible-inventory --extra-vars " cluster_name=MyCluster ovn_central=192.168.0.1 ovn_tunneling_interface=MyNetwork" ovirt-provider-ovn-driver.yml&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Note:</strong> The <code>OVN_Central_IP</code> can be on the new network, but this is not a requirement. The <code>OVN_Central_IP</code> must be accessible to all hosts.</p>
+
+<p>The <code>VDSM_Network_Name</code> is limited to 15 characters.</p>
+
+<p><strong>Updating the OVN Tunnel Network on a Single Host</strong></p>
+
+<p>You can update the OVN tunnel network on a single host with <code>vdsm-tool</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vdsm-tool ovn-config OVN_Central_IP Tunneling_IP_or_Network_Name&#x000A;</code></pre></div>
+<p><strong>Updating a Host with vdsm-tool</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vdsm-tool ovn-config 192.168.0.1 MyNetwork&#x000A;</code></pre></div>
+<h4 id="connecting-an-ovn-network-to-a-physical-network">Connecting an OVN Network to a Physical Network</h4>
+
+<p>You can create an external provider network that overlays a native oVirt network so that the virtual machines on each appear to be sharing the same subnet.</p>
+
+<p><strong>Important:</strong> If you created a subnet for the OVN network, a virtual machine using that network will receive an IP address from there. If you want the physical network to allocate the IP address, do not create a subnet for the OVN network.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>The cluster must have OVS selected as the <strong>Switch Type</strong>. Hosts added to this cluster must not have any pre-existing oVirt networks configured, such as the <strong>ovirtmgmt</strong> bridge.</p>
+  </li>
+  <li>
+    <p>The physical network must be available on the hosts. You can enforce this by setting the physical network as required for the cluster (in the <strong>Manage Networks</strong> window, or the <strong>Cluster</strong> tab of the <strong>New Logical Network</strong> window).</p>
+  </li>
+</ul>
+
+<p><strong>Creating a New External Network Connected to a Physical Network</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Clusters</strong>.</p>
+  </li>
+  <li>
+    <p>Click the cluster’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Logical Networks</strong> tab and click <strong>Add Network</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> for the network.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Create on external provider</strong> check box. <code>ovirt-provider-ovn</code> is selected by default.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Connect to physical network</strong> check box if it is not already selected by default.</p>
+  </li>
+  <li>
+    <p>Choose the physical network to connect the new network to:</p>
+
+    <ul>
+      <li>
+        <p>Click the <strong>Data Center Network</strong> radio button and select the physical network from the drop-down list. This is the recommended option.</p>
+      </li>
+      <li>
+        <p>Click the <strong>Custom</strong> radio button and enter the name of the physical network. If the physical network has VLAN tagging enabled, you must also select the <strong>Enable VLAN tagging</strong> check box and enter the physical network’s VLAN tag.</p>
+
+        <p><strong>Important:</strong> The physical network’s name must not be longer than 15 characters, or contain special characters.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="adding-an-external-network-provider">Adding an External Network Provider</h3>
+
+<p>Any network provider that implements the OpenStack Neutron REST API can be added to oVirt. The virtual interface driver needs to be provided by the implementer of the external network provider. A reference implementation of a network provider and a virtual interface driver are available at <a href="https://github.com/mmirecki/ovirt-provider-mock">https://github.com/mmirecki/ovirt-provider-mock</a> and <a href="https://github.com/mmirecki/ovirt-provider-mock/blob/master/docs/driver_instalation">https://github.com/mmirecki/ovirt-provider-mock/blob/master/docs/driver_instalation</a>.</p>
+
+<p><strong>Adding an External Network Provider for Network Provisioning</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong>.</p>
+  </li>
+  <li>
+    <p>Select <strong>External Network Provider</strong> from the <strong>Type</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Optionally click the <strong>Networking Plugin</strong> text box and select the appropriate driver from the drop-down menu.</p>
+  </li>
+  <li>
+    <p>Enter the URL or fully qualified domain name of the machine on which the external network provider is installed in the <strong>Provider URL</strong> text field, followed by the port number. The <strong>Read-Only</strong> check box is selected by default. This prevents users from modifying the external network provider.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Requires Authentication</strong> check box and enter the <strong>Username</strong>, <strong>Password</strong>, <strong>Tenant Name</strong>, and <strong>Authentication URL</strong> for the external network provider.</p>
+  </li>
+  <li>
+    <p>Optionally, select the <strong>Automatic Synchronization</strong> check box. This enables automatic synchronization of the external network provider with existing networks. This feature is disabled by default when adding external network providers.</p>
+  </li>
+  <li>
+    <p>Test the credentials:</p>
+
+    <p>i. Click <strong>Test</strong> to test whether you can authenticate successfully with the external network provider using the provided credentials.</p>
+
+    <p>ii. If the external network provider uses SSL, the <strong>Import provider certificates</strong> window opens; click <strong>OK</strong> to import the certificate that the external network provider provides to ensure the Engine can communicate with the instance.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>Before you can use the networks it provides, you need to install the virtual interface driver on the hosts and import the networks. To import networks, see <a href="Importing_Networks">Importing Networks</a>.</p>
+
+<h3 id="add-provider-general-settings-explained">Add Provider General Settings Explained</h3>
+
+<p>The <strong>General</strong> tab in the <strong>Add Provider</strong> window allows you to register the core details of the external provider.</p>
+
+<p><strong>Add Provider: General Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Setting</td>
+   <td>Explanation</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Name</b></td>
+   <td>A name to represent the provider in the Engine.</td>
+  </tr>
+  <tr>
+   <td><b>Description</b></td>
+   <td>A plain text, human-readable description of the provider.</td>
+  </tr>
+  <tr>
+   <td><b>Type</b></td>
+   <td>
+    <p>The type of external provider. Changing this setting alters the available fields for configuring the provider.</p>
+    <p><b>Foreman/Satellite</b></p>
+    <ul>
+     <li><b>Provider URL</b>: The URL or fully qualified domain name of the machine that hosts the Foreman instance. You do not need to add the port number to the end of the URL or fully qualified domain name.</li>
+     <li><b>Requires Authentication</b>: Allows you to specify whether authentication is required for the provider. Authentication is mandatory when <b>Foreman</b> is selected.</li>
+     <li><b>Username</b>: A user name for connecting to the Foreman instance. This user name must be the user name used to log in to the provisioning portal on the Foreman instance. By default, this user name is <tt>admin</tt>.</li>
+     <li><b>Password</b>: The password against which the above user name is to be authenticated. This password must be the password used to log in to the provisioning portal on the Foreman instance.</li>
+    </ul>
+    <p><b>OpenStack Image</b></p>
+    <ul>
+    <li><b>Provider URL</b>: The URL or fully qualified domain name of the machine on which the OpenStack Image service is hosted. You must add the port number for the OpenStack Image service to the end of the URL or fully qualified domain name. By default, this port number is 9292.</li>
+     <li><b>Requires Authentication</b>: Allows you to specify whether authentication is required to access the OpenStack Image service.</li>
+     <li><b>Username</b>: A user name for connecting to the OpenStack Image service. This user name must be the user name for the OpenStack Image service registered in the Keystone instance of which the OpenStack Image service is a member. By default, this user name is <tt>glance</tt>.</li>
+     <li><b>Password</b>: The password against which the above user name is to be authenticated. This password must be the password for the OpenStack Image service registered in the Keystone instance of which the OpenStack Image service is a member.</li>
+     <li><b>Tenant Name</b>: The name of the OpenStack tenant of which the OpenStack Image service is a member. By default, this is <tt>services</tt>.</li>
+     <li><b>Authentication URL</b>: The URL and port of the Keystone server with which the OpenStack Image service authenticates.</li>
+
+    </ul>
+    <p><b>OpenStack Networking</b></p>
+    <ul>
+     <li><b>Networking Plugin</b>: The networking plugin with which to connect to the OpenStack Networking server. <b>Open vSwitch</b> is the only option, and is selected by default.</li>
+     <li><b>Provider URL</b>: The URL or fully qualified domain name of the machine on which the OpenStack Networking instance is hosted. You must add the port number for the OpenStack Networking instance to the end of the URL or fully qualified domain name. By default, this port number is 9696.</li>
+     <li><b>Read Only</b>: Allows you to specify whether the OpenStack Networking instance can be modified from the Administration Portal.</li>
+     <li><b>Requires Authentication</b>: Allows you to specify whether authentication is required to access the OpenStack Networking service.</li>
+     <li><b>Username</b>: A user name for connecting to the OpenStack Networking instance. This user name must be the user name for OpenStack Networking registered in the Keystone instance of which the OpenStack Networking instance is a member. By default, this user name is <tt>neutron</tt>.</li>
+     <li><b>Password</b>: The password against which the above user name is to be authenticated. This password must be the password for OpenStack Networking registered in the Keystone instance of which the OpenStack Networking instance is a member.</li>
+     <li><b>Tenant Name</b>: The name of the OpenStack tenant of which the OpenStack Networking instance is a member. By default, this is <tt>services</tt>.</li>
+     <li><b>Authentication URL</b>: The URL and port of the Keystone server with which the OpenStack Networking instance authenticates.</li>
+    </ul>
+    <p><b>OpenStack Volume</b></p>
+    <ul>
+     <li><b>Data Center</b>: The data center to which OpenStack Volume storage volumes will be attached.</li>
+     <li><b>Provider URL</b>: The URL or fully qualified domain name of the machine on which the OpenStack Volume instance is hosted. You must add the port number for the OpenStack Volume instance to the end of the URL or fully qualified domain name. By default, this port number is 8776.</li>
+     <li><b>Requires Authentication</b>: Allows you to specify whether authentication is required to access the OpenStack Volume service.</li>
+     <li><b>Username</b>: A user name for connecting to the OpenStack Volume instance. This user name must be the user name for OpenStack Volume registered in the Keystone instance of which the OpenStack Volume instance is a member. By default, this user name is <tt>cinder</tt>.</li>
+     <li><b>Password</b>: The password against which the above user name is to be authenticated. This password must be the password for OpenStack Volume registered in the Keystone instance of which the OpenStack Volume instance is a member.</li>
+     <li><b>Tenant Name</b>: The name of the OpenStack tenant of which the OpenStack Volume instance is a member. By default, this is <tt>services</tt>.</li>
+     <li><b>Authentication URL</b>: The URL and port of the Keystone server with which the OpenStack Volume instance authenticates.</li>
+    </ul>
+    <p><b>VMware</b></p>
+    <ul>
+     <li><b>Data Center</b>: Specify the data center into which VMware virtual machines will be imported, or select <b>Any Data Center</b> to instead specify the destination data center during individual import operations (using the <b>Import</b> function in the <b>Virtual Machines</b> tab).</li>
+     <li><b>vCenter</b>: The IP address or fully qualified domain name of the VMware vCenter instance.</li>
+     <li><b>ESXi</b>: The IP address or fully qualified domain name of the host from which the virtual machines will be imported.</li>
+     <li><b>Data Center</b>: The name of the data center in which the specified ESXi host resides.</li>
+     <li><b>Cluster</b>: The name of the cluster in which the specified ESXi host resides.</li>
+     <li><b>Verify server's SSL certificate</b>: Specify whether the ESXi host's certificate will be verified on connection.</li>
+     <li><b>Proxy Host</b>: Select a host in the chosen data center with <tt>virt-v2v</tt> installed to serve as the host during virtual machine import operations. This host must also be able to connect to the network of the VMware vCenter external provider. If you selected <b>Any Data Center</b>, you cannot choose the host here, but instead can specify a host during individual import operations (using the <b>Import</b> function in the <b>Virtual Machines</b> tab).</li>
+     <li><b>Username</b>: A user name for connecting to the VMware vCenter instance. The user must have access to the VMware data center and ESXi host on which the virtual machines reside.</li>
+     <li><b>Password</b>: The password against which the above user name is to be authenticated.</li>
+    </ul>
+    <p><b>Xen</b></p>
+    <ul>
+     <li><b>Data Center</b>: Specify the data center into which Xen virtual machines will be imported, or select <b>Any Data Center</b> to instead specify the destination data center during individual import operations (using the <b>Import</b> function in the <b>Virtual Machines</b> tab).</li>
+     <li><b>URI</b>: The URI of the Xen host.</li>
+     <li><b>Proxy Host</b>: Select a host in the chosen data center with <tt>virt-v2v</tt> installed to serve as the host during virtual machine import operations. This host must also be able to connect to the network of the Xen external provider. If you selected <b>Any Data Center</b>, you cannot choose the host here, but instead can specify a host during individual import operations (using the <b>Import</b> function in the <b>Virtual Machines</b> tab).</li>
+    </ul>
+    <p><b>KVM</b></p>
+    <ul>
+     <li><b>Data Center</b>: Specify the data center into which KVM virtual machines will be imported, or select <b>Any Data Center</b> to instead specify the destination data center during individual import operations (using the <b>Import</b> function in the <b>Virtual Machines</b> tab).</li>
+     <li><b>URI</b>: The URI of the KVM host.</li>
+     <li><b>Proxy Host</b>: Select a host in the chosen data center with <tt>virt-v2v</tt> installed to serve as the host during virtual machine import operations. This host must also be able to connect to the network of the KVM external provider. If you selected <b>Any Data Center</b>, you cannot choose the host here, but instead can specify a host during individual import operations (using the <b>Import</b> function in the <b>Virtual Machines</b> tab).</li>
+    </ul>
+    <p><b>External Network Provider</b></p>
+    <ul>
+     <li><b>Provider URL</b>: The URL or fully qualified domain name of the machine on which the external network provider is hosted. You must add the port number for the external network provider to the end of the URL or fully qualified domain name. By default, this port number is 9696.</li>
+     <li><b>Read Only</b>: Allows you to specify whether the external network provider can be modified from the Administration Portal.</li>
+     <li><b>Requires Authentication</b>: Allows you to specify whether authentication is required to access the external network provider.</li>
+     <li><b>Username</b>: A user name for connecting to the external network provider.</li>
+     <li><b>Password</b>: The password against which the above user name is to be authenticated.</li>
+     <li><b>Authentication URL</b>: The URL and port of the authentication server with which the external network provider authenticates.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Test</b></td>
+   <td>Allows users to test the specified credentials. This button is available to all provider types.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="add-provider-agent-configuration-settings-explained">Add Provider Agent Configuration Settings Explained</h3>
+
+<p>The <strong>Agent Configuration</strong> tab in the <strong>Add Provider</strong> window allows users to register details for networking plugins. This tab is only available for the <strong>OpenStack Networking</strong> provider type.</p>
+
+<p><strong>Add Provider: General Settings</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Explanation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Interface Mappings</strong></td>
+      <td>A comma-separated list of mappings in the format of <code>label:interface</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Broker Type</strong></td>
+      <td>The message broker type that the OpenStack Networking instance uses. Select <strong>RabbitMQ</strong> or <strong>Qpid</strong>.</td>
+    </tr>
+    <tr>
+      <td><strong>Host</strong></td>
+      <td>The URL or fully qualified domain name of the machine on which the message broker is installed.</td>
+    </tr>
+    <tr>
+      <td><strong>Port</strong></td>
+      <td>The remote port by which a connection with the above host is to be made. By default, this port is 5762 if SSL is not enabled on the host, and 5761 if SSL is enabled.</td>
+    </tr>
+    <tr>
+      <td><strong>Username</strong></td>
+      <td>A user name for authenticating the OpenStack Networking instance with the above message broker. By default, this user name is <code>neutron</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>Password</strong></td>
+      <td>The password against which the above user name is to be authenticated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="editing-an-external-provider">Editing an External Provider</h2>
+
+<p><strong>Editing an External Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the current values for the provider to the preferred values.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="removing-external-providers">Removing External Providers</h2>
+
+<p><strong>Removing an External Provider</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Providers</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Virtual_Machine_Disks">Chapter 10: Virtual Disks</a><br />
+<strong>Next:</strong> <a href="chap-Backups_and_Migration">Chapter 12: Backups and Migration</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-external_providers">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-External_Providers.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-External_Providers.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

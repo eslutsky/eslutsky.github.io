@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Ovs Dpdk</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/ovs-dpdk.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Upgraded DPDK support in oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/07/ovn-dpdk.html"/>
+    <id>http://ovirt.org/blog/2018/07/ovn-dpdk.html</id>
+    <published>2018-07-29T10:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>lgoldber</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://dpdk.org/"&gt;DPDK (Data Plane Development Kit)&lt;/a&gt; is a set of open-source high-performance packet processing libraries and user space drivers.&lt;/p&gt;
+
+&lt;p&gt;oVirt &lt;a href="https://www.ovirt.org/blog/2017/09/ovs-dpdk/"&gt;support for DPDK&lt;/a&gt; was introduced in 2017, and is now enhanced in terms of deployment via &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;Ansible&lt;/a&gt; and usage via &lt;a href="http://www.ovn.org/"&gt;Open Virtual Network&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While still experimental, OVN-DPDK in oVirt is now available in version 4.2.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1 id="whats-new"&gt;What's new?&lt;/h1&gt;
+
+&lt;h3 id="ansible-dpdk-host-setup"&gt;Ansible DPDK host setup&lt;/h3&gt;
+
+&lt;p&gt;Host configuration for DPDK usage is now automated using Ansible. This primarly includes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Hugepages configuration – hugepage size and quantity in the kernel.&lt;/li&gt;
+  &lt;li&gt;CPU partitioning.&lt;/li&gt;
+  &lt;li&gt;Binding NICs to userspace drivers.&lt;/li&gt;
+  &lt;li&gt;OVS-DPDK related configuration (initialization, socket memory, pmd thread core binding, etc).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The role is installed via Ansible galaxy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An example playbook:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;- hosts: dpdk_host_0
+  vars:
+    pci_drivers:
+      "0000:02:00.1": "vfio-pci"
+      "0000:02:00.2": "igb"
+      "0000:02:00.3": ""
+    configure_kernel: true
+    bind_drivers: true
+    set_ovs_dpdk: false
+  roles:
+    - ovirt-ansible-dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The role is controlled by 3 boolean variables (all set to &lt;code&gt;true&lt;/code&gt; by default) and a dictionary of devices and their drivers:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;configure_kernel&lt;/code&gt; – determines whether the kernel should be configured for DPDK usage (hugepages, CPU partitioning). &lt;strong&gt;WARNING&lt;/strong&gt;: When set to &lt;code&gt;true&lt;/code&gt; it is very likely to trigger a reboot of the host, unless all required configuration is already pre-set.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;bind_drivers&lt;/code&gt; – determines whether the role should bind devices to their specified drivers.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;set_ovs_dpdk&lt;/code&gt; – determines whether the role should initialize and configure OVS for DPDK usage.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pci_drivers&lt;/code&gt; – a dictionary of the PCI addresses of network interface cards as keys and drivers as values. An empty string represents the default Linux driver for the specified device. Non-DPDK compatible drivers may be set; However, NICs with such drivers will not be configured for OVS-DPDK usage and will not have their CPU isolated in multiple NUMA environments. PCI addresses can be retrieved via &lt;code&gt;lshw -class network -businfo&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Additionally, there are several optional performance related variables:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;pmd_threads_count&lt;/code&gt; – determines the number of PMD threads per NIC (default: &lt;code&gt;1&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_2mb_hugepages&lt;/code&gt; – determines the number of 2MB hugepages, if 2MB hugepages are to be used (default: &lt;code&gt;1024&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_1gb_hugepages&lt;/code&gt; – determines the number of 1GB hugepages, if 1GB hugepages are to be used (default: &lt;code&gt;4&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;use_1gb_hugepages&lt;/code&gt; – determines whether 1GB hugepages should be used, where 1GB hugepages are supported (default: &lt;code&gt;true&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For additional information, refer to the role's &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id="ovn-integration"&gt;OVN Integration&lt;/h3&gt;
+&lt;p&gt;DPDK in oVirt now leverages the capabilities of OVN in the form of an OVN localnet. This allows seamless connectivity across OVN networks, benefiting from OVN's software defined routers, switches, security groups, and ACL's.&lt;/p&gt;
+
+&lt;p&gt;For more information about OVN localnet integration in oVirt, refer to oVirt's &lt;a href="https://ovirt.org/develop/release-management/features/network/provider-physical-network/"&gt;Provider Physical Network RFE&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id="usage-in-ovirt"&gt;Usage in oVirt&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install &lt;code&gt;oVirt.dpdk-setup&lt;/code&gt; Ansible role via ansible-galaxy:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; # ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Execute the role as described above.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Unless the host was already configured, the host will restart for kernel changes to be applied. After reboot, the following values are changed (if they are not, you may have incompatible hardware):&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;IOMMU: &lt;code&gt;/sys/devices/virtual/iommu/&amp;lt;DMAR device&amp;gt;/devices/&amp;lt;PCI address&amp;gt;&lt;/code&gt; should exist. DMAR devices are typically annotated by &lt;code&gt;dmar0&lt;/code&gt;, &lt;code&gt;dmar1&lt;/code&gt;, and so forth.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;hugepages: &lt;code&gt;grep Huge /proc/meminfo&lt;/code&gt; should reflect the desired state as defined in the Ansible playbook (i.e. &lt;code&gt;Hugepagesize&lt;/code&gt; and &lt;code&gt;HugePages_Total&lt;/code&gt;)&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;CPU partitioning: based on the devices that are to be used with a DPDK compatible driver, CPUs should be partitioned separately between each NUMA node. Refer to &lt;code&gt;lscpu&lt;/code&gt; to see live CPU NUMA separation information, e.g.: &lt;code&gt;NUMA node1 CPU(s): 8-15&lt;/code&gt;&lt;/p&gt;
+
+        &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: NICs using userspace drivers do not appear in the kernel; &lt;code&gt;ip&lt;/code&gt; commands won't list devices using userspace drivers. in oVirt, such devices appear as &lt;code&gt;dpdk0&lt;/code&gt;, &lt;code&gt;dpdk1&lt;/code&gt;, and so forth.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an oVirt network &lt;code&gt;phys-net-demo&lt;/code&gt; on your data center and attach it to your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Attach &lt;code&gt;phys-net-demo&lt;/code&gt; to DPDK NICs accross your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/set-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an external OVN network &lt;code&gt;ext-net-demo&lt;/code&gt;, setting &lt;code&gt;phys-net-demo&lt;/code&gt; as its physical network. This configuration between &lt;code&gt;ext-net-demo&lt;/code&gt; and &lt;code&gt;phys-net-demo&lt;/code&gt; will enable traffic between &lt;code&gt;phys-net-demo&lt;/code&gt; (which DPDK's physical port is part of) and the rest of the ports present in OVN's &lt;code&gt;ext-net-demo&lt;/code&gt; network.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-ext-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code&gt;ext-net-demo&lt;/code&gt; vNic's may now be added to virtual machines. These vNics now share L2 connectivity with other remote ports in &lt;code&gt;ext-net-demo&lt;/code&gt; via DPDK's NIC (and other local ports internally).&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/ext-net-demo.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Temporarily, SElinux needs to be set to permissive. This is due to an &lt;a href="https://bugzilla.redhat.com/1598435"&gt;open bug&lt;/a&gt; where SElinux blocks the creation of a QEMU socket. Once the bug is resolved, this step should be skipped.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Host to VM packets are transmitted and received on buffers allocated on shared hugepages memory. As such, virtual machines using DPDK based NIC's need to enable hugepage sharing; this is done by running VM's with custom properties:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Review engine custom properties:&lt;br /&gt;
+&lt;code&gt;engine-config -g UserDefinedVMProperties&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Add engine custom properties for hugepages support:&lt;br /&gt;
+&lt;code&gt;engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Restart engine for changes to take effect:&lt;br /&gt;
+&lt;code&gt;systemctl restart ovirt-engine&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;In the VM run once menu dialog, add the following custom properties:&lt;br /&gt;
+&lt;code&gt;hugepages_shared&lt;/code&gt; – &lt;code&gt;true&lt;/code&gt;.&lt;br /&gt;
+&lt;code&gt;hugepages&lt;/code&gt; – the number of hugepages to share.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/hugepages.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</content>
+  </entry>
+  <entry>
+    <title>oVirt Now Supports OVS-DPDK</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/09/ovs-dpdk.html"/>
+    <id>http://ovirt.org/blog/2017/09/ovs-dpdk.html</id>
+    <published>2017-09-02T10:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>igoihman</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://dpdk.org/"&gt;DPDK&lt;/a&gt; (Data Plane Development Kit) provides high-performance packet processing libraries and user space drivers.
+&lt;a href="http://openvswitch.org/"&gt;Open vSwitch&lt;/a&gt; uses DPDK libraries to perform entirely within the user space. According to &lt;a href="https://download.01.org/packet-processing/ONPS2.1/Intel_ONP_Release_2.1_Performance_Test_Report_Rev1.0.pdf"&gt;Intel ONP performance tests&lt;/a&gt;, using OVS with DPDK can provide a huge performance enhancement, increasing network packet throughput and reducing latency.&lt;/p&gt;
+
+&lt;p&gt;OVS-DPDK has been added to the oVirt Master branch as an experimental feature. The following post describes the OVS-DPDK installation and configuration procedures.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Please note:&lt;/strong&gt; Accessing the OVS-DPDK feature requires installing the oVirt Master version. In addition, OVS-DPDK cannot access any features located within the Linux kernel. This includes Linux bridge, tun/tap devices, iptables, etc.&lt;/p&gt;
+
+&lt;h2 id="requirements"&gt;Requirements&lt;/h2&gt;
+
+&lt;p&gt;In order to achieve the best performance, please follow the instructions at:
+ &lt;a href="http://dpdk.org/doc/guides-16.11/linux_gsg/nic_perf_intel_platform.html"&gt;http://dpdk.org/doc/guides-16.11/linux_gsg/nic_perf_intel_platform.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The network card must be on the supported vendor matrix, located here: &lt;a href="http://dpdk.org/doc/nics"&gt;http://dpdk.org/doc/nics&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Ensure that your system supports 1GB hugepages:
+&lt;code&gt;grep -q pdpe1gb /proc/cpuinfo &amp;amp;&amp;amp; echo "1GB supported"&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Hardware support: Make sure VT-d / AMD-Vi is enabled in BIOS&lt;/li&gt;
+  &lt;li&gt;Kernel support: When adding a new host via the oVirt GUI, go to Hosts -&amp;gt; Edit &amp;gt; Kernel, and add the following parameters to the Kernel command line:  &lt;code&gt;iommu=pt intel_iommu=on default_hugepagesz=1GB hugepagesz=1G hugepages=N&lt;/code&gt;
+In the event that 1GB hugepages is not supported, drop the &lt;code&gt;default_hugepagesz=1GB hugepagesz=1G&lt;/code&gt;. The default hugepages size will be used instead.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It is best to configure the host before installing it on oVirt-engine. If changes are made after VDSM is installed, move the host to maintenance mode and reboot the host and re-install it for the changes to take effect.&lt;/p&gt;
+
+&lt;h2 id="configuring-ovs-and-dpdk-on-the-host"&gt;Configuring OVS and DPDK on the Host&lt;/h2&gt;
+
+&lt;h3 id="install-dpdk-1611-packages"&gt;Install dpdk 16.11 packages:&lt;/h3&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# yum install dpdk dpdk-tools driverctl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="bind-nics-to-dpdk"&gt;Bind NICs to DPDK&lt;/h3&gt;
+
+&lt;p&gt;In order to run a DPDK application, a suitable UIO module should be loaded into kernel memory.
+Available modules are: uio_pci_generic, igb_uio and vfio-pci.
+In many cases, the standard uio_pci_generic module included in the Linux kernel can provide the UIO capability.
+For some devices which lack support for legacy interrupts, igb_uio module should be used. Note that it is an out-of-tree kernel module.
+VFIO is the preferred driver in latest DPDK versions, in platforms that support VFIO.&lt;/p&gt;
+
+&lt;p&gt;All ports that you would like to run DPDK application should be bound to one of the modules before OVS is started. DPDK will ignore all devices which are not bound to one of the modules above.&lt;/p&gt;
+
+&lt;p&gt;Load vfio-pci&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# modprobe vfio_pci
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Find the appropriate network devices you wish to bind:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# lspci | grep Ether
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Review the status of current port bindings:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# driverctl -v list-devices
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Bind the device to DPDK:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# driverctl set-override &amp;lt;PCI_ID&amp;gt; vfio-pci
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="hugepages-support"&gt;Hugepages Support&lt;/h3&gt;
+&lt;p&gt;Hugepages support is required for increasing performance. It allows the Linux kernel to manage larger pages, in addition to the standard 4K pages.
+Modern CPUs use a page-based mechanism to translate a virtual address into a physical address. The mapping is stored in page tables and can grow significantly large. To make the translation faster, we use a transparent cache called Translation Lookaside Buffer (TLB). A TLB miss will be handled by the hardware, which will increase the translation time significantly.
+TLB misses can be reduced by increasing the page size. Therefore, 1GB pages are preferable.&lt;/p&gt;
+
+&lt;p&gt;The number of pages can vary according to usage requirements but is limited to memory size.
+Hugepages must be marked as shared in order to enable host and guest communication, as packets are transmitted and received on buffers allocated on hugepages memory.&lt;/p&gt;
+
+&lt;p&gt;Review custom properties:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# engine-config -g UserDefinedVMProperties
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Add engine custom properties for hugepages support (followed by engine restart)&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="enable-dpdk-in-ovs"&gt;Enable DPDK in OVS&lt;/h3&gt;
+
+&lt;p&gt;To enable DPDK functionality, ovs-vscwhitchd should receive the following parameters:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Set &lt;code&gt;dpdk-init&lt;/code&gt; to allow OVS to initialize and support DPDK ports:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;dpdk-socket-mem&lt;/code&gt;: A comma-separated list of the mount of memory to allocate from each NUMA node. It is important to allocate memory on all NUMA nodes that have DPDK interfaces associated with them, otherwise, the NUMA node cannot be used and errors will occur.
+For example, in a dual socket system, we allocate 1GB only for NUMA node 0:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="1024,0"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;pmd-cpu-mask&lt;/code&gt;: PMD (poll mode driver) threads are used to poll DPDK devices for new packets instead of using the NIC driver that interacts with the kernel.
+To better scale the workloads across cores, multiple PMD threads can be created and pinned to CPU cores by explicitly specifying pmd-cpu-mask. Ensure that cores from the same NUMA nodes as the network device are enabled. In case of hyper-threading, it is best to use sibling cpus.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;eg: To spawn 2 PMD threads and pin them to cores 1, 2:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ovs-vsctl set Open_vSwitch . other_config:pmd-cpu-mask=0x6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;dpdk-lcore-mask&lt;/code&gt;: Specifies the CPU cores on which DPDK lcore threads should be spawned and expects a hex string. These are threads for OVS usage other than PMD. They cannot overlap with PMD or vCPUs threads.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-lcore-mask=0x2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Restart openvswitch service:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# sudo systemctl restart openvswitch
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Verify that DPDK is enabled:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ovs-vsctl get Open_vSwitch . iface_types
+[dpdk, dpdkr, dpdkvhostuser, dpdkvhostuserclient, geneve, gre, internal, ipsec_gre, lisp, patch, stt, system, tap, vxlan]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="ovs-dpdk-in-ovirt"&gt;OVS-DPDK in oVirt&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Upon creating a new cluster, choose OVS as the switch type.&lt;/li&gt;
+  &lt;li&gt;When setting up host networks, DPDK-bound NICs are shown in the dialog,as well as Linux-controlled ones&lt;/li&gt;
+  &lt;li&gt;When creating a network on a DPDK device, an OVS bridge with datapath_type=’netdev’ automatically attached to a DPDK device, will be created.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id="vms"&gt;VMs&lt;/h3&gt;
+
+&lt;p&gt;VMs will be created with vhost-user network interface. In order to support vhostuser interfaces, hugepages should be configured on the VM.&lt;/p&gt;
+
+&lt;p&gt;In the oVirt GUI, configure hugepages size, number of pages to use and enable shared hugepages.
+Choose &lt;code&gt;hugepages=1048576&lt;/code&gt; and &lt;code&gt;hugepages_shared=true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Vhostuser XML file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;&amp;lt;interface type="vhostuser"&amp;gt;
+            &amp;lt;address bus="0x00" domain="0x0000" function="0x0" slot="0x04" type="pci" /&amp;gt;
+            &amp;lt;mac address="00:1a:4a:16:01:54" /&amp;gt;
+            &amp;lt;model type="virtio" /&amp;gt;
+            &amp;lt;source mode="server" path="/var/run/vdsm/vhostuser/ee844c42-7075-3bf5-86c2-ec831f287c22" type="unix" /&amp;gt;
+            &amp;lt;filterref filter="vdsm-no-mac-spoofing" /&amp;gt;
+            &amp;lt;link state="up" /&amp;gt;
+            &amp;lt;bandwidth /&amp;gt;
+        &amp;lt;/interface&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="dpdk-in-the-guest"&gt;DPDK in the Guest&lt;/h3&gt;
+
+&lt;p&gt;DPDK can be used in the guest in order to run a high-speed packet forwarding program between vhostuser ports.
+VM should be configured to support DPDK using the same steps introduced in the host: configure hugepages, install dpdk package, load the suitable kernel module and bind network devices to DPDK.
+Testpmd is a good example of a DPDK application designated for testing packet forwarding.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;# sudo testpmd -l 0-3 --socket-mem 1024 -n 4 -- -i&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;-l&lt;/code&gt; : List of cores to run on&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;--socket-memory&lt;/code&gt;: memory to allocate on specific sockets&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;-n&lt;/code&gt; : number of memory channels to use&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;-i&lt;/code&gt; : interactive mode&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more options, please consult testpmd &lt;a href="http://dpdk.org/doc/guides/testpmd_app_ug/run_app.html"&gt;documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id="limitations"&gt;Limitations&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;hugepages must be configured for each host via the command line.&lt;/li&gt;
+  &lt;li&gt;Shared hugepages must be requested for every VM via a custom property.&lt;/li&gt;
+  &lt;li&gt;Performance is highly affected from the hardware and the setup configuration.&lt;/li&gt;
+  &lt;li&gt;NIC Hotplug / Hotunplug and live migration are currently not supported.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ways to achieve optimized performance will be discussed in a follow up post.&lt;/p&gt;
+
+&lt;h3 id="references"&gt;References&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/intro/install/dpdk.rst"&gt;https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/intro/install/dpdk.rst&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/howto/dpdk.rst"&gt;https://github.com/openvswitch/ovs/blob/branch-2.7/Documentation/howto/dpdk.rst&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://software.intel.com/en-us/articles/vhost-user-numa-awareness-in-open-vswitch-with-dpdk"&gt;https://software.intel.com/en-us/articles/vhost-user-numa-awareness-in-open-vswitch-with-dpdk&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://developers.redhat.com/blog/2017/06/28/ovs-dpdk-parameters-dealing-with-multi-numa/"&gt;https://developers.redhat.com/blog/2017/06/28/ovs-dpdk-parameters-dealing-with-multi-numa/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+</feed>

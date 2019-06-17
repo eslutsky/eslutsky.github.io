@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Migration from vdscli to jsonrpcvdscli &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="migration-from-vdscli-to-jsonrpcvdscli">Migration from vdscli to jsonrpcvdscli</h1>
+
+<p>Between both communication modules there is a compatibility issue. When we work with jsonrpc we do not send response status information (code, message) when method invocation was successful. We only send it when command failed. There is compatibility mode that we can set when calling jsonrpcvdscli.connect.</p>
+
+<h2 id="vdscli">vdscli</h2>
+
+<p>Here is the code how we used to create vdscli client:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  hostPort = vdscli.cannonizeHostPort(&#x000A;      self._dst,&#x000A;      config.getint('addresses', 'management_port'))&#x000A;  if config.getboolean('vars', 'ssl'):&#x000A;      self._destServer = vdscli.connect(hostPort,&#x000A;          useSSL=True,&#x000A;          TransportClass=kaxmlrpclib.TcpkeepSafeTransport)&#x000A;  else:&#x000A;      destServer = kaxmlrpclib.Server('`[`http://`](http://)`' + hostPort)&#x000A;</code></pre></div>
+<p>In the old code we provide information where we want to connect in hostPort and whether we want to use ssl.</p>
+
+<h2 id="jsonrpcvdscli">jsonrpcvdscli</h2>
+
+<p>Here is jsonrpcvdscli code:
+      from vdsm import jsonrpcvdscli
+      from vdsm.config import config 
+      requestQueues = config.get('addresses', 'request_queues')
+      requestQueue = requestQueues.split(",")[0]
+      destServer = jsonrpcvdscli.connect(requestQueue, host=host, port=port)</p>
+
+<p>Above code use config.py to get missing information we can customize the client by providing more detail:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  from vdsm import jsonrpcvdscli&#x000A;  from vdsm.config import config&#x000A;  from vdsm.sslcompat import sslutils&#x000A;  from vdsm import utils&#x000A;  sslctx = sslutils.create_ssl_context()&#x000A;  client_socket = utils.create_connected_socket(host, int(port), sslctx)&#x000A;  client = clientIF.createStompClient(client_socket)&#x000A;  requestQueues = config.get('addresses', 'request_queues')&#x000A;  requestQueue = requestQueues.split(",")[0]&#x000A;  destServer = jsonrpcvdscli.connect(requestQueue, client) &#x000A;</code></pre></div>
+<p>Please note that above code do not connect during the process of creation. It is required to call a procedure to physically establish connection.</p>
+
+<p>New client is not widely used so for some of the methods it is required to update _COMMAND_CONVERTER dictionary in jsonrpcvdscli module. It contain mapping of a methods called on destServer proxy object and api method names.</p>
+
+<h2 id="example">example</h2>
+
+<p>There are 2 examples in vdsm code already:</p>
+
+<ul>
+  <li>migration.py</li>
+  <li>tests/functional/utils.py</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/migration-from-vdscli-to-jsonrpcvdscli.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/migration-from-vdscli-to-jsonrpcvdscli.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 23 Dec 2018 02:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

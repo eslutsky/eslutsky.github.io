@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DomainInfrastructure &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="domain-infrastructure-in-the-ovirt-engine">Domain Infrastructure in the oVirt Engine</h1>
+
+<p>This document describes the different components in the oVirt engine domain infrastructure, for authenticating and querying to LDAP servers. The infrastructure supports:</p>
+
+<ol>
+  <li>Authenticating Active Directory, IPA and RHDS using GSSAPI authentication</li>
+  <li>Querying the directory using the LDAP protocol</li>
+  <li>Easily adding new LDAP provider types</li>
+  <li>Easily adding new query types</li>
+</ol>
+
+<p>This infrastructure is in the package: org.ovirt.engine.core.bll.adbroker, and it consists of the following main components:</p>
+
+<ol>
+  <li>Domain - Entity that represents domain related properties:
+    <ul>
+      <li>name // domain name</li>
+      <li>RootDSE rootDSE // rootDSE for domain</li>
+      <li>ldapServers // LDAP servers that match the domain</li>
+      <li>ldapProviderType // (Active-Directory/IPA/RHDS)</li>
+      <li>ldapSecurityAuthentication // set the authentication mode. Currently only GSSAPI is allowed</li>
+    </ul>
+  </li>
+  <li>LdapTemplateWrapper - This class is responsible for the basic actions we do with Ldap servers:
+    <ul>
+      <li>initializing context for searches</li>
+      <li>searching the directory</li>
+    </ul>
+  </li>
+  <li>org.springframework.ldap.core.support.DirContextAuthenticationStrategy - interface for authentication strategy (we implement it in GSSAPIDirContextAuthenticationStrategy for gssapi authentication, and use the basic from spring ldap - SimpleDirContextAuthenticationStrategy, for simple authentication (simple authentication isn't supported anymore).</li>
+  <li>LdapQueryMetadata - interface that contains metadata about a query. Such as:
+    <ul>
+      <li>filter - the filter we use for the query. For example: (objectGUID=%1$s)</li>
+      <li>baseDN - we set this if we want to query using a specific base dn</li>
+      <li>contextMapper - context mapper is an object that takes the context returned from the ldap server, and maps it into the object we wish to return. For example, we have context mappers for user object, ADUserContextMapper and IPAUserContextMapper, that support constructing the user object from active directory and IPA respectively.</li>
+      <li>searchScope - SUBTREE_SCOPE, ONE_LEVEL_SCOPE or OBJECT_SCOPE</li>
+      <li>ldapGuidEncoder - used for encoding the guid (useful in cases the guid is not just an ordinary string, like in active directory)</li>
+      <li>formatter - used for formatting the filter (we have SimpleLdapQueryExecutionFormatter for simple formatting of the filter, or MultipleLdapQueryExecutionFormatter for more composed queries).</li>
+      <li>queryData - the data of the query. it is set when running it</li>
+      <li>returningAttributes - array of strings with attribute names we wish the ldap server to return</li>
+    </ul>
+  </li>
+  <li>LdapQueryType - enum with query types</li>
+  <li>LdapQueryData - contains the data for the query:
+    <ul>
+      <li>ldapQueryType - the query type (for example: getUserByGuid, getGroupByGuid, getGroupByDN…)</li>
+      <li>filterParameters - parameters for the filter (for example, the guid of the user, the name of the user, etc.)</li>
+      <li>baseDNParameters - parameters for the basedn, in case we wish to change it</li>
+      <li>domain - the name of the domain we wish to query</li>
+    </ul>
+  </li>
+  <li>UsersDomainsCacheManagerService - a Service that implements UsersDomainsCacheManager, which supports adding/getting/removing domain objects, and associating user with a domain. The caching in the DB is used for searches and showing updated information in the UI on an hourly basis. It is always updated at login time for authorization decisions</li>
+  <li>KerberosManager - a Service that initializes the kerberos configuration</li>
+  <li>DirectorySearcher - a class that is responsible for querying the ldap server. It uses an instance of LdapQueryData in order to preform the query
+    <ul>
+      <li>The directory searcher gets the domain object from the UsersDomainsCacheManagerService, and it preforms a root DSE query in order to deduce the ldap provider type (Active-Directory or IPA)</li>
+      <li>According to the result it performs the query suitable for the specific ldap provider type</li>
+    </ul>
+  </li>
+</ol>
+
+<h1 id="some-samples">Some samples</h1>
+
+<ul>
+  <li>
+    <p>Querying user properties by principal name:</p>
+
+    <p>  // Create query data object
+    LdapQueryData queryData = new LdapQueryDataImpl();</p>
+
+    <p>  // We wish to get the user by its principal name
+    queryData.setLdapQueryType(LdapQueryType.getUserByPrincipalName);</p>
+
+    <p>  // The input of the query
+    queryData.setFilterParameters(new Object[] { krbPrincipalName });</p>
+
+    <p>  // The domain we wish to query
+    queryData.setDomain(domain);</p>
+
+    <p>  // Setting the credentials for the query
+    LdapCredentials credentials = new LdapCredentials(username, password);</p>
+
+    <p>  // Creating the directory searcher
+    DirectorySearcher searcher = new DirectorySearcher(credentials);</p>
+
+    <p>  // Running the query
+    List<AdUser> resultByUpn = searcher.FindAll(queryData);
+   </AdUser></p>
+  </li>
+  <li>
+    <p>Querying group properties by group name:</p>
+
+    <p>  LdapQueryData queryData = new LdapQueryDataImpl();
+    queryData.setLdapQueryType(LdapQueryType.getGroupByName);
+    queryData.setFilterParameters(new Object[] { "dev" });
+    queryData.setDomain(domain);</p>
+
+    <p>  LdapCredentials credentials = new LdapCredentials(username, password);</p>
+
+    <p>  DirectorySearcher searcher = new DirectorySearcher(credentials);</p>
+
+    <p>  List<AdUser> resultByname = searcher.FindAll(queryData);
+   </AdUser></p>
+  </li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/domaininfrastructure.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/domaininfrastructure.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

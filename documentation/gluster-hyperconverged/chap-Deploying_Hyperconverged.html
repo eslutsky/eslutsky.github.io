@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Deploying oVirt and Gluster Hyperconverged &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/gluster-hyperconverged/">Gluster-hyperconverged</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-2-deploying-ovirt-and-gluster-hyperconverged">Chapter 2: Deploying oVirt and Gluster Hyperconverged</h1>
+
+<h2 id="pre-requisites">Pre-requisites</h2>
+
+<ul>
+  <li>
+    <p>You must have 3 Enterprise Linux 7 hosts or oVirt Node hosts. Refer <a href="install-guide/chap-Enterprise_Linux_Hosts">Enterprise Linux Hosts</a> or <a href="install-guide/chap-oVirt_Nodes">oVirt Nodes</a></p>
+  </li>
+  <li>
+    <p>You must have at least 2 interfaces on each of the hosts, so that the frontend and backend traffic can be separated out. Having only one network will cause the engine monitoring, client traffic, gluster I/O traffic to all run together and interfere each other. To segregate the backend network, the gluster cluster is formed using the backend network addresses, and the nodes are added to the engine using the frontend network address.</p>
+  </li>
+  <li>
+    <p>You must have a fully qualified domain name prepared for your Engine and the host. Forward and reverse lookup records must both be set in the DNS. <strong>The Engine should use the same subnet as the management network.</strong></p>
+  </li>
+  <li>
+    <p>You must have configured passwordless ssh between the first host to itself and the other 2 hosts. This is needed for gdeploy to configure the 3 nodes. gdeploy uses Ansible playbooks and the ability to remotely execute commands is a pre-requisite.</p>
+  </li>
+</ul>
+
+<h2 id="deploying-on-enterprise-linux-hosts">Deploying on Enterprise Linux Hosts</h2>
+
+<h3 id="installing-the-required-packages">Installing the Required Packages</h3>
+
+<p><strong>Installing the packages on the first host</strong></p>
+
+<ol>
+  <li>
+    <p>On all 3 hosts, subscribe to ovirt repos from https://resources.ovirt.org/pub/yum-repo/
+For instance, to subscribe to oVirt 4.2 repo.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install https://resources.ovirt.org/pub/yum-repo/ovirt-release42.rpm&#x000A;</code></pre></div>  </li>
+  <li>On all 3 hosts, install the following packages:
+    <ul>
+      <li>cockpit-ovirt-dashboard (provides a UI for the installation)</li>
+      <li>vdsm-gluster (plugin to manage gluster services)</li>
+    </ul>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install cockpit-ovirt-dashboard vdsm-gluster&#x000A;</code></pre></div></li>
+  <li>On the first host, install the following packages:
+    <ul>
+      <li>ovirt-engine-appliance (for the Engine virtual machine installation)</li>
+      <li>gdeploy (a wrapper tool around Ansible that helps to setup gluster volumes)</li>
+    </ul>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install ovirt-engine-appliance gdeploy&#x000A;</code></pre></div></li>
+</ol>
+
+<h2 id="deploying-on-ovirt-node-based-hosts">Deploying on oVirt Node based Hosts</h2>
+
+<p><strong>oVirt Node contains all the required packages to set up the hyperconverged environment.</strong>
+Refer <a href="install-guide/chap-oVirt_Nodes">oVirt Nodes</a> for instructions on installing oVirt Node on your hosts. You can proceed to setting up the hyperconverged environment if you have 3 oVirt Node based hosts.</p>
+
+<h3 id="setting-up-the-hyperconverged-environment">Setting up the hyperconverged environment</h3>
+
+<p>Steps for installing are detailed in this <a href="/blog/2018/02/up-and-running-with-ovirt-4-2-and-gluster-storage/">blog post</a>.</p>
+
+<p>More details on the deployment wizard are explained below</p>
+
+<h4 id="host-selection">Host selection</h4>
+
+<p>To ensure that GlusterFS related network traffic is segregated on the backend/storage network, the gluster bricks need to be defined using these interface. In this tab, provide the FQDN/IP addresses associated with the backend/storage network so that the bricks are correctly defined during the deployment process.</p>
+
+<p>Cockpit wizard uses ansible to perform the gluster deployment on the hosts. It is required to have key-based authentication setup for <code>root</code> user between the host running the wizard and the 3 addresses providedfor gluster hosts</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    On the first host in the list, (from which deployment is run)&#x000A;&#x000A;    # ssh-keygen&#x000A;    # ssh-copy-id root@gluster-host1-address&#x000A;    # ssh-copy-id root@gluster-host2-address&#x000A;    # ssh-copy-id root@gluster-host3-address&#x000A;</code></pre></div>
+<p><img alt="Hosts sub-tab" width="1919" height="965" src="/images/gluster-hyperconverged/3-Hosts.png?1560777613" /></p>
+
+<p>The deployment process also add the 3 hosts to the oVirt engine at the end of the deployment process. To ensure that the hosts are added using the frontend/management network, provide the FQDN to be used for the hosts in the tab below:</p>
+
+<p><em>FQDN of host1 is input during the Hosted Engine deployment process, hence not asked here</em></p>
+
+<p><img alt="Hosts sub-tab" width="1919" height="965" src="/images/gluster-hyperconverged/4-FQDN.png?1560777613" /></p>
+
+<h4 id="package-selection">Package selection</h4>
+
+<p>This is an optional step - to install additional packages required on all hosts. If using oVirt-Node based installation, all required packages are already available.</p>
+
+<p><img alt="Packages sub-tab" width="1919" height="966" src="/images/gluster-hyperconverged/5-Packages.png?1560777613" /></p>
+<h4 id="volume-tab">Volume tab</h4>
+
+<p>This step in the wizard defines the gluster volumes that need to be created. These gluster volumes will later in the wizard, be used to create storage domains in oVirt.
+The first volume in the list is used to host the Hosted Engine virtual disk.
+As a guidance, we ask to create 2 additional gluster volumes</p>
+<ul>
+  <li>vmstore : Hosting the OS disks of the virtual machines</li>
+  <li>data : Hosting the data disks of the virtual machines</li>
+</ul>
+
+<p><em>The volumes are separated as above to ease backup, assuming only data volume will need to be backed up</em></p>
+
+<p>All 3 gluster volumes will be created as <code>Data</code> storage domains.</p>
+
+<p>A gluster volume can be created as an <code>Arbiter</code> type volume, to save on storage capacity. In this case, the 3rd host will not need the same capacity as the first two hosts. Refer <a href="https://docs.gluster.org/en/v3/Administrator%20Guide/arbiter-volumes-and-quorum/">Arbiter volume</a></p>
+
+<p><img alt="Volume sub-tab" width="1919" height="965" src="/images/gluster-hyperconverged/6-Volumes.png?1560777613" /></p>
+<h4 id="brick-setup-tab">Brick setup tab</h4>
+
+<p>The Bricks tab configures the devices to use for the gluster volumes defined in the previous step.</p>
+
+<p>If the devices used for bricks are configured as RAID devices, provide the information in the <code>RAID information</code> section. These parameters are used to create the optimal alignment values for the LVM and filesystem layers created on the device.</p>
+
+<p>Brick configuration allows for per-host definition of bricks. This is useful in case the device names are not uniform across the hosts.</p>
+
+<ul>
+  <li>LV Name : name used for the logical LV created on brick. This is read-only and based on the gluster volumes defined in previous step</li>
+  <li>Device Name: name of device to be used to create the brick. Either the same device or different devices can be used for different gluster volumes. For instance, engine can use device <code>sdb</code> while vmstore and data can use device <code>sdc</code></li>
+  <li>Size (GB): Size of the LV in Gigabytes</li>
+  <li>Thinp: Checkbox indicating if the LV should be thinly provisioned or not. <strong><em>Thin provisioned LVs are not supported with dedupe &amp; compression on device</em></strong></li>
+  <li>Mount point: Path where the brick is mounted. Determined from the brick directory provided in previous step</li>
+  <li>
+    <p>Enable Dedupe &amp; Compression: Checkbox indicating if de-duplication and compression should be turned on for the device. Dedupe and compression is provided at the device layer using the vdo module available since el7.5. Read more at <a href="https://github.com/dm-vdo/kvdo">dm-vdo</a>. <strong><em>vdo layer will introduce a performance overhead, so it is advised to enable this if you're using SSD devices</em></strong></p>
+  </li>
+  <li>Configure LV Cache: Use this option to provide an SSD based lvmcache layer if your brick LVs are on spinning devices.</li>
+</ul>
+
+<p><img alt="Brick setup sub-tab" width="1919" height="963" src="/images/gluster-hyperconverged/7-Bricks.png?1560777613" /></p>
+
+<p><strong>Prev:</strong> <a href="../chap-Introduction">Chapter: Introduction</a> <br />
+<strong>Next:</strong> <a href="../chap-Additional_Steps">Chapter: Additional Steps</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/gluster-hyperconverged/chap-Deploying_Hyperconverged.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/gluster-hyperconverged/chap-Deploying_Hyperconverged.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 16 Feb 2019 14:04 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

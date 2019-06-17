@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Next Gen Node RPM persistence &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/node/">Node</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="node-rpm-persistence-after-upgrades">Node RPM Persistence After Upgrades</h1>
+
+<h2 id="summary">Summary</h2>
+<p><a href="/develop/projects/node/4.0">oVirt Node NG</a> is an advancement over vintage Node, especially that it allows users to install RPMs or customize the system through configuration management tools. Some of these changes are migrated over from /etc after upgrades, and some are kept persistenly in /var, but any packages which are installed on a running layer will be lost after upgrades and need re-installation. This presents some problems with vendor tooling, IPMI, utilities to collect statistics, and other add-ons.</p>
+
+<p>This feature presents a mechanism by which packages installed through yum/dnf can be saved and automatically re-applied when the OS is updated.</p>
+
+<p>A deep dive presentation of the feature is available on <a href="https://www.youtube.com/watch?v=tpAVkBEDdVg">youtube</a></p>
+
+<h3 id="owner">Owner</h3>
+<ul>
+  <li>Name: Ryan Barry</li>
+  <li>Email: rbarry@redhat.com</li>
+</ul>
+
+<h3 id="current-status">Current Status</h3>
+<ul>
+  <li>Status: On QA</li>
+  <li>Last updated date: 29th Jan 2017</li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>This feature will greatly improve the user experience of Node by maintaining a consistent userland and system configuration after upgrades. This allows for Node customizations to "stick".</p>
+
+<h3 id="dependencies">Dependencies</h3>
+<p>None! We simply need to add an additional yum plugin to imgbased.</p>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Node NG performs a number of actions when updates are applied.</p>
+
+<ul>
+  <li>A new layer is added</li>
+  <li>An event fires for the new layer</li>
+</ul>
+
+<h2 id="consumers">Consumers</h2>
+
+<h2 id="osupdater">osupdater</h2>
+<ul>
+  <li>The new squashfs is extracted onto that layer</li>
+  <li><code>/etc</code>/ and <code>/root</code> are rsynced to the new layer</li>
+  <li>UIDs and GIDs are synchronized across packages, in case a drift occurred inbetween images for UIDs/GIDs which are not fixed</li>
+  <li>A new bootloader entry is added and set as the default</li>
+</ul>
+
+<h2 id="rpm-persistence">RPM persistence</h2>
+
+<ul>
+  <li>An additional plugin can be added to imgbased which also consumes the 'on-layer-added' hook</li>
+</ul>
+
+<p>A reliable mechanism must be written in order to capture packages as they are installed, however.</p>
+
+<p><a href="http://yum.baseurl.org/api/yum-3.2.26/yum.packages.PackageObject-class.html">yum.PackageObject</a> is able to immediately provide the location of a cached RPM (after downloading or from localinstall), and this is available as part of yum plugin hooks.</p>
+
+<p>It <em>may</em> be possible to <a href="http://www.rpm.org/wiki/DevelDocs/Plugins">extend RPM</a>, but some research must be done in order to discover whether RPM's plugin interface is as informative as yum.PackageObject. It is possible that RPM's plugin mechanism only triggers during the execution of the RPM specfile, and cannot be used to pin down the location of the actual package. This also provides the additional burden of maintaining a small codebase in C, though that may be an acceptable tradeoff.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="yum-plugin">yum plugin</h3>
+
+<p>yum provides a <a href="http://yum.baseurl.org/wiki/WritingYumPlugins">variety of places to add hooks</a>, and actually somewhat more than what's listed:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>args&#x000A;clean&#x000A;close&#x000A;compare_providers&#x000A;config&#x000A;exclude&#x000A;historybegin&#x000A;historyend&#x000A;init&#x000A;postconfig&#x000A;postdownload&#x000A;postreposetup&#x000A;postresolve&#x000A;posttrans&#x000A;postverifytrans&#x000A;predownload&#x000A;prelistenabledrepos&#x000A;prereposetup&#x000A;preresolve&#x000A;pretrans&#x000A;preverifytrans&#x000A;verify_package&#x000A;</code></pre></div>
+<p>While not all of these hooks run while yum has the package cached, we can rely on <code>pretrans</code> to have the cached package available, both for <code>yum localinstall</code> and <code>yum install</code>.</p>
+
+<p>Though the hook should be limited to only run during certain transaction types (install, upgrade), the transaction package object is available, and we can grab the local file from <a href="http://yum.baseurl.org/api/yum/yum/packages.html#yumavailablepackage">YumAvailablePackage.localPkg</a> and save it off to /var, which is a persistent filesystem on Node NG, which is not versioned per layer.</p>
+
+<p>The yum plugin will add a hook into <code>pretrans</code></p>
+
+<ul>
+  <li>The pretrans conduit is able to retrieve the transaction set from yum</li>
+  <li>Inside this transaction set, if a package is being installed or updated, <code>TransactionSet.installed</code> will contain all package objects</li>
+  <li>We can iterate over the package objects, and retrieve <code>TransactionSet.PackageObject.localpkg()</code> (this is actually <code>po.localpkg</code>, since yum uses short variable internally</li>
+  <li>The package will be copied over to <code>/var/imgbased/persisted-rpms</code></li>
+  <li>Using the yum cache is not reliable, as <code>yum clean all</code> would remove cached RPMs, and <code>yum localinstall</code> never touches the cache</li>
+</ul>
+
+<p>Additionally:</p>
+
+<ul>
+  <li>If the package set is empty, the plugin should check whether <code>remove</code> or <code>uninstall</code> have been used as verbs</li>
+  <li>If they are, a <code>posttrans</code> hook can be used to remove the specified packages from <code>/var/imgbased/persisted-rpms</code>, so they are not spuriously installed again when users upgrade</li>
+</ul>
+
+<p>The yum plugin should provide a configuration file, with only one parameter necessary:</p>
+
+<ul>
+  <li>excludepkgs=foo,bar</li>
+</ul>
+
+<p>Any package which is on the list of exclusions will not be persisted.</p>
+
+<h3 id="imgbased-plugin">imgbased plugin</h3>
+
+<p>A new imgbased plugin will be added, which triggers when a new layer is added.</p>
+
+<ul>
+  <li>This plugin will mount the new layer, and bind mount /var into the tree</li>
+  <li>Then we'll set up a local yum repository, pointed at <code>/var/imgbased/persisted_packages</code>, and install all RPMs</li>
+</ul>
+
+<h3 id="imgbased-extension">imgbased extension</h3>
+
+<p>With the packages saved in /var, imgbased.osupdater can set up a local yum repository which points at <code>/var/imgbased/persisted_packages</code> (pathname to be determined), and install them when osupdater triggers during a Node update.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/node/node-next-persistence.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/node/node-next-persistence.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

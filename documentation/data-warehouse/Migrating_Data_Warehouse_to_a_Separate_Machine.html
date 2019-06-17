@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Migrating Data Warehouse to a Separate Machine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/data-warehouse/">Data-warehouse</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h2 id="migrating-data-warehouse-to-a-separate-machine">Migrating Data Warehouse to a Separate Machine</h2>
+
+<p>Migrate the Data Warehouse service from the oVirt Engine to a separate machine. Hosting the Data Warehouse service on a separate machine reduces the load on each individual machine, and allows each service to avoid potential conflicts caused by sharing CPU and memory with other processes.</p>
+
+<p>Migrate the Data Warehouse service and connect it with the existing <code>ovirt_engine_history</code> database, or optionally migrate the <code>ovirt_engine_history</code> database to a new database machine before migrating the Data Warehouse service. If the <code>ovirt_engine_history</code> database is hosted on the Engine, migrating the database in addition to the Data Warehouse service further reduces the competition for resources on the Engine machine. You can migrate the database to the same machine onto which you will migrate the Data Warehouse service, or to a machine that is separate from both the Engine machine and the new Data Warehouse service machine.</p>
+
+<h3 id="migrating-the-data-warehouse-database-to-a-separate-machine">Migrating the Data Warehouse Database to a Separate Machine</h3>
+
+<p>Optionally migrate the <code>ovirt_engine_history</code> database before you migrate the Data Warehouse service. Use <code>engine-backup</code> to create a database backup and restore it on the new database machine. For more information on <code>engine-backup</code>, run <code>engine-backup --help</code>.</p>
+
+<p>Attach the required repositories to your system.</p>
+
+<p>To migrate the Data Warehouse service only, see the "Migrating the Data Warehouse Service to a Separate Machine" section below.</p>
+
+<p><strong>Migrating the Data Warehouse Database to a Separate Machine</strong></p>
+
+<ol>
+  <li>
+    <p>Create a backup of the Data Warehouse database and configuration files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --mode=backup --scope=dwhdb --scope=files --file=file_name --log=log_file_name&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Copy the backup file from the Engine to the new machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp /tmp/file_name root@new.dwh.server.com:/tmp&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install <code>engine-backup</code> on the new machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-tools-backup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restore the Data Warehouse database on the new machine. <code>file_name</code> is the backup file copied from the Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --mode=restore --scope=files --scope=dwhdb --file=file_name --log=log_file_name --provision-dwh-db --no-restore-permissions&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The Data Warehouse database is now hosted on a separate machine from that on which the Engine is hosted. Proceed to the next section to complete the migration.</p>
+
+<h2 id="migrating-the-data-warehouse-service-to-a-separate-machine">Migrating the Data Warehouse Service to a Separate Machine</h2>
+
+<p>Migrate a Data Warehouse service that was installed and configured on the oVirt Engine to a dedicated host machine. Hosting the Data Warehouse service on a separate machine helps to reduce the load on the Engine machine. Note that this procedure migrates the Data Warehouse service only; to migrate the Data Warehouse database (also known as the <code>ovirt_engine_history</code> database) prior to migrating the Data Warehouse service, see the "Migrating the Data Warehouse Database to a Separate Machine" section above.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<p>Ensure that you have completed the following prerequisites:</p>
+
+<ol>
+  <li>
+    <p>You must have installed and configured the Engine and Data Warehouse on the same machine.</p>
+  </li>
+  <li>
+    <p>To set up the new Data Warehouse machine, you must have the following:</p>
+
+    <ul>
+      <li>
+        <p>A virtual or physical machine with Enterprise Linux 7 installed.</p>
+      </li>
+      <li>
+        <p>Attached the required repositories to your system.</p>
+      </li>
+      <li>
+        <p>The password from the Engine's <strong>/etc/ovirt-engine/engine.conf.d/10-setup-database.conf</strong> file.</p>
+      </li>
+      <li>
+        <p>Allowed access from the Data Warehouse machine to the Engine database machine's TCP port 5432.</p>
+      </li>
+      <li>
+        <p>The <code>ovirt_engine_history</code> database credentials from the Engine's <strong>/etc/ovirt-engine-dwh/ovirt-engine-dwhd.conf.d/10-setup-database.conf</strong> file. If you migrated the <code>ovirt_engine_history</code> database using the steps from the "Migrating the Data Warehouse Database to a Separate Machine" section, retrieve the credentials you defined during the database setup on that machine.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p>Installing this scenario involves four key steps:</p>
+
+<ol>
+  <li>
+    <p>Set up the new Data Warehouse machine.</p>
+  </li>
+  <li>
+    <p>Stop the Data Warehouse service on the Engine machine.</p>
+  </li>
+  <li>
+    <p>Configure the new Data Warehouse machine.</p>
+  </li>
+  <li>
+    <p>Remove the Data Warehouse package from the Engine machine.</p>
+  </li>
+</ol>
+
+<h4 id="setting-up-the-new-data-warehouse-machine">Setting up the New Data Warehouse Machine</h4>
+
+<ol>
+  <li>
+    <p>Attach the required repositories to your system.</p>
+  </li>
+  <li>
+    <p>Ensure that all packages currently installed are up to date:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum update&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Install the <code>ovirt-engine-dwh-setup</code> package:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-dwh-setup&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h4 id="stopping-the-data-warehouse-service-on-the-engine-machine">Stopping the Data Warehouse Service on the Engine Machine</h4>
+
+<ol>
+  <li>
+    <p>Stop the Data Warehouse service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl stop ovirt-engine-dwhd.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>If the database is hosted on a remote machine, you must manually grant access by editing the <strong>postgres.conf</strong> file. Edit the <strong>/var/lib/pgsql/data/postgresql.conf</strong> file and modify the <code>listen_addresses</code> line so that it matches the following:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> listen_addresses = '\*'&#x000A;</code></pre></div>
+    <p>If the line does not exist or has been commented out, add it manually.</p>
+
+    <p>If the database is hosted on the Engine machine and was configured during a clean setup of the oVirt Engine, access is granted by default.</p>
+
+    <p>See “Migrating the Data Warehouse Database to a Separate Machine” for more information on how to configure and migrate the Data Warehouse database.</p>
+  </li>
+  <li>
+    <p>Restart the postgresql service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart postgresql.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h4 id="configuring-the-new-data-warehouse-machine">Configuring the New Data Warehouse Machine</h4>
+
+<p>The questions shown in this step only appear if you are migrating the <code>ovirt_engine_history</code> database to one machine and Data Warehouse service to a different machine. The order of the questions may differ depending on your environment.</p>
+
+<ol>
+  <li>
+    <p>If you are migrating both the <code>ovirt_engine_history</code> database and the Data Warehouse service to the <em>same</em> machine, run the following, otherwise proceed to the next step.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # sed -i '/^ENGINE_DB_/d' \&#x000A;         /etc/ovirt-engine-dwh/ovirt-engine-dwhd.conf.d/10-setup-database.conf&#x000A;&#x000A; # sed -i \&#x000A;      -e 's;^\(OVESETUP_ENGINE_CORE/enable=bool\):True;\1:False;' \&#x000A;      -e '/^OVESETUP_CONFIG\/fqdn/d' \&#x000A;      /etc/ovirt-engine-setup.conf.d/20-setup-ovirt-post.conf&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the <code>engine-setup</code> command to begin configuration of Data Warehouse on the machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <code>Enter</code> to configure Data Warehouse:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure Data Warehouse on this host (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <code>Enter</code> to accept the automatically detected hostname, or enter an alternative hostname and press <code>Enter</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Host fully qualified DNS name of this server [autodetected host name]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <code>Enter</code> to automatically configure the firewall, or type <code>No</code> and press <code>Enter</code> to maintain existing settings:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Setup can automatically configure the firewall on this system.&#x000A; Note: automatic configuration of the firewall may overwrite current settings.&#x000A; Do you want Setup to configure the firewall? (Yes, No) [Yes]:&#x000A;</code></pre></div>
+    <p>If you choose to automatically configure the firewall, and no firewall Engines are active, you are prompted to select your chosen firewall Engine from a list of supported options. Type the name of the firewall Engine and press <code>Enter</code>. This applies even in cases where only one option is listed.</p>
+  </li>
+  <li>
+    <p>Enter the fully qualified domain name and password for the Engine. Press <code>Enter</code> to accept the default values in each other field:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Host fully qualified DNS name of the engine server []: engine-fqdn&#x000A; Setup needs to do some actions on the remote engine server. Either automatically, using ssh as root to access it, or you will be prompted to manually perform each such action.&#x000A; Please choose one of the following:&#x000A; 1 - Access remote engine server using ssh as root&#x000A; 2 - Perform each action manually, use files to copy content around&#x000A; (1, 2) [1]:&#x000A; ssh port on remote engine server [22]:&#x000A; root password on remote engine server engine-fqdn: password&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Answer the following question about the location of the <code>ovirt_engine_history</code> database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Where is the DWH database located? (Local, Remote) [Local]: Remote&#x000A;</code></pre></div>
+    <p>Type the alternative option as shown above and then press <strong>Enter</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the fully qualified domain name and password for your <code>ovirt_engine_history</code> host. Press <code>Enter</code> to accept the default values in each other field:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> DWH database host []: dwh-db-fqdn&#x000A; DWH database port [5432]:&#x000A; DWH database secured connection (Yes, No) [No]:&#x000A; DWH database name [ovirt_engine_history]:&#x000A; DWH database user [ovirt_engine_history]:&#x000A; DWH database password: password&#x000A;</code></pre></div>
+    <p>See “Migrating the Data Warehouse Database to a Separate Machine” for more information on how to configure and migrate the Data Warehouse database.</p>
+  </li>
+  <li>
+    <p>Enter the fully qualified domain name and password for the Engine database machine. Press <code>Enter</code> to accept the default values in each other field:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Engine database host []: engine-db-fqdn&#x000A; Engine database port [5432]:&#x000A; Engine database secured connection (Yes, No) [No]:&#x000A; Engine database name [engine]:&#x000A; Engine database user [engine]:&#x000A; Engine database password: password&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Choose how long Data Warehouse will retain collected data::</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Please choose Data Warehouse sampling scale:&#x000A;	(1) Basic&#x000A;	(2) Full&#x000A;	(1, 2)[1]:&#x000A;</code></pre></div>
+    <p><code>Full</code> uses the default values for the data storage settings listed in “Application Settings for the Data Warehouse service in ovirt-engine-dwhd.conf” (recommended when Data Warehouse is installed on a remote host).</p>
+
+    <p><strong>Note:</strong> If you migrate from <code>Basic</code> to <code>Full</code>, initially only the existing basic data will be available.</p>
+
+    <p><code>Basic</code> reduces the values of <code>DWH_TABLES_KEEP_HOURLY</code> to <code>720</code> and <code>DWH_TABLES_KEEP_DAILY</code> to <code>0</code>, easing the load on the Engine machine but with a less detailed history.</p>
+  </li>
+  <li>
+    <p>Confirm that you want to permanently disconnect the existing Data Warehouse service from the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Do you want to permanently disconnect this DWH from the engine? (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Confirm your installation settings:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Please confirm installation settings (OK, Cancel) [OK]:&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h4 id="disabling-the-data-warehouse-package-on-the-engine-machine">Disabling the Data Warehouse Package on the Engine Machine</h4>
+
+<ol>
+  <li>
+    <p>On the Engine machine, restart the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # service ovirt-engine restart&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Disable the Data Warehouse service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl disable ovirt-engine-dwhd.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Remove the Data Warehouse files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # rm -f /etc/ovirt-engine-dwh/ovirt-engine-dwhd.conf.d/* .conf /var/lib/ovirt-engine-dwh/backups/*&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The Data Warehouse service is now hosted on a separate machine from that on which the Engine is hosted.</p>
+
+<p><strong>Prev:</strong> <a href="Data_Warehouse_and_Reports_Configuration_Notes">Installing and Configuring Data Warehouse on a Separate Machine</a><br />
+<strong>Next:</strong> <a href="Changing_the_Data_Warehouse_Sampling_Scale">Changing the Data Warehouse Sampling Scale</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/data_warehouse_guide/sect-migrating_data_warehouse_to_a_separate_machine">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/data-warehouse/Migrating_Data_Warehouse_to_a_Separate_Machine.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/data-warehouse/Migrating_Data_Warehouse_to_a_Separate_Machine.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

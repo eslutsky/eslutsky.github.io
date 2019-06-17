@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CommandCoordinator &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="command-coordinator">Command Coordinator</h1>
+
+<h2 id="introduce-commandcoordinator-framework-and-ability-to-persist-commands-in-database">Introduce CommandCoordinator Framework and Ability To Persist Commands in Database</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Refactor the code in AsyncTask Manager to introduce CommandCoordinator which holds many of the functions that resided in the CommandBase. The CommandCoordinator exposes the functionality to persist any command to the database and retrieve it.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Ravi Nori (rnori)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#110;&#111;&#114;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#114;&#110;&#111;&#114;&#105;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Last updated on – by (WIKI)</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>A new table in the database will hold all the information to persist a command and rebuild it at a later point of time. Currently Asyc Tasks table holds the parameters needed to reconstruct an AsyncTask, but after the introduction of the CommandEntity table the async tasks table will no longer have these columns. The new table will be used to store both SPM and NON SPM commands. All the columns from the Async Tasks table pertaining to a command will be moved to the new table. In addition to the columns that already existed in Async Tasks table the new table will also have the parent command id. This would be useful to reconstruct the parent command parameters when rebuilding the command.</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>This feature lets NON Spm commands like LiveMerge to be persisted into the database. So long running commands can use this feature to persist the command and load it up at a latter point of time from the database. This is especially useful in case the engine was restarted during the execution of LiveMerge or any long running command by providing a way to save and load the command. The async tasks table currently holds the information for SPM tasks to rebuild a command, but after this change the data will no longer is saved in async_tasks table. It will be saved in the command_entities table.</p>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p><a href="/develop/release-management/features/engine/command-coordinator-flows-and-events/">Features/Design/CommandCoordinatorFlowsAndEvents</a>
+<a href="http://www.ovirt.org/Features/Design/LiveMerge">http://www.ovirt.org/Features/Design/LiveMerge</a></p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1083769">https://bugzilla.redhat.com/show_bug.cgi?id=1083769</a></p>
+
+<p><img alt="" width="970" height="463" src="/images/wiki/Coco.png?1560777613" /></p>
+
+<h4 id="details-of-command-entity-table">Details of Command Entity Table</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>CREATE TABLE command_entities&#x000A;(&#x000A; command_id uuid NOT NULL,&#x000A; command_type integer NOT NULL,&#x000A; root_command_id uuid,&#x000A; command_parameters text,&#x000A; command_params_class character varying(256),&#x000A; created_at timestamp with time zone,&#x000A; status character varying(20) DEFAULT NULL::character varying,&#x000A; callback_enabled boolean DEFAULT false,&#x000A; callback_notified boolean DEFAULT false,&#x000A; return_value text,&#x000A; return_value_class character varying(256),&#x000A; job_id uuid,&#x000A; step_id uuid,&#x000A; executed boolean DEFAULT false,&#x000A; CONSTRAINT pk_command_entities PRIMARY KEY (command_id)&#x000A;)&#x000A;CREATE INDEX idx_root_command_id ON command_entities(root_command_id)&#x000A;WHERE root_command_id IS NOT NULL;&#x000A;</code></pre></div>
+<h4 id="methods-to-persistretrievedelete-command">Methods to persist/retrieve/delete command</h4>
+
+<p>The CommandCoordinator exposes new methods persistCommand and retrieveCommand. Persist command can be invoked on any command by calling command.persistCommand(VdcActionType parentCommand) or command.persistCommand(VdcActionType parentCommand, enableCallback) to enable call backs from the CommandExecutor framework. This calls CommandCoordinator to persit the command into the database.</p>
+
+<p>Below are the list of methods from CommandCRUDOperations interface.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>public boolean hasCommandEntitiesWithRootCommandId(Guid rootCommandId);&#x000A;public CommandEntity createCommandEntity(Guid cmdId, VdcActionType actionType, VdcActionParametersBase params);&#x000A;public List&lt;Guid&gt; getChildCommandIds(Guid commandId);&#x000A;public CommandEntity getCommandEntity(Guid commandId);&#x000A;public CommandStatus getCommandStatus(Guid commandId);&#x000A;public List&lt;CommandEntity&gt; getCommandsWithCallBackEnabled();&#x000A;public void persistCommand(CommandEntity cmdEntity);&#x000A;public void persistCommand(CommandEntity cmdEntity, CommandContext cmdContext);&#x000A;public CommandBase&lt;?&gt; retrieveCommand(Guid commandId);&#x000A;public void removeCommand(Guid commandId);&#x000A;public void removeAllCommandsInHierarchy(Guid commandId);&#x000A;public void removeAllCommandsBeforeDate(DateTime cutoff);&#x000A;public void updateCommandStatus(Guid commandId, CommandStatus status);&#x000A;public void updateCommandExecuted(Guid commandId);&#x000A;public void updateCallBackNotified(Guid commandId);&#x000A;</code></pre></div>
+<h4 id="command-entity-dao">Command Entity DAO</h4>
+
+<p>Command entity DAO is the class object that deals with persisting the CommandEntity object. There are methods in this class to save/update/retrieve and delete the command entity. New stored procedures will need to be added to support this functionality. Existing stored procedures in Async Tasks needs to be modified to reflect the removal of columns from the table.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>void saveOrUpdate(CommandEntity commandEntity);&#x000A;void remove(Guid commandId);&#x000A;void removeAllBeforeDate(Date cutoff);&#x000A;void updateExecuted(Guid id);&#x000A;void updateNotified(Guid id);&#x000A;void updateStatus(Guid command, Status status);&#x000A;</code></pre></div>
+<h4 id="command-entity-cleanup-manager">Command Entity Cleanup Manager</h4>
+
+<p>A new cleanup manager similar to AuditLogCleanupManager that removes any old commands that have been persisted but not have not been cleaned up after they were marked completed.</p>
+
+<h3 id="commandexecutor-framework">CommandExecutor Framework</h3>
+
+<p>The CommandExecutor framework is build on top of the new methods introduced in CommandCoordinator. A command can be submitted to the CommandExecutor to be run in a separate thread and the command can provide a CommandCallBack which as callback methods that the CommandExecutor will invoke at various points in the lifecycle of the command.</p>
+
+<h4 id="submit-a-command-to-commandexecutor">Submit a command to CommandExecutor</h4>
+
+<p>To submit a command to the CommandExecutor framework the parent command can invoke the executeAsyncCommand providing the action type and the action parameters.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>public static Future&lt;VdcReturnValueBase&gt; executeAsyncCommand(&#x000A;      VdcActionType actionType, VdcActionParametersBase parameters, CommandContext cmdContext)&#x000A;</code></pre></div>
+<h4 id="commandcallback">CommandCallBack</h4>
+
+<p>The implementation of the command can override getCallBack methods to provide a custom command callback handler.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>@Override&#x000A;public CommandCallBack getCallBack() {&#x000A;    return new CustomCommandCallback();&#x000A;}&#x000A;</code></pre></div>
+<p>The CommandCallBack is an abstract class with various methods that will be invoked during the life cycle of the command. The doPolling method of the callback is invoked at regular intervals by a quartz scheduler giving the callback a way to determine if the command has completed execution. Once the command has completed execution and the status of the execution has been determined, the command callback needs to update the status of the command using CommandCoordinatorUtil.updateCommandStatus(CommandStatus stauts), setting the status to either SUCCEEDED/FAILED. Once the status has been updated, the onFailed/onSucceeded method is invoked by the CommandExecutor.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>import org.ovirt.engine.core.common.action.VdcReturnValueBase;&#x000A;import org.ovirt.engine.core.compat.Guid;&#x000A;import java.util.List;&#x000A;public abstract class CommandCallBack {&#x000A;    public CommandCallBack() {}&#x000A;    public void executed(VdcReturnValueBase result) {&#x000A;    }&#x000A;    public void doPolling(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;    }&#x000A;    public void onFailed(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;    }&#x000A;    public void onSucceeded(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;    }&#x000A;}&#x000A;</code></pre></div>
+<h4 id="parent-commandcallback">Parent CommandCallBack</h4>
+
+<p>Below is a simple example of a CommandCallBack. The example shows the call back implementation for a parent command. The command call back on each doPolling, checks the status of the child commands. If all child commands have completed it executes the endAction and sets the status to succeeded/failed.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>import org.ovirt.engine.core.bll.tasks.CommandCoordinatorUtil;&#x000A;import org.ovirt.engine.core.bll.tasks.interfaces.CommandCallBack;&#x000A;import org.ovirt.engine.core.common.action.RemoveSnapshotParameters;&#x000A;import org.ovirt.engine.core.compat.CommandStatus;&#x000A;import org.ovirt.engine.core.compat.Guid;&#x000A;import org.ovirt.engine.core.utils.log.Log;&#x000A;import org.ovirt.engine.core.utils.log.LogFactory;&#x000A;public class CustomCommandCallback extends CommandCallBack {&#x000A;    private static final Log log = LogFactory.getLog(CustomCommandCallback.class);&#x000A;    @Override&#x000A;    public void doPolling(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;        boolean anyFailed = false;&#x000A;        for (Guid childCmdId : childCmdIds) {&#x000A;            switch (CommandCoordinatorUtil.getCommandStatus(childCmdId)) {&#x000A;            case ACTIVE:&#x000A;                log.info("Waiting on child commands to complete");&#x000A;                return;&#x000A;            case FAILED:&#x000A;            case FAILED_RESTARTED:&#x000A;            case UNKNOWN:&#x000A;                anyFailed = true;&#x000A;                break;&#x000A;            default:&#x000A;                break;&#x000A;            }&#x000A;        }&#x000A;        CustomCommand&lt;CustomCommandParameters&gt; command =  (CustomCommand&lt;CustomCommandParameters&gt;) CommandCoordinatorUtil.retrieveCommand(cmdId);&#x000A;        command.getParameters().setTaskGroupSuccess(!anyFailed);&#x000A;        command.setCommandStatus(anyFailed ? CommandStatus.FAILED : CommandStatus.SUCCEEDED);&#x000A;        log.infoFormat("All child commands have completed, status {1}", command.getCommandStatus());&#x000A;    }&#x000A;    @Override&#x000A;    public void onSucceeded(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;        getCommand(cmdId).endAction();&#x000A;        CommandCoordinatorUtil.removeAllCommandsInHierarchy(cmdId);&#x000A;    }&#x000A;    @Override&#x000A;    public void onFailed(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;        getCommand(cmdId).endAction();&#x000A;        CommandCoordinatorUtil.removeAllCommandsInHierarchy(cmdId);&#x000A;    }&#x000A;}&#x000A;</code></pre></div>
+<h4 id="child-commandcallback">Child CommandCallBack</h4>
+
+<p>The command callback for the child command is much simpler, it just needs to monitor the status of the command and update the status with the CommandExeuctor using the CommandCoordinatorUtil methods.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>import org.ovirt.engine.core.bll.tasks.CommandCoordinatorUtil;&#x000A;import org.ovirt.engine.core.bll.tasks.interfaces.CommandCallBack;&#x000A;import org.ovirt.engine.core.common.action.MergeParameters;&#x000A;import org.ovirt.engine.core.common.businessentities.VmJob;&#x000A;import org.ovirt.engine.core.compat.CommandStatus;&#x000A;import org.ovirt.engine.core.compat.Guid;&#x000A;import org.ovirt.engine.core.dal.dbbroker.DbFacade;&#x000A;import org.ovirt.engine.core.utils.log.Log;&#x000A;import org.ovirt.engine.core.utils.log.LogFactory;&#x000A;public class ChildCommandCallback extends CommandCallBack {&#x000A;    private static final Log log = LogFactory.getLog(MergeCommandCallback.class); &#x000A;    @Override&#x000A;    public void doPolling(Guid cmdId, List&lt;Guid&gt; childCmdIds) {&#x000A;        // If the VM Job exists, the command is still active&#x000A;        boolean isRunning = false;&#x000A;        ChildCommand&lt;ChildCommandParameters&gt; command = (ChildCommand&lt;ChildCommandParameters&gt;) CommandCoordinatorUtil.retrieveCommand(cmdId)); `           boolean isDone = &lt;custom code to check if command is running, call to database etc.&gt;&#x000A;        if (isDone) { `               boolean succeeded = &lt;custom code to check if command has succeeded, call to database etc.&gt;&#x000A;            command.setSucceeded(succeeded);&#x000A;            command.setCommandStatus(succeeded ? CommandStatus.SUCCEEDED : CommandStatus.FAILED);&#x000A;            command.persistCommand(command.getParameters().getParentCommand(), true);&#x000A;        }&#x000A;    }&#x000A;}&#x000A;</code></pre></div>
+<h4 id="persisting-command-return-value">Persisting command return value</h4>
+
+<p>If data in return value(VdcReturnValueBase) of a command needs to be passed from child command to the parent command, this can be achieved by persisting the return value in the database. Nothing special needs to be done to persist this data to the db, all that the child command needs to do is to execute persistCommand after setting the needed data in the return value. This is also useful after server restarts where the return value of the child commands can be looked up by the parent command from the database.</p>
+
+<h4 id="command-executed-flag">Command Executed Flag</h4>
+
+<p>The executed flag is used to determine if the command executed to completion. If there is an exception or if the engine was restarted during the execution of the command this flag is false. To use this flag in the endWithFailure or endSuccessfully method the command needs to be managed by the CommandCoordinator framework. This can be achived by calling the persist command in the executeCommand method. Once it is managed by the CommandCoordinator framework the executed flag indicates if the command was executed to completion.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>@Override&#x000A;protected void executeCommand() {&#x000A;     persistCommand(getParameters().getParentCommand(), false);&#x000A;     .....&#x000A;}&#x000A;&#x000A;@Override&#x000A;protected void endWithFailure() {&#x000A;       .....&#x000A;       if (CommandCoordinatorUtil.getCommandExecutionStatus(getCommandId()) == CommandExecutionStatus.EXECUTED) {&#x000A;          ....&#x000A;      }&#x000A;      ......&#x000A;  }&#x000A;</code></pre></div>
+<h3 id="testing">Testing</h3>
+
+<p>All the Async tasks need to work with the new code changes. Instead of commands being persisted into async tasks table, the command should be persisted in the new command_entities table.</p>
+
+<h3 id="test-cases">Test Cases</h3>
+
+<ul>
+  <li><a href="/develop/infra/testing/test-cases/commandcoordinator/">QA:TestCase CommandCoordinator</a></li>
+</ul>
+
+<h3 id="deep-dive-presentation">Deep Dive Presentation</h3>
+
+<p>Deep Dive into CommandCoordinator Framework <a href="https://www.youtube.com/watch?v=V-mEttpaGL4">Youtube</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/commandcoordinator.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/commandcoordinator.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Vagrant</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/vagrant.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Using oVirt and Vagrant</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/02/using-oVirt-vagrant.html"/>
+    <id>http://ovirt.org/blog/2017/02/using-oVirt-vagrant.html</id>
+    <published>2017-02-10T21:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Marc Young</name>
+    </author>
+    <content type="html">&lt;p&gt;Introducing oVirt virtual machine management via Vagrant.&lt;/p&gt;
+
+&lt;p&gt;In this short tutorial I'm going to give a brief introduction on how to use &lt;a href="http://vagrantup.com"&gt;vagrant&lt;/a&gt; to manage oVirt with the new &lt;a href="http://www.github.com/myoung34/vagrant-ovirt4"&gt;community developed oVirt v4 Vagrant provider&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="background"&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;Vagrant is a way to tool to create portable and reproducible environments. We can use it to provision and manage virtual machines in oVirt by managing a base box (small enough to fit in github as an artifact) and a Vagrantfile. The Vagrantfile is the piece of configuration that defines everything about the virtual machines: memory, cpu, base image, and any other configuration that is specific to the hosting environment.&lt;/p&gt;
+
+&lt;h2 id="prerequisites"&gt;Prerequisites&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A fully working and configured oVirt cluster of any size&lt;/li&gt;
+  &lt;li&gt;A system capable of compiling and running the &lt;a href="http://github.com/ovirt/ovirt-engine-sdk-ruby"&gt;oVirt ruby SDK gem&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Vagrant 1.8 or later&lt;/li&gt;
+  &lt;li&gt;The oVirt vagrant plugin installed via &lt;code&gt;$ vagrant plugin install vagrant-ovirt4&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id="the-vagrantfile"&gt;The Vagrantfile&lt;/h2&gt;
+
+&lt;p&gt;To start off, I'm going to use this Vagrantfile:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;&lt;span class="no"&gt;Vagrant&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;configure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"2"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+  &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;vm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;box&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'ovirt4'&lt;/span&gt;
+  &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;vm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;hostname&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"test-vm"&lt;/span&gt;
+  &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;vm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;box_url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'https://github.com/myoung34/vagrant-ovirt4/blob/master/example_box/dummy.box?raw=true'&lt;/span&gt;
+
+  &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;vm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;network&lt;/span&gt; &lt;span class="ss"&gt;:private_network&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;:ip&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'192.168.56.100'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:nictype&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'virtio'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:netmask&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'255.255.255.0'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c1"&gt;#normal network configuration&lt;/span&gt;
+    &lt;span class="ss"&gt;:ovirt__ip&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'192.168.2.198'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:ovirt__network_name&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'ovirtmgmt'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="ss"&gt;:ovirt__gateway&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s1"&gt;'192.168.2.125'&lt;/span&gt; &lt;span class="c1"&gt;# oVirt specific information, overwrites previous on oVirt provider&lt;/span&gt;
+
+  &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;vm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;provider&lt;/span&gt; &lt;span class="ss"&gt;:ovirt4&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'https://ovirt/ovirt-engine/api'&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;username&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"admin@internal"&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;password&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"mypassword"&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;insecure&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;true&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;debug&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kp"&gt;true&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;cluster&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'Default'&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;template&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'vagrant-centos7'&lt;/span&gt;
+    &lt;span class="n"&gt;ovirt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;console&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'vnc'&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the configuration file, there are some pieces on which to elaborate. The URL, password, and username should be self-explanatory. The &lt;code&gt;config.vm.network&lt;/code&gt; block has some special mappings (prefixed by &lt;code&gt;ovirt__&lt;/code&gt;) so that it can be used in any provider, as well as oVirt. Vagrantfiles can manage lifecycles across providers, which is why the oVirt-specific mappings are in a &lt;code&gt;config.vm.provider :ovirt4&lt;/code&gt; configuration block as well.&lt;/p&gt;
+
+&lt;p&gt;Within our &lt;code&gt;ovirt4&lt;/code&gt; configuration section, we have set SSL verify to off (to allow self-signed certificates), the cluster is set to &lt;code&gt;Default&lt;/code&gt; (and available in the oVirt UI), and the template to use as a starting point is &lt;code&gt;vagrant-centos7&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The base template will need to be created per your environment, but a starting helper script for redhat based distributions such as CentOS &lt;a href="https://github.com/myoung34/vagrant-ovirt4/blob/master/tools/prepare_redhat_for_box.sh"&gt;is available here&lt;/a&gt;. It basically installs some base packages like the oVirt agent but also sets up a local user &lt;code&gt;vagrant&lt;/code&gt; inside the VM that is required to proceed. Please read through it carefully.&lt;/p&gt;
+
+&lt;h2 id="getting-to-it"&gt;Getting to it&lt;/h2&gt;
+
+&lt;p&gt;In the directory where the &lt;code&gt;Vagrantfile&lt;/code&gt; lives, we can create and start a VM.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant up
+Bringing machine &lt;span class="s1"&gt;'default'&lt;/span&gt; up with &lt;span class="s1"&gt;'ovirt4'&lt;/span&gt; provider...
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Creating VM with the following settings...
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default:  &lt;span class="nt"&gt;--&lt;/span&gt; Name:          test-vm
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default:  &lt;span class="nt"&gt;--&lt;/span&gt; Cluster:       Default
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default:  &lt;span class="nt"&gt;--&lt;/span&gt; Template:      vagrant-centos7
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default:  &lt;span class="nt"&gt;--&lt;/span&gt; Console Type:  vnc
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Waiting &lt;span class="k"&gt;for &lt;/span&gt;VM to become &lt;span class="s2"&gt;"ready"&lt;/span&gt; to start...
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Starting VM.
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Waiting &lt;span class="k"&gt;for &lt;/span&gt;VM to get an IP address...
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Machine is booted and ready &lt;span class="k"&gt;for &lt;/span&gt;use!
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Rsyncing folder: /home/vagrant/ &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; /vagrant
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Setting hostname...
+    default:
+    default: Vagrant insecure key detected. Vagrant will automatically replace
+    default: this with a newly generated keypair &lt;span class="k"&gt;for &lt;/span&gt;better security.
+    default:
+    default: Inserting generated public key within guest...
+    default: Removing insecure key from the guest &lt;span class="k"&gt;if &lt;/span&gt;it&lt;span class="s1"&gt;'s present...
+    default: Key inserted! Disconnecting and reconnecting using new SSH key...
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you look in oVirt we now have a virtual machine named &lt;code&gt;test-vm&lt;/code&gt; running.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="vagrant vm listed" width="2042" height="792" src="/images/vagrant-ovirt-up-1.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can do things such as manage snapshots:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant snapshot list
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Retrieving list of snapshots...
+id     description     date
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant snapshot save somename
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Creating snapshot...
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant snapshot list
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Retrieving list of snapshots...
+                                  id     description                          date
+3dd34cbf-4698-446f-82bb-00ac66931411        somename     2017-02-10T05:34:53-06:00
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant snapshot delete 3dd34cbf-4698-446f-82bb-00ac66931411
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Deleting snapshot...
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant snapshot list
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Retrieving list of snapshots...
+id     description     date
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can SSH into the box or run commands via SSH:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant ssh
+Last login: Wed Feb  8 21:27:23 2017 from marc-pc
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;hostname
+test-vm
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;logout
+&lt;/span&gt;Connection to 192.168.2.238 closed.
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant ssh &lt;span class="nt"&gt;-c&lt;/span&gt; &lt;span class="s1"&gt;'hostname; whoami'&lt;/span&gt;
+test-vm
+vagrant
+Connection to 192.168.2.238 closed.
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can also run &lt;a href="https://www.vagrantup.com/docs/provisioning/"&gt;provisioners&lt;/a&gt; against the machine. Add this to your Vagrantfile:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight ruby"&gt;&lt;code&gt;  &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;vm&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;provision&lt;/span&gt; &lt;span class="s2"&gt;"shell"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="ss"&gt;inline: &lt;/span&gt;&lt;span class="s2"&gt;"whoami &amp;gt;&amp;gt; /home/vagrant/somefile"&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now let's see what happens when we use it:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant provision
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Rsyncing folder: /home/vagrant/ &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; /vagrant
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Running provisioner: shell...
+    default: Running: inline script
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant ssh &lt;span class="nt"&gt;-c&lt;/span&gt; &lt;span class="s1"&gt;'cat ~/somefile'&lt;/span&gt;
+root
+Connection to 192.168.2.238 closed.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Lastly, we can tear down the VM and all of its artifacts:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vagrant destroy &lt;span class="nt"&gt;-f&lt;/span&gt;
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Halting VM...
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Waiting &lt;span class="k"&gt;for &lt;/span&gt;VM to shutdown...
+&lt;span class="o"&gt;==&amp;gt;&lt;/span&gt; default: Removing VM...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title>New oVirt Project Underway</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2016/12/new-oVirt-project-underway.html"/>
+    <id>http://ovirt.org/blog/2016/12/new-oVirt-project-underway.html</id>
+    <published>2016-12-06T20:05:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Brian Proffitt</name>
+    </author>
+    <content type="html">&lt;p&gt;As oVirt continues to grow, the many projects within the broader oVirt community are thriving as well. Today, the oVirt community is pleased to announce the addition of a new incubator subproject, Vagrant Provider, as well as the graduation of another subproject, moVirt, from incubator to full project status!&lt;/p&gt;
+
+&lt;p&gt;According to maintainer Marc Young, Vagrant Provider is a provider plugin for the Vagrant suite that enables command-line ease of virtual machine provisioning and lifecycle management.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="more-on-vagrant-provider"&gt;More on Vagrant Provider&lt;/h2&gt;
+
+&lt;p&gt;The Vagrant provider plugin will interface with the oVirt REST API (version 4 and higher) using the oVirt provided ruby SDK 'ovirt-engine-sdk-ruby'. This allows users to abstract the user interface and experience into a set of command-line abilities to create, provision, destroy and manage the complete lifecycle of virtual machines. It also allows the use of external configuration management and configuration files themselves to be committed into code.&lt;/p&gt;
+
+&lt;p&gt;As Young explains in &lt;a href="/develop/projects/proposals/vagrant-provider/"&gt;his project proposal&lt;/a&gt;, the "trend in configuration management, operations, and devops has been to maintain as much of the development process as possible in terms of the virtual machines and hosts that they run on. With software like Terraform the tasks of creating the underlying infrastructure such as network rules, etc have had great success moving into 'Infrastructure as code'. The same company behind Terraform got their reputation from Vagrant which aims to utilize the same process for virtual machines themselves. The core software allows for standard commands such as 'up', 'provision', 'destroy' to be used across a provider framework. A provider for oVirt makes the process for managing VMs easier and able to be controlled through code and source control."&lt;/p&gt;
+
+&lt;p&gt;Vagrant Provider currently exists as an independent open source project hosted on &lt;a href="https://github.com/myoung34/vagrant-ovirt4"&gt;github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id="movirt-makes-full-status"&gt;moVirt Makes Full Status&lt;/h2&gt;
+
+&lt;p&gt;Meanwhile, moVirt has demonstrated its healthy status as a part of the oVirt community, and was voted to become a full oVirt project at the end of November.&lt;/p&gt;
+
+&lt;p&gt;The &lt;a href="https://github.com/matobet/movirt"&gt;moVirt app&lt;/a&gt;, which was released in August 2015, is a mobile client for oVirt that aims not to duplicate the features of the existing web dashboard but strives to be a useful companion app.&lt;/p&gt;
+
+&lt;p&gt;moVirt contains three main features: Monitoring of virtual machine health, such as memory/CPU utilization, status, and events; integration with SPICE and VNC; and bridging the physical world of servers with the virtual world of oVirt using the techniques of augmented reality that can scan data matrix codes located physically on servers.&lt;/p&gt;
+
+&lt;p&gt;Congratulations to both projects for their progress within the oVirt Project!&lt;/p&gt;
+</content>
+  </entry>
+</feed>

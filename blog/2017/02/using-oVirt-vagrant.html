@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Using oVirt and Vagrant &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Marc Young' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Using oVirt and Vagrant' property='og:title'>
+<meta content='Introducing oVirt virtual machine management via Vagrant.
+
+In this short tutorial I&#39;m going to give a brief introduction on how to use vagrant to manage oVirt with the new community developed oVirt v4 Vagrant provider.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/02/using-oVirt-vagrant.html' property='og:url'>
+<meta content='2017-02-10T21:00:00Z' property='article:published_time'>
+<meta content='myoung34' property='article:author:username'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='documentation' property='article:tag'>
+<link href='/blog/tag/documentation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='howto' property='article:tag'>
+<link href='/blog/tag/howto.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='vagrant' property='article:tag'>
+<link href='/blog/tag/vagrant.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Using oVirt and Vagrant' name='twitter:title'>
+<meta content='Introducing oVirt virtual machine management via Vagrant.
+
+In this short tutorial I&#39;m going to give a brief introduction on how to use vagrant to manage oVirt with the new community developed oVirt v4 Vagrant provider.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>02</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Using oVirt and Vagrant
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/myoung34.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/myoung34/">Marc Young</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-02-10T21:00:00Z'>
+Friday 10 February 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Introducing oVirt virtual machine management via Vagrant.</p>
+
+<p>In this short tutorial I'm going to give a brief introduction on how to use <a href="http://vagrantup.com">vagrant</a> to manage oVirt with the new <a href="http://www.github.com/myoung34/vagrant-ovirt4">community developed oVirt v4 Vagrant provider</a>.</p>
+
+<p></p>
+
+<h2 id="background">Background</h2>
+
+<p>Vagrant is a way to tool to create portable and reproducible environments. We can use it to provision and manage virtual machines in oVirt by managing a base box (small enough to fit in github as an artifact) and a Vagrantfile. The Vagrantfile is the piece of configuration that defines everything about the virtual machines: memory, cpu, base image, and any other configuration that is specific to the hosting environment.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>A fully working and configured oVirt cluster of any size</li>
+  <li>A system capable of compiling and running the <a href="http://github.com/ovirt/ovirt-engine-sdk-ruby">oVirt ruby SDK gem</a></li>
+  <li>Vagrant 1.8 or later</li>
+  <li>The oVirt vagrant plugin installed via <code>$ vagrant plugin install vagrant-ovirt4</code></li>
+</ul>
+
+<h2 id="the-vagrantfile">The Vagrantfile</h2>
+
+<p>To start off, I'm going to use this Vagrantfile:</p>
+
+<div class="highlight"><pre class="highlight ruby"><code><span class="no">Vagrant</span><span class="p">.</span><span class="nf">configure</span><span class="p">(</span><span class="s2">"2"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>&#x000A;  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">box</span> <span class="o">=</span> <span class="s1">'ovirt4'</span>&#x000A;  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">hostname</span> <span class="o">=</span> <span class="s2">"test-vm"</span>&#x000A;  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">box_url</span> <span class="o">=</span> <span class="s1">'https://github.com/myoung34/vagrant-ovirt4/blob/master/example_box/dummy.box?raw=true'</span>&#x000A;&#x000A;  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">network</span> <span class="ss">:private_network</span><span class="p">,</span>&#x000A;    <span class="ss">:ip</span> <span class="o">=&gt;</span> <span class="s1">'192.168.56.100'</span><span class="p">,</span> <span class="ss">:nictype</span> <span class="o">=&gt;</span> <span class="s1">'virtio'</span><span class="p">,</span> <span class="ss">:netmask</span> <span class="o">=&gt;</span> <span class="s1">'255.255.255.0'</span><span class="p">,</span> <span class="c1">#normal network configuration</span>&#x000A;    <span class="ss">:ovirt__ip</span> <span class="o">=&gt;</span> <span class="s1">'192.168.2.198'</span><span class="p">,</span> <span class="ss">:ovirt__network_name</span> <span class="o">=&gt;</span> <span class="s1">'ovirtmgmt'</span><span class="p">,</span> <span class="ss">:ovirt__gateway</span> <span class="o">=&gt;</span> <span class="s1">'192.168.2.125'</span> <span class="c1"># oVirt specific information, overwrites previous on oVirt provider</span>&#x000A;&#x000A;  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">provider</span> <span class="ss">:ovirt4</span> <span class="k">do</span> <span class="o">|</span><span class="n">ovirt</span><span class="o">|</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">url</span> <span class="o">=</span> <span class="s1">'https://ovirt/ovirt-engine/api'</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">username</span> <span class="o">=</span> <span class="s2">"admin@internal"</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">password</span> <span class="o">=</span> <span class="s2">"mypassword"</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">insecure</span> <span class="o">=</span> <span class="kp">true</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">debug</span> <span class="o">=</span> <span class="kp">true</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">cluster</span> <span class="o">=</span> <span class="s1">'Default'</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">template</span> <span class="o">=</span> <span class="s1">'vagrant-centos7'</span>&#x000A;    <span class="n">ovirt</span><span class="p">.</span><span class="nf">console</span> <span class="o">=</span> <span class="s1">'vnc'</span>&#x000A;  <span class="k">end</span>&#x000A;<span class="k">end</span>&#x000A;</code></pre></div>
+<p>In the configuration file, there are some pieces on which to elaborate. The URL, password, and username should be self-explanatory. The <code>config.vm.network</code> block has some special mappings (prefixed by <code>ovirt__</code>) so that it can be used in any provider, as well as oVirt. Vagrantfiles can manage lifecycles across providers, which is why the oVirt-specific mappings are in a <code>config.vm.provider :ovirt4</code> configuration block as well.</p>
+
+<p>Within our <code>ovirt4</code> configuration section, we have set SSL verify to off (to allow self-signed certificates), the cluster is set to <code>Default</code> (and available in the oVirt UI), and the template to use as a starting point is <code>vagrant-centos7</code>.</p>
+
+<p>The base template will need to be created per your environment, but a starting helper script for redhat based distributions such as CentOS <a href="https://github.com/myoung34/vagrant-ovirt4/blob/master/tools/prepare_redhat_for_box.sh">is available here</a>. It basically installs some base packages like the oVirt agent but also sets up a local user <code>vagrant</code> inside the VM that is required to proceed. Please read through it carefully.</p>
+
+<h2 id="getting-to-it">Getting to it</h2>
+
+<p>In the directory where the <code>Vagrantfile</code> lives, we can create and start a VM.</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>vagrant up&#x000A;Bringing machine <span class="s1">'default'</span> up with <span class="s1">'ovirt4'</span> provider...&#x000A;<span class="o">==&gt;</span> default: Creating VM with the following settings...&#x000A;<span class="o">==&gt;</span> default:  <span class="nt">--</span> Name:          test-vm&#x000A;<span class="o">==&gt;</span> default:  <span class="nt">--</span> Cluster:       Default&#x000A;<span class="o">==&gt;</span> default:  <span class="nt">--</span> Template:      vagrant-centos7&#x000A;<span class="o">==&gt;</span> default:  <span class="nt">--</span> Console Type:  vnc&#x000A;<span class="o">==&gt;</span> default: Waiting <span class="k">for </span>VM to become <span class="s2">"ready"</span> to start...&#x000A;<span class="o">==&gt;</span> default: Starting VM.&#x000A;<span class="o">==&gt;</span> default: Waiting <span class="k">for </span>VM to get an IP address...&#x000A;<span class="o">==&gt;</span> default: Machine is booted and ready <span class="k">for </span>use!&#x000A;<span class="o">==&gt;</span> default: Rsyncing folder: /home/vagrant/ <span class="o">=&gt;</span> /vagrant&#x000A;<span class="o">==&gt;</span> default: Setting hostname...&#x000A;    default:&#x000A;    default: Vagrant insecure key detected. Vagrant will automatically replace&#x000A;    default: this with a newly generated keypair <span class="k">for </span>better security.&#x000A;    default:&#x000A;    default: Inserting generated public key within guest...&#x000A;    default: Removing insecure key from the guest <span class="k">if </span>it<span class="s1">'s present...&#x000A;    default: Key inserted! Disconnecting and reconnecting using new SSH key...&#x000A;</span></code></pre></div>
+<p>If you look in oVirt we now have a virtual machine named <code>test-vm</code> running.</p>
+
+<p><img alt="vagrant vm listed" width="2042" height="792" src="/images/vagrant-ovirt-up-1.png?1560777613" /></p>
+
+<p>We can do things such as manage snapshots:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>vagrant snapshot list&#x000A;<span class="o">==&gt;</span> default: Retrieving list of snapshots...&#x000A;id     description     date&#x000A;&#x000A;<span class="nv">$ </span>vagrant snapshot save somename&#x000A;<span class="o">==&gt;</span> default: Creating snapshot...&#x000A;&#x000A;<span class="nv">$ </span>vagrant snapshot list&#x000A;<span class="o">==&gt;</span> default: Retrieving list of snapshots...&#x000A;                                  id     description                          date&#x000A;3dd34cbf-4698-446f-82bb-00ac66931411        somename     2017-02-10T05:34:53-06:00&#x000A;&#x000A;<span class="nv">$ </span>vagrant snapshot delete 3dd34cbf-4698-446f-82bb-00ac66931411&#x000A;<span class="o">==&gt;</span> default: Deleting snapshot...&#x000A;&#x000A;<span class="nv">$ </span>vagrant snapshot list&#x000A;<span class="o">==&gt;</span> default: Retrieving list of snapshots...&#x000A;id     description     date&#x000A;</code></pre></div>
+<p>We can SSH into the box or run commands via SSH:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>vagrant ssh&#x000A;Last login: Wed Feb  8 21:27:23 2017 from marc-pc&#x000A;&#x000A;<span class="nv">$ </span>hostname&#x000A;test-vm&#x000A;<span class="nv">$ </span><span class="nb">logout&#x000A;</span>Connection to 192.168.2.238 closed.&#x000A;&#x000A;<span class="nv">$ </span>vagrant ssh <span class="nt">-c</span> <span class="s1">'hostname; whoami'</span>&#x000A;test-vm&#x000A;vagrant&#x000A;Connection to 192.168.2.238 closed.&#x000A;&#x000A;</code></pre></div>
+<p>We can also run <a href="https://www.vagrantup.com/docs/provisioning/">provisioners</a> against the machine. Add this to your Vagrantfile:</p>
+
+<div class="highlight"><pre class="highlight ruby"><code>  <span class="n">config</span><span class="p">.</span><span class="nf">vm</span><span class="p">.</span><span class="nf">provision</span> <span class="s2">"shell"</span><span class="p">,</span>&#x000A;    <span class="ss">inline: </span><span class="s2">"whoami &gt;&gt; /home/vagrant/somefile"</span>&#x000A;</code></pre></div>
+<p>Now let's see what happens when we use it:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>vagrant provision&#x000A;<span class="o">==&gt;</span> default: Rsyncing folder: /home/vagrant/ <span class="o">=&gt;</span> /vagrant&#x000A;<span class="o">==&gt;</span> default: Running provisioner: shell...&#x000A;    default: Running: inline script&#x000A;&#x000A;<span class="nv">$ </span>vagrant ssh <span class="nt">-c</span> <span class="s1">'cat ~/somefile'</span>&#x000A;root&#x000A;Connection to 192.168.2.238 closed.&#x000A;</code></pre></div>
+<p>Lastly, we can tear down the VM and all of its artifacts:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>vagrant destroy <span class="nt">-f</span>&#x000A;<span class="o">==&gt;</span> default: Halting VM...&#x000A;<span class="o">==&gt;</span> default: Waiting <span class="k">for </span>VM to shutdown...&#x000A;<span class="o">==&gt;</span> default: Removing VM...&#x000A;</code></pre></div>
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/community.html">community</a></li>
+<li><a href="../../tag/documentation.html">documentation</a></li>
+<li><a href="../../tag/howto.html">howto</a></li>
+<li><a href="../../tag/vagrant.html">vagrant</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-02-10-using-oVirt-vagrant.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-02-10-using-oVirt-vagrant.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 10 Feb 2017 21:12 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

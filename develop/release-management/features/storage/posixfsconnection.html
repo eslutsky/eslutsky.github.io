@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+PosixFSConnection &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<p>Also known as SharedFS support</p>
+
+<h1 id="posixfs-connection">PosixFS Connection</h1>
+
+<h1 id="summary">Summary</h1>
+
+<p>This feature will allow to define a DC of a customizable type. The storage domains in this DC will be mounted with custom properties and will support file system based storage domains which do not necessarily rely on NFS.</p>
+
+<h1 id="current-status">Current Status</h1>
+
+<p>To do:</p>
+
+<ul>
+  <li>Make needed change in Ovirt-Engine</li>
+  <li>Make needed change in the GUIs</li>
+</ul>
+
+<p>Done:</p>
+
+<ul>
+  <li>Make needed changes in VDSM (http://gerrit.ovirt.org/559)</li>
+</ul>
+
+<h1 id="description">Description</h1>
+
+<p>Currently VDSM only supports using NFS as a remote domain target. This feature will allow VDSM to use any mountable target that adheres to posix file semantics to be used in VDSM as a domain.</p>
+
+<p>This will not replace specialized support but rather compliment. The underlying implementation will only adhere to posix semantics and will ignore quirks and hacks needed by any random target. This is why it is highly recommended to use a the specialized domain types when available.</p>
+
+<h1 id="dependency">Dependency</h1>
+
+<p>None</p>
+
+<h1 id="related-features">Related Features</h1>
+
+<p><a href="Features/ConnectionMonitoring">Features/ConnectionMonitoring</a></p>
+
+<h1 id="affected-functionality">Affected Functionality</h1>
+
+<ul>
+  <li>storage domain creation\connection\removal - It is now possible to specify a new connection type</li>
+</ul>
+
+<h1 id="user-experience">User Experience</h1>
+
+<p>User should be able to witness the wonders of this new functionality</p>
+
+<h1 id="upgrade">Upgrade</h1>
+
+<p>Just works!</p>
+
+<h1 id="how-to-use">How to use</h1>
+
+<p>The new connection type is named "posixfs" and its TypeID is 6. The connection specific arguments are:</p>
+
+<ul>
+  <li><strong>spec</strong> - <em>Mandatory</em>, <em>string</em>, This field describes the block special device or remote filesystem to be mounted. For ordinary mounts it will hold (a link to) a block special device node (as created by mknod(8)) for the device to be mounted, like `/dev/cdrom' or `/dev/sdb7'. For NFS mounts one will have <host>:
+</host>    <dir>
+, e.g., \`knuth.aeb.nl:/'.
+
+</dir>
+  </li>
+  <li><strong>vfsType</strong> - <em>Mandatory</em>, <em>string</em>, This field describes the type of the filesystem. Linux supports lots of filesystem types, such as adfs, affs, autofs, coda, coherent, cramfs, devpts, efs, ext2, ext3, hfs, hpfs, iso9660, jfs, minix, msdos, ncpfs, nfs, ntfs, proc, qnx4, reiserfs, romfs, smbfs, sysv, tmpfs, udf, ufs, umsdos, vfat, xenix, xfs, and possibly others.</li>
+  <li><strong>options</strong> - <em>Optional</em>, <em>string</em>, This field describes the mount options associated with the filesystem. It is formatted as a comma separated list of options. It contains at least the type of mount plus any additional options appropriate to the filesystem type.</li>
+</ul>
+
+<p>For complete documentation you could look at `man fstab`</p>
+
+<p>When creating a domain pass the posixfs type id to create a posixfs domain.</p>
+
+<h1 id="user-work-flows">User work flows</h1>
+
+<p>User will be able to connect to said target and enter specialized parameters.</p>
+
+<h1 id="changes-in-ovirt-engine">Changes in ovirt engine</h1>
+
+<p>This part is for engine-core</p>
+
+<ul>
+  <li>The connection arguments will be introduced as fields to the storage_server_connection class.
+    <ul>
+      <li>"spec" will be mapped to the existing "connection" field</li>
+      <li>"vfsType" will be added as a new field of String</li>
+      <li>"mountOptions" will be added as a new field of String</li>
+    </ul>
+  </li>
+  <li>The new fields will be mapped to proper columns at the storage_server_connections, and necessary changes to the Spring-JDBC mapper should be introduced.</li>
+  <li>A new storage type named POSIXFS should be introduced (supported by a new StorageHelper class).</li>
+  <li>As the storage type should be set to 6 (to reflect the domainType) , and this value is already being used by the StorageType.All constant - the value of StorageType.All constant (which is not used by VDSM) should be changed (also for persistent connections, using an upgrade script).</li>
+  <li>ConnectStorageServerVDSCommand.CreateStructFromConnection should be changed in order to add the new fields to the connection, as sent to the Connect VDSM verb (see <a href="http://gerrit.ovirt.org/559">http://gerrit.ovirt.org/559</a>)</li>
+  <li>A new configuration value named "PosixFSSupportEnabled" will be added (boolean value) set to true for version 3.1 and false for the other versions.</li>
+  <li>A validation to check compatibility level is 3.1 and above should be added to the following commands, in case a connection includes POSIX FS information
+    <ul>
+      <li>AddStorageServerConnection</li>
+      <li>AddStorageDomain</li>
+    </ul>
+  </li>
+  <li>A validation check to check compatibility level is 3.1 and above should be added to AddEmptyStoragePool for the case of StorageType.POSIX</li>
+</ul>
+
+<h1 id="changes-in-api">Changes in API</h1>
+
+<p>This part is for api.</p>
+
+<ul>
+  <li>StorageDomain will have the following new attributes:
+    <ul>
+      <li>String VfsType (mandatory only if StorageType is POSIXFS)</li>
+      <li>String MountOptions (optional)</li>
+    </ul>
+  </li>
+  <li>The attribute "Path" will be mapped to storage_server_connections.connection attribute.</li>
+  <li>StorageType will have a new literal value of POSIXFS</li>
+</ul>
+
+<h1 id="changes-in-gui">Changes in GUI</h1>
+
+<p><img alt="" width="700" height="370" src="/images/wiki/Posixfsnewdatacenterdialog.png?1560777612" /> <img alt="" width="800" height="540" src="/images/wiki/Posixfsnewdomaindialog.png?1560777612" /></p>
+
+<p><a href="/develop/release-management/features/">PosixFSConnection</a> <a href="/develop/release-management/releases/3.3/feature/">PosixFSConnection</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/posixfsconnection.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/posixfsconnection.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

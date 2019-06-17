@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Vdsm TODO &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="vdsm-todo">Vdsm TODO</h1>
+
+<h2 id="what-can-you-do-for-vdsm">What Can You Do for Vdsm</h2>
+
+<p>We intend to move this TODO into this <a href="https://trello.com/b/U3lsbVRU/maintenance">Trello board</a>, please check for tasks in it.</p>
+
+<h3 id="cleanup">Cleanup</h3>
+
+<h4 id="infra">infra</h4>
+
+<ul>
+  <li><code>pylint -E `git ls-files | grep '.py$'`</code> makes me cry. A lot of it is "only" about bad style, but we should clear it up and add it to our <code>make check-local</code>. We should grow up and pass <code>pychecker</code> too.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Add git submodules for pyflakes and pep8 to vdsm. Control the specific version of each tool to use from within the vdsm build itself. This way we can make sure everyone is using the same version of the tools regardless of where vdsm is being built.
+    <ul>
+      <li>See <a href="https://github.com/jcrocholl/pep8">https://github.com/jcrocholl/pep8</a> and <a href="https://github.com/pyflakes/pyflakes/">https://github.com/pyflakes/pyflakes/</a></li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>BindingXML's wrapApiMethod is incredibly fragile when deciding what not to log. Logging should be done as a decorator per called function, after password entries are converted to ProtectedPassword.</li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<ul>
+  <li>Add <code>`make distcheck`</code> to Jenkins's jobs.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Wrap all tests and fail a test that leaves an open file descriptor behind.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>add a unit test for qemuimg.rebase.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>make @permutations nestable</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>test fileSD.scanDomains()</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>add migration tests</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>test cannonizeHostPort</li>
+</ul>
+
+<h3 id="features">Features</h3>
+
+<ul>
+  <li>Support striping for disk images.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>let Vdsm install and run on hosts with no iscsid (report that iscsi is missing to Engine?)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>start Vdsm only when it receives a request (integrate with systemd)</li>
+</ul>
+
+<h4 id="networking">Networking</h4>
+
+<ul>
+  <li>Modify vdsm-tool restore-nets so that the management network (or the network with the default IPv4 route) is the last to be taken down and the first to be taken up to minimize the connectivity loss (very useful when accessing the machine remotely). Minimize vdsm-restore-net-config downtime for the default route network.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><del>Split off the network restoration from vdsm startup so that it is performed in a different init service. This vdsm-network-restoration service should be oneshot and happen before network.service. <a href="http://gerrit.ovirt.org/#/c/29441/">http://gerrit.ovirt.org/#/c/29441/</a></del></li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Fine-grained control on network-specific routes.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Allow multiple setting IPv4 and IPv6 addresses per network device. (API change is needed; we report multiple ipv6 addresses).</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <ul>
+      <li>models: support multiple IPv4 and/or IPv6 addresses</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>get a single dump of all libvirt networks (no libvirt API for it yet…)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>IPv4 routing table Id hash mechanism
+    <ul>
+      <li>change the 'network' argument in routes to 'link scope route'</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>move source routing info to route.py (which uses netlink instead of using the default configurator). this will also simplify StaticSourceRoute</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Move vdsm-store-net-config logic to netconfbackpersistence.py</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Add configureIp to the configurators API so that Layer 3 can be configured in parallel after Layer 2 (and it gives much better modelling). Obviously, this isn't really possible in ifcfg without doing a two step write which is an ugly hack.</li>
+</ul>
+
+<h3 id="refactoring">refactoring</h3>
+
+<ul>
+  <li>In vm.py, libvirtvm.py, clientIF.py there is a mess of prepare*Path functions (end their respective teardowns), which is too complex to fathom. We have to convert all drive specifications (PDIV,GUID,path) into Drive object at the API entry.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>lvm.PV.guid is devicemapper-owned piece of information; lvm has nothing to do with it, and jumps through <a href="http://gerrit.ovirt.org/2940">hoops</a> to produce it. Instead, it should be produced by devicemapper and consumed directly by blockSD.</li>
+</ul>
+
+<h3 id="bugzilla">Bugzilla</h3>
+
+<ul>
+  <li>pick one of the [<a href="https://bugzilla.redhat.com/buglist.cgi?action=wrap&amp;bug_file_loc">https://bugzilla.redhat.com/buglist.cgi?action=wrap&amp;bug_file_loc</a>=&amp;bug_file_loc_type=allwordssubstr&amp;bug_id=&amp;bug_id_type=anyexact&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=vdsm&amp;deadlinefrom=&amp;deadlineto=&amp;email1=&amp;email2=&amp;emailtype1=substring&amp;emailtype2=substring&amp;field0-0-0=flagtypes.name&amp;keywords=&amp;keywords_type=allwords&amp;longdesc=&amp;longdesc_type=allwordssubstr&amp;short_desc=&amp;short_desc_type=allwordssubstr&amp;status_whiteboard=&amp;status_whiteboard_type=allwordssubstr&amp;type0-0-0=notsubstring&amp;value0-0-0=rhel-6.2.0&amp;votes=&amp;=&amp;bug_status=NEW NEW bugs], post a patch to <a href="http://gerrit.ovirt.org">gerrit</a>, and make the bug yours.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/todo.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/todo.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

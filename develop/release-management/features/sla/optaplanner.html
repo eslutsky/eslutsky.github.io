@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Optaplanner &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="optaplanner-integration-with-scheduling">Optaplanner integration with scheduling</h1>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature Owner: Martin Sivák: msivak (msivak)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#115;&#105;&#118;&#097;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Tech preview release - 0.8 - part of oVirt 3.5.3 (bundles Optaplanner)</li>
+  <li>Release - 0.9 - will be part of oVirt 3.6 (downloads Optaplanner)</li>
+  <li>Last updated: – by (WIKI)</li>
+  <li>Tracking BZs: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1093051">rhbz#1093051</a></li>
+</ul>
+
+<h2 id="use-cases">Use Cases</h2>
+
+<ul>
+  <li>A virtual machine fails to start due to insufficient resources, and the user wants to know if there is a way to fit the virtual machine</li>
+  <li>The user wants to rebalance the cluster to achieve an "optimal" state</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Our users will get hints about how to utilize their hardware better.</p>
+
+<h1 id="goals"><strong>Goals</strong></h1>
+
+<ul>
+  <li>We want to write a service that takes a snapshot of a cluster (list of hosts and Vms) and computes an optimized Vm to Host assignment solution.</li>
+  <li>Optimization will be done on per Cluster basis.</li>
+  <li>We intend to implement the service using rules on top of <a href="http://www.optaplanner.com">Optaplanner</a> engine.</li>
+  <li>The administrator should then be able to use that as a hint to tweak the situation in the cluster to better utilize resources.</li>
+  <li>The idea is to have the service free-running in an infinite loop and improve the solution over time while adapting to changes in the cluster.</li>
+  <li>The service will be separated from the ovirt-engine to not endanger the datacenter by using too much memory or cpu. It will talk to the engine using an API.</li>
+</ul>
+
+<h1 id="deployment-manual">Deployment manual</h1>
+
+<p>Two hosts (or virtual machines) are needed - one will host the ovirt-engine and the other will contain the ovirt-optimizer service. Your ovirt-engine must already be installed and configured before you perform the following steps.</p>
+
+<p>There are two repositories you can use:</p>
+
+<ul>
+  <li>latest release - <a href="https://copr.fedoraproject.org/coprs/msivak/ovirt-optimizer/">https://copr.fedoraproject.org/coprs/msivak/ovirt-optimizer/</a></li>
+  <li>latest for oVirt 3.6 - <a href="https://copr.fedoraproject.org/coprs/msivak/ovirt-optimizer-for-ovirt-3.6/">https://copr.fedoraproject.org/coprs/msivak/ovirt-optimizer-for-ovirt-3.6/</a></li>
+  <li>latest nightly from the git repo - <a href="http://jenkins.ovirt.org/job/ovirt-optimizer_master_create-rpms_merged/">http://jenkins.ovirt.org/job/ovirt-optimizer_master_create-rpms_merged/</a></li>
+</ul>
+
+<p>Five packages are currently available:</p>
+
+<ul>
+  <li>ovirt-optimizer-%{version}-%{release}.%{dist}.noarch.rpm</li>
+  <li>ovirt-optimizer-ui-%{version}-%{release}.%{dist}.noarch.rpm</li>
+  <li>ovirt-optimizer-jboss-%{version}-%{release}.%{dist}.noarch.rpm (or -jboss7 if you install version older than 0.9)</li>
+  <li>ovirt-optimizer-jetty-%{version}-%{release}.%{dist}.noarch.rpm</li>
+  <li>ovirt-optimizer-dependencies-%{version}-%{release}.%{dist}.noarch.rpm</li>
+</ul>
+
+<p>There are packages for CentOS 7, CentOS 6 and Fedora 21 and above. The jboss sub-package supports oVirt's distribution of Wildfly (ovirt-engine-wildfly). The older version shipping with jboss7 supports either JBoss 7 from Fedora or ovirt-engine-jboss-as shipped as part of oVirt.</p>
+
+<h2 id="installing-the-ovirt-optimizer-machine">Installing the ovirt-optimizer machine</h2>
+
+<ul>
+  <li>Install the ovirt-optimizer-jetty or ovirt-optimizer-jboss(7) package depending on which application server you want to use.</li>
+  <li>Execute the ovirt-optimizer-setup tool to make sure the Optaplanner library is properly installed (only needed for versions 0.9 and up)</li>
+  <li>Edit the /etc/ovirt-optimizer/ovirt-optimizer.properties file and set the address of your ovirt-engine instance and the credentials for the REST API.</li>
+  <li>Set up a reverse proxy (nginx or apache) with SSL certificates (see the README file for details)</li>
+  <li>Check if the firewall allows external access to the port where your proxy serves the content (443/tcp for SSL enabled optimizer).</li>
+  <li>If you performed a fresh installation of Jetty on Fedora 19, you must remove the demonstration configuration file for Jetty to start - /usr/share/jetty/start.d/900-demo.ini</li>
+  <li>Start the optimizer - service ovirt-optimizer-jboss start or systemctl start ovirt-optimizer-jboss. (Versions 0.8 and older do not have proper service files, but everything works if you start the application server using their scripts - systemctl start jboss-as or /usr/share/java/jetty/bin/jetty.sh for example).</li>
+  <li>Check the logs in /var/log/ovirt-optimizer/jboss or in the Jetty log directory and you should see that ovirt-optimizer detected some cluster(s) and tried to compute a solution.</li>
+</ul>
+
+<h2 id="installing-the-ui">Installing the UI</h2>
+
+<ul>
+  <li>Switch to your ovirt-engine machine.</li>
+  <li>Install the ovirt-optimizer-ui package.</li>
+  <li>Configure the user interface plug-in by updating /etc/ovirt-engine/ui-plugins/ovirt-optimizer-config.json - you must put the address and port of the ovirt-optimizer service there.</li>
+  <li>Restart the ovirt-engine service and reload the Administration Portal.</li>
+  <li>Log in to the Administration Portal, navigate to the main Cluster tab and select a cluster. You will now see the oVirt Optimizer subtab in the lower half of the page.</li>
+  <li>When you switch to the subtab, it should load some data (might take couple of seconds).</li>
+</ul>
+
+<h2 id="present-features">Present Features</h2>
+
+<ul>
+  <li>Each cluster has a new subtab - Optimizer results - that shows the proposed optimized solution (both the final state and the steps to get there) and makes it possible to start a migration by clicking the relevant buttons.</li>
+  <li>Each virtual machine has two new elements in their context menu - Optimize start and Cancel start optimization. These elements are designed to be used with stopped virtual machines (status Down) and tell the optimizer to identify a solution when the selected virtual machine are started. The cancel menu item cancels this request. You can select multiple virtual machines this way. Sadly, there is no indication in the user interface of the currently optimized virtual machines. However, the result subtab provides a list of virtual machines that are supposed to be started together with the solution details.</li>
+  <li>The solution should obey the cluster policy to some extent - OptimalForEvenDistribution, OptimalForEvenGuestDistribution and OptimalForPowerSaving will be computed using the memory assignments though (the engine uses CPU load)</li>
+</ul>
+
+<h2 id="missing-features">Missing Features</h2>
+
+<ul>
+  <li>Some hard constraint rules are missing so the solution might not be applicable because of the current scheduling policy.</li>
+  <li>Balancing check is missing so the engine might decide to touch the cluster in the middle of your optimization steps - you can disable automatic balancing in the scheduling policy to prevent this.</li>
+  <li>No CPU load based rules, the optimizer tries to use the hosts' memory in an even way (engine uses CPU load in the balanced rule).</li>
+</ul>
+
+<h1 id="known-issues">Known issues</h1>
+
+<h2 id="data-refresh-failed-undefined">Data refresh failed: undefined</h2>
+
+<p>Check your Firefox (or other browser) version. There is a chance that your browser is new enough and enforces mixed content security rules. That blocks the request to get results from the optimizer. See <a href="https://developer.mozilla.org/en-US/docs/Security/MixedContent">https://developer.mozilla.org/en-US/docs/Security/MixedContent</a> for details.</p>
+
+<p>You can work around this in Firefox by going to <about:config> page and setting security.mixed_content.block_active_content to false.</about:config></p>
+
+<h2 id="javalangoutofmemoryerror">java.lang.OutOfMemoryError</h2>
+
+<p>Please check the amount of memory available to the application server.</p>
+
+<p>Jboss is configured in /usr/share/jbossas/bin/standalone.conf (or the respective file in /usr/share/ovirt-engine-jboss-as) and look for the -Xmx option in JAVA_OPTS.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     example: JAVA_OPTS="-Xms2048m -Xmx8192m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true"&#x000A;</code></pre></div>
+<h1 id="detailed-description---internals">Detailed Description - Internals</h1>
+
+<p>This feature will allow the user to get a solution to his scheduling needs. Computing the solution might take a long time so an <a href="http://www.optaplanner.org">Optaplanner</a> based service will run outside of the engine and will apply a set of rules to the current cluster's situation to get an optimized VM to Host assignments.</p>
+
+<h2 id="getting-the-cluster-situation-to-optaplanner">Getting the cluster situation to Optaplanner</h2>
+
+<p>This will be based on REST API after the missing entities for Cluster policy are implemented. In the worst case we might consider to utilize direct database access to get missing data.</p>
+
+<p>The following information is needed:</p>
+
+<ul>
+  <li>List of hosts in the cluster with information about provided resources</li>
+  <li>List of all VMs running in the cluster with information about required resources (probably without statistics data for now)</li>
+  <li>The currently selected cluster policy is needed together with the custom parameters</li>
+  <li>The configuration of the cluster policy - list of filters, weights and coefficients</li>
+</ul>
+
+<p>The ideal situation would be if it was possible to get the described data in an atomic snapshot way. Which means that all the data will be valid at one single exactly defined moment in time.</p>
+
+<p>The Optaplanner service will use Java SDK to get the data and the idea is to get the data once and then (cache and) reuse them during the whole optimization run.</p>
+
+<h2 id="representing-the-solution-in-optaplanner">Representing the solution in Optaplanner</h2>
+
+<p>Optaplanner requires at least two java classes to be implemented:</p>
+
+<ul>
+  <li>Solution description – a set of all VMs with assigned Hosts.</li>
+  <li>Mutable entity for the optimization algorithm to update – the VM itself, the mutable field is the Host assignment</li>
+</ul>
+
+<p>The VM and Host classes can be represented in couple of ways:</p>
+
+<ul>
+  <li>SDK's Host and VM classes</li>
+  <li>Engine internal Vds and Vm classes</li>
+</ul>
+
+<p>The selected representation will depend on the way our Optaplanner service will define the rules for the optimization algorithm (see the next sections).</p>
+
+<h2 id="reporting-the-result-of-optimization">Reporting the result of optimization</h2>
+
+<p>The result will be presented using an UI plugin in the engine's webadmin. That way the user will have comfortable access to the results from a UI he is used to. Also the authentication and access management to REST will be provided by the webadmin. The disadvantage is that the UI plugin will have to use some kind of new protocol (REST, plain HTTP, …) to talk to the Optaplanner service. Also the UI plugin will have to authenticate to the Optaplanner service, but we are probably not implementing that in the tech preview phase.</p>
+
+<p>There is also a question of how to represent the solution:</p>
+
+<ul>
+  <li>The first prototype will just show a table (graph, image) of the "optimal" VM to Host assignments in a dialog window</li>
+  <li>in the future we might be even able to tell the user the order of steps he should perform (migrate A to B…) to reach the state we are showing him</li>
+</ul>
+
+<h2 id="rules-to-select-the-optimal-solution-high-level-overview">Rules to select the optimal solution (high level overview)</h2>
+
+<p>All optimization tasks need to know how does a possible solution look like and how to select the best one. The main task we are trying to accomplish is:</p>
+
+<ol>
+  <li>consolidate the free resources – It should do a defragmentation of free memory or spare cpu cycles so more or big VMs can be started. The extreme case is our Power Saving policy as its side-effect is that a lot of hosts end up totally free of VMs. But we do not want to load the hosts that much. The actual rules that will describe this are yet to be determined, but we are currently looking into using only the hard constraints (filters) of the currently selected cluster policy.</li>
+</ol>
+
+<p>There are two situations that should be avoided in the computed solution:</p>
+
+<ol>
+  <li>Unstable cluster – what I mean here is that once the user performs the changes to get the cluster to the "optimal" state, the engine's internal balancing kicks in and rearranges the cluster differently. It would mean that the output of the optimization algorithm was not as smart as we wanted it to be. This might be mitigated a bit by using the result of balancer as part of the scoring mechanism.</li>
+  <li>Impossible solution – if the user gets a solution from the optimization algorithm and then finds out that the cluster policy prevents him from reaching it, we will have an issue that the theoretical solution can be useless to the user. We will probably start by telling the user to disable load balancing while he is trying to reach "a better" state.</li>
+</ol>
+
+<p>In the case where no solution can be found (for example to the start VM case) we should inform the user that there is no solution with the current cluster policy rules, but that solution to the optimization can still be found if the rules are relaxed a bit.</p>
+
+<p>It is my opinion that the cluster policy rules reflect the actual user's requirements and we should obey them and make sure all solutions are valid in that context.</p>
+
+<h2 id="future-enhancements">Future enhancements</h2>
+
+<p>We need to keep improving the Policy unit to DRL rules match.</p>
+
+<h2 id="implementation-details">Implementation details</h2>
+
+<p>We implemented the rules using the Drools' DRL language.</p>
+
+<p>This approach required that we copy the logic from our Java code to drools rules as exactly as possible. Any difference might have caused the found solution to not be applicable to the actual cluster. The rules contain UUID checks so we can relate them to the currently allowed PolicyUnits.</p>
+
+<p>Advantages:</p>
+
+<ul>
+  <li>Users might already be using Drools for other business logic purposes</li>
+  <li>Better performance</li>
+  <li>Uses Java SDK classes directly</li>
+  <li>Smaller footprint (does not need the ovirt-engine)</li>
+</ul>
+
+<p>Disadvantages:</p>
+
+<ul>
+  <li>Code duplication – the rules have to be kept in sync with engine's PolicyUnits or we might compromise the fitness of computed solutions</li>
+</ul>
+
+<h1 id="examples-and-demostrations">Examples and demostrations</h1>
+
+<h2 id="example-of-suboptimal-balancing-as-a-result-of-starting-vms-one-by-one">Example of suboptimal balancing as a result of starting VMs one by one</h2>
+
+<p>This example uses just a single resource and evenly balanced policy. At the end all the Hosts should be providing the same amount of that resource to the VMs.</p>
+
+<p>There are 4 VMs and 2 hosts:</p>
+
+<ol>
+  <li>Vm_A: 330MB of memory</li>
+  <li>Vm_B: 330MB of memory</li>
+  <li>Vm_C: 330MB of memory</li>
+  <li>Vm_D: 1000MB of memory</li>
+</ol>
+
+<p>Now lets investigate what happens when the starting order is A,B,C,D:</p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Abcd_1.png?1560777613" /></p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Abcd_2.png?1560777613" /></p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Abcd_3.png?1560777613" /></p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Abcd_4.png?1560777613" /></p>
+
+<p>And as a second case D, C, B, A:</p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Dcba_1.png?1560777613" /></p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Dcba_2.png?1560777613" /></p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Dcba_3.png?1560777613" /></p>
+
+<p><img alt="" width="567" height="75" src="/images/wiki/Dcba_4.png?1560777613" /></p>
+
+<p>Notice that the second case is much better with regards to equal balancing, but has less free space for a new VM. It is necessary to determine the priorities without guessing to select the proper solution according to user's needs.</p>
+
+<h2 id="screenshots-of-the-ui-plugin-in-version-03">Screenshots of the UI plugin in version 0.3</h2>
+
+<p>When there is nothing that needs to be done in the cluster, you will see something similar to this:</p>
+
+<p><img alt="" width="740" height="487" src="/images/wiki/No-actions.png?1560777613" /></p>
+
+<p>After a VM start is requested, the display will reflect that a VM is being scheduled and give you the chance to start the VM on the computed dectination host:</p>
+
+<p><img alt="" width="742" height="596" src="/images/wiki/Start-vm.png?1560777612" /></p>
+
+<p>Starting the VM changes the status (the icon is missing here, but will be present in the version):</p>
+
+<p><img alt="" width="741" height="555" src="/images/wiki/Starting-vm-1.png?1560777612" /></p>
+
+<p>VM started successfully. It is still visible here, but will disappear from the list after the next result refresh (the optimizer needs some time to update the solution with the new state):</p>
+
+<p><img alt="" width="741" height="546" src="/images/wiki/Vm-up.png?1560777612" /></p>
+
+<h2 id="compute-a-complicated-start-vm-solution">Compute a "complicated" start VM solution</h2>
+
+<p>This demonstration shows a situation where the starting VM does not directly fit to any host. The first picture shows that all hosts are partially occupied and there is no host with 1.5 GB of free RAM that is needed for the VM we are about to start.</p>
+
+<p><img alt="" width="742" height="492" src="/images/wiki/Before-solution.png?1560777613" /></p>
+
+<p>When optimizer kicks in the following solution is found. One of the small VMs is migrated and the freed space is used to start the big VM.</p>
+
+<p><img alt="" width="742" height="578" src="/images/wiki/Start-solution.png?1560777612" /></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/optaplanner.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/optaplanner.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

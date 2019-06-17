@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DetailedStableDeviceAddresses &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/ux/">Ux</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-stable-device-addresses">Detailed Stable Device Addresses</h1>
+
+<h2 id="stable-device-addresses">Stable Device Addresses</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Allow devices in guest virtual machines to retain the same device address allocations as other devices are added or removed from the guest configuration. This is particularly important for Windows guests in order to prevent warnings or reactivation when device addresses change.
+In the term Device we include PCI, VirtIO Serial, SCSI, IDE, CCID and actually anything libvirt supports.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Feature owner: Eli Mesika (emesika)</p>
+
+    <ul>
+      <li>
+        <p>GUI Component owner: Not Relevant</p>
+      </li>
+      <li>
+        <p>REST Component owner: Not Relevant</p>
+      </li>
+      <li>
+        <p>Engine Component owner: Eli Mesika (emesika)</p>
+      </li>
+      <li>
+        <p>QA Owner: Yaniv Kaul (ykaul)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: emesika@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release: 3.1</li>
+  <li>Status: Done</li>
+  <li>Last updated date: Wed Mar 14 2012</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>When creating a VM, QEMU allocates device addresses to the guest devices, these addresses are being reported by libvirt to VDSM and VDSM should report it back to RHEVM. RHEVM should persist the device addresses and report it as part of the VM configuration on the next run. If a change to the VM devices occurred RHEVM should detect the change and persist the new device addresses.</p>
+
+<h3 id="entity-description">Entity Description</h3>
+
+<p>A new BE VmDevice that represents video/controller/any-other-device
+==== VM Device ==== VmDevice will have the following properties
+vmId - VM or template Id
+type - The device type (for example 'sound')
+device - The device (for example 'ich6')
+address - A string reprenting all address details (for example "type='pci' domain='0x0000' bus='0x00' slot='0x0c' function='0x0'")
+bootOrder - The device boot order
+specparams - Any device specific parameters (for example memory allocation per monitor in video device)
+isManaged - Is the device managed
+isPlugged - Is the device plugable
+isReadOnly - The device access mode</p>
+
+<h3 id="crud">CRUD</h3>
+
+<p>New table vm_device:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   device_id           -- Unique identifier of the VM device&#x000A;   vm_id               -- The VM/Template id (FK of vm_static)&#x000A;   type                -- The type  (for example : disk, interface etc.)&#x000A;   device              -- The device (for example : floppy, cdrom etc.)&#x000A;   address             -- The device address as a string&#x000A;   boot_order          -- The device boot order&#x000A;   spec_params         -- The device special parameters, for example ('display': 'vnc')&#x000A;   is_managed          -- Indicates if the device is managed &#x000A;   is_plugged          -- Indicates if device is plugable&#x000A;   is_readonly         -- Indicates if device is read-only.&#x000A;</code></pre></div>
+<p>Adding a column to vm_dynamic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   hash                -- holds the md5 like hash indicating a change &#x000A;</code></pre></div>
+<p>Generation CRUD SPs for the new vm_device table Modify all relevant views &amp; SP to have the hash field.</p>
+
+<h4 id="image_vm_map-table">image_vm_map table</h4>
+
+<p>This table becomes redundant since all information is already contained in vm_device.
+Upgrade will drop this table after data is ported to vm_device table.
+A view with the same name (image_vm_map) will be created on top of vm_device to support current code.</p>
+
+<h3 id="dal">DAL</h3>
+
+<p>Adding VmDeviceDAO, VmDeviceDAODbFacadeImpl , VmDeviceDAOHibernateImpl
+Adding VmDeviceDAOTest that extends BaseGenericDaoTestCase
+Adding Hash property to VmDynamic
+Updating VmDynamicDAOTest to include the new Hash property</p>
+
+<h4 id="metadata">Metadata</h4>
+
+<p>Adding test data for vm_device in fixtures.xml</p>
+
+<h3 id="business-logic">Business Logic</h3>
+
+<p>All places in which we send/receive VM details are affected:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   CreateVDSCommand           - called when running a VM&#x000A;   GetAllVmStatsVDSCommand    - called to get basic information (status) on all VMs&#x000A;   GetVmStatsVDSCommand       - called to get basic information (status) on all one VM&#x000A;   ListVDSCommand             - called to get all VM details, will be used when recognizing that hash has been changed on a VM&#x000A;   refreshVdsRunTimeInfo      - called periodically to refresh VMs information and persist it to db.&#x000A;</code></pre></div>
+<p>In order to support both old (under 3.1) structure and new structure (3.1 and above), we will have to re-factor current code in above classes. This will be done by creating a VMInfoManagerHelper class that will implement all shared code as device indexing etc.
+We will have to create VMOldInfoManager and VMInfoManager VM30InfoManager stands for old (under 3.1) structure
+VMInfoManager stands for new structure (3.1 and above)
+Both VMOldInfoManager and VMInfoManager implement a common VMInfoManagerInterface interface
+We will have a factory method in the relevant CreateVDSCommand and refreshVdsRunTimeInfo that will create the proper class instance depending on VM Cluster Compatibility version.
+Those classes will handle both composing the right structure for VDSM when a VM is created and getting VM information from VDSM in order to update our persistent layer after calling Get*VdsStatsComamnd , ListVdsCommand</p>
+
+<p><img alt="" width="473" height="384" src="/images/wiki/Vmmanagerinfo.png?1560777612" /></p>
+
+<h4 id="flow">Flow</h4>
+
+<p>create:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   query cluster to get version comparability value&#x000A;   3.0 and below =&gt; create VMOldInfoManager and calls methods in it to compose structural info for VDSM&#x000A;   3.1 and above =&gt; create VMInfoManager and calls methods in it to compose structural info for VDSM&#x000A;</code></pre></div>
+<p>refreshVdsRunTimeInfo:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   query cluster to get version comparability value&#x000A;   3.0 and below =&gt; create VMOldInfoManager and calls methods in it to persist data from structural info from VDSM&#x000A;     run on all VMs and do old logic &#x000A;   3.1 and above =&gt; create VMInfoManager and calls methods in it to persist data from structural info from VDSM&#x000A;     run on all VMs &#x000A;     compare hash value if different add VM to change list&#x000A;     call List requesting long format for all VMs in the changed list&#x000A;     persist changes in DB&#x000A;</code></pre></div>
+<p><img alt="" width="525" height="400" src="/images/wiki/Flow.png?1560777613" /></p>
+
+<h4 id="migration">Migration</h4>
+
+<p>We will use cluster level decision, since we will have to support migration from host to host in the same Cluster. New API for both sending (create) and receiving (get*VmStats, List) information will use VM parameters as a structured dictionary</p>
+
+<h4 id="boot-order">Boot Order</h4>
+
+<p>Boot order is currently managed as a int field in vm_dynamic table, the reflects an enumerator in the BLL having values 1-14 representing comminations of boot sources (Hard Drive, CD, Network) This is changed as we will handle boot sequence in both disks &amp; vm_interface table as a running number representing the order of the device in the boot process.</p>
+
+<h4 id="device-index">Device Index</h4>
+
+<p>Manage internal unique index for 'iface' virtio' or 'ide' Same ordering as in old format should be kept in order to support 3.0 VMs that starts to run on 3.1 cluster
+Relevant only for Floppy and CD</p>
+
+<h4 id="managing-addresses">Managing Addresses</h4>
+
+<p>Addresses are kept in the database as a plain-text strings. However, when passed to VDSM addresses should be structured as dictionaries.
+Example
+DB:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   "type='drive' controller='0' bus='0' unit='0'"&#x000A;</code></pre></div>
+<p>Structure:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   { type='drive',&#x000A;     controller='0',&#x000A;     bus='0',&#x000A;     unit='0' }&#x000A;</code></pre></div>
+<h4 id="video-cards">Video Cards</h4>
+
+<p>In new format we will have to add some logic when handling video cards.
+Up to 3.1, we were passing spiceMonitors, this described the number of monitors used by the VM and memory allocation calculation per video card was sone by VDSM
+In new format, we will have to send each video card as a VM device and calculate the memory allocation, the result will be passed to vdsm as the specparams value.</p>
+
+<h4 id="importexport">Import/Export</h4>
+
+<p>OvfVmReader and OvfVmWriter should be enhanced to support:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   is_plugged flag&#x000A;   access_mode&#x000A;   boot order&#x000A;   address&#x000A;   manage Floppy/CDROM as a device&#x000A;</code></pre></div>
+<p>Those changes should bee coordinated with the OVF team.
+see <a href="http://www.ovirt.org/wiki/Ovf">http://www.ovirt.org/wiki/Ovf</a></p>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>This feature is not exposed to the GUI in 3.1</p>
+
+<h3 id="installationupgrade">Installation/Upgrade</h3>
+
+<p>In order to prevent data duplication we will tend to upgrade some old data to new format and still be backward compatible.
+issues:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   Boot Order    - migrate boot order info to new format even from VMs that are in old (under 3.1) clusters&#x000A;   Floppy/CDROM  - migrate Floppy/CDROM to be stored as a disk&#x000A;   Sound/Video   - migrate as Vm Device&#x000A;</code></pre></div>
+<h4 id="user-work-flows">User work-flows</h4>
+
+<h3 id="enforcement">Enforcement</h3>
+
+<h3 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h3>
+
+<h4 id="affected-ovirt-projects">Affected oVirt projects</h4>
+
+<ul>
+  <li>Engine-core</li>
+  <li>VDSM</li>
+</ul>
+
+<h4 id="hot-plug-disknic">Hot Plug Disk/Nic</h4>
+
+<p>Since managing this is via backend, we always assume that we get the exact Disk/Nic number as we know already.
+In case that we got a device that is nor recognized (even if it a Hot Plug) , it will be handled as a Generic Device</p>
+
+<ul>
+  <li>Note that there's a difference between Attach / Detach, Plug / Unplug.
+    <ol>
+      <li>Attach / Detach should cause addition / deletion of entries to vm_device table.</li>
+      <li>Plug / Unplug should change the isPlug flag (default is null).
+        <ul>
+          <li>When a device is unplugged, it's flag is set to False, and its address should be deleted.</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h4 id="optional-disk">Optional Disk</h4>
+
+<p>We should support and persist an optional disk , this is implemented as a new attribute of the disk entry in the API.
+Optional flag is passed as <strong>hard-coded False</strong> in 3.1</p>
+
+<h4 id="direct-lun">Direct LUN</h4>
+
+<p>Direct LUN enables adding a block device to the system either by its GUID or UUID</p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p><a href="/develop/release-management/features/ux/design/stabledeviceaddresses/">Features/Design/StableDeviceAddresses</a></p>
+
+<h3 id="open-issues">Open Issues</h3>
+
+<p><a href="Category: Feature">Category: Feature</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/ux/detailedstabledeviceaddresses.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/ux/detailedstabledeviceaddresses.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

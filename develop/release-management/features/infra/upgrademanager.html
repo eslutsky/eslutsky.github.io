@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+UpgradeManager &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="upgrade-manager">Upgrade Manager</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The process of upgrading cluster/hosts to a higher version is a manual process. When working with a small cluster of hosts that suffice. However, on large clusters it is very time-consuming to upgrade all the hosts manually. The purpose of this feature is to give administrators a set of tools to know when an upgrade is available for the hosts, upgrade separate hosts, and upgrade cluster as a whole, using rolling upgrade process.
+See demo <a href="https://youtu.be/fDzBNKu5pyQ">here</a>.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: <a href="user:masayag">Moti Asayag</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: masayag at #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Upgrade is a big pain point on large oVirt deployments. The existence of tools to ease the upgrade process will make it easier to adopt oVirt.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>The set of tools that are in the scope of this feature are:</p>
+
+<ol>
+  <li>Notify the user that an update for the engine is available</li>
+  <li>Make it easier to know whether a host has available updates</li>
+  <li>Allow the user to upgrade a specific host automatically</li>
+  <li>Allow the user to do a rolling cluster upgrade, either to a higher cluster level, or to a new version that supports the current one (out-of-scope of ovirt-engine-3.6)</li>
+</ol>
+
+<h2 id="user-experience">User Experience</h2>
+
+<h3 id="make-it-easier-to-know-whether-a-host-has-an-available-update">Make it easier to know whether a host has an available update</h3>
+
+<p>Currently, for oVirt-node, it already shows you that there is an upgrade available, by an alert on the bottom of the general sub-tab.
+We can add a similar alert also for regular hosts:
+* A notification will be added at the bottom of the 'General' sub-tab of the host, saying 'Upgrade is available. <em>Upgrade</em>'. where <em>Upgrade</em> is a link to the action, based on the host type (plan host or ovirt-node).</p>
+
+<ul>
+  <li>Once an update is available, the "Upgrade" button will be enabled, both on the menu bar and in the host context menu.</li>
+  <li>For consistency, a support will be added for updates available property for <strong>oVirt-node</strong></li>
+  <li>Upgrading host in 'Up' status will trigger the following flow:
+    <ul>
+      <li>Host is set to maintenance mode, triggering the migration of the vms to other hosts in the cluster.</li>
+      <li>New updates are being installed on the host using ovirt-host-deploy.</li>
+      <li>Host is brought up once installation is completed.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img alt=" 800px" title=" 800px" width="1035" height="768" src="/images/wiki/Update_available_mockups.png?1560777612" /></p>
+
+<p><strong>API:</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /hosts/{host:id}/&#x000A;<span class="nt">&lt;host&gt;</span>&#x000A;    ...&#x000A;    <span class="nt">&lt;updates_available&gt;</span>`true`<span class="nt">&lt;/updates_available&gt;</span>&#x000A;<span class="nt">&lt;/host&gt;</span>&#x000A;</code></pre></div>
+<h4 id="which-packages-are-checked-for-updates">Which packages are checked for updates?</h4>
+
+<p>There is a system configuration value named 'PackageNamesForCheckUpdate' which contains the system required packages for upgrade (specifically 'vdsm').
+A user may provide additional packages he wishes to monitor for updates by using 'UserPackageNamesForCheckUpdate' config value, which is a merge-able and supports wildcards.
+Assuming the config value contains the value 'libvirt, mom', the use can use:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>engine-config -m UserPackageNamesForCheckUpdate<span class="o">=</span>qemu-kvm-rhev&#x000A;</code></pre></div>
+<p>which will result in:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>engine-config -g UserPackageNamesForCheckUpdate&#x000A;UserPackageNamesForUpdate: libvirt,mom,qemu-kvm-rhev version: general&#x000A;</code></pre></div>
+<p>The same behavior is applied during the upgrade sequence: All packages listed in 'PackageNamesForCheckUpdate' and 'UserPackageNamesForCheckUpdate' will be upgraded.</p>
+
+<h4 id="when-packages-are-checked-for-updates">When packages are checked for updates?</h4>
+
+<p>The interval for updates checking is determined by the configuration value 'HostPackagesUpdateTimeInHours', which is specified in hours.</p>
+
+<h3 id="allow-the-user-to-upgrade-a-specific-host-automatically">Allow the user to upgrade a specific host automatically</h3>
+
+<ul>
+  <li>If an update is available:
+    <ul>
+      <li>and if the host's status is 'Up' or 'Maintenance':
+        <ul>
+          <li>Enable "Upgrade" button on menu-bar and in the host context menu.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img alt=" 800px" title=" 800px" width="1318" height="127" src="/images/wiki/Upgrade_host_button.png?1560777612" /></p>
+
+<ul>
+  <li>For consistency, a support will be added for <strong>oVirt-node</strong> upgrade in UP status.</li>
+</ul>
+
+<p><strong>API:</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>POST /hosts/{host:id}/upgrade|rel=upgrade&#x000A;</code></pre></div>
+<h3 id="allow-the-user-to-do-a-rolling-cluster-upgrade-either-to-a-higher-cluster-level-or-to-a-new-version-that-supports-the-current-one">Allow the user to do a rolling cluster upgrade, either to a higher cluster level, or to a new version that supports the current one</h3>
+
+<p><em>Not planned for 3.6</em>:
+For a cluster we should add the option to "check for available upgrade". This should go on all the operational hosts, and check whether there is a new version available, and what cluster levels it supports. If there is one, the minimal and maximal supported cluster level will be shown as well. Now, the user can upgrade to a higher cluster level, or to a higher version in the current one.
+Two flows here behind the scenes:</p>
+<ol>
+  <li>Same cluster level - host by host is moved to maintenance, upgraded, activated. At the end of the day the cluster itself as a whole was upgraded. There should be an easy way to see the status of this upgrade, and information for all the hosts, whether they were upgraded or not (Task list?).</li>
+  <li>Higher cluster level - same as #1, but upgrading the cluster levels once all hosts were upgraded.</li>
+</ol>
+
+<h2 id="implementation">Implementation</h2>
+
+<h3 id="upgrade-host-flow">Upgrade Host Flow</h3>
+
+<p>The upgrade process will reuse the existing re-install flow which updates the required packages (vdsm, vdsm-cli).
+The host upgrade sequence is:</p>
+
+<ul>
+  <li>If VMs are running on the host - popup a warning confirmation dialog: "There are running VMs on the host. Would you like to continue?"</li>
+  <li>If there are updates available for the host
+    <ul>
+      <li>Move host to 'Maintenance'.
+        <ul>
+          <li>Migrate VMs if there are any running on the host.</li>
+        </ul>
+      </li>
+      <li>Run 'Re-install' command</li>
+      <li>Return the host to its origin status (Up or Maintenance).</li>
+      <li>Clear updates notifications for the host</li>
+    </ul>
+  </li>
+  <li>Upgrade failure will move the host to "Install Failed" status. From "Install Failed" the user should be able to "Upgrade" the host again.</li>
+</ul>
+
+<p><strong>The ovirt-engine</strong> will schedule a daily quartz job for querying vdsm for any available updates for the host.
+ The packages availability check/upgrade action will be performed using the ovirt-host-deploy component.
+ <strong>Install/Reinstall Host Flow changes:</strong></p>
+
+<ul>
+  <li>When host installation/re-installation fails, the available updates notification will be disabled.</li>
+</ul>
+
+<h2 id="open-issuesquestions">Open Issues/Questions</h2>
+
+<ul>
+  <li>Support a cluster upgrade when cluster contains both RHEL and RHEV-H hosts.
+    <ul>
+      <li>How cluster version should be determined?</li>
+    </ul>
+  </li>
+  <li>Upgrade procedure of RHEV-H (done by selecting a specific image to upgrade)</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/upgrademanager.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/upgrademanager.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

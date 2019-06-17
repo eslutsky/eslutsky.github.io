@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Stateless Hosted Engine broker &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="stateless-hosted-engine-broker">Stateless Hosted Engine broker</h1>
+
+<p><strong>Stateless Hosted Engine broker</strong></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Replacing custom made agent-broker RPC implementation with python's standard xmlrpc</p>
+
+<h2 id="owners">Owners</h2>
+
+<h4 id="initial-design-and-implementation">Initial design and implementation</h4>
+
+<ul>
+  <li>Name: Denis Chaplygin (dchaplyg) dchaplyg@redhat.com</li>
+</ul>
+
+<h4 id="maintainers">Maintainers</h4>
+
+<ul>
+  <li>Name: Denis Chaplygin (dchaplyg) dchaplyg@redhat.com</li>
+  <li>Name: Martin Sivak (msivak) msivak@redhat.com</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 4.2</li>
+  <li>Status: Done</li>
+  <li>Last updated: December 11, 2017</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>With Hosted Engine operation expirience we realized, that some planned features was neither ever used nor even implemented. One of those features is ability of
+the engine to handle several storage domains for several agents.</p>
+
+<p>Special stateful agent-broker RPC protocol was developed to enable those abilities. Unfortunately, it is useless now and hard to maintain. Problems with
+maintaining and extension result to moving part ob broker's job to the agent.</p>
+
+<p>Therefore, as most part of that functionality is not needed, we can get rid of multi-agent support and custom RPC protocol. To do that we need:</p>
+
+<ol>
+  <li>Make broker stateless, i.e. support just a single agent/storage. We need to replace <code>_backends</code> array with a single <code>backend</code> var in StorageBroker and remove mandatory <code>client</code> parameter. Same applies to the ConnectioHanlder calss: we do not need to keep client id in the handler's thread and do not need to pass it to the StorageBroker methods anymore. On the other hand, we still need to set storage info in a first call after connection.</li>
+  <li>Enable broker to get storage information from config on start up. Biggest part of the <code>_initialize_broker</code> code should be moved from agetn to StorageBroker.<strong>init</strong> Broker should be able to read storage information from the hosted-engine config on startup and prepare itself accordingly. <code>set_storage_domain</code> call and <code>cleanup</code> calls should be removed.</li>
+  <li>Cleanup storage backend code - removal of <code>BlockStorageBackend</code> class</li>
+  <li>Refactoring <code>ConnectionHandler.dispatch</code> - as we don't need client information anymore, we can split large <code>dispatch</code> functions in to a set of small functions and call them using a dict.</li>
+  <li>Replace custom RPC with standard xmlrpc. <code>BrokerLink</code> classes and <code>ConnectionHandler</code> classes should be replaced with wrappers over python's standard xmlrpc</li>
+  <li>Remove broker initialization code. Broker is stateless now, so we do not need to establish and keep connection to it, neither from agent nor from the vdsm. We can throw away <code>_initialize_broker</code> function and remove it from the monitoring loop. Broker reconnection code should also be removed.</li>
+</ol>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Less code - less errors. Standard module is well tested and it is easier to suport code based on it. We will also move some heavy stuff from agent to broker, making agent react faster.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/stateless-broker.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/stateless-broker.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 11 Jan 2018 13:24 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

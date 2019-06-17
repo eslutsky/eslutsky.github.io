@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Snapshots Overview &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="snapshots-overview">Snapshots Overview</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Snapshots overview and management in context of a storage domain.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Daniel Erez (Derez)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#101;&#114;&#101;&#122;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#101;&#114;&#101;&#122;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 3.5</li>
+  <li>Status: work in progress</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Improving the display of storage consumption details in order to identify which entities (disks/snapshots) could be removed in order to free up space.</li>
+  <li>Ability to remove a specific disk from a snapshot (instead of to current support which forces deletion of the entire VM snapshot).</li>
+  <li>Ability to remove disks snapshots in storage domain context; i.e. merging a specified set of snapshots in order the allow regaining space on a storage domain.</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Currently, only a VM snapshot removal is supported - i.e. removing snapshots of disks requires the removal of the entire set of disks of the VM snapshot. Hence, in order to further decouple disks snapshots from VM snapshots, this proposed feature adds a new functionality of removing disks from snapshots. The UI will expose a flattened list of disks snapshots that reside on a specific storage domain in a new sub-tab in which, the new action of removal would be available.</p>
+
+<h2 id="ui">UI</h2>
+
+<h3 id="sub-tabs-concept">Sub-Tabs concept</h3>
+
+<h4 id="storage---snapshots-sub-tab">Storage -&gt; Snapshots Sub-Tab</h4>
+
+<p><img alt="" title="storage snapshots subtab sketch" src="/images/wiki/storage_snapshots_subtab.png" /></p>
+
+<h4 id="future-work-storage-resources-usage-sub-tab-disks-active-volumes--snapshots--free-space">[Future Work?] Storage Resources Usage Sub-Tab [Disks (active volumes) / Snapshots / Free space]</h4>
+
+<p><img alt="" title="storage resources usage subtab sketch" src="/images/wiki/storage_resources_usage_subtab.png" /></p>
+
+<h3 id="deprecated-manage-snapshots-concept">[DEPRECATED] Manage Snapshots concept</h3>
+
+<p>The solution is being neglected in favor of the sub-tabs concept as removing snapshot disks (merging) is a long operation; i.e. sub-tabs is the way to go when status indication is needed. Furthermore, since the interesting operation on snapshots in context of storage is merging, having a dedicate dialog seems redundant.</p>
+
+<h4 id="deprecated-manage-snapshots-dialog">[DEPRECATED] Manage Snapshots Dialog</h4>
+
+<p><img alt="" title="manage snapshots dialog sketch" width="958" height="810" src="/images/wiki/manage_snapshots_dialog_sketch.png?1560777612" /></p>
+
+<h2 id="rest-api">REST-API</h2>
+
+<p>Introducing new functionality of deleting a disk from a snapshot.</p>
+
+<h3 id="get-disk-snapshots-by-storage-domain">Get disk snapshots by storage domain</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>GET /api/storagedomains/{storage_id}/disksnapshots&#x000A;</code></pre></div>
+<h3 id="delete-a-disk-snapshot-from-storage-domain">Delete a disk snapshot from storage domain</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>DELETE /api/storagedomains/{storage_id}/disksnapshots/{image_id}&#x000A;</code></pre></div>
+<h3 id="delete-a-snapshot-disk">Delete a snapshot disk:</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>DELETE /api/vms/{vm_id}/snapshots/{snapshot_id}/disks/{disk_id}&#x000A;</code></pre></div>
+<h2 id="backend">Backend</h2>
+
+<ul>
+  <li><code>RemoveDiskSnapshotsCommand</code> -&gt; <code>RemoveDiskSnapshotTaskHandler</code>:
+    <ul>
+      <li>A new command (and task handler) for removing specific images from snapshots.</li>
+      <li>The command accepts as an argument a list of multiple images (of the same disk) to remove.</li>
+      <li>The command utilizes <a href="serial-execution-of-asynchronous-tasks/">SEAT</a> infrastructure for removing multiple images from a disk consecutively (as merging multiple snapshots of a specific disk must be done separably - to avoid volume chain breakage).</li>
+    </ul>
+  </li>
+  <li><code>GetAllDiskSnapshotsByStorageDomainIdQuery</code>:
+    <ul>
+      <li>A new query for retrieving all snapshot disks that resides on a specified storage domain.</li>
+      <li>Needed for fetching data of Storage -&gt; Snapshots sub-tab.</li>
+    </ul>
+  </li>
+  <li><code>DiskImage</code> -&gt; <code>vmSnapshotDescription</code> member:
+    <ul>
+      <li>Needed for displaying snapshot description in the UI (for easier image identification).</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="vdsm">VDSM</h2>
+
+<p>Already supported.</p>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<ul>
+  <li>Sorting in sub-tabs - wait for the generic client/server side sorting UI infrastructure?</li>
+  <li>Display additional information about the snapshot/VM on item selection?</li>
+  <li>Integrating a filter widget in sub-tab (as illustrated in manage snapshots dialog) or wait for a generic infrastructure?</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>Verify that the sub-tab displays all disk snapshots that reside on the selected storage domain.</li>
+  <li>Verify removal of a single snapshots.</li>
+  <li>Verify removal of multiple snapshots (of the same disk).</li>
+  <li>Verify that removal of a snapshot that is attached to a running VM is blocked (until live snapshot merge is supported…).</li>
+  <li>Verify snapshot removal from REST-API.</li>
+</ul>
+
+<h2 id="future-work">Future Work</h2>
+
+<ul>
+  <li>Mentioned inline above.</li>
+</ul>
+
+<h2 id="related-bugzilla-items">Related Bugzilla Items:</h2>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1086181">Bug 1086181 - OVIRT35 - [RFE] Snapshot Overview screen to manage storage</a></li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/snapshots-overview.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/snapshots-overview.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

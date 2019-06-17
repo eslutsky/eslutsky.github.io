@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Federate oVirt engine authentication to OpenID Connect infrastructure &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Ravi Nori' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Federate oVirt engine authentication to OpenID Connect infrastructure' property='og:title'>
+<meta content='In this post I will introduce how to integrate OIDC with oVirt engine using Keycloak and LDAP user federation.
+
+Prerequisites: I assume you have already setup the 389ds directory server, but the solution is very similar for any other LDAP provider.
+As OIDC is not integrated into oVirt directly, we use Apache to do the OIDC authentication for us. The mod_auth_openidc module nicely covers all needed functionality.
+
+Overview
+
+Integrate with external OpenID Connect Identity Provider (IDP) to provide Single Sign-On  (SSO) across products that use the IDP for authenticating users. We currently have oVirt SSO for providing unified authentication across Administrator and VM portals. The oVirt engine SSO also provides tokens for REST API clients and supports bearer authentication to reuse tokens to access oVirt engine RESTAPI. With external IDP integration the internal oVirt SSO is disabled and browser users will be redirected to the external IDP for authentication. After successful authentication users can access both Admin and VM portals as they normally do. REST API clients don&#39;t have to change, they can still obtain a token from engine SSO and use the token for bearer authentication to access oVirt engine RESTAPI. Engine SSO acts as a proxy obtaining the token from external IDP on behalf of the RESTAPI client.
+
+To access Administrator portal users need to belong to LDAP group named “ovirt-administrator” or an LDAP group that has been manually granted permissions to access Admin portal.
+
+Note
+
+In the examples and configuration below we use keycloak.example.com as the Keycloak server FQDN and engineopenid.example.com as the oVirt engine server FQDN. Please note that these should be replaced with real FQDNs from your setup.' property='og:description'>
+<meta content='http://ovirt.org/blog/2019/01/sso-keycloak-ovirt-openidc-389ds.html' property='og:url'>
+<meta content='2019-01-22T17:32:00Z' property='article:published_time'>
+<meta content='rnori' property='article:author:username'>
+<meta content='AAA' property='article:tag'>
+<link href='/blog/tag/aaa.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='LDAP' property='article:tag'>
+<link href='/blog/tag/ldap.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OIDC' property='article:tag'>
+<link href='/blog/tag/oidc.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='SSO' property='article:tag'>
+<link href='/blog/tag/sso.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Federate oVirt engine authentication to OpenID Connect infrastructure' name='twitter:title'>
+<meta content='In this post I will introduce how to integrate OIDC with oVirt engine using Keycloak and LDAP user federation.
+
+Prerequisites: I assume you have already setup the 389ds directory server, but the solution is very similar for any other LDAP provider.
+As OIDC is not integrated into oVirt directly, we use Apache to do the OIDC authentication for us. The mod_auth_openidc module nicely covers all needed functionality.
+
+Overview
+
+Integrate with external OpenID Connect Identity Provider (IDP) to provide Single Sign-On  (SSO) across products that use the IDP for authenticating users. We currently have oVirt SSO for providing unified authentication across Administrator and VM portals. The oVirt engine SSO also provides tokens for REST API clients and supports bearer authentication to reuse tokens to access oVirt engine RESTAPI. With external IDP integration the internal oVirt SSO is disabled and browser users will be redirected to the external IDP for authentication. After successful authentication users can access both Admin and VM portals as they normally do. REST API clients don&#39;t have to change, they can still obtain a token from engine SSO and use the token for bearer authentication to access oVirt engine RESTAPI. Engine SSO acts as a proxy obtaining the token from external IDP on behalf of the RESTAPI client.
+
+To access Administrator portal users need to belong to LDAP group named “ovirt-administrator” or an LDAP group that has been manually granted permissions to access Admin portal.
+
+Note
+
+In the examples and configuration below we use keycloak.example.com as the Keycloak server FQDN and engineopenid.example.com as the oVirt engine server FQDN. Please note that these should be replaced with real FQDNs from your setup.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2019</li>
+<li class='active'>01</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Federate oVirt engine authentication to OpenID Connect infrastructure
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/rnori.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/rnori/">Ravi Nori</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2019-01-22T17:32:00Z'>
+Tuesday 22 January
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>In this post I will introduce how to integrate OIDC with oVirt engine using <a href="https://www.keycloak.org/">Keycloak</a> and LDAP user federation.</p>
+
+<p>Prerequisites: I assume you have already setup the <code>389ds</code> directory server, but the solution is very similar for any other LDAP provider.
+As OIDC is not integrated into oVirt directly, we use Apache to do the OIDC authentication for us. The <a href="https://github.com/zmartzone/mod_auth_openidc">mod_auth_openidc</a> module nicely covers all needed functionality.</p>
+
+<p>Overview</p>
+
+<p>Integrate with external OpenID Connect Identity Provider (IDP) to provide Single Sign-On  (SSO) across products that use the IDP for authenticating users. We currently have oVirt SSO for providing unified authentication across Administrator and VM portals. The oVirt engine SSO also provides tokens for REST API clients and supports bearer authentication to reuse tokens to access oVirt engine RESTAPI. With external IDP integration the internal oVirt SSO is disabled and browser users will be redirected to the external IDP for authentication. After successful authentication users can access both Admin and VM portals as they normally do. REST API clients don't have to change, they can still obtain a token from engine SSO and use the token for bearer authentication to access oVirt engine RESTAPI. Engine SSO acts as a proxy obtaining the token from external IDP on behalf of the RESTAPI client.</p>
+
+<p>To access Administrator portal users need to belong to LDAP group named “ovirt-administrator” or an LDAP group that has been manually granted permissions to access Admin portal.</p>
+
+<p>Note</p>
+
+<p>In the examples and configuration below we use keycloak.example.com as the Keycloak server FQDN and engineopenid.example.com as the oVirt engine server FQDN. Please note that these should be replaced with real FQDNs from your setup.</p>
+
+<p></p>
+
+<h2 id="keycloak">Keycloak</h2>
+<p>Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the OIDC provider.</p>
+
+<h2 id="keycloak-configuration">Keycloak configuration</h2>
+<p>For our example, we'll use default master realm. First let's create user federation with our <code>389ds</code> directory server.
+Fill the values of your 389ds server as show in the image below.</p>
+
+<p><img alt="" width="1502" height="869" src="/images/../images/blog/2019-01-22/user_federation.png?1560777613" /></p>
+
+<p>Add ldap groups mapper</p>
+
+<p><img alt="" width="1456" height="837" src="/images/../images/blog/2019-01-22/ldap_group_mapper.png?1560777613" /></p>
+
+<p>After testing the connection and authentication, click the <code>save</code> button And then Synchronize All Users using the button at the bottom of User Federation Provider page.. Check if your users are searchable, as shown in image below.
+<img alt="" width="1679" height="659" src="/images/../images/blog/2019-01-22/user_search.png?1560777613" /></p>
+
+<p>Now that user federation is working and is integrated, let's configure the OIDC client.</p>
+
+<p><img alt="" width="1456" height="837" src="/images/../images/blog/2019-01-22/add_client.png?1560777613" /></p>
+
+<p><strong>IMPORTANT</strong> After the client is created, we must change <code>Access Token Lifespan</code> to <code>10 days</code>. This is required because oVirt manages the token lifespan and we do not want Keycloak invalidating the tokens.
+<img alt="" width="900" height="269" src="/images/../images/blog/2019-01-22/life_span.png?1560777613" /></p>
+
+<p>Make a note of client id and client secret from the client credentials page, the client id and secret is needed to configure the Apache mod_auth_openidc and also ovirt-engine.
+<img alt="" width="1456" height="667" src="/images/../images/blog/2019-01-22/client_id_secret.png?1560777613" /></p>
+
+<p>Create a mapper to add groups to the claim
+<img alt="" width="1183" height="695" src="/images/../images/blog/2019-01-22/groups_claim.png?1560777613" /></p>
+
+<p>Add the build in mapper for username
+<img alt="" width="1183" height="970" src="/images/../images/blog/2019-01-22/user_name.png?1560777613" /></p>
+
+<p>Create the scopes need by ovirt engine, ovirt-app-api and ovirt-app-admin
+<img alt="" width="1183" height="736" src="/images/../images/blog/2019-01-22/scope_ovirt_app_api.png?1560777613" /></p>
+
+<p><img alt="" width="1183" height="723" src="/images/../images/blog/2019-01-22/scope_ovirt_app_admin.png?1560777613" /></p>
+
+<p>Set up optional client scopes for the ovirt-engine client
+<img alt="" width="1183" height="733" src="/images/../images/blog/2019-01-22/client_scopes.png?1560777613" /></p>
+
+<h2 id="mod_auth_openidc-configuration">mod_auth_openidc configuration</h2>
+<p>First we need to configure Apache on oVirt engine machine. SSH to the oVirt engine and install mod_auth_openidc and ovirt-engine-extension-aaa-misc.</p>
+
+<div class="highlight"><pre class="highlight shell"><code>ssh root@engineopenid&#x000A;yum install <span class="nt">-y</span> mod_auth_openidc&#x000A;yum install <span class="nt">-y</span> ovirt-engine-extension-aaa-misc&#x000A;</code></pre></div>
+<p>We need to create a file <code>/etc/httpd/conf.d/ovirt-openidc.conf</code> to configure mod_auth_openidc as follows:</p>
+
+<div class="highlight"><pre class="highlight html"><code>LoadModule auth_openidc_module modules/mod_auth_openidc.so&#x000A;ServerName engineopenid.example.com&#x000A;&#x000A;OIDCProviderMetadataURL https://keycloak.example.com:8443/auth/realms/master/.well-known/openid-configuration&#x000A;OIDCSSLValidateServer Off&#x000A;    &#x000A;OIDCClientID ovirt-engine&#x000A;OIDCClientSecret c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a&#x000A;OIDCRedirectURI https://engineopenid.example.com/ovirt-engine/callback&#x000A;OIDCDefaultURL https://engineopenid.example.com/ovirt-engine/login?scope=ovirt-app-admin+ovirt-app-portal+ovirt-ext%3Dauth%3Asequence-priority%3D%7E&#x000A;    &#x000A;# maps the prefered_username claim to the REMOTE_USER environment variable&#x000A;OIDCRemoteUserClaim preferred_username&#x000A;OIDCCryptoPassphrase random1234&#x000A;&#x000A;<span class="nt">&lt;LocationMatch</span> <span class="err">^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">sso</span><span class="err">/(</span><span class="na">interactive-login-negotiate</span><span class="err">|</span><span class="na">oauth</span><span class="err">/</span><span class="na">token-http-auth</span><span class="err">)|^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">callback</span><span class="nt">&gt;</span>&#x000A;    <span class="nt">&lt;If</span> <span class="err">"</span><span class="na">req</span><span class="err">('</span><span class="na">Authorization</span><span class="err">')</span> <span class="err">!~</span> <span class="err">/^(</span><span class="na">Bearer</span><span class="err">|</span><span class="na">Basic</span><span class="err">)/</span><span class="na">i</span><span class="err">"</span><span class="nt">&gt;</span>&#x000A;    &#x000A;      Require valid-user&#x000A;      AuthType openid-connect&#x000A;    &#x000A;      ErrorDocument 401 "<span class="nt">&lt;html&gt;&lt;meta</span> <span class="na">http-equiv=</span><span class="s">\"refresh\"</span> <span class="na">content=</span><span class="s">\"0;</span> <span class="na">url=</span><span class="s">/ovirt-engine/sso/login-unauthorized\"/</span><span class="nt">&gt;&lt;body&gt;&lt;a</span> <span class="na">href=</span><span class="s">\"/ovirt-engine/sso/login-unauthorized\"</span><span class="nt">&gt;</span>Here<span class="nt">&lt;/a&gt;&lt;/body&gt;&lt;/html&gt;</span>"&#x000A;    <span class="nt">&lt;/If&gt;</span>&#x000A;<span class="nt">&lt;/LocationMatch&gt;</span>&#x000A;    &#x000A;OIDCOAuthIntrospectionEndpoint https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/token/introspect&#x000A;OIDCOAuthSSLValidateServer    Off&#x000A;OIDCOAuthIntrospectionEndpointParams token_type_hint=access_token&#x000A;OIDCOAuthClientID ovirt-engine&#x000A;OIDCOAuthClientSecret c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a&#x000A;OIDCOAuthRemoteUserClaim sub&#x000A;&#x000A;<span class="nt">&lt;LocationMatch</span> <span class="err">^/</span><span class="na">ovirt-engine</span><span class="err">/</span><span class="na">api</span><span class="nt">&gt;</span>&#x000A;   AuthType oauth20&#x000A;   Require valid-user&#x000A;<span class="nt">&lt;/LocationMatch&gt;</span>&#x000A;&#x000A;</code></pre></div>
+<p>Create /etc/ovirt-engine/extensions.d/openidc-authn.properties</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = openidc-authn&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn&#x000A;ovirt.engine.aaa.authn.profile.name = openidchttp&#x000A;ovirt.engine.aaa.authn.authz.plugin = openidc-authz&#x000A;ovirt.engine.aaa.authn.mapping.plugin = openidc-http-mapping&#x000A;config.artifact.name = HEADER&#x000A;config.artifact.arg = OIDC_CLAIM_preferred_username&#x000A;</code></pre></div>
+<p>Create /etc/ovirt-engine/extensions.d/openidc-http-mapping.properties</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = openidc-http-mapping&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping&#x000A;config.mapAuthRecord.type = regex&#x000A;config.mapAuthRecord.regex.mustMatch = false&#x000A;config.mapAuthRecord.regex.pattern = ^(?&lt;user&gt;.*?)((\\\\(?&lt;at&gt;@)(?&lt;suffix&gt;.*?)@.*)|(?&lt;realm&gt;@.*))$&#x000A;config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}&#x000A;</code></pre></div>
+<p>Create /etc/ovirt-engine/extensions.d/openidc-authz.properties</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ovirt.engine.extension.name = openidc-authz&#x000A;ovirt.engine.extension.bindings.method = jbossmodule&#x000A;ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc&#x000A;ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthzExtension&#x000A;ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz&#x000A;config.artifact.name.arg = OIDC_CLAIM_preferred_username&#x000A;config.artifact.groups.arg = OIDC_CLAIM_groups&#x000A;config.globals.baseDN.simple_baseDN = dc=example,dc=com&#x000A;</code></pre></div>
+<p>Create 99-enable-external-auth.conf in /etc/ovirt-engine/engine.conf.d/</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>ENGINE_SSO_ENABLE_EXTERNAL_SSO=true&#x000A;ENGINE_SSO_EXTERNAL_SSO_LOGOUT_URI="${ENGINE_URI}/callback"&#x000A;</code></pre></div>
+<p>Create 99-config-external-auth.conf in /etc/ovirt-engine/engine.conf.d/</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>EXTERNAL_OIDC_USER_INFO_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/userinfo&#x000A;EXTERNAL_OIDC_TOKEN_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/token&#x000A;EXTERNAL_OIDC_LOGOUT_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/logout&#x000A;EXTERNAL_OIDC_CLIENT_ID=ovirt-engine&#x000A;EXTERNAL_OIDC_CLIENT_SECRET="c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a"&#x000A;EXTERNAL_OIDC_HTTPS_PKI_TRUST_STORE="/home/cacerts"&#x000A;EXTERNAL_OIDC_HTTPS_PKI_TRUST_STORE_PASSWORD=""&#x000A;EXTERNAL_OIDC_SSL_VERIFY_CHAIN=false&#x000A;EXTERNAL_OIDC_SSL_VERIFY_HOST=false&#x000A;</code></pre></div>
+<p>Restart ovirt-engine and httpd</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl restart httpd&#x000A;systemctl restart ovirt-engine&#x000A;</code></pre></div>
+<h2 id="test-the-setup">Test the setup</h2>
+
+<p>Obtain token from engine</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>curl -k -H "Accept: application/json" 'https://engineopenid.example.com/ovirt-engine/sso/oauth/token?grant_type=password&amp;username=user1@openidchttp&amp;password=123456&amp;scope=ovirt-app-api'&#x000A;</code></pre></div>
+<p>Use token to access api</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>curl -v -k -H "Authorization: Bearer $1" -L https://engineopenid.rnori.redhat.com/ovirt-engine/api&#x000A;</code></pre></div>
+<p>Using python SDK to access engine, SDK directly obtains token from engine and doesn’t have to deal with Keycloak</p>
+<div class="highlight"><pre class="highlight plaintext"><code>import logging&#x000A;import pdb&#x000A;import ovirtsdk4 as sdk&#x000A;import ovirtsdk4.types as types&#x000A;&#x000A;logging.basicConfig(level=logging.DEBUG, filename='example.log')&#x000A;&#x000A;# This example will connect to the server and print the names and identifiers of all the data centers and virtual machines:&#x000A;&#x000A;# Create the connection to the server:&#x000A;connection = sdk.Connection(&#x000A;    url='https://engineopenid.example.com/ovirt-engine/api',&#x000A;    username='user1@openidchttp',&#x000A;    password='123456',&#x000A;    debug=True,&#x000A;    log=logging.getLogger(),&#x000A;    insecure=True&#x000A;)&#x000A;&#x000A;# Verify connection&#x000A;if connection.test(raise_exception=False):&#x000A;    print("Connection works.")&#x000A;else:&#x000A;    print("Connection doesn't work.")&#x000A;&#x000A;# Get the reference to the "vms" service:&#x000A;dcs_service = connection.system_service().data_centers_service()&#x000A;&#x000A;# Use the "list" method of the "vms" service to list all the virtual machines of the system:&#x000A;dcs = dcs_service.list()&#x000A;&#x000A;# Print the virtual machine names and identifiers:&#x000A;for dc in dcs:&#x000A;  print("%s " % (dc.name))&#x000A;&#x000A;# Get the reference to the "vms" service:&#x000A;vms_service = connection.system_service().vms_service()&#x000A;&#x000A;# Use the "list" method of the "vms" service to list all the virtual machines of the system:&#x000A;vms = vms_service.list()&#x000A;&#x000A;# Print the virtual machine names and identifiers:&#x000A;for vm in vms:&#x000A;  print("%s: %s" % (vm.name, vm.id))&#x000A;&#x000A;# Close the connection to the server:&#x000A;connection.close()&#x000A;</code></pre></div>
+<p>Login to webadmin, user1 belongs to group ovirt-administrator in ldap, so user1 should be able to login to webadmin without any additional permission settings.</p>
+
+<h2 id="configuring-ovn">Configuring OVN</h2>
+
+<p>Configuring ovn requires to create 20-setup-ovirt-provider-ovn.conf config file under /etc/ovirt-provider-ovn/conf.d/ with the contents. Where user1 belongs to ldap group ovirt-administrator and openidchttp is the profile configured for aaa-ldap-misc</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[OVIRT]&#x000A;ovirt-admin-user-name=user1@openidchttp&#x000A;</code></pre></div>
+<p>Restart ovirt-provider-ovn</p>
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl restart ovirt-provider-ovn&#x000A;</code></pre></div>
+<p>Login in webadmin to update the password for ovn under Administration -&gt; Providers</p>
+
+<p><img alt="" width="808" height="566" src="/images/../images/blog/2019-01-22/providers_passwd.png?1560777613" /></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/aaa.html">AAA</a></li>
+<li><a href="../../tag/ldap.html">LDAP</a></li>
+<li><a href="../../tag/oidc.html">OIDC</a></li>
+<li><a href="../../tag/sso.html">SSO</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2019-01-22-sso-keycloak-ovirt-openidc-389ds.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2019-01-22-sso-keycloak-ovirt-openidc-389ds.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 22 Jan 2019 17:34 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DetailedFloatingDisk &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-floating-disk">Detailed Floating Disk</h1>
+
+<h2 id="floating-disk">Floating Disk</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>Floating disk - a disk that is not attached to any VM.
+This feature covers the management and usage of disks in floating state.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Feature owner: Daniel Erez (derez)</p>
+
+    <ul>
+      <li>
+        <p>GUI Component owner: Daniel Erez (derez)</p>
+      </li>
+      <li>
+        <p>REST Component owner: Michael Pasternak (mpasternak)</p>
+      </li>
+      <li>
+        <p>Engine Component owner: Maor Lipchuk (mlipchuk)</p>
+      </li>
+      <li>
+        <p>QA Owner: Yaniv Kaul (ykaul)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: derez@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release:</li>
+  <li>Status: Released</li>
+  <li>Last updated date: Sun January 25 2011</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>The feature introduces a significant improvement to oVirt compatibility and flexabilty regarding disks usage. It provides administration and management functionalities for floating disks.
+A floating disk should behave as a flexible independent entity that can be attached to any VM. Any virtual disk can be in a floating state - by unattaching the disk from the VM/s.
+Supporting a floating state for disks is essential to derived features (e.g. 'Shared RAW Disk' and 'Direct LUN Disk') and dependent implementations (e.g. application clustering, shared data warehouse).</p>
+
+<h4 id="entity-description">Entity Description</h4>
+
+<h5 id="disk">Disk</h5>
+
+<ul>
+  <li>Floating state should be added to disk entity - floating / not floating.</li>
+  <li>Name and Description should be added to disk entity.</li>
+  <li>Disk must be a searchable entity for providing search/sort/display capabilities under 'Virtual Disks' main tab.</li>
+  <li>Open issue: adding an indication whether the disk is originated from a VM or a template (useful for filtering 'Virtual Disks' sub-tabs).</li>
+</ul>
+
+<h4 id="functionality">Functionality</h4>
+
+<ul>
+  <li>A floating disk can be attached to any VM (or multiple VMs in case of a Shared Disk).</li>
+  <li>Detaching a disk from a VM will result in a floating disk creation (i.e. the disk's state will be updated to 'floating').</li>
+  <li>A disk that is based on a thinly provisioned template can't be detached (i.e. 'floating' is not applicable state for it).</li>
+  <li>A floating disk can be moved between storage domains.</li>
+  <li>Export/Import - currently not supported.</li>
+</ul>
+
+<h4 id="installationupgrade">Installation/Upgrade</h4>
+
+<ul>
+  <li>Installation
+    <ul>
+      <li>New/Edit disk:
+        <ul>
+          <li>Should enforce the user to enter a unique (in VM context) name.</li>
+          <li>New optional field - Description.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Upgrade
+    <ul>
+      <li>Disk description should remain empty.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="user-experience">User Experience</h4>
+
+<h5 id="administrator-portal">Administrator Portal</h5>
+
+<ul>
+  <li>CRUD - Introducing a new 'Virtual Disks' main tab
+    <ul>
+      <li>Contains a list of all the disks in the system (except templates disk) - sortable/searchable by Floating/Shared/Managed attributes.</li>
+      <li>Actions - at first stage, only a few actions will be included (first subset will probably include 'Remove Disk')</li>
+      <li>Includes the following sub-tabs:
+        <ul>
+          <li>General
+            <ul>
+              <li>Additional info on the selected Disk (type/interface/etc).</li>
+            </ul>
+          </li>
+          <li>Virtual Machines (visible for disks that reside in VMs):
+            <ul>
+              <li>List of Virtual Machines to which the selected Disk is attached.</li>
+              <li>Actions:
+                <ul>
+                  <li>Attach - dialog with a list of available VMs.</li>
+                  <li>Detach - detaches the selected Disk from the selected VM.</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Each row is composed of the following columns:</li>
+    </ul>
+
+    <p>VM, Name, Storage Domain, Description, Size, Actual Size, Allocation,Creation Date, Floating(Yes/No), Shared(Yes/No), Managed(Yes/No). </p>
+  </li>
+  <li>VMs -&gt; Disks sub-tab
+    <ul>
+      <li>Attach/Detach all shared and/or floating disks.</li>
+      <li>Edit/Remove disks (need to warn user in case disk is attached to more VMs).</li>
+      <li>Move disks between storage domains.</li>
+    </ul>
+  </li>
+  <li>Open Issue: Tree
+    <ul>
+      <li>'Resources' link under 'Storage' node - invokes a search of all the Floating/Shared disks in the Data Center.</li>
+      <li>'Free Disks' link under a new 'Resources' node - invokes a search of all the Floating/Shared non-managed (i.e. direct-luns) disks.</li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="user-portal">User Portal</h5>
+
+<p>The Power User Portal should allow the following operations:</p>
+
+<ul>
+  <li>
+    <p>Attach/Detach only floating disks to a VM (through disks sub-tab).</p>
+
+    <p> Note:
+    For now, premissions for disk entities will <em>not</em> be supported.
+    Consequently, availabilty of disks will be deterimined by their type (i.e. users can attach only floating disks).</p>
+  </li>
+</ul>
+
+<h4 id="search">Search</h4>
+
+<p>Search of disks should retrieve the following fields:</p>
+
+<ul>
+  <li>VM Name (For floating will return detached)</li>
+  <li>Disk Name</li>
+  <li>Description</li>
+  <li>Size</li>
+  <li>Actual Size</li>
+  <li>Creation Date</li>
+  <li>Bootable (True / False)</li>
+  <li>Shared (True / False)</li>
+  <li>quota name?</li>
+  <li>quota id?</li>
+</ul>
+
+<p>Should consider adding the optional fields:</p>
+
+<ul>
+  <li>Direct LUN?</li>
+  <li>Interface?</li>
+  <li>Allocation?</li>
+</ul>
+
+<p>The return value should be sorted by VM Name and Disk Name.
+Search auto completion will be supporting the following properties:</p>
+
+<ul>
+  <li>Disk name</li>
+  <li>VM name</li>
+  <li>bootable by searching for bootable = true</li>
+  <li>shared by searching for shared = true</li>
+  <li>floating disks by searching for floating = true</li>
+</ul>
+
+<h5 id="mockups">Mockups</h5>
+
+<p>The following UI mockups contain guidelines for the different screens and wizards:</p>
+
+<p><img alt="" width="1023" height="590" src="/images/wiki/VirtualDisks_MainTab_VMs.png?1560777612" /></p>
+
+<p><img alt="" width="1023" height="590" src="/images/wiki/VirtualDisks_MainTab_General.png?1560777612" /></p>
+
+<p><img alt="" src="/images/wiki/attach_disk_maintab_dialogue.png" /></p>
+
+<p><img alt="" width="811" height="522" src="/images/wiki/disks_subtab.png?1560777612" /></p>
+
+<p><img alt="" src="/images/wiki/disks_subtab_attach_disk_dialogue.png" /></p>
+
+<h3 id="engine">Engine</h3>
+
+<ul>
+  <li>Add disk
+    <ul>
+      <li>When adding a disk, the vm id should be optional, if the id of the VM is provided and the VM is down then the disk should be attached(plugged) to the VM, but if the vm is up, the operation should be blocked.</li>
+      <li>The disk should be locked when adding it, until the create process is ended in VDSM.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Remove Disk
+    <ul>
+      <li>When removing a disk, the disk should be locked.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Activate/Deactivate disk
+    <ul>
+      <li>Disk should not be locked when activate deactivate a disk same for attach detach</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>move/copy
+    <ul>
+      <li>Currently floating disk should not be moved.</li>
+      <li>Disk should be locked while move or copy.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h3>
+
+<p>Affected oVirt projects:</p>
+
+<ul>
+  <li>API</li>
+  <li>CLI</li>
+  <li>Engine-core</li>
+  <li>Webadmin</li>
+  <li>User Portal</li>
+</ul>
+
+<p>Quota should be taken into consideration for every new feature that involves consumption of resources.
+Shared raw disk will be dependent on floating disk.</p>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p><a href="/develop/release-management/features/storage/floatingdisk/">Features/FloatingDisk</a></p>
+
+<h3 id="future-work">Future Work</h3>
+
+<ul>
+  <li>Consider adding permissions support to disks entities.</li>
+  <li>Adding templates disks to main tab.</li>
+</ul>
+
+<h3 id="open-issues">Open Issues</h3>
+
+<ul>
+  <li>Detaching a disk with a snapshot history: blocked to the user or collapsing and marking the snapshot as broken ?</li>
+  <li>Disks main tab -&gt; VMs sub-tab - should it include Plugged/UnPlugged status column ?</li>
+  <li>Permissions for actions on disks - who is permitted to invoke: Attach/Detach/Edit/Delete/Move ?</li>
+  <li>More actions should be added to Disks main tab: New/Edit/Remove/Move/etc.</li>
+</ul>
+
+<p><a href="Category: Feature">Category: Feature</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/detailedfloatingdisk.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/detailedfloatingdisk.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

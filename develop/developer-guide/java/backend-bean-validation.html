@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Backend Bean Validation &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/java/">Java</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="backend-bean-validation-how-to">Backend Bean Validation How-to</h1>
+
+<p>Adding validation on beans used in the backend is easy and should be adopted by everyone.
+Using the <a href="http://beanvalidation.org/1.0/spec/">jsr 303</a> and its Jboss reference implementation <a href="http://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#d0e2704">hibernate validator</a>, the work is really clean and quick.</p>
+
+<h2 id="where-is-it-used-currently-in">Where is it used currently in</h2>
+
+<p>To validate the command inputs parameters classes i.e. all the descendants of <strong>VdcActionParametersBase</strong> and the beans they are composed from. The validation is fits into the execution before CanDoAction phase:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Authorization check &#x000A;         |&#x000A;          -&gt; Backward Compatibility check&#x000A;                       |&#x000A;                        -&gt; *Validate Inputs*&#x000A;                                |&#x000A;                                 -&gt; Can do action&#x000A;</code></pre></div>
+<h2 id="how-to-annotate-my-command-inputs">How to annotate my command inputs</h2>
+
+<h3 id="basic-usage">Basic Usage</h3>
+
+<p>lets look at existing validation of a hot plugging a disk to a VM. The command involved is ` HotPlugDiskToVM ` which uses ` HotPlugDiskToVmParameter ` and
+we want to validate to target ` diskId ` will never be null.</p>
+
+<p>the required constraint annotation is:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  public class HotPlugDiskToVmParameters extends VmDiskOperatinParameterBase {&#x000A;     @NotNull&#x000A;     private Guid diskId;&#x000A;</code></pre></div>
+<p>that's it. The rest is done by ` CommandBase.validateInputs() ` !</p>
+
+<h3 id="complex-hierarchy-validation---valid">complex hierarchy validation - @Valid</h3>
+
+<p>if you need to validate a member inside an object passed:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  class VmManagementParameterBase&#x000A;  @Valid&#x000A;  private VmStatic vmStatic&#x000A;</code></pre></div>
+<p>and in VmStatic class</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  class VmStatic&#x000A;  @Size(min = 1)&#x000A;  private Name name;&#x000A;</code></pre></div>
+<h3 id="control-when-to-use-a-validation---validation-groups">Control when to use a validation - Validation Groups</h3>
+
+<p>An annotated parameter class could be shared by one or more Commands thus the validation proposed by the annotation doesn't necessarily fit into all.</p>
+
+<p>example: we need to validate storage_domain_static name when its passed in a parameter class
+for adding storage or updating it. Other Commands that has it in their params should ignore those
+validation constraints.</p>
+
+<p>To achieve that we use Validation Groups. Its a marker interface passed to the validator and make it look only for validation marked with those interfaces.</p>
+
+<p>1st annotate and specify a new marker interface in ` groups `</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   class StorageDomainManagementParameter extends StorageDomainParametersBase {&#x000A;     @Valid&#x000A;     private storage_domain_static privateStorageDomain;&#x000A;  ...&#x000A;   @ValidName(message = "VALIDATION.STORAGE_DOMAIN.NAME.INVALID", groups = { CreateEntity.class, UpdateEntity.class })&#x000A;   private String name = "";&#x000A;</code></pre></div>
+<p>The marker interface:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  import javax.validation.groups.Default;&#x000A;  public interface CreateEntity extends Default { }&#x000A;   &#x000A;</code></pre></div>
+<p>now state what validation groups your command needs by invoking addValidationGroups or overriding addValidationGroup method</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  class CreateFooEntityCommand {&#x000A;  public CreateFooEntityCommand() {&#x000A;      addValidationGroup(CreateEntity.class);&#x000A;</code></pre></div>
+<p>or</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  @Override&#x000A;     protected List`&lt;Class&lt;?&gt;`&gt; getValidationGroups() {&#x000A;         return addValidationGroup(CreateEntity.class);&#x000A;     }&#x000A;</code></pre></div>
+<h3 id="custom-candomessages-in-validations">Custom canDoMessages in validations</h3>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  @NotNull(message = "VALIDATION_NULL_VM_GUID"&#x000A;  private Guid vmId&#x000A;&#x000A;  AppErrors.properties:&#x000A;  VALIDATION_NULL_VM_GUID=Null VM id is prohibited here.&#x000A;</code></pre></div>
+<ul>
+  <li>more on <a href="/wiki/Engine_Adding_Messages">creating error messages in ovirt</a></li>
+</ul>
+
+<h2 id="further-readings">Further readings</h2>
+
+<p>Read on the <a href="http://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-defineconstraints-builtin">built-in constrains</a> you can use.</p>
+
+<p>Read on how to <a href="http://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#validator-customconstraints">create your own custom constraints</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/java/backend-bean-validation.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/java/backend-bean-validation.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

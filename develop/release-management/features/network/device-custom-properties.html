@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Device Custom Properties &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="device-custom-properties">Device Custom Properties</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Define special parameters per VM virtual device, and pass them down to vdsm hooks when a VM is started or migrated, and when a device is plugged or unplugged from the VM.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Assaf Muller (amuller)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#109;&#117;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#109;&#117;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: amuller at #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>oVirt-3.3</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Just like we can define VM-wide custom properties, we would like to set per-device ones. This would allow users to pass special parameters to connect a specific vNIC to a funky host network.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>oVirt currently supports only one type of network connectivity: a vNIC is connected by a Linux bridge to a pre-existing host NIC, that is connected to the outer world. Users want to allow funkier types of connection, for example:</p>
+
+<ul>
+  <li>Create a host nic (via Mellanox UFM) just in time, and connect it directly to the vNIC.</li>
+  <li>Request OpenStack's Quantum to connect a vNIC to one of its defined networks.</li>
+  <li>Pass non-standard QoS setting for a vNIC.</li>
+</ul>
+
+<p>Similarly, users may want to connect a virtual disk to an "exotic" storage server, that requires special actions just before the VM is started.</p>
+
+<p>These extensions, and many others, can be made available by allowing per-device custom properties. Device custom properties are just like VM-wide ones, only that they are attached to a specific device, and can take effect when the device is hot-plugged.</p>
+
+<h2 id="user-experience">User Experience</h2>
+
+<p>Under the Networks main tab -&gt; Profiles subtab:</p>
+
+<p><img alt="" width="510" height="346" src="/images/wiki/NetworkCustomProperties.png?1560777613" /></p>
+
+<h2 id="implementation">Implementation</h2>
+
+<h4 id="vdsm">Vdsm</h4>
+
+<p>This feature affects the following Vdsm verbs:</p>
+
+<ul>
+  <li>vmCreate</li>
+  <li>vmDestroy</li>
+  <li>vmHotplugNic</li>
+  <li>vmHotunplugNic</li>
+  <li>vmHotplugDisk</li>
+  <li>vmHotunplugDisk</li>
+  <li>vmMigrate</li>
+  <li>vmUpdateDevice</li>
+</ul>
+
+<p>Each of these verbs accepts a dictionary (of type VmInterfaceDevice) that describes the relevant device (note that vmCreate accepts a <strong>list</strong> of devices). A new optional key "custom" would be added to VmInterfaceDevice. Its value is a dictionary of custom properties and their string value.</p>
+
+<p>Vdsm would pass device custom properties to its hook scripts.</p>
+
+<p>In hooks scripts of per-device verbs (nic hotplug, for example) the properties would be passed as environment variables of the hook scripts being executed. For vmCreate, two new hook events were created. Hook scripts called before_device_create and after_device_create would be executed per each device that has "custom" in its VmInterfaceDevice device definition.</p>
+
+<p>The reasoning behind the vmCreate behavior is that we should pass different properties for each device. At the stage that before_vm_create hook is executed, the alias of devices is not necessarily known, and the ordering of devices may be changed by other hooks. Thus we have no means to designate which property belong to which device - save for executing a different script for each device, passing that device's xml definition.</p>
+
+<h4 id="dependencies--related-features">Dependencies / Related Features</h4>
+
+<p>With this feature, Engine would keep track of per-device custom properties.</p>
+
+<p>We will insert the custom properties column into the vm_device table. Custom properties will be saved at the device level to keep the implementation generic and future proof.</p>
+
+<h4 id="configuration">Configuration</h4>
+
+<p>Not all custom properties are valid for every setups - they depend on the hooks installed on hosts. Therefore, just like with per-VM properties, a user would have to define the valid properties and their valid values in vdc_options. Note that properties likely to be valid for an interface, but invalid for a disk. The option_name value will be DeviceCustomProperties, and its corresponding option_value will look like:</p>
+
+<p>[{type=disk; prop={value1=regex1; …; valueN=regexN}};{type=interface; prop={value1=regex1; …; valueN=regexN}};…]</p>
+
+<p>Following device types are supported:</p>
+
+<ul>
+  <li>disk</li>
+  <li>interface</li>
+  <li>video</li>
+  <li>sound</li>
+  <li>controller</li>
+  <li>balloon</li>
+  <li>channel</li>
+  <li>console</li>
+  <li>smartcard</li>
+  <li>watchdog</li>
+</ul>
+
+<p>The configuration values should be exposed to the engine-config tool.</p>
+
+<h4 id="crud">CRUD</h4>
+
+<p>Add a custom_properties column to vm_device of type TEXT.</p>
+
+<p>Every stored procedure and view that depend on vm_device need to be updated. The is_plugged property of a device can serve as an example, as the is_plugged column resides in the vm_device table. vm_interface_view is a view that joins on vm_device and vm_interface that displays the information about a NIC, including whether it is plugged in or not. Similarly, custom_properties needs to be added to vm_interface_view and similar disk views which are affected.</p>
+
+<h4 id="business-entities">Business Entities</h4>
+
+<p>Add a string field called customProperties to VmNetworkInterface and to the corresponding disk business entity.</p>
+
+<h4 id="daos">DAOs</h4>
+
+<p>Update the relevant row mappers at VmDeviceDao, VmNetworkInterfaceDao and vmDiskDao to map from the JDBC result set to the new business entity fields. Similarly, update the save and update methods to include the new field when building the getCustomMapSqlParameterSource object.</p>
+
+<h4 id="business-logic">Business Logic</h4>
+
+<p>Each bll command that adds or updates a NIC or a disk should include custom properties validation during its canDoAction stage.</p>
+
+<h4 id="vdsbroker">VdsBroker</h4>
+
+<p>Update all relevant VdsBroker commands that involve verbs related to adding, removing and altering disks and NICs.</p>
+
+<h4 id="rest">REST</h4>
+
+<p>Add a custom_properties field to api.xsd for NICs and disks: <custom_properties></custom_properties></p>
+<custom_property value="123" name="sndbuf" />
+
+<custom_property value="true" name="sap_agent" />
+
+<p>&lt;/custom_properties&gt;</p>
+
+<p>And subsequently fix the NicMapper to map properly from VmInterface to NIC and vice versa.</p>
+
+<h4 id="backwards-compatibility">Backwards Compatibility</h4>
+
+<p>As this is a 3.3 feature, all 3.2 (and down) cluster related entities should not be allowed (at the GUI level ) to customize device properties. In the engine special care needs to be taken at canDoAction to disallow custom device properties for 3.2 and down.</p>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Use the engine-config tool to insert the property 'label': 'red' to vNics, and 'capped': 'True' to disks. Specify the regex on the 'capped' property to 'True</td>
+          <td>False'</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>For example: engine-config -s CustomDeviceProperties="{type=interface;prop={speed=^([0-9]{1,5})$;duplex=^(full</td>
+          <td>half)$}}" will set two custom properties for vNics: speed and duplex.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Verify that the properties were inserted into the DB</li>
+  <li>From the Engine, edit a vNic and place the label property, and the capped property on a disk (Make sure the cluster level is 3.3+)</li>
+  <li>Verify that you may only place the label property on vNics and not disks, and the capped property on disks and not vNics.</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Verify that the 'True</td>
+          <td>False' regex works properly on 'capped'</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Examine the vdsm.log to verify that the custom properties were sent during the updateDevice verb</li>
+  <li><a href="Vdsm_Hooks">Create a new VDSM hook</a> that occurs during before updateDevice that prints the value for the 'label' and 'capped' environment variables, and the domxml of the device the hook received</li>
+  <li>Verify that when the device received is a nic, 'red' is printed, and when the device received is a disk, 'True' is printed</li>
+  <li>Finally, use the same hook for all relevant hook points: vmCreate, vmHotplugNic, vmHotunplugNic, vmHotplugDisk, vmHotunplugDisk, vmMigrate</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>Benoit ML asking for per-vNIC custom properties: <a href="https://lists.ovirt.org/pipermail/users/2012-November/010857.html">https://lists.ovirt.org/pipermail/users/2012-November/010857.html</a></li>
+  <li><a href="/develop/release-management/features/network/osn-integration/">Features/Quantum_Integration</a></li>
+  <li>Almost any interesting hook for <a href="https://bugzilla.redhat.com/show_bug.cgi?id=908656">hotplug disk</a> is going to require per-disk triggering proprty</li>
+</ul>
+
+<h2 id="comments-and-discussion">Comments and Discussion</h2>
+
+<ul>
+  <li>On the arch@ovirt.org mailing list.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/device-custom-properties.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/device-custom-properties.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 22 May 2018 09:18 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Configuring Storage &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-9-configuring-storage">Chapter 9: Configuring Storage</h1>
+
+<h2 id="introduction-to-storage">Introduction to Storage</h2>
+
+<p>A storage domain is a collection of images that have a common storage interface. A storage domain contains complete images of templates and virtual machines (including snapshots), ISO files, and metadata about themselves. A storage domain can be made of either block devices (SAN - iSCSI or FCP) or a file system (NAS - NFS, GlusterFS, or other POSIX compliant file systems).</p>
+
+<p>There are Installing_the_Websocket_Proxy_on_a_Separate_Machine types of storage domain:</p>
+
+<ul>
+  <li>
+    <p><strong>Data Domain:</strong> A data domain holds the virtual hard disks and OVF files of all the virtual machines and templates in a data center, and cannot be shared across data centers. Data domains of multiple types (iSCSI, NFS, FC, POSIX, and Gluster) can be added to the same data center, provided they are all shared, rather than local, domains.</p>
+
+    <p><strong>Important:</strong> You must have one host with the status of <strong>Up</strong> and have attached a data domain to a data center before you can attach an ISO domain and an export domain.</p>
+  </li>
+  <li>
+    <p><strong>ISO Domain:</strong> ISO domains store ISO files (or logical CDs) used to install and boot operating systems and applications for the virtual machines, and can be shared across different data centers. An ISO domain removes the data center's need for physical media. ISO domains can only be NFS-based. Only one ISO domain can be added to a data center.</p>
+
+    <p><strong>Important:</strong> ISO domains have been deprecated. ISO images should be uploaded directly to data domains from the Administration Portal.</p>
+
+    <p><strong>Important:</strong> If your host is booting from SAN storage and loses connectivity to the storage, the storage file systems become read-only and remain in this state after connectivity is restored.</p>
+
+    <p>To prevent this situation, Red Hat recommends adding a drop-in multipath configuration file for the boot LUN to ensure that it is queued when there is a connection:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # cat /etc/multipath/conf.d/host.conf&#x000A;    multipaths {&#x000A;        multipath {&#x000A;            wwid boot_LUN_wwid&#x000A;            no_path_retry queue&#x000A;        }&#x000A;</code></pre></div>  </li>
+</ul>
+
+<p>See the next section to attach existing FCP storage as a data domain. More storage options are available in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a>.</p>
+
+<h2 id="adding-fcp-storage">Adding FCP Storage</h2>
+
+<p>The oVirt platform supports SAN storage by creating a storage domain from a volume group made of pre-existing LUNs. Neither volume groups nor LUNs can be attached to more than one storage domain at a time.</p>
+
+<p>oVirt system administrators need a working knowledge of Storage Area Networks (SAN) concepts. SAN usually uses Fibre Channel Protocol (FCP) for traffic between hosts and shared external storage. For this reason, SAN may occasionally be referred to as FCP storage.</p>
+
+<p>The following procedure shows you how to attach existing FCP storage to your oVirt environment as a data domain. For more information on other supported storage types, see "Storage" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a>.</p>
+
+<p><strong>Adding FCP Storage</strong></p>
+
+<ol>
+  <li>
+    <p>Click the <strong>Storage</strong> → <strong>Domains</strong> to list all storage domains.</p>
+  </li>
+  <li>
+    <p>Click <strong>New Domain</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> of the storage domain.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Data Center</strong> drop-down menu to select an FCP data center.</p>
+
+    <p>If you do not yet have an appropriate FCP data center, select <code>(none)</code>.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Domain Function</strong> and the <strong>Storage Type</strong> from the drop-down menus. The storage domain types that are not compatible with the chosen data center are not available.</p>
+  </li>
+  <li>
+    <p>Select an active host in the <strong>Use Host</strong> field. If this is not the first data domain in a data center, you must select the data center's SPM host.</p>
+
+    <p><strong>Important:</strong> All communication to the storage domain is through the selected host and not directly from the oVirt Engine. At least one active host must exist in the system and be attached to the chosen data center. All hosts must have access to the storage device before the storage domain can be configured.</p>
+  </li>
+  <li>
+    <p>The <strong>New Domain</strong> window automatically displays known targets with unused LUNs when <strong>Data / Fibre Channel</strong> is selected as the storage type. Select the <strong>LUN ID</strong> check box to select all of the available LUNs.</p>
+  </li>
+  <li>
+    <p>Optionally, you can configure the advanced parameters.</p>
+
+    <p>i. Click <strong>Advanced Parameters</strong>.</p>
+
+    <p>ii. Enter a percentage value into the <strong>Warning Low Space Indicator</strong> field. If the free space available on the storage domain is below this percentage, warning messages are displayed to the user and logged.</p>
+
+    <p>iii. Enter a GB value into the <strong>Critical Space Action Blocker</strong> field. If the free space available on the storage domain is below this value, error messages are displayed to the user and logged, and any new action that consumes space, even temporarily, will be blocked.</p>
+
+    <p>iv. Select the <strong>Wipe After Delete</strong> check box to enable the wipe after delete option. This option can be edited after the domain is created, but doing so will not change the wipe after delete property of disks that already exist.</p>
+
+    <p>v. Select the <strong>Discard After Delete</strong> check box to enable the discard after delete option. This option can be edited after the domain is created. This option is only available to block storage domains.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to create the storage domain and close the window.</p>
+  </li>
+</ol>
+
+<p>The new FCP data domain displays in <strong>Storage</strong> → <strong>Domains</strong>. It will remain with a <code>Locked</code> status while it is being prepared for use. When ready, it is automatically attached to the data center.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Adding_a_Host_to_the_oVirt_Engine">Chapter 8: Adding a Host to the oVirt Engine</a> <br />
+<strong>Next:</strong> <a href="appe-Changing_the_Permissions_for_the_Local_ISO_Domain">Appendix A: Changing the Permissions for the Local ISO Domain</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/chap-configuring_storage">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/chap-Configuring_Storage.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/chap-Configuring_Storage.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 11 Feb 2019 14:27 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

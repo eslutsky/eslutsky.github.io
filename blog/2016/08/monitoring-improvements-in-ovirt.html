@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Monitoring Improvements in oVirt &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Arik Hadas' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Monitoring Improvements in oVirt' property='og:title'>
+<meta content='Recently I&#39;ve been working on improving the scalability of monitoring in oVirt. That is, how to make oVirt-engine, the central management unit in the oVirt management system, able to process and report changes in a growing number of virtual machines that are running in a data center. In this post, I will elaborate on what we did and share some measurements.' property='og:description'>
+<meta content='http://ovirt.org/blog/2016/08/monitoring-improvements-in-ovirt.html' property='og:url'>
+<meta content='2016-08-03T17:25:00Z' property='article:published_time'>
+<meta content='arik' property='article:author:username'>
+<meta content='Monitoring' property='article:tag'>
+<link href='/blog/tag/monitoring.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Performance' property='article:tag'>
+<link href='/blog/tag/performance.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Scale' property='article:tag'>
+<link href='/blog/tag/scale.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Monitoring Improvements in oVirt' name='twitter:title'>
+<meta content='Recently I&#39;ve been working on improving the scalability of monitoring in oVirt. That is, how to make oVirt-engine, the central management unit in the oVirt management system, able to process and report changes in a growing number of virtual machines that are running in a data center. In this post, I will elaborate on what we did and share some measurements.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2016</li>
+<li class='active'>08</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Monitoring Improvements in oVirt
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/arik.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/arik/">Arik Hadas</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2016-08-03T17:25:00Z'>
+Wednesday  3 August 2016
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Recently I've been working on improving the scalability of monitoring in oVirt. That is, how to make oVirt-engine, the central management unit in the oVirt management system, able to process and report changes in a growing number of virtual machines that are running in a data center. In this post, I will elaborate on what we did and share some measurements.</p>
+
+<p></p>
+
+<h2 id="monitoring-in-ovirt">Monitoring in oVirt</h2>
+
+<p>In short, <a href="/">oVirt</a> is an open-source management platform for virtual data centers. It allows centralized management of a distributed system of virtual machines, compute, storage, and networking resources.</p>
+
+<p>In this post, the term <em>monitoring</em> refers to the mechanism that oVirt-engine, the central component in the oVirt distributed system, uses to collect run-time data from hosts that virtual machines are running on and report it to clients. Some examples of such run-time data include:</p>
+
+<ul>
+  <li>Statuses of hosts and virtual machines (VMs)</li>
+  <li>Statistics such as memory and CPU consumption</li>
+  <li>Information about devices that are attached to VMs and hosts</li>
+</ul>
+
+<h2 id="notable-past-changes-in-the-monitoring-code">Notable Past Changes in the Monitoring Code</h2>
+
+<p>In previous versions of oVirt, the monitoring code has undergone some improvements as well.</p>
+
+<h3 id="unchangablebyvdsm"><code>@UnchangableByVdsm</code></h3>
+
+<p>Generally speaking, the monitoring gets run-time data reported from the hosts, compares it with the previously known data and process the changes.</p>
+
+<p>In order to distinguish dynamic data that is reported by the hosts and dynamic data that is not reported by the hosts, we added in oVirt 3.5 an annotation called <code>@UnchangableByVdsm</code> that should be put on every field in the <code>VmDynamic</code> class not expected to be reported by the hosts. This was supposed to eliminate redundant saves of unchanged run-time data to the database.</p>
+
+<h3 id="split-hosts-and-vms-monitoring">Split Hosts and VMs Monitoring</h3>
+
+<p>Previously, before monitoring a host, we locked the host and released it only after the host-related information and all information of VMs running on the host was processed. As a result, when doing an operation on a running VM, the host that the VM ran on was locked.<br />
+A major change in oVirt 3.5 was a refactoring the monitoring to use per-VM lock instead of the host lock while processing VM run-time data. That reduced the time that both monitoring and threads executing commands are locked.</p>
+
+<h3 id="introduction-of-events-based-protocol-with-hosts">Introduction of Events-Based Protocol with Hosts</h3>
+
+<p>A highly desirable enhancement came in oVirt 3.6, in which changes in VM run-time data are reported as events rather than by polling. In a typical data center many of the VMs are "stable," i.e., their status does not change much. In such environments, this change reduces the number of data sent on the wire and reduces the unnecessary processing in oVirt-engine.</p>
+
+<p>Note that not all monitoring cycles were replaced with events: on every 15 seconds (by default), oVirt-engine still polls the statuses of all VMs, including their statistics. These cycles are called "statistics cycles."</p>
+
+<h2 id="scope-of-this-work">Scope of this Work</h2>
+
+<p>An indication that monitoring is inefficient is when it works hard while the system is stable (I prefer the term "stable" over "idle" since the virtual machines could actually be in use). For example, when virtual machines don't change (no operation is done on these VMs and nothing in their environments is changed), one could expect the monitoring not to do anything except for processing and persisting statistics data (that is likely to change frequently).</p>
+
+<p>Unfortunately this was not the case in oVirt. The next figure shows the "self time" of hot-spots in the interaction with the database in oVirt 3.6 during the time an environment with one host and 6000 VMs was stable for one hour. I will elaborate on these numbers later on, but for now just note that the red color is the overall execution time of database queries/updates. The more red color we see, the more busy the monitoring.</p>
+
+<p><img alt="Execution time of DB queries in stable 3.6 environment" width="236" height="435" src="/images/monitoring-3.6-self_time.png?1560777613" /></p>
+
+<p>This work continues the effort to improve the monitoring in oVirt mentioned in the previous sub-section in order to address this particular problem. In the next section, I elaborate on the changes we did that lead to the reduced execution times shown in the next figure for the same enviroment and for the same time (look how much less red color!).</p>
+
+<p><img alt="Execution time of DB queries in stable 4.1 environment" width="227" height="433" src="/images/monitoring-master-self_time.png?1560777613" /></p>
+
+<p>This work:</p>
+
+<ul>
+  <li>Takes for granted that the monitoring in oVirt hinders its scalability.</li>
+  <li>Does not change hosts monitoring.</li>
+  <li>Does not refer to other optimizations we did that do not improve monitoring of a stable system.</li>
+</ul>
+
+<h2 id="changes-introduced">Changes Introduced</h2>
+
+<p>Here are the most recent changes to the monitoring code we have introduced.</p>
+
+<h3 id="not-processing-numa-nodes-data-when-not-needed">Not Processing numa Nodes Data When Not Needed</h3>
+
+<p>We saw that a significant effort was put to process run-time data of numa nodes.</p>
+
+<p>In terms of CPU time, 8.1% (which is 235 seconds) was wasted on getting all numa nodes of the host from the database and 5.9% (which is 170 seconds) was wasted on getting all numa nodes of VMs from the database. The overall CPU time spent on processing numa node data got up to 14.6%! This finding is similar to what we saw in profiling dump we got for other scaled environment.</p>
+
+<p>In terms of database interaction, getting this information is relatively cheap (the following are average numbers in micro-seconds):</p>
+
+<ul>
+  <li>261 to get numa nodes by host</li>
+  <li>259 to get assigned numa nodes</li>
+  <li>255 to get numa node CPU by host</li>
+  <li>246 to get numa node CPU by VM</li>
+  <li>242 to get numa nodes by VM</li>
+</ul>
+
+<p>But these queries are called many times so the overall portion of these calls is significant:</p>
+
+<ul>
+  <li>Getting numa nodes by host—3% (48,546 msec)</li>
+  <li>Getting assigned numa nodes—3% (48,201 msec)</li>
+  <li>Getting numa node CPU by host—3% (47,569 msec)</li>
+  <li>Getting numa node CPU by VM—2% (45,918 msec)</li>
+  <li>Getting numa nodes by VM—2% (45,041 msec)</li>
+</ul>
+
+<p>I used the term "wasted" because my host did not report any VM-related information about numa nodes! So in order to improve this, we changed the analysis of VM's data to skip processing (and fetching from the database) numa-related data if no such data is reported for a VM.</p>
+
+<h3 id="memoizing-hosts-numa-nodes">Memoizing Host's numa Nodes</h3>
+
+<p>But we cannot assume that hosts do not report numa nodes data for the VMs. So another improvement was to reduce the number of times it takes to query host's level numa nodes data—by querying it on per-host basis instead of per-VM. That's okay, since this data does not change while we process data received from the host. We used the memoization technique to cache this information during host monitoring cycle.</p>
+
+<h3 id="cache-vm-jobs">Cache VM jobs</h3>
+
+<p>Another surprising finding was to see that we put a not-negligible effort in processing and updating VM jobs (that is, jobs that represent live snapshot merges) without having a single job like that (the system is stable, remember?).</p>
+
+<p>It got up to 3.8% (111 sec) of the overall CPU time and 3% (47,140 msec) of the overall database interactions.</p>
+
+<p>Therefore, another layer of in-memory management of VM jobs was added. Only when this layers detects that information should be retrieved from the database (and not all the data is cached) it access the database.</p>
+
+<h3 id="reduce-number-of-updates-of-dynamic-vm-data">Reduce number of updates of dynamic VM data</h3>
+
+<p>Despite the use of <code>@UnchangableByVdsm</code>, I discovered that VM dynamic data (that includes for example, its status, IP of client console that is connected to it and so on) is updated. Again, no such update should occur in a stable system… the implications of this issue are significant because this is a per-VM operation, so the time it takes is accumulated and in our environment got to 6% (101 sec) of the overall database interactions.</p>
+
+<p>To solve this, <code>VmDynamic</code> was modified. Some of the fields that should not by compared against the reported data were marked with <code>@UnchangableByVdsm</code> and some fields that <code>VmStatistics</code> is a more appropriate place for them were moved.</p>
+
+<h3 id="split-vm-device-monitoring-from-vm-monitoring">Split VM Device Monitoring from VM Monitoring</h3>
+
+<p>Hosts report the hash of the devices of each VM and the monitoring of the VMs used to compare this hash against the hash that was reported before, and triggers a poll request for full VM data, that contains information of the devices, only when the hash is changed. Not only that the code became more complicated when it was tangled within other VM analysis computation, but a change in the hash triggered update of the whole VM dynamic data.</p>
+
+<p>Therefore, we split the VM devices monitoring into a separate module that caches the device hashes and by that reduce even further the number of updates of VM dynamic data.</p>
+
+<h3 id="lighter-dedicated-monitoring-views">Lighter, Dedicated Monitoring Views</h3>
+
+<p>Another observation from analyzing hot spots in the database interactions was that one of the queries we spend a lot of time on is the one for getting the network interface of the monitored VMs. This is a relatively cheap query, only 678 micro-seconds on average, but it is called per-VM that therefore accumulated to 8% (126 sec) of the overall database interactions.</p>
+
+<p>The way to improve it was by introducing another query that is based on a lighter view of network interfaces that contains only the information needed for the monitoring.</p>
+
+<p>This technique was also used to improve the query for all VMs running on a given host. The following output depicts how much lighter is the new view (vms_monitoring_view) than the previous view the monitoring used (vms):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>engine=&gt; explain analyze select * from vms where run_on_vds='043f5638-f461-4d73-b62d-bc7ccc431429';&#x000A; Planning time: 2.947 ms  &#x000A; Execution time: 765.774 ms&#x000A;engine=&gt; explain analyze select * from vms_monitoring_view where run_on_vds='043f5638-f461-4d73-b62d-bc7ccc431429';&#x000A; Planning time: 0.387 ms&#x000A; Execution time: 275.600 ms&#x000A;</code></pre></div>
+<p>This new view is used by the monitoring in oVirt 4.0, but as we will see later on the monitoring, in oVirt 4.1 won't use it anymore. Still, this new view is used in several other places instead of the costly 'vms' view.</p>
+
+<h3 id="in-memory-management-of-vm-statistics">In-memory Management of VM Statistics</h3>
+
+<p>The main argument for persisting data into a database is its ability to store information that should be recoverable after restart of the application. However, in oVirt the database is used many times in order to share data between threads and processes. This badly affects performance.</p>
+
+<p>VM statistics is a type of data that is not supposed to be recoverable after restart of the application. Thus, one could expect it not to be persisted in the database. But in order share the statistics with thread that queries VMs for clients and with DWH, it used to be persisted.</p>
+
+<p>As part of this work, VM statistics is no longer persisted into the database. They are now managed in-memory. Threads that query VMs for clients retrieve it from the memory, and for DWH we can dump the statistics in longer intervals to wherever it takes the statistics from. By not persisting the statistics, the number of saves to the database it reduced. In our environment it got to 2% (38,669 msec) of the overall database interactions. It also reduces the time it takes to query VMs for clients.</p>
+
+<h3 id="query-only-vm-dynamic-data-for-vm-analysis">Query Only VM-Dynamic Data for VM Analysis</h3>
+
+<p>So 'vms_monitoring_view' turned out to be much more efficient than 'vms' view as it returned only statistics, dynamic and static information of the VM (without additional information that is stored in different tables).</p>
+
+<p>But obviously querying only the dynamic data is much more efficient than using the vms_monitoring_view:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>engine=&gt; explain analyze select * from vms_monitoring_view where run_on_vds='043f5638-f461-4d73-b62d-bc7ccc431429';&#x000A; Planning time: 0.405 ms&#x000A; Execution time: 275.850 ms&#x000A;engine=&gt; explain analyze select * from vm_dynamic where run_on_vds='043f5638-f461-4d73-b62d-bc7ccc431429';&#x000A; Planning time: 0.109 ms&#x000A; Execution time: 2.703 ms&#x000A;</code></pre></div><p>So as part of this work, not only that VM statistics are no longer queried from the database but also the static data of the VM is no longer queried from the database by the monitoring. Each update is done through <code>VmManager</code> that caches only the information needed by the monitoring and the monitoring uses this data instead of getting it from the database. That way, only the dynamic data is queried from the database.</p>
+
+<h3 id="eliminate-redundant-queries-by-vm-pools-monitoring">Eliminate Redundant Queries by VM-Pools Monitoring</h3>
+
+<p>Not directly related to VMs monitoring, VM pool monitoring that is responsible for running prestarted VMs also affects the amount of work done in a stable system. As part of this work, the amount of interactions with the database by VM pool monitoring in system that doesn't contain prestarted VMs was reduced.</p>
+
+<h2 id="results">Results</h2>
+
+<p>The results of these changes were able to be clearly tracked.</p>
+
+<h3 id="cpu">CPU</h3>
+
+<p>CPU view on oVirt 3.6:</p>
+
+<p><img alt="CPU view on 3.6" width="854" height="416" src="/images/monitoring-3.6-cpu.png?1560777613" /></p>
+
+<p>CPU view on oVirt master:</p>
+
+<p><img alt="CPU view on master" width="859" height="368" src="/images/monitoring-master-cpu.png?1560777613" /></p>
+
+<ul>
+  <li>The total CPU time used in one hour for the monitoring reduced from 2297 sec to 1789 sec.</li>
+  <li>We spend significantly less time in the monitoring code - 814 sec instead of 1451 sec.</li>
+  <li>The processing time reduced from 896 sec to 687 sec.</li>
+  <li>The time it takes to persist changes to the database reduced from 546 sec to 114 sec.</li>
+</ul>
+
+<p>An additional insight was that the time spent on host monitoring increased from 40,730 msec in oVirt 3.6 to 53,447 msec when using 'vms_monitoring_view'. Thus, in 4.0 it is probably even higher due to additional operations that were added.</p>
+
+<h3 id="database">Database</h3>
+
+<p>Database hot spots on oVirt 3.6:</p>
+
+<p><img alt="DB hot-spots on 3.6" width="1721" height="712" src="/images/monitoring-3.6-db.png?1560777613" /></p>
+
+<p>Database hot spots on oVirt master:</p>
+
+<p><img alt="DB hot-spots on master" width="1718" height="708" src="/images/monitoring-master-db.png?1560777613" /></p>
+
+<ul>
+  <li>The time to query network interfaces of VM reduced from 678 micro-sec on average to 282 micro-sec, resulting in overall improvement from 126 sec to 108 sec (it is called much more, I believe it is because postgres caches this differently now)</li>
+  <li>The time it takes to query all the running VMs on the host reduced from 3,539 msec on average (!) to 909 msec, resulting in overall improvement from 113 sec to 59,130 msec thanks to querying only the dynamic data</li>
+  <li>The time it took to save the dynamic data of the VMs was 101 sec (6%, 544 micro-sec on average). On master, the dynamic data was not saved at all</li>
+  <li>All queries for numa nodes that were described before were not called on our environment</li>
+  <li>Same for the query of VM jobs</li>
+  <li>The update of VM statistics which took 261 micro-sec and 38,669 msec overall (2%) on oVirt 3.6, is not called anymore</li>
+  <li>Queries related to guest agent data on network interfaces that we spend time on in oVirt 3.6 (insert: 319 micro-sec on average, 59,493 msec overall which is 3% and delete: 223 micro-sec on average, 41,605 msec overall which is 2%) were not called on oVirt master</li>
+</ul>
+
+<p>More insights include:</p>
+
+<ul>
+  <li>Despite making the 'regular' VMs query lighter (since it does not include querying VM statistics from the database), it takes significatly more time on oVirt master: 996 msec on average while it used to be ~570 msec on average on oVirt 3.6</li>
+  <li>Updates of the dynamic data of disks seems to be also inefficient. Although it is relatively cheap (143 micro-sec on average) operation, the fact that it is done per-VM makes the overall time relatively high on master (4%), especially considering that these VMs had no disks</li>
+  <li>The overall time spent on querying VM network interfaces is still too much</li>
+  <li>An insight that I find hard to explain is the following diagrams of the executed database statements that are probably a result of caching in postgres (that might explain the reduced memory consumption we will see later)</li>
+</ul>
+
+<p>Executed statements in oVirt 3.6:</p>
+
+<p><img alt="db statements on 3.6" width="1654" height="358" src="/images/monitoring-3.6-statements.png?1560777613" /></p>
+
+<p>Executed statements in oVirt master:</p>
+
+<p><img alt="memory on master" width="1551" height="384" src="/images/monitoring-master-statements.png?1560777613" /></p>
+
+<h3 id="memory">Memory</h3>
+
+<p>Memory consumption on oVirt 3.6:</p>
+
+<p><img alt="memory on 3.6" width="1674" height="398" src="/images/monitoring-3.6-memory.png?1560777613" /></p>
+
+<p>Memory consumption on oVirt master:</p>
+
+<p><img alt="memory on master" width="1629" height="422" src="/images/monitoring-master-memory.png?1560777613" /></p>
+
+<p>One can argue that in-memory management like the one introduced for VM statistics or in-memory management layers over the database like the one introduced for VM jobs leads to high memory consumption.</p>
+
+<p>Surprisingly, the memory consumption on master is lower than the one seen on 3.6. While at peaks (right before the garbage collector cleans it) the memory on oVirt 3.6 get to ~1.45 GB, on oVirt master it gets to ~1.2 GB. That is probably thanks to other improvements or by reducing the amount of caching by postgres that compansate the higher memory consumption by the monitoring.</p>
+
+<h1 id="possible-future-work">Possible Future Work</h1>
+
+<p>Looking ahead, here are some possible goals for oVirt-engine monitoring:</p>
+
+<ul>
+  <li>Although I refer to the code that includes the described changes as 'master branch', some of the changes are not yet merged so this work is not completed yet.</li>
+  <li>Need to investigate what makes VMs query to take much longer on the master branch.</li>
+  <li>Another improvement can be to replace the 'statistics cycles' polling with events. This could also prevent theoretical issues we currently have in the monitoring code.</li>
+  <li>In order to create the testing environment I played a bit with environment running 6000 VMs (using fake-VDSM). It is very inconvenient via the webadmin currently. Better UI support for batch operations is something to consider.</li>
+  <li>Also, we had an effort to introduce batch operations for operations on the hosts (like Run VM). We could consider batch scheduling that will allow us to resume that effort.</li>
+  <li>Introduce in-memory layers for network interface and dynamic disk data as well.</li>
+  <li>Split VM dynamic data to run-time data, that is reported by VDSM, and other kind of data to prevent redundant updates from happening again.</li>
+  <li>Cache VM dynamic data. We planned to do it for VM statuses, but we should consider doing that for other kind of dynamic VM data.</li>
+</ul>
+
+<p><em>This post was originally published at <a href="http://ahadas.github.io/monitoring-improvements-in-ovirt">ahadas.github.io</a>. It has been edited for grammar and convention</em></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/monitoring.html">Monitoring</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/performance.html">Performance</a></li>
+<li><a href="../../tag/scale.html">Scale</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2016-08-03-monitoring-improvements-in-ovirt.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2016-08-03-monitoring-improvements-in-ovirt.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 28 Oct 2016 10:09 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

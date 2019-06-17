@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+qemucmdline &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+<li><a href="/develop/developer-guide/vdsm/hook/">Hook</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="qemucmdline">qemucmdline</h1>
+
+<p>qemu_cmdline hook:</p>
+
+<p>libvirt provides support for passing QEMU cmdline options. With the help of this, one can inject QEMU options bypassing the libvirt's domain XML code. This can help immensely in testing and developing new qemu features, which are not yet in libvirt and/or injecting experimental options.</p>
+
+<p>The os environ 'qemu_cmdline' points to a json list, containing the qemu option followed by value as individual list entries. For qemu option that does not take any value, skip the value entry.</p>
+
+<p>Note that validation of the option and value list entries is NOT done, its passed as-is to qemu and in the same order as present in the list.</p>
+
+<p>Example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  qemu_cmdline='["-cdrom","`&lt;path/to/iso&gt;`", ...]'&#x000A;</code></pre></div>
+<h2 id="installing-the-package-in-the-hypervisor">Installing the package in the Hypervisor</h2>
+
+<p>Download vdsm-hook-qemucmdline from:</p>
+
+<p><a href="https://apps.fedoraproject.org/packages/vdsm-hook-qemucmdline"><code>https://apps.fedoraproject.org/packages/vdsm-hook-qemucmdline</code></a><code> or </code><a href="http://resources.ovirt.org/pub/"><code>http://resources.ovirt.org/pub/</code></a></p>
+
+<ol>
+  <li>yum/dnf install vdsm-hook-qemucmdline-N-V-R.rpm</li>
+</ol>
+
+<p>If you are using oVirt Node:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   1- Enable SSH via TUI or via Console (Press F2 and execute: /usr/libexec/ovirt-config-password)&#x000A;   2- Remount FileSystem as read and write&#x000A;   # mount -o remount,rw /  (Remount the FS as rw)&#x000A;   3- Install the package and persist the hook&#x000A;   # rpm -ivh vdsm-hook-qemucmdline-N.V.R.rpm &#x000A;   # persist /usr/libexec/vdsm/hooks/before_vm_start/50_qemucmdline&#x000A;</code></pre></div>
+<h2 id="in-the-ovirt-engine-side">In the oVirt Engine side</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   # engine-config -s "UserDefinedVMProperties=qemu_cmdline=^.*$"&#x000A;   # service ovirt-engine restart&#x000A;&#x000A;   Now go to oVirt Engine Admin Portal&#x000A;     -&gt; Virtual Machines&#x000A;     -&gt; Stop the virtual machine&#x000A;     -&gt; Click in the VM and Edit&#x000A;        -&gt; Custom Properties&#x000A;           Add the key qemu_cmdline and type in the box your additional param to qemu:&#x000A;    Example:&#x000A;             ["-spice", "tls-ciphers=DES-CBC3-SHA"]&#x000A;     -&gt; Start the virtual machine&#x000A;</code></pre></div>
+<h2 id="testing">Testing</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   After the virtual machine start, execute ps auxww | grep qemu-kvm in hypervisor. &#x000A;   You will see the  flags added into the qemu-kvm process.&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/hook/qemucmdline.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/hook/qemucmdline.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

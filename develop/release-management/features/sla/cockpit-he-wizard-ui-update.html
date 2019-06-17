@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cockpit Hosted Engine Wizard UI Update &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="cockpit-hosted-engine-wizard-ui-update">Cockpit Hosted Engine Wizard UI Update</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Provide an improved user experience in the Cockpit hosted engine setup wizard.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Owner: Phillip Bailey</li>
+  <li>Email: phbailey@redhat.com</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>The current hosted engine setup wizard in Cockpit uses the machine dialect interface for OTOPI, which effectively emulates the command line interface. This approach allows for the most robust error-handling possible, but delivers a very poor user experience for a number of reasons:</p>
+
+<ul>
+  <li>Only a small amount of the available space is used, as each page consists of a single question</li>
+  <li>Related questions aren't grouped and displayed together</li>
+  <li>There is no indication of progress completion</li>
+  <li>There is no "Back" option, meaning the user has to cancel entirely if they discover they've made an error</li>
+  <li>A text box component is used for all input types</li>
+</ul>
+
+<p><img alt="" width="1919" height="937" src="/images/wiki/cockpit-he-setup-wizard-old.png?1560777612" /></p>
+
+<p>The redesigned UI addresses each of these issues in order to provide a more efficient and enjoyable user experience.</p>
+
+<h2 id="approach">Approach</h2>
+
+<p>Instead of interfacing with OTOPI in the machine dialect manner currently being used, an answer file will be created that can be consumed by hosted engine setup.</p>
+
+<h4 id="error-handling">Error Handling</h4>
+
+<p>Existing Cockpit infrastructure will be used to check for major requirements such as hardware virtualization support and storage connectivity. Input issues like formatting problems will be checked in real-time on the front end. Errors thrown from the setup process will be determined via OTOPI exit codes. The user will then have the opportunity to correct the errors and reattempt deployment using the updated answer file.</p>
+
+<h2 id="user-experience">User Experience</h2>
+
+<p>The first major change in the updated UI is the addition of a progress indicator at the top of the wizard. The progress indicator informs the user of what stages make up the setup process, where they are in the process, and what stages they have left to complete. Each stage contains all of its relevant input fields, as expected.</p>
+
+<p><img alt="" width="1912" height="939" src="/images/wiki/cockpit-he-setup-wizard-update-storage.png?1560777612" /></p>
+
+<p><img alt="" width="1916" height="940" src="/images/wiki/cockpit-he-setup-wizard-update-vm.png?1560777612" /></p>
+
+<p>The user can move between each of the stages as they choose, allowing for corrections to be made at any point in the process. The last stage of the process provides the user's inputs on one screen for easy review. Note that it is planned for values to be separated by stage in the final version of the review screen.</p>
+
+<p><img alt="" width="1917" height="938" src="/images/wiki/cockpit-he-setup-wizard-update-review.png?1560777612" /></p>
+
+<h2 id="references">References</h2>
+<p>RFE in Bugzilla: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1367457">BZ 1367457</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/cockpit-he-wizard-ui-update.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/cockpit-he-wizard-ui-update.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 23 Nov 2017 20:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

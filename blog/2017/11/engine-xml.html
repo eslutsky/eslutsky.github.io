@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Engine XML Brings a Smoother Flow of Data Into oVirt &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='jmarks, ahadas' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Engine XML Brings a Smoother Flow of Data Into oVirt' property='og:title'>
+<meta content='on November 8, oVirt 4.2 saw the introduction of an important behind-the-scenes enhancement.
+
+The change is associated with the exchange of information between the engine and the VDSM. It addresses the issue of multiple abstraction layers, with each layer needing to convert its input into a suitably readable format in order to report to the next layer.
+
+This change improves data communication between the engine and Libvirt - the tool that manages platform virtualization.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/11/engine-xml.html' property='og:url'>
+<meta content='2017-11-09T09:00:00Z' property='article:published_time'>
+<meta content='jmarks, ahadas' property='article:author:username'>
+<meta content='engine XML' property='article:tag'>
+<link href='/blog/tag/engine xml.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Libvirt' property='article:tag'>
+<link href='/blog/tag/libvirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='VDSM' property='article:tag'>
+<link href='/blog/tag/vdsm.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Engine XML Brings a Smoother Flow of Data Into oVirt' name='twitter:title'>
+<meta content='on November 8, oVirt 4.2 saw the introduction of an important behind-the-scenes enhancement.
+
+The change is associated with the exchange of information between the engine and the VDSM. It addresses the issue of multiple abstraction layers, with each layer needing to convert its input into a suitably readable format in order to report to the next layer.
+
+This change improves data communication between the engine and Libvirt - the tool that manages platform virtualization.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>11</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Engine XML Brings a Smoother Flow of Data Into oVirt
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/jmarks, ahadas.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/jmarks-ahadas/">jmarks, ahadas</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-11-09T09:00:00Z'>
+Thursday  9 November 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>on November 8, oVirt 4.2 saw the introduction of an important behind-the-scenes enhancement.</p>
+
+<p>The change is associated with the exchange of information between the engine and the VDSM. It addresses the issue of multiple abstraction layers, with each layer needing to convert its input into a suitably readable format in order to report to the next layer.</p>
+
+<p>This change improves data communication between the engine and Libvirt - the tool that manages platform virtualization.</p>
+
+<p></p>
+
+<h4 id="background">Background</h4>
+
+<p>Previously, the configuration file for a newly created virtual machine (VM) originated in the engine as a map or dictionary.
+Then, in the VDSM, it was converted into an XML file that was readable by Libvirt. This process required a greater coding
+effort which in turn slowed down the development process.</p>
+
+<h4 id="whats-changed">What's changed?</h4>
+<p>Now, this map or dictionary has been replaced by engine XML, an XML configuration file that complies with the Libvirt API.
+VDSM now simply routes this Libvirt-readable file to/from Libvirt, in VM lifecycle (virt) related flows.</p>
+
+<p>As an oVirt user, it’s business as usual.</p>
+
+<p>However, if you are a developer dealing with debugging issues that involve running a VM, simply be aware that the Domain XML is now generated by ovirt-engine, and printed to engine.log.</p>
+
+<p>Also, if you are debugging issues with device monitoring, note that ovirt-engine matches the devices reported by Libvirt with those stored in the database rather than VDSM.</p>
+
+<p>The figure below shows the new flow for running a VM:</p>
+
+<p><img alt="" width="635" height="122" src="/images/blog/run_vm.png?1560777613" /></p>
+
+<p>For an in-depth description of the new enhancement, read Arik Hadas’ <a href="http://ahadas.github.io/engine-xml/">Addressing Abstraction Hell in oVirt</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/engine-xml.html">engine XML</a></li>
+<li><a href="../../tag/libvirt.html">Libvirt</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/vdsm.html">VDSM</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-11-09-engine-xml.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-11-09-engine-xml.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 9 Nov 2017 16:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

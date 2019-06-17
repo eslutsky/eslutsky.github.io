@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Backup engine db &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<!-- TODO: Content review -->
+
+<h1 id="backup-engine-db">Backup engine db</h1>
+
+<h2 id="backup-manually">Backup manually</h2>
+
+<p>Stop jboss-as service</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # /bin/systemctl stop jboss-as.service&#x000A;</code></pre></div>
+<p>Backup the engine db</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # pg_dump -C -E UTF8 --column-inserts --disable-dollar-quoting --disable-triggers -U postgres --format=p -f "/path/dump.sql" engine&#x000A;</code></pre></div>
+<p>Start jboss-as service</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # /bin/systemctl start jboss-as.service&#x000A;</code></pre></div>
+<h2 id="restore-manually">Restore manually</h2>
+
+<p>Stop jboss-as service</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # /bin/systemctl stop jboss-as.service&#x000A;</code></pre></div>
+<p>Drop any existing engine db:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # dropdb -U postgres engine&#x000A;</code></pre></div>
+<p>Create an engine db:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # createdb -U postgres engine&#x000A;</code></pre></div>
+<p>Restore the backup file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # psql -U postgres -d engine -w &lt; "/path/dump.sql"&#x000A;</code></pre></div>
+<p>Start jboss-as service</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # /bin/systemctl start jboss-as.service&#x000A;</code></pre></div>
+<h2 id="others">Others</h2>
+
+<h3 id="engine-db-toolpy">engine-db-tool.py</h3>
+
+<p>engine-db-tool helps to backup/restore engine database
+Download: <a href="https://raw.github.com/dougsland/misc-rhev/master/engine-db-tool.py">https://raw.github.com/dougsland/misc-rhev/master/engine-db-tool.py</a> The preceding link is stale as of October 2013; see instead: <a href="https://github.com/dougsland/misc-rhev">https://github.com/dougsland/misc-rhev</a> and link: <a href="https://github.com/dougsland/misc-rhev/raw/master/engine-db-tool.py">https://github.com/dougsland/misc-rhev/raw/master/engine-db-tool.py</a></p>
+
+<p>Example of usage:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # mkdir /engine-db-backup&#x000A;  # chmod +x engine-db-tool.py&#x000A;  # ./engine-db-tool.py&#x000A;</code></pre></div>
+<h4 id="backup-manually-1">backup manually</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ./engine-db-tool.py --backup --path=/engine-db-backup&#x000A;  Stopping jboss-as service...&#x000A;  Backuping database: /engine-db-backup/dump_ENGINEDB_BACKUP_2012-04-03-15:05.sql&#x000A;  Starting jboss-as service...&#x000A;  Done&#x000A;</code></pre></div>
+<h4 id="restore-manually-1">restore manually</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # ./engine-db-tool.py --restore --path=/engine-db-backup/dump_ENGINEDB_BACKUP_2012-04-03-15:05.sql&#x000A;  Stopping jboss-as service...&#x000A;  Restoring database: /engine-db-backup/dump_ENGINEDB_BACKUP_2012-04-03-15:05.sql&#x000A;  Starting jboss-as service...&#x000A;  Done&#x000A;</code></pre></div>
+<h4 id="crontab-example">Crontab example</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # crontab -e  (adding to my crontab user)&#x000A;&#x000A;  # Every day 18:00 backup db&#x000A;  00 18 * * * /path-to/engine-db-tool.py --backup --path=/engine-backup-db&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/storage/backup-engine-db.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/storage/backup-engine-db.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

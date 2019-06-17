@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cloud-Init Integration &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="cloud-init-integration">Cloud-Init Integration</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p><a href="https://launchpad.net/cloud-init/">Cloud-init</a> [1] is a tool used to perform initial setup on cloud nodes, including networking, SSH keys, timezone, user data injection, and more. It is a service that runs on the guest, and supports various Linux distributions including Fedora, RHEL, and Ubuntu.</p>
+
+<p>Integrating support for it into oVirt will help facilitate provisioning of virtual machines. It's already in wide use by cloud software such as OpenStack (via Heat) as well as providers such as Amazon, and its capabilities are a natural fit in our environment.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Greg Padgett</li>
+  <li>Email: gpadgett@redhatdotcom</li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<p>Implementation</p>
+
+<p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1039009">existing functionality since 3.3.2</a> can't use cloud-init /run once via api</p>
+
+<p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1045484">existing functionality since 3.4.0</a> REST API cloud init: can't set root password [using json]</p>
+
+<p><a href="https://bugzilla.redhat.com/1330217">open RFE</a> Enable configuring IPv6 in VM cloud-init (planned to be implemented in 4.2.0)</p>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p><strong>Use Case</strong></p>
+
+<p>Use of cloud-init to help provision a guest requires that the guest have cloud-init installed. For cloud instances, this is typically done during image creation; in our use case, it would be installed on a VM or template.</p>
+
+<p>The package currently supports Fedora, RHEL, Debian, and Ubuntu (and compatible derivatives). Initially, we'd like to support Fedora (18), RHEL (6.4), and Ubuntu (12.04 LTS).</p>
+
+<p>After package installation, cloud-init will start during the boot process and looks for various "data sources" that supply it with instructions on what to configure. These sources can be local configuration data stored on the VM itself, an attached block device (config disk) identified by a specific volume labels and directory structure, or a metadata server accessible via the network at a predefined IP address. We'll be using a config disk, which will allow the engine to create and attach data to the VMs dynamically based on user preferences, as well as allowing a user to attach their own already-prepared config disks.</p>
+
+<p>Note that there are multiple config disk types supported by cloud-init, each with their own varying structures and capabilities. We are most interested in using <a href="http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/sources/configdrive/README.rst">config-drive version 2</a> [2], which is also in supported by OpenStack.</p>
+
+<p>Once cloud-init discovers a data source, it scans it for meta-data and user-data. Generally, meta-data contains information about the cloud that is passed to the guest (instance identification, network setup, etc [3]), whereas user-data contains instructions on provisioning the specific system in question (usernames/passwords to configure, timezone, custom scripts to run, packages to install, files to inject, etc [4]). If cloud-init has not previously seen the supplied instance identifier (i.e. this is a new configuration), it will proceed to set up the system accordingly. The end result is a system with all basic provisioning complete before the first login.</p>
+
+<p>In summary, a typical workflow for using cloud-init in oVirt to assist in guest provisioning might involve:</p>
+
+<ul>
+  <li>Create new VM</li>
+  <li>Install OS</li>
+  <li>Install cloud-init</li>
+  <li>(Create template if desired)</li>
+  <li>Configure cloud-init options through webadmin or rest api, or attach disk/payload with pre-constructed config disk</li>
+  <li>Start VM</li>
+  <li>Wait (usually just seconds) for cloud-init configuration to complete</li>
+  <li>VM is configured and ready for use</li>
+</ul>
+
+<p>TODO: still pending is whether and/or how to communicate to oVirt engine that cloud-init has finished guest setup, set vm initialized flag, …</p>
+
+<p><strong>Functionality</strong></p>
+
+<p>There is a long list of configuration options supported by cloud-init. The ones we are currently targeting for inclusion in oVirt include:</p>
+
+<ul>
+  <li>set root password</li>
+  <li>set timezone</li>
+  <li>add ssh authorized keys for root user</li>
+  <li>set static IP (address/mask/gateway) for both IPv4 and IPv6 stacks</li>
+  <li>set and persist hostname*</li>
+  <li>inject user data/files to guest disk</li>
+</ul>
+
+<p>Some additional options for later investigation:</p>
+
+<ul>
+  <li>create users and/or set user passwords</li>
+  <li>auto-generate system ssh key (public &amp; private) - should consider using <a href="http://libvirt.org/formatdomain.html#elementsRng">virtio-rng before doing so</a></li>
+  <li>assign system ssh key to user-specified value (public &amp; private)</li>
+  <li>"phone home" once system is up</li>
+  <li>shut down and/or reboot</li>
+  <li>run custom scripts and/or commands</li>
+  <li>set system locale</li>
+</ul>
+
+<p>In addition, there are some usability goals for the project:</p>
+
+<ul>
+  <li>allow guest setup with default cloud-init package installation (no custom configuration steps necessary)*</li>
+  <li>don't create additional user only for cloud-init setup (e.g. ec2-user)</li>
+  <li>after reboot, cloud-init shouldn't cause a delay due to no data source being present*</li>
+</ul>
+
+<p>(* Items with asterisk indicate that a workaround or bugfix is needed, these are expected by the time the feature is ready.)</p>
+
+<p><strong>\1</strong></p>
+
+<ul>
+  <li>Config disks will be attached to VMs as ISOs using the VM Payload feature, so both a payload and cloud-init configuration cannot be used at the same time. However, cloud-init can be used to inject files into the guest, effectively an alternate way to deliver a payload.</li>
+</ul>
+
+<p><strong>UI Mock-Up</strong></p>
+
+<p>Details subject to change:</p>
+
+<p><img alt="" width="565" height="469" src="/images/wiki/Cloud-init-ui-mock-up.png?1560777613" /></p>
+
+<p><strong>Screenshot</strong></p>
+
+<p><img alt="" width="605" height="831" src="/images/wiki/Cloud-init-webadmin-screenshot.png?1560777613" /></p>
+
+<p><strong>API Design</strong></p>
+
+<p>Example of usage:</p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;vm&gt;</span>&#x000A;  …&#x000A;  <span class="nt">&lt;initialization&gt;</span>&#x000A;      <span class="nt">&lt;host&gt;</span>&#x000A;        <span class="nt">&lt;address&gt;</span>cloudInitInstanceName<span class="nt">&lt;/address&gt;</span>&#x000A;      <span class="nt">&lt;/host&gt;</span>&#x000A;      <span class="nt">&lt;authorized_keys&gt;</span>&#x000A;        <span class="nt">&lt;authorized_key&gt;</span>&#x000A;          <span class="nt">&lt;user&gt;</span>&#x000A;            <span class="nt">&lt;user_name&gt;</span>root<span class="nt">&lt;/user_name&gt;</span>&#x000A;          <span class="nt">&lt;/user&gt;</span>&#x000A;          <span class="nt">&lt;key&gt;</span>ssh-rsa AAAAB3Nza[…]75zkdD user@domain.com<span class="nt">&lt;/key&gt;</span>&#x000A;        <span class="nt">&lt;/authorized_key&gt;</span>&#x000A;      <span class="nt">&lt;/authorized_keys&gt;</span>&#x000A;      <span class="nt">&lt;regenerate_ssh_keys&gt;</span>true<span class="nt">&lt;/regenerate_ssh_keys&gt;</span>&#x000A;      <span class="nt">&lt;timezone&gt;</span>Asia/Jerusalem<span class="nt">&lt;/timezone&gt;</span>&#x000A;      <span class="nt">&lt;users&gt;</span>&#x000A;        <span class="nt">&lt;user&gt;</span>&#x000A;          <span class="nt">&lt;user_name&gt;</span>root<span class="nt">&lt;/user_name&gt;</span>&#x000A;          <span class="nt">&lt;password&gt;</span>myPass<span class="nt">&lt;/password&gt;</span>&#x000A;        <span class="nt">&lt;/user&gt;</span>&#x000A;      <span class="nt">&lt;/users&gt;</span>&#x000A;      <span class="nt">&lt;dns_search&gt;</span>qa.lab redhat.com<span class="nt">&lt;/dns_search&gt;</span>&#x000A;      <span class="nt">&lt;dns_servers&gt;</span>8.8.8.8 127.0.0.1<span class="nt">&lt;/dns_servers&gt;</span>&#x000A;      <span class="nt">&lt;nic_configurations&gt;</span>&#x000A;        <span class="nt">&lt;nic_configuration&gt;</span>&#x000A;          <span class="nt">&lt;name&gt;</span>eth0<span class="nt">&lt;/name&gt;</span>&#x000A;          <span class="nt">&lt;boot_protocol&gt;</span>static<span class="nt">&lt;/boot_protocol&gt;</span>&#x000A;          <span class="nt">&lt;ip&gt;</span>&#x000A;            <span class="nt">&lt;address&gt;</span>192.168.2.11<span class="nt">&lt;/address&gt;</span>&#x000A;            <span class="nt">&lt;netmask&gt;</span>255.255.255.0<span class="nt">&lt;/netmask&gt;</span>&#x000A;            <span class="nt">&lt;gateway&gt;</span>192.168.2.1<span class="nt">&lt;/gateway&gt;</span>&#x000A;          <span class="nt">&lt;/ip&gt;</span>&#x000A;          <span class="nt">&lt;ipv6_boot_protocol&gt;</span>static<span class="nt">&lt;/ipv6_boot_protocol&gt;</span>&#x000A;          <span class="nt">&lt;ipv6&gt;</span>&#x000A;            <span class="nt">&lt;address&gt;</span>2001::1234<span class="nt">&lt;/address&gt;</span>&#x000A;            <span class="nt">&lt;netmask&gt;</span>64<span class="nt">&lt;/netmask&gt;</span>&#x000A;            <span class="nt">&lt;gateway&gt;</span>2001::fffa<span class="nt">&lt;/gateway&gt;</span>&#x000A;          <span class="nt">&lt;/ipv6&gt;</span>&#x000A;          <span class="nt">&lt;on_boot&gt;</span>true<span class="nt">&lt;/on_boot&gt;</span>&#x000A;        <span class="nt">&lt;/nic_configuration&gt;</span>&#x000A;        <span class="nt">&lt;nic_configuration&gt;</span>&#x000A;          <span class="nt">&lt;name&gt;</span>eth1<span class="nt">&lt;/name&gt;</span>&#x000A;          <span class="nt">&lt;boot_protocol&gt;</span>dhcp<span class="nt">&lt;/boot_protocol&gt;</span>&#x000A;          <span class="nt">&lt;ipv6_boot_protocol&gt;</span>none<span class="nt">&lt;/ipv6_boot_protocol&gt;</span>&#x000A;        <span class="nt">&lt;/nic_configuration&gt;</span>&#x000A;        <span class="nt">&lt;nic_configuration&gt;</span>&#x000A;          <span class="nt">&lt;name&gt;</span>eth2<span class="nt">&lt;/name&gt;</span>&#x000A;          <span class="nt">&lt;boot_protocol&gt;</span>none<span class="nt">&lt;/boot_protocol&gt;</span>&#x000A;          <span class="nt">&lt;ipv6_boot_protocol&gt;</span>autoconf<span class="nt">&lt;/ipv6_boot_protocol&gt;</span>&#x000A;          <span class="nt">&lt;on_boot&gt;</span>true<span class="nt">&lt;/on_boot&gt;</span>&#x000A;        <span class="nt">&lt;/nic_configuration&gt;</span>&#x000A;      <span class="nt">&lt;/nic_configurations&gt;</span>&#x000A;      <span class="nt">&lt;files&gt;</span>&#x000A;        <span class="nt">&lt;file&gt;</span>&#x000A;          <span class="nt">&lt;name&gt;</span>/tmp/testFile1.txt<span class="nt">&lt;/name&gt;</span>&#x000A;          <span class="nt">&lt;content&gt;</span>temp content<span class="nt">&lt;/content&gt;</span>&#x000A;          <span class="nt">&lt;type&gt;</span>PLAINTEXT<span class="nt">&lt;/type&gt;</span>&#x000A;        <span class="nt">&lt;/file&gt;</span>&#x000A;      <span class="nt">&lt;/files&gt;</span>&#x000A;  <span class="nt">&lt;/initialization&gt;</span>&#x000A;<span class="nt">&lt;/vm&gt;</span>&#x000A;</code></pre></div>
+<p><strong>Python SDK</strong></p>
+
+<p>Example of usage, setting hostname, root password and writing simple text file:</p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="n">vmstat</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">vm</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span><span class="o">.</span><span class="n">state</span>&#x000A;<span class="k">if</span><span class="err"> </span><span class="n">vmstat</span><span class="err"> </span><span class="o">==</span><span class="err"> </span><span class="s">'down'</span><span class="p">:</span>&#x000A;<span class="err">    </span>&#x000A;<span class="err">    </span><span class="k">try</span><span class="p">:</span>&#x000A;<span class="err">        </span><span class="n">osVersion</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">vm</span><span class="o">.</span><span class="n">get_os</span><span class="p">()</span><span class="o">.</span><span class="n">get_type</span><span class="p">()</span>&#x000A;<span class="err">        </span><span class="k">if</span><span class="err"> </span><span class="p">(</span><span class="n">osVersion</span><span class="err"> </span><span class="o">==</span><span class="err"> </span><span class="s">"rhel_6x64"</span><span class="err"> </span><span class="ow">or</span><span class="err"> </span><span class="n">osVersion</span><span class="err"> </span><span class="o">==</span><span class="err"> </span><span class="s">"rhel_6"</span><span class="err"> </span><span class="ow">or</span><span class="err"> </span><span class="n">osVersion</span><span class="err"> </span><span class="o">==</span><span class="err"> </span><span class="s">"rhel_7x64"</span><span class="p">)</span><span class="err"> </span><span class="ow">and</span><span class="err"> </span><span class="n">CLOUDINIT</span><span class="err"> </span><span class="o">==</span><span class="err"> </span><span class="s">"yes"</span><span class="p">:</span>&#x000A;<span class="err">            </span><span class="k">print</span><span class="err"> </span><span class="s">"Starting VM: "</span><span class="err"> </span><span class="o">+</span><span class="err"> </span><span class="n">vm</span><span class="o">.</span><span class="n">name</span><span class="err"> </span><span class="o">+</span><span class="err"> </span><span class="s">" with cloud-init options"</span>&#x000A;<span class="err">            </span><span class="n">scontent</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="s">"write_files:</span><span class="se">\n</span><span class="s">-   content: |</span><span class="se">\n</span><span class="s">        search example.com</span><span class="se">\n</span><span class="s">        nameserver 10.10.10.1</span><span class="se">\n</span><span class="s">        nameserver 10.10.10.2</span><span class="se">\n</span><span class="s">    path: /etc/resolv.conf"</span>&#x000A;<span class="err">            </span><span class="n">action</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">params</span><span class="o">.</span><span class="n">Action</span><span class="p">(</span>&#x000A;<span class="err">                </span><span class="n">vm</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">VM</span><span class="p">(</span>&#x000A;<span class="err">                    </span><span class="n">initialization</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Initialization</span><span class="p">(</span>&#x000A;<span class="err">                        </span><span class="n">cloud_init</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">CloudInit</span><span class="p">(</span>&#x000A;<span class="err">                            </span><span class="n">host</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Host</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s">"rheltest001.example.com"</span><span class="p">),</span>&#x000A;<span class="err">                            </span><span class="n">users</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Users</span><span class="p">(</span>&#x000A;<span class="err">                                </span><span class="n">user</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="n">user_name</span><span class="o">=</span><span class="s">"root"</span><span class="p">,</span><span class="err"> </span><span class="n">password</span><span class="o">=</span><span class="s">"secret"</span><span class="p">)]</span>&#x000A;<span class="err">                                </span><span class="p">),</span>&#x000A;<span class="err">                            </span><span class="n">files</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Files</span><span class="p">(</span>&#x000A;<span class="err">                                </span><span class="nb">file</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"/etc/resolv.conf"</span><span class="p">,</span><span class="err"> </span><span class="n">content</span><span class="o">=</span><span class="n">scontent</span><span class="p">,</span><span class="err"> </span><span class="n">type_</span><span class="o">=</span><span class="s">"PLAINTEXT"</span><span class="p">)]</span>&#x000A;<span class="err">                                </span><span class="p">)</span>&#x000A;<span class="err">                            </span><span class="p">)</span>&#x000A;<span class="err">                        </span><span class="p">)</span>&#x000A;<span class="err">                    </span><span class="p">)</span>&#x000A;<span class="err">                </span><span class="p">)</span>&#x000A;<span class="err">            </span><span class="n">vm</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="err"> </span><span class="n">action</span><span class="err"> </span><span class="p">)</span>&#x000A;<span class="err">        </span><span class="k">else</span><span class="p">:</span>&#x000A;<span class="err">            </span><span class="k">print</span><span class="err"> </span><span class="s">"Starting VM "</span><span class="err"> </span><span class="o">+</span><span class="err"> </span><span class="n">vm</span><span class="o">.</span><span class="n">name</span>&#x000A;<span class="err">            </span><span class="n">vm</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>&#x000A;<span class="err">        </span><span class="k">while</span><span class="err"> </span><span class="n">vmstat</span><span class="err"> </span><span class="o">!=</span><span class="err"> </span><span class="s">'down'</span><span class="p">:</span>&#x000A;<span class="err">            </span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>&#x000A;<span class="err">            </span><span class="n">vmstat</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">vm</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span><span class="o">.</span><span class="n">state</span>&#x000A;<span class="err">    </span><span class="k">except</span><span class="err"> </span><span class="nb">Exception</span><span class="p">,</span><span class="err"> </span><span class="n">err</span><span class="p">:</span>&#x000A;<span class="err">        </span><span class="k">print</span><span class="err"> </span><span class="s">"Error on starting VM"</span>&#x000A;<span class="err">        </span><span class="k">print</span><span class="err"> </span><span class="n">err</span>&#x000A;</code></pre></div>
+<p>Same as above, but setting also networking:</p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="n">action</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">params</span><span class="o">.</span><span class="n">Action</span><span class="p">(</span>&#x000A;<span class="err">           </span><span class="n">vm</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">VM</span><span class="p">(</span>&#x000A;<span class="err">               </span><span class="n">initialization</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Initialization</span><span class="p">(</span>&#x000A;<span class="err">                   </span><span class="n">cloud_init</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">CloudInit</span><span class="p">(</span>&#x000A;<span class="err">                       </span><span class="n">host</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Host</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s">"testvm.example.com"</span><span class="p">),</span>&#x000A;<span class="err">                       </span><span class="n">authorized_keys</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">AuthorizedKeys</span><span class="p">(</span>&#x000A;<span class="err">                           </span><span class="n">authorized_key</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">AuthorizedKey</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="n">user_name</span><span class="o">=</span><span class="s">"root"</span><span class="p">),</span><span class="err"> </span><span class="n">key</span><span class="o">=</span><span class="s">"ssh-rsa AAAAB3NzaC1yc........."</span><span class="p">)]</span>&#x000A;<span class="err">                           </span><span class="p">),</span>&#x000A;<span class="err">                       </span><span class="n">regenerate_ssh_keys</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>&#x000A;<span class="err">                       </span><span class="n">users</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Users</span><span class="p">(</span>&#x000A;<span class="err">                           </span><span class="n">user</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">User</span><span class="p">(</span><span class="n">user_name</span><span class="o">=</span><span class="s">"root"</span><span class="p">,</span><span class="err"> </span><span class="n">password</span><span class="o">=</span><span class="s">"SecretPassword"</span><span class="p">)]</span>&#x000A;<span class="err">                           </span><span class="p">),</span>&#x000A;<span class="err">                       </span><span class="n">network_configuration</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">NetworkConfiguration</span><span class="p">(</span>&#x000A;<span class="err">                           </span><span class="n">nics</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Nics</span><span class="p">(</span><span class="n">nic</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">NIC</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"eth0"</span><span class="p">,</span>&#x000A;<span class="err">                                               </span><span class="n">boot_protocol</span><span class="o">=</span><span class="s">"STATIC"</span><span class="p">,</span>&#x000A;<span class="err">                                               </span><span class="n">on_boot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>&#x000A;<span class="err">                                               </span><span class="n">network</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="n">ip</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">IP</span><span class="p">(</span>&#x000A;<span class="err">                                                                       </span><span class="n">address</span><span class="o">=</span><span class="s">"192.168.100.10"</span><span class="p">,</span>&#x000A;<span class="err">                                                                       </span><span class="n">netmask</span><span class="o">=</span><span class="s">"255.255.255.0"</span><span class="p">,</span>&#x000A;<span class="err">                                                                       </span><span class="n">gateway</span><span class="o">=</span><span class="s">"192.168.100.1"</span><span class="p">)))])</span>&#x000A;<span class="err">                           </span><span class="p">),</span>&#x000A;<span class="err">                       </span><span class="n">files</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">Files</span><span class="p">(</span>&#x000A;<span class="err">                           </span><span class="nb">file</span><span class="o">=</span><span class="p">[</span><span class="n">params</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">"/etc/motd"</span><span class="p">,</span><span class="err"> </span><span class="n">content</span><span class="o">=</span><span class="s">"Automatic configuration"</span><span class="p">,</span><span class="err"> </span><span class="n">type_</span><span class="o">=</span><span class="s">"PLAINTEXT"</span><span class="p">)]</span>&#x000A;<span class="err">                           </span><span class="p">)</span>&#x000A;<span class="err">                       </span><span class="p">)</span>&#x000A;<span class="err">                   </span><span class="p">)</span>&#x000A;<span class="err">               </span><span class="p">)</span>&#x000A;<span class="err">           </span><span class="p">)</span>&#x000A;</code></pre></div>
+<h2 id="required-changes">Required Changes</h2>
+
+<p>Further details TBD</p>
+
+<ul>
+  <li>UI
+    <ul>
+      <li>Modifications to store config options from user (location TBD)</li>
+      <li>Method to disallow having both payload and cloud-init configuration</li>
+    </ul>
+  </li>
+  <li>REST API
+    <ul>
+      <li>Allow specification of cloud-init configuration options</li>
+      <li>Payload type configuration (i.e. like sysprep type, also with option to support different config disk types either now or in the future)</li>
+    </ul>
+  </li>
+  <li>Engine/Backend/Db
+    <ul>
+      <li>Create config disk from passed-in configuration options</li>
+    </ul>
+  </li>
+  <li>VDSM
+    <ul>
+      <li>Support custom volume label for vm payloads</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Integrating with cloud-init will make provisioning Linux VMs easier for admins, decreasing the amount of setup time needed and streamlining support for attaching existing config disks to feed data to cloud-init.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>Related features:</p>
+
+<ul>
+  <li><a href="/develop/release-management/features/virt/vmpayload/">Features/VMPayload</a></li>
+  <li><a href="/develop/release-management/features/virt/intial-run-vm-tab/">Features/Intial Run Vm tab</a></li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External References</h2>
+
+<references>
+1.  [5]
+2.  [6]
+3.  [7]
+4.  [8]
+
+</references>
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>Test case: <strong>Initialize vm parameters</strong>
+    <ul>
+      <li>setup:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Create VM in 3.3 cluster</p>
+
+<p>Make sure the vm OS is set correctly ("Other Linux" should be a good choice to fit any linux)
+:Install latest Fedora/RHEL/Ubuntu and install cloud-init package ("yum/apt-get install cloud-init")
+:When done shut down the vm.</p>
+
+<ul>
+  <li>
+    <ul>
+      <li>test:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Click 'run-once' in the webadmin, under 'Inital Run' click 'Use Cloud-Init'</p>
+
+<p>Fill in some initialization fields as described in the screenshot above</p>
+
+<p>Click 'OK'</p>
+
+<p>Connect to the VM and observe the changes filled before were applied.</p>
+
+<ul>
+  <li>Test case: <strong>Initialize vm parameters and attach a CD</strong>
+    <ul>
+      <li>setup:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Same as first test</p>
+
+<ul>
+  <li>
+    <ul>
+      <li>test:</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Click 'run-once' in the webadmin, under Boot select 'attach CD' and select any cd to attach to the vm</p>
+
+<p>Under 'Initial Run' click 'Use Cloud-Init'</p>
+
+<p>Fill in some initialization fields as described in the screenshot above</p>
+
+<p>Click 'OK'</p>
+
+<p>Connect to the VM and observe the CD indeed attached and other changes filled before were applied.</p>
+
+<p>[1]</p>
+
+<p>[2]</p>
+
+<p>[3]</p>
+
+<p>[4]</p>
+
+<p>[5] Cloud-init documentation: <a href="https://launchpad.net/cloud-init/">https://launchpad.net/cloud-init/</a></p>
+
+<p>[6] Config-Drive version 2 readme: <a href="http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/sources/configdrive/README.rst">http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/sources/configdrive/README.rst</a></p>
+
+<p>[7] OpenStack meta-data example: <a href="http://docs.openstack.org/grizzly/openstack-compute/admin/content/config-drive.html">http://docs.openstack.org/grizzly/openstack-compute/admin/content/config-drive.html</a></p>
+
+<p>[8] User-data example: <a href="http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config.txt">http://bazaar.launchpad.net/~cloud-init-dev/cloud-init/trunk/view/head:/doc/examples/cloud-config.txt</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/cloud-init-integration.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/cloud-init-integration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

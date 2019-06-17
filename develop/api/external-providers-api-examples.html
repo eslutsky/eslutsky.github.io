@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+External Providers API Examples &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/api/">Api</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="external-host-providers">External host providers</h1>
+
+<p>This page contains information and examples of the external providers API.</p>
+
+<p>The representation of the resource will look like this:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders&#x000A;<span class="nt">&lt;external_host_providers&gt;</span>&#x000A;  <span class="nt">&lt;external_host_provider</span> <span class="na">id=</span><span class="s">"{provider:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/external_host_provider&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/external_host_providers&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}&#x000A;<span class="nt">&lt;external_host_provider</span> <span class="na">id=</span><span class="s">"{provider:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myprovider<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;description&gt;</span>My provider<span class="nt">&lt;/description&gt;</span>&#x000A;  <span class="nt">&lt;url&gt;</span>http://provider.example.com<span class="nt">&lt;/url&gt;</span>&#x000A;  <span class="nt">&lt;requires_authentication&gt;</span>true<span class="nt">&lt;/requires_authentication&gt;</span>&#x000A;  <span class="nt">&lt;username&gt;</span>myuser<span class="nt">&lt;/username&gt;</span>&#x000A;  <span class="nt">&lt;password&gt;</span>mypass<span class="nt">&lt;/password&gt;</span>&#x000A;<span class="nt">&lt;/external_host_provider&gt;</span>&#x000A;</code></pre></div>
+<p>The providers collection will support listing, getting, adding, and removing providers, with the usual methods.</p>
+
+<p>The provider resource will support getting, deleting and updating the provider, with the usual methods. In addition it will support the <code>testconnectivity</code> and <code>importcertificates</code> operation. The first is used to check the connectivity with the external provider:</p>
+
+<div class="highlight"><pre class="highlight xml"><code> POST /externalhostproviders/{provider:id}/testconnectivity&#x000A; <span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The second is used to import the chain of certificates of the external provider:</p>
+
+<div class="highlight"><pre class="highlight xml"><code> POST /externalhostproviders/{provider:id}/importcertificates&#x000A; <span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The provider resource includes subcollections for certificates, provisioned hosts, discovered hosts, host groups and compute resources, all of them read only. For certificates it will look like this:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/certificates&#x000A;<span class="nt">&lt;certificates&gt;</span>&#x000A;  <span class="nt">&lt;certificate</span> <span class="na">id=</span><span class="s">"{host:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/certificate&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/certificates&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/certificates/{certificate:id}&#x000A;<span class="nt">&lt;certificate</span> <span class="na">id=</span><span class="s">"{certificate:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;subject&gt;</span>CN=provider.example.com<span class="nt">&lt;/subject&gt;</span>&#x000A;<span class="nt">&lt;content&gt;</span>...<span class="nt">&lt;/content&gt;</span>&#x000A;<span class="nt">&lt;/certificate&gt;</span>&#x000A;</code></pre></div>
+<p>For provisioned hosts:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/hosts&#x000A;<span class="nt">&lt;external_hosts&gt;</span>&#x000A;  <span class="nt">&lt;external_host</span> <span class="na">id=</span><span class="s">"{host:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/external_host&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/external_hosts&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/hosts/{host:id}&#x000A;<span class="nt">&lt;external_host</span> <span class="na">id=</span><span class="s">"{host:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myhost<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;address&gt;</span>mhost.example.com<span class="nt">&lt;/address&gt;</span>&#x000A;<span class="nt">&lt;/external_host&gt;</span>&#x000A;</code></pre></div>
+<p>For discovered hosts:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/discoveredhosts&#x000A;<span class="nt">&lt;external_discovered_hosts&gt;</span>&#x000A;  <span class="nt">&lt;external_discovered_host</span> <span class="na">id=</span><span class="s">"{host:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/external_discovered_host&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/external_discovered_hosts&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/discoveredhosts/{discoveredhost:id}&#x000A;<span class="nt">&lt;external_discovered_host</span> <span class="na">id=</span><span class="s">"{discoveredhost:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myhost<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;ip&gt;</span>192.168.122.23<span class="nt">&lt;/ip&gt;</span>&#x000A;  <span class="nt">&lt;mac&gt;</span>52:54:00:1a:65:40<span class="nt">&lt;/mac&gt;</span>&#x000A;  <span class="nt">&lt;subnet_name&gt;</span>...<span class="nt">&lt;/subnet_name&gt;</span>&#x000A;  <span class="nt">&lt;last_report&gt;</span>...<span class="nt">&lt;/last_report&gt;</span>&#x000A;<span class="nt">&lt;/external_discovered_host&gt;</span>&#x000A;</code></pre></div>
+<p>For host groups:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/hostgroups&#x000A;<span class="nt">&lt;external_host_groups&gt;</span>&#x000A;  <span class="nt">&lt;external_host_group</span> <span class="na">id=</span><span class="s">"{group:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/external_host_group&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/external_host_groups&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/hostgroups/{group:id}&#x000A;<span class="nt">&lt;external_host_group</span> <span class="na">id=</span><span class="s">"{group:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>mygroup<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;architecture_name&gt;</span>...<span class="nt">&lt;/architecture_name&gt;</span>&#x000A;  <span class="nt">&lt;operating_system_name&gt;</span>...<span class="nt">&lt;/operating_system_name&gt;</span>&#x000A;  <span class="nt">&lt;subnet_name&gt;</span>...<span class="nt">&lt;/subnet_name&gt;</span>&#x000A;  <span class="nt">&lt;domain_name&gt;</span>...<span class="nt">&lt;/domain_name&gt;</span>&#x000A;<span class="nt">&lt;/external_host_group&gt;</span>&#x000A;</code></pre></div>
+<p>For compute resources:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/computeresources&#x000A;<span class="nt">&lt;external_compute_resources&gt;</span>&#x000A;  <span class="nt">&lt;external_compute_resource</span> <span class="na">id=</span><span class="s">"{resource:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/external_compute_resource&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/external_compute_resources&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /externalhostproviders/{provider:id}/computeresources/{resource:id}&#x000A;<span class="nt">&lt;external_compute_resource</span> <span class="na">id=</span><span class="s">"{resource:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myresource<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;provider&gt;</span>...<span class="nt">&lt;/provider&gt;</span>&#x000A;  <span class="nt">&lt;user&gt;</span>...<span class="nt">&lt;/user&gt;</span>&#x000A;  <span class="nt">&lt;url&gt;</span>...<span class="nt">&lt;/url&gt;</span>&#x000A;<span class="nt">&lt;/external_compute_resource&gt;</span>&#x000A;</code></pre></div>
+<h1 id="openstack-image-providers">OpenStack image providers</h1>
+
+<p>The representation of the resource will look like this:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackimageproviders&#x000A;<span class="nt">&lt;openstack_image_providers&gt;</span>&#x000A;  <span class="nt">&lt;openstack_image_provider</span> <span class="na">id=</span><span class="s">"{provider:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/openstack_image_provider&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/openstack_image_providers&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackimageproviders/{provider:id}&#x000A;<span class="nt">&lt;openstack_image_provider</span> <span class="na">id=</span><span class="s">"{provider:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myprovider<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;description&gt;</span>My provider<span class="nt">&lt;/description&gt;</span>&#x000A;  <span class="nt">&lt;url&gt;</span>http://glance.example.com<span class="nt">&lt;/url&gt;</span>&#x000A;  <span class="nt">&lt;requires_authentication&gt;</span>true<span class="nt">&lt;/requires_authentication&gt;</span>&#x000A;  <span class="nt">&lt;username&gt;</span>myuser<span class="nt">&lt;/username&gt;</span>&#x000A;  <span class="nt">&lt;password&gt;</span>mypass<span class="nt">&lt;/password&gt;</span>&#x000A;  <span class="nt">&lt;tenant_name&gt;</span>mytenant<span class="nt">&lt;/tenant_name&gt;</span>&#x000A;  <span class="nt">&lt;properties&gt;</span>&#x000A;    <span class="nt">&lt;property&gt;</span>&#x000A;      <span class="nt">&lt;name&gt;</span>prop1<span class="nt">&lt;/name&gt;</span>&#x000A;      <span class="nt">&lt;value&gt;</span>value1<span class="nt">&lt;/myvalue&gt;</span>&#x000A;    <span class="nt">&lt;/property&gt;</span>&#x000A;    <span class="nt">&lt;property&gt;</span>&#x000A;      <span class="nt">&lt;name&gt;</span>prop2<span class="nt">&lt;/name&gt;</span>&#x000A;      <span class="nt">&lt;value&gt;</span>value2<span class="nt">&lt;/myvalue&gt;</span>&#x000A;    <span class="nt">&lt;/property&gt;</span>&#x000A;  <span class="nt">&lt;/properties&gt;</span>&#x000A;<span class="nt">&lt;/openstack_image_provider&gt;</span>&#x000A;</code></pre></div>
+<p>The providers collection will support listing, getting, adding, and removing providers, with the usual methods.</p>
+
+<p>The provider resource will support getting, deleting and updating the provider, with the usual methods. In addition it will support the <code>testconnectivity</code> and <code>importcertificates</code> operations. The first is used to check the connectivity with the external provider:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>POST /openstackimageproviders/{provider:id}/testconnectivity&#x000A;<span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The second is used to import the chain of certificates of the external provider:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>POST /openstackimageproviders/{provider:id}/importcertificates&#x000A;<span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The third is used to import the image:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>POST /openstackimageproviders/{provider:id}/importcertificates&#x000A;<span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The provider resource includes subcollections for certificates and images. For certificates it will look like this:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackimageproviders/{provider:id}/certificates&#x000A;<span class="nt">&lt;certificates&gt;</span>&#x000A;  <span class="nt">&lt;certificate</span> <span class="na">id=</span><span class="s">"{host:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/certificate&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/certificates&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackimageproviders/{provider:id}/certificates/{certificate:id}&#x000A;<span class="nt">&lt;certificate</span> <span class="na">id=</span><span class="s">"{certificate:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;subject&gt;</span>CN=glance.example.com<span class="nt">&lt;/subject&gt;</span>&#x000A;  <span class="nt">&lt;content&gt;</span>...<span class="nt">&lt;/content&gt;</span>&#x000A;<span class="nt">&lt;/certificate&gt;</span>&#x000A;</code></pre></div>
+<p>For images:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackimageproviders/{provider:id}/images&#x000A;<span class="nt">&lt;openstack_images&gt;</span>&#x000A;  <span class="nt">&lt;openstack_image</span> <span class="na">id=</span><span class="s">"{image:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/openstack_image&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/openstack_images&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackimageproviders/{provider:id}/images/{image:id}&#x000A;<span class="nt">&lt;openstack_image</span> <span class="na">id=</span><span class="s">"{image:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myimage<span class="nt">&lt;/name&gt;</span>&#x000A;<span class="nt">&lt;/openstack_image&gt;</span>&#x000A;</code></pre></div>
+<p>The image resource supports the <code>import</code> operation:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>POST /openstackimageproviders/{provider:id}/images/{image:id}/import&#x000A;<span class="nt">&lt;action&gt;</span>&#x000A;  <span class="nt">&lt;storagedomain&gt;</span>&#x000A;    <span class="nt">&lt;name&gt;</span>mysd<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;/storagedomain&gt;</span>&#x000A;  <span class="nt">&lt;cluster&gt;</span>&#x000A;    <span class="nt">&lt;name&gt;</span>mycluster<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;/cluster&gt;</span>&#x000A;  <span class="nt">&lt;import_as_template&gt;</span>false<span class="nt">&lt;/import_as_template&gt;</span>&#x000A;<span class="nt">&lt;/action&gt;</span>&#x000A;</code></pre></div>
+<h1 id="openstack-network-providers">OpenStack network providers</h1>
+
+<p>The representation of the resource will look like this:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstackneetworkproviders&#x000A;<span class="nt">&lt;openstack_network_providers&gt;</span>&#x000A;  <span class="nt">&lt;openstack_network_provider</span> <span class="na">id=</span><span class="s">"{provider:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/openstack_network_provider&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/openstack_network_providers&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworkproviders/{provider:id}&#x000A;<span class="nt">&lt;openstack_network_provider</span> <span class="na">id=</span><span class="s">"{provider:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>myprovider<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;description&gt;</span>My provider<span class="nt">&lt;/description&gt;</span>&#x000A;  <span class="nt">&lt;url&gt;</span>http://neutron.example.com<span class="nt">&lt;/url&gt;</span>&#x000A;  <span class="nt">&lt;username&gt;</span>myuser<span class="nt">&lt;/username&gt;</span>&#x000A;  <span class="nt">&lt;password&gt;</span>mypass<span class="nt">&lt;/password&gt;</span>&#x000A;  <span class="nt">&lt;tenant_name&gt;</span>mytenant<span class="nt">&lt;/tenant_name&gt;</span>&#x000A;  <span class="nt">&lt;plugin_type&gt;</span>open_vswitch<span class="nt">&lt;plugin_type&gt;</span>&#x000A;  <span class="nt">&lt;agent_configuration&gt;</span>&#x000A;    <span class="nt">&lt;network_mappings&gt;</span>...<span class="nt">&lt;/network_mappings&gt;</span>&#x000A;    <span class="nt">&lt;broker_type&gt;</span>qpid|rabbit_mq<span class="nt">&lt;broker_type&gt;</span>&#x000A;    <span class="nt">&lt;address&gt;</span>...<span class="nt">&lt;/address&gt;</span>&#x000A;    <span class="nt">&lt;port&gt;</span>...<span class="nt">&lt;/port&gt;</span>&#x000A;    <span class="nt">&lt;username&gt;</span>...<span class="nt">&lt;/username&gt;</span>&#x000A;    <span class="nt">&lt;password&gt;</span>...<span class="nt">&lt;/password&gt;</span>&#x000A;  <span class="nt">&lt;/agent_configuration&gt;</span>&#x000A;  <span class="nt">&lt;properties&gt;</span>&#x000A;    <span class="nt">&lt;property&gt;</span>&#x000A;      <span class="nt">&lt;name&gt;</span>prop1<span class="nt">&lt;/name&gt;</span>&#x000A;      <span class="nt">&lt;value&gt;</span>value1<span class="nt">&lt;/myvalue&gt;</span>&#x000A;    <span class="nt">&lt;/property&gt;</span>&#x000A;    <span class="nt">&lt;property&gt;</span>&#x000A;      <span class="nt">&lt;name&gt;</span>prop2<span class="nt">&lt;/name&gt;</span>&#x000A;      <span class="nt">&lt;value&gt;</span>value2<span class="nt">&lt;/myvalue&gt;</span>&#x000A;    <span class="nt">&lt;/property&gt;</span>&#x000A;  <span class="nt">&lt;/properties&gt;</span>&#x000A;<span class="nt">&lt;/openstack_network_provider&gt;</span>&#x000A;</code></pre></div>
+<p>The providers collection will support listing, getting, adding and removing providers, with the usual methods.</p>
+
+<p>The provider resource will support getting, deleting and updating the provider, with the usual methods. In addition it will support the <code>testconnectivity</code> and <code>importcertificates</code> operations. The first used to check the connectivity with the external provider:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>POST /openstacknetworkproviders/{provider:id}/testconnectivity&#x000A;<span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The second is used to import the chain of certificates of the external provider:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>POST /openstacknetworkproviders/{provider:id}/importcertificates&#x000A;<span class="nt">&lt;action/&gt;</span>&#x000A;</code></pre></div>
+<p>The provider resource includes sub-collections for certificates and networks. For certificates it will look like this:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworkproviders/{provider:id}/certificates&#x000A;<span class="nt">&lt;certificates&gt;</span>&#x000A;  <span class="nt">&lt;certificate</span> <span class="na">id=</span><span class="s">"{host:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/certificate&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/certificates&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworkproviders/{provider:id}/certificates/{certificate:id}&#x000A;<span class="nt">&lt;certificate</span> <span class="na">id=</span><span class="s">"{certificate:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;subject&gt;</span>CN=neutron.example.com<span class="nt">&lt;/subject&gt;</span>&#x000A;  <span class="nt">&lt;content&gt;</span>...<span class="nt">&lt;/content&gt;</span>&#x000A;<span class="nt">&lt;/certificate&gt;</span>&#x000A;</code></pre></div>
+<p>For networks:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworkproviders/{provider:id}/networks&#x000A;<span class="nt">&lt;openstack_networks&gt;</span>&#x000A;  <span class="nt">&lt;openstack_network</span> <span class="na">id=</span><span class="s">"{network:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/openstack_network&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/openstack_networks&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworkproviders/{provider:id}/networks/{network:id}&#x000A;<span class="nt">&lt;openstack_network</span> <span class="na">id=</span><span class="s">"{networkd:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>mynetwork<span class="nt">&lt;/name&gt;</span>&#x000A;<span class="nt">&lt;/openstack_network&gt;</span>&#x000A;</code></pre></div>
+<p>The network resource will in turn include a sub-collection for sub-networks:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworproviders/{provider:id}/networks/{network:id}/subnets&#x000A;<span class="nt">&lt;openstack_subnets&gt;</span>&#x000A;  <span class="nt">&lt;openstack_subnet</span> <span class="na">id=</span><span class="s">"{subnet:id}"</span><span class="nt">&gt;</span>...<span class="nt">&lt;openstack_subnet&gt;</span>&#x000A;  ...&#x000A;<span class="nt">&lt;/openstack_subnets&gt;</span>&#x000A;</code></pre></div>
+<div class="highlight"><pre class="highlight xml"><code>GET /openstacknetworproviders/{provider:id}/networks/{network:id}/subnets/{subnet:id}&#x000A;<span class="nt">&lt;openstack_subnet</span> <span class="na">id=</span><span class="s">"{subnet:id}"</span><span class="nt">&gt;</span>&#x000A;  <span class="nt">&lt;cidr&gt;</span>...<span class="nt">&lt;/cidr&gt;</span>&#x000A;  <span class="nt">&lt;ip_version&gt;</span>v4|v6<span class="nt">&lt;ip_version&gt;</span>&#x000A;  <span class="nt">&lt;gateway&gt;</span>192.168.122.1<span class="nt">&lt;/gateway&gt;</span>&#x000A;  <span class="nt">&lt;dns_servers&gt;</span>&#x000A;    <span class="nt">&lt;dns_server&gt;</span>192.168.122.1<span class="nt">&lt;/dns_server&gt;</span>&#x000A;    <span class="nt">&lt;dns_server&gt;</span>192.168.122.2<span class="nt">&lt;/dns_server&gt;</span>&#x000A;    ...&#x000A;  <span class="nt">&lt;/dns_servers&gt;</span>&#x000A;<span class="nt">&lt;/openstack_subnet&gt;</span>&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/api/external-providers-api-examples.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/api/external-providers-api-examples.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

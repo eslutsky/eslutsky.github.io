@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Engine support for PPC64 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="engine-support-for-ppc64">Engine support for PPC64</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Implement support in ovirt-engine to manage KVM on IBM POWER processor based hosts.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Paulo de Rezende Pinatti <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#112;&#112;&#105;&#110;&#097;&#116;&#116;&#105;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#112;&#112;&#105;&#110;&#097;&#116;&#116;&#105;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner: Nathan Augusto Ozelim <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#110;&#097;&#116;&#111;&#122;&#101;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#110;&#097;&#116;&#111;&#122;&#101;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+      <li>Engine Component owner: Fernando Granha Jeronimo <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#103;&#114;&#097;&#110;&#104;&#097;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#102;&#103;&#114;&#097;&#110;&#104;&#097;&#064;&#108;&#105;&#110;&#117;&#120;&#046;&#118;&#110;&#101;&#116;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+      <li>Developers: Leonardo Bianconi <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#108;&#101;&#111;&#110;&#097;&#114;&#100;&#111;&#046;&#098;&#105;&#097;&#110;&#099;&#111;&#110;&#105;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;">&#108;&#101;&#111;&#110;&#097;&#114;&#100;&#111;&#046;&#098;&#105;&#097;&#110;&#099;&#111;&#110;&#105;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;</a>; Vitor de Lima <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#118;&#105;&#116;&#111;&#114;&#046;&#108;&#105;&#109;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;">&#118;&#105;&#116;&#111;&#114;&#046;&#108;&#105;&#109;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;</a>; Gustavo Frederico Temple Pedrosa <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#103;&#117;&#115;&#116;&#097;&#118;&#111;&#046;&#112;&#101;&#100;&#114;&#111;&#115;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;">&#103;&#117;&#115;&#116;&#097;&#118;&#111;&#046;&#112;&#101;&#100;&#114;&#111;&#115;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<p>Status: Released.</p>
+
+<h2 id="important-notes-about-ppc64-support">Important notes about ppc64 support</h2>
+
+<p>Currently QEMU for ppc64 has some missings features which should not be used when administrating VMs for this architecture, these features include:</p>
+
+<ul>
+  <li>Suspension</li>
+</ul>
+
+<p>The suspend option in the "Virtual Machines" tab should not be used until QEMU supports this feature.</p>
+
+<ul>
+  <li>Migration</li>
+</ul>
+
+<p>Migration does not work, so as a workaround the "Do Not Migrate Virtual Machines" option in the "Resilience Policy" tab should be used when creating clusters. Also, every ppc64 VM should be pinned to a Host, this can be done by choosing the "Do not allow migration" in the "Migration Options" section of the "Host" tab in the "New Virtual Machine" dialog.</p>
+
+<ul>
+  <li>Memory Snapshots</li>
+</ul>
+
+<p>Memory snapshots are not supported yet, so the "Save memory" option in the "Create Snapshot" dialog must not be checked.</p>
+
+<ul>
+  <li>Boot order</li>
+</ul>
+
+<p>The "Boot Sequence" section in the "Boot Options" tab of the "New/Edit Virtual Machine" dialog is ignored by QEMU, the boot order is always fixed no matter what is defined in this section.</p>
+
+<ul>
+  <li>Alignment scans</li>
+</ul>
+
+<p>libguestfs is not properly supported on ppc64 hosts, this affects only the "Scan Alignment" available in the context menu of Disks.</p>
+
+<ul>
+  <li>Self Hosted Engine</li>
+</ul>
+
+<p>The Self Hosted Engine functionality was not implemented yet.</p>
+
+<h2 id="detailed-description">Detailed description</h2>
+
+<p>This feature will add ppc64 architecture awareness to the ovirt-engine code, which currently makes various assumptions based on the x86 architecture. When specifying virtual machine devices for example, what is suitable for x86 architecture may not be for POWER (or may not be available yet).</p>
+
+<p>For example, in the package common.businessentities the enum at VmInterfaceType.java describing some network devices types are not architecture aware and may contain devices not supported by the POWER architecture:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>public enum VmInterfaceType {&#x000A;    rtl8139_pv(0,"Dual mode rtl8139, Red Hat VirtIO"),&#x000A;    rtl8139(1,"rtl8139"),&#x000A;    e1000(2,"e1000"),&#x000A;    pv(3,"Red Hat VirtIO");&#x000A;</code></pre></div>
+<h3 id="approach">Approach</h3>
+
+<p>It is highly undesirable that a new architecture increases the burden of developing and maintaining the engine code. If new commands required direct architectural gory details manipulation, it would be error prone and would increase code complexity. Therefore an important aspect to be considered is a good encapsulation of architecture differentiation.</p>
+
+<p>An interesting design pattern that can be used is the Strategy pattern mentioned in the GoF book. It encapsulates the specifics of a set algorithms proving a standard interface no matter the underlying implementation, allowing the client to remain decoupled of the unnecessary details. This behaviour is extremely desirable in the canDoAction methods of bll package, once the code will not need to explicitly differentiate an architecture.</p>
+
+<p>For instance, in the VmInfoBuilder.java, an architecture specific code similar to the one shown below can be added to the addCdDetails:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    // CDROM addresses for PPC64 must be treated differently from x86_64&#x000A;    strategy.addCdromAddress(struct);&#x000A;</code></pre></div>
+<p>And in the VmInfoBuilder object the method would make use of the appropriate arch strategy logic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    public class ArchStrategyFactory {&#x000A;        private static final EnumMap&lt;ArchitectureType, ArchStrategy&gt; architectureArchStrategyMap =  new EnumMap&lt;ArchitectureType, ArchStrategy&gt;(ArchitectureType.class);&#x000A;&#x000A;        public static ArchStrategy getStrategy(ArchitectureType architecture) { &#x000A;            return architectureArchStrategyMap.get(architecture);&#x000A;        }&#x000A;    } &#x000A;&#x000A;    public void addCdromAddress(Map&lt;String, Object&gt; cdromDevice) {&#x000A;        Map&lt;String, String&gt; cdromAddress = new HashMap&lt;String, String&gt;();&#x000A;        /*... create the appropriate addresses for architecture specific*/&#x000A;        cdromDevice.put(VdsProperties.Address, cdromAddress);&#x000A;    }&#x000A;</code></pre></div>
+<p>Moreover, the strategy class can be used to list domain values. Instead of directly accessing an arch specific enum it would get the strategy associated to the context and ask it to list the available types and default values such as <code>contextObject.listDisplayTypes();</code> and <code>contextObject.getDefaultDisplayType();</code> (Important, this is only an example, since the OSInfo handle many of these cases).</p>
+
+<h3 id="osinfo-repository">OSInfo Repository</h3>
+
+<p>After OSInfo implementation, many hard-coded architecture code specific will be removed, such as display types, network interfaces, etc. For that, the OSInfo will handle a basic PPC64 OS, which will set the basic configuration for PPC64 Platform. Example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other_ppc64.cpuArchitecture.value = ppc64&#x000A;os.other_ppc64.name.value = Other OS&#x000A;os.other_ppc64.spiceSupport.value = true&#x000A;os.other_ppc64.displayProtocols.value = vnc/cirrus&#x000A;...&#x000A;</code></pre></div>
+<p>For new PPC64 OSes, will be only necessary create a new OS instance, which derivate from the generic one, like all other x86_64.</p>
+
+<h3 id="cpu-flags-and-families">CPU flags and families</h3>
+
+<p>Ovirt-engine currently relies on x86 cpu flags to identify the cpu model and levels to determine compatibility between cpu families. For example, a cluster can change from family A to family B if level_A &lt;= level_B, which means B has A's features and possibly more. This data is stored in the field ServerCpuList of the vdc_options table, in the format [0]-level, [1]-name, [2]-flags, [3]-verb as below:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>3:Intel Conroe Family:vmx,nx,model_Conroe:Conroe;&#x000A;4:Intel Penryn Family:vmx,nx,model_Penryn:Penryn;&#x000A;5:Intel Nehalem Family:vmx,nx,model_Nehalem:Nehalem;&#x000A;6:Intel Westmere Family:aes,vmx,nx,model_Westmere:Westmere;&#x000A;7:Intel SandyBridge Family:vmx,nx,model_SandyBridge:SandyBridge;&#x000A;2:AMD Opteron G1:svm,nx,model_Opteron_G1:Opteron_G1;&#x000A;3:AMD Opteron G2:svm,nx,model_Opteron_G2:Opteron_G2;&#x000A;4:AMD Opteron G3:svm,nx,model_Opteron_G3:Opteron_G3;&#x000A;5:AMD Opteron G4:svm,nx,model_Opteron_G4:Opteron_G4;&#x000A;</code></pre></div>
+<p>For IBM POWER, there are no cpu flags available. To be able to correctly identify a KVM enabled IBM POWER machine, the solution is to use the platform identificator string <strong>PowerNV</strong> available in /proc/cpuinfo, as a replacement for the vmx/svm flags.</p>
+
+<p>With regard to family levels, there is no support at the moment for compatibility between POWER families, which means the current implementation does not work. For example, the code below, from UpdateVdsGroupCommand.java, needs to be adapted:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    boolean sameCpuNames = StringUtils.equals(oldGroup.getcpu_name(), getVdsGroup().getcpu_name());&#x000A;    if (!sameCpuNames) {&#x000A;        if (suspendedVms) {&#x000A;            addCanDoActionMessage(VdcBllMessages.VDS_GROUP_CANNOT_UPDATE_CPU_WITH_SUSPENDED_VMS);&#x000A;            result = false;&#x000A;        } else if (notDownVms) {&#x000A;            int compareResult = compareCpuLevels(oldGroup);&#x000A;            if (compareResult &lt; 0) {&#x000A;                addCanDoActionMessage(VdcBllMessages.VDS_GROUP_CANNOT_LOWER_CPU_LEVEL);&#x000A;                result = false;&#x000A;            } else if (compareResult &gt; 0) {// Upgrade of CPU in same compability level is allowed if&#x000A;                                           // there&#x000A;                // are running VMs - but we should warn they&#x000A;                // cannot not be hibernated&#x000A;                AuditLogableBase logable = new AuditLogableBase();&#x000A;                logable.AddCustomValue("VdsGroup", getParameters().getVdsGroup().getname());&#x000A;                AuditLogDirector.log(logable,&#x000A;                        AuditLogType.CANNOT_HIBERNATE_RUNNING_VMS_AFTER_CLUSTER_CPU_UPGRADE);&#x000A;            }&#x000A;        }&#x000A;    }&#x000A;</code></pre></div>
+<p>Due to the fact that there is no notion of a more featured family containing a less one on POWER, it's necessary to adapt the code to encapsulate the x86 levels and report the (non) compatibility between POWER families accordingly. This can be addressed by using again the strategy class which will manage the cpu details and provide functions free of the level semantic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    boolean sameCpuNames = StringUtils.equals(oldGroup.getcpu_name(), getVdsGroup().getcpu_name());&#x000A;    if (!sameCpuNames) {  &#x000A;        if (suspendedVms) {&#x000A;            addCanDoActionMessage(VdcBllMessages.VDS_GROUP_CANNOT_UPDATE_CPU_WITH_SUSPENDED_VMS);&#x000A;            result = false;&#x000A;        } else if (notDownVms) {&#x000A;            boolean isCompatible = getVdsGroup().isCpuCompatible(oldGroup.getcpu_name())&#x000A;            if (!isCpuCompatible) {&#x000A;                addCanDoActionMessage(VdcBllMessages.VDS_GROUP_CANNOT_UPDATE_INCOMPATIBLE_CPU);&#x000A;                result = false;&#x000A;            } else {&#x000A;                // At this point only x86 families as ppc64 are always incompatible between them&#x000A;                if (getVdsGroup.cpuHasMoreFeatures(oldGroup.getcpu_name())) {&#x000A;                    AuditLogableBase logable = new AuditLogableBase();&#x000A;                    logable.AddCustomValue("VdsGroup", getParameters().getVdsGroup().getname());&#x000A;                    AuditLogDirector.log(logable,&#x000A;                    AuditLogType.CANNOT_HIBERNATE_RUNNING_VMS_AFTER_CLUSTER_CPU_UPGRADE);&#x000A;                }&#x000A;            }&#x000A;        }&#x000A;    }&#x000A;&#x000A;// VDSGroup class encapsulates the strategy object&#x000A;public class VDSGroup ...&#x000A;&#x000A;    public boolean cpuHasMoreFeatures(String otherGroup) {&#x000A;        ArchStrategy archStrategy = getArchStrategy();&#x000A;        boolean result = archStrategy.cpuHasMoreFeatures(getcpu_name(), otherGroup);&#x000A;        return result&#x000A;    }&#x000A;&#x000A;    public boolean isCpuCompatible(String otherGroup) {&#x000A;        ArchStrategy archStrategy = getArchStrategy();&#x000A;        boolean result = archStrategy.isCpuCompatible(getcpu_name(), otherGroup);&#x000A;        return result&#x000A;    }&#x000A;&#x000A;    private ArchStrategy getArchStrategy() {   &#x000A;        ArchStrategy strategy = strategyFactory.get(getArch(), getVersion());&#x000A;        return strategy;&#x000A;    }&#x000A;</code></pre></div>
+<p>As a result, the ppc64 entries entries in the vdc_options table would look like this:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>:PowerPC 7:powernv,model_POWER7:POWER7;&#x000A;:PowerPC 7 v2.1:powernv,model_POWER7_v2.1:POWER7_v2.1;&#x000A;:PowerPC 7 v2.3:powernv,model_POWER7_v2.3:POWER7_v2.3;&#x000A;</code></pre></div>
+<p>The level field would be empty to signalize it's not supported.</p>
+
+<h3 id="gui-considerations">GUI considerations</h3>
+
+<p>Some options in the user interface may vary according to the architecture. For instance, the operating systems available for a vm are not the same for x86 and ppc64. The engine allows to set functions to be called when certain properties of a model change, this can be used to update the options according to architecture whenever needed. For example, in the event where the selected cluster changes while adding a new vm we include a method to update the list of available operating systems:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    @Override&#x000A;    public void Cluster_SelectedItemChanged()&#x000A;    {&#x000A;        UpdateDefaultHost();&#x000A;        UpdateCustomProperties();&#x000A;        UpdateMinAllocatedMemory();&#x000A;        UpdateNumOfSockets();&#x000A;        updateQuotaByCluster(null, "");&#x000A;        updateCpuPinningVisibility();&#x000A;&#x000A;        // Add method to update the list of oses&#x000A;        UpdateOperatingSystemOptions();&#x000A;    }&#x000A;</code></pre></div>
+<p>The function would ask the server for the operating system list:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    public void UpdateOperatingSystemOptions()&#x000A;    {&#x000A;        VDSGroup cluster = (VDSGroup) getModel().getCluster().getSelectedItem();&#x000A;&#x000A;        // this function is responsible for retrieving the OS list from server&#x000A;        AsyncDataProvider.GetOSList(new AsyncQuery( getModel(),&#x000A;                new INewAsyncCallback() {&#x000A;                    @Override&#x000A;                    public void OnSuccess(Object target, Object returnValue) {&#x000A;&#x000A;                        UnitVmModel model = (UnitVmModel) target;&#x000A;                        ArrayList&lt;VmOsType&gt; osList = (ArrayList&lt;VmOsType&gt;) returnValue;&#x000A;                        model.getOSType().setItems(osList);&#x000A;                        model.getOSType().setSelectedItem(VmOsType.Unassigned);&#x000A;&#x000A;                    }&#x000A;                }, getModel().getHash()), cluster.getId());&#x000A;&#x000A;    }&#x000A;</code></pre></div>
+<h2 id="development">Development</h2>
+
+<p>The oVirt PPC64 support is in development status and the following changes are under review:</p>
+
+<h3 id="frontend-related-changes">Frontend related changes</h3>
+
+<p><strong>Cluster and architecture related changes</strong> <a href="http://gerrit.ovirt.org/18226">[18226]</a></p>
+
+<p>After have added the architecture field in the cluster, the following validations are necessary:</p>
+
+<ul>
+  <li>
+    <p>Do not allow cluster architecture be changed (processor name of different architecture) while there are VMs and hosts attached.</p>
+  </li>
+  <li>
+    <p>Do not allow hosts of different architectures be attached in the same cluster.</p>
+  </li>
+</ul>
+
+<p><strong>Architecture support for VM and Template</strong> <a href="http://gerrit.ovirt.org/18227">[18227]</a></p>
+
+<p>After have added the architecture field in VM and Template, commands and UI validation related with architecture were added:</p>
+
+<ul>
+  <li>
+    <p>Do not allow add VMs and Pools if the selected template (except the blank one) hasn't the same architecture of the selected cluster.</p>
+  </li>
+  <li>
+    <p>Do not allow add VMs, Templates or Pool if the selected cluster has blank processor name (processor name indicates the architecture).</p>
+  </li>
+  <li>
+    <p>Do not allow change the cluster on host and VM if they have different architecture.</p>
+  </li>
+  <li>
+    <p>Do not allow migrate VMs if the destination host has different architectures.</p>
+  </li>
+  <li>
+    <p>Do not allow change the cluster of a VM if the destination cluster has a different architecture.</p>
+  </li>
+</ul>
+
+<p><strong>Prevent architecture mismatches in the frontend</strong> <a href="http://gerrit.ovirt.org/#/c/19132">[19132]</a></p>
+
+<p>This patch introduces some changes in the frontend in order to prevent the user from making mistakes and receive errors from the backend commands. These changes include:</p>
+
+<ul>
+  <li>
+    <p>Show only CPUs compatible with the cluster's current CPU when editing clusters</p>
+  </li>
+  <li>
+    <p>Show only clusters with the same architecture as the host when editing hosts</p>
+  </li>
+  <li>
+    <p>Show only clusters with the same architecture as the VM, Pool or Template when editing them</p>
+  </li>
+  <li>
+    <p>Show only clusters with the same architecture as the VM used as a model when creating a template</p>
+  </li>
+  <li>
+    <p>Hide clusters without a CPU name in the 'New VM' and 'New Pool' dialogs</p>
+  </li>
+</ul>
+
+<p><strong>Show only supported displays</strong> <a href="http://gerrit.ovirt.org/17885">[17885]</a></p>
+
+<p>Some displays are not compatible with a specific architecture, for example the Spice one is not compatible with PPC64 architecture. So this change uses information from the osinfo property file to load a list of supported displays per OS and blocks the selection of the ones that are not in the list, since there is an enum to handle all supported displays in the system.
+Also this change adds the display and its protocol, so a protocol can be related to different displays.</p>
+
+<p>OSInfo property responsible for display protocols:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other.displayProtocols.value = vnc/cirrus,qxl/qxl&#x000A;</code></pre></div>
+<p><strong>Show only supported disk interfaces</strong> <a href="http://gerrit.ovirt.org/17964">[17964]</a></p>
+
+<p>As displays, some disk interfaces, cannot be compatible with an OS or an architecture, so a new property was added in the OSInfo file to handle this case.</p>
+
+<p>OSInfo property responsible to show specific disk interfaces:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other_ppc64.devices.diskInterfaces.value = VirtIO, VirtIO_SCSI&#x000A;</code></pre></div>
+<p><strong>Disk interface validation</strong> <a href="http://gerrit.ovirt.org/#/c/18648">[18648]</a></p>
+
+<p>It introduces a validation to check if the disk interface is compatible with the selected operating system.</p>
+
+<p><strong>Show only compatible OSes</strong> <a href="http://gerrit.ovirt.org/17972">[17972]</a></p>
+
+<p>For oVirt support for multiplatform, the OSes in the OSInfo property file are architecture specific. In the frontend they must be filtered based on the architecture, so this change shows only the compatible OSes on the VM and Pool screen. The filter is based on the OSInfo property bellow:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other_ppc64.cpuArchitecture.value = ppc64&#x000A;</code></pre></div>
+<p><strong>Show only supported watchdogs</strong> <a href="http://gerrit.ovirt.org/18221">[18221]</a></p>
+
+<p>This change adds, for each OS, the list of watchdogs supported and filters it on the screen. The following property is the one created in the OSInfo property file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other.watchDogModels.value = i6300esb,ib700&#x000A;</code></pre></div>
+<p><strong>Watchdog model validation</strong> <a href="http://gerrit.ovirt.org/#/c/18448">[18448]</a></p>
+
+<p>It introduces a validation to check if the watchdog model is compatible with the selected operating system.</p>
+
+<p><strong>Architecture parameter on search backend</strong> <a href="http://gerrit.ovirt.org/#/c/19010">[19010]</a></p>
+
+<p>This change adds a search parameter used to filter the architecture of VMs, Templates, Clusters, Pools and Hosts. In other words, the user can show only entities with a specific architecture.</p>
+
+<p><strong>Vnic hotplug validation</strong> <a href="http://gerrit.ovirt.org/#/c/19188">[19188]</a></p>
+
+<p>This change modifies the way hotplus is indicated in the system, adding it to the OSInfo property file. The following lines were added:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   os.{id}.devices.network.hotplugSupport.value = true&#x000A;   os.{id}.devices.network.hotplugSupport.value.3.0 = false&#x000A;</code></pre></div>
+<p><strong>Vnic hotplug validation</strong> <a href="http://gerrit.ovirt.org/#/c/19189">[19189]</a></p>
+
+<p>Based on the change <strong>19188</strong>, this change add the new way to check if a nic can be hotpluged.</p>
+
+<h3 id="backend-related-changes">Backend related changes</h3>
+
+<p><strong>Add POWER 7 to the CPU list</strong> <a href="http://gerrit.ovirt.org/17853">[17853]</a></p>
+
+<p>It introduces the POWER 7 CPU names to the list of supported CPUs in the oVirt data base. Along with this change, a new CPU attribute was created, the architecture. Now each processor name in the data base is related with an architecture type. This also includes an Enum (called <code>ArchitectureType</code>) to internally distinguish the architecture of each supported processor. The <code>ClusterEmulatedMachines configuration</code> value was changed to include the "pseries" emulated machine. See bellow the Power CPUs added:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>IBM POWER 7 v2.3&#x000A;IBM POWER 7 v2.0&#x000A;IBM POWER 7 v2.1&#x000A;</code></pre></div>
+<p><strong>Initial support for alternative architectures</strong> <a href="http://gerrit.ovirt.org/#/c/18938">[18938]</a></p>
+
+<p>It introduces a field to indicate the target architecture of VM, Templates and clusters present in the engine. This field is used in architecture related code in order to introduce support for the IBM POWER systems. The commands responsible for adding and updating these entities were modified, along with the REST API, the DAOs, the database and the frontend.</p>
+
+<p><strong>New OS for IBM POWER support</strong> <a href="http://gerrit.ovirt.org/18220">[18220]</a></p>
+
+<p>An new operating system was introduced in this change, which contains the characteristics of the PPC64 architecture. It includes also some information about disk interfaces that will be used in other following patches. See bellow the new OS added in the OSInfo property file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other_ppc64.id.value = 1001&#x000A;os.other_ppc64.name.value = Other OS&#x000A;os.other_ppc64.linux.derivedFrom.value = other&#x000A;os.other_ppc64.cpuArchitecture.value = ppc64&#x000A;os.other_ppc64.bus.value = 64&#x000A;os.other.displayProtocols.value = vnc/vga&#x000A;os.other_ppc64.devices.network.value = pv&#x000A;os.other_ppc64.devices.diskInterfaces.value = VirtIO, VirtIO_SCSI&#x000A;</code></pre></div>
+<p><strong>Fill and check arch when importing VM and Template from OVF</strong> <a href="http://gerrit.ovirt.org/18702">[18702]</a></p>
+
+<p>The OVF files doesn't have a field to handle the architecture, so when importing a VM or Template from it, the architecture is obtained from its OS. The system reads the OS and using the OSInfo property file, the architecture is obtained.</p>
+
+<p><strong>OVF import in multiple architecture scenario</strong> <a href="http://gerrit.ovirt.org/#/c/19012">[19012]</a></p>
+
+<p>This change prevents the user from import VMs and templates with different architectures into the same cluster. This is done by showing a warning when there are selected VMs with different architectures in the Import VM and Import Template dialog. Also, when the Import VM dialog is shown the only clusters displayed in the dialog are the ones compatible with the architecture of the selected VMs and templates.</p>
+
+<p><strong>OS type validation</strong> <a href="http://gerrit.ovirt.org/18347">[18347]</a></p>
+
+<p>For multiplatform support, the OSes now are architecture specific, so VM must be compatible with the OS used to create it. In all commands for these structures were added a validation to check this compatibility.</p>
+
+<p><strong>SCSI CD-ROM on PPC64 VMs</strong> <a href="http://gerrit.ovirt.org/18622">[18622]</a></p>
+
+<p>It introduces the proper creation of the virtual CD device on PPC64 VMs. This device must be attached to a SPAPR VSCSI controller, since currently the SCSI CD doesn't work with the VirtIO SCSI controller. For that, the following lines were added in the OSInfo property file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># for x86_64&#x000A;os.other.cdInterface.value = ide&#x000A;&#x000A;# for ppc_64&#x000A;os.other_ppc64.cdInterface.value = scsi&#x000A;</code></pre></div>
+<p><strong>Display type validation</strong> <a href="http://gerrit.ovirt.org/18150">[18150]</a></p>
+
+<p>The operating system, described in the OSInfo property file, now has a property to set the supported displays. This change checks the compatibility between the selected displays and the operating system. OSInfo property used to check compatibility:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other_ppc64.devices.diskInterfaces.value = VirtIO, VirtIO_SCSI&#x000A;</code></pre></div>
+<p><strong>VM Device Type for Display Type</strong> <a href="http://gerrit.ovirt.org/18677">[18677]</a></p>
+
+<p>This change adds VM Device Type for Display Type in property file. The attribute VM Device Type for each OS is present in the os info property file as bellow:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>os.other.displayProtocols.value = vnc/cirrus,qxl/qxl&#x000A;</code></pre></div>
+<p>The attribute VM Device Type in the Display Type now is the default value if none is found in the os file.</p>
+
+<h3 id="todo">TODO</h3>
+
+<ul>
+  <li>change DisplayType.qxl to DisplayType.spice which is more appropriate and reads clearer both in config and in the code</li>
+  <li>refactor and cleanup CpuFlagManager so it would be open to extention - started with <a href="http://gerrit.ovirt.org/#/c/19905">http://gerrit.ovirt.org/#/c/19905</a> - Roy</li>
+  <li>ensure the Version (3.3? 3.4?) ppc emulated machine is reported on</li>
+</ul>
+
+<h2 id="benefits-to-ovirt">Benefits to oVirt</h2>
+
+<p>oVirt will be able to support IBM POWER processor based hosts and have a code base design suitable to include new architectures.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>VDSM</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p><a href="http://en.wikipedia.org/wiki/Strategy_pattern">http://en.wikipedia.org/wiki/Strategy_pattern</a></p>
+
+<p><a href="/develop/release-management/features/vdsm/for-ppc64/">Features/Vdsm_for_PPC64</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/engine-support-for-ppc64.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/engine-support-for-ppc64.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

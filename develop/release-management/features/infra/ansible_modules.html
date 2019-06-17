@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Ansible oVirt modules &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h3 id="summary">Summary</h3>
+
+<p>The goal is to have a module for every entity oVirt has, so users can manage whole oVirt environment via Ansible playbooks.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Ondra Machacek (omachace)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#111;&#109;&#097;&#099;&#104;&#097;&#099;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#111;&#109;&#097;&#099;&#104;&#097;&#099;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h1 id="ansible">Ansible</h1>
+
+<h2 id="about">About</h2>
+
+<p>Ansible is an IT automation tool. It can configure systems, deploy software, and orchestrate more advanced IT tasks such
+as continuous deployments or zero downtime rolling updates.</p>
+
+<p>Ansible’s main goals are simplicity and ease-of-use. It also has a strong focus on security and reliability,
+featuring a minimum of moving parts, usage of OpenSSH for transport (with an accelerated socket mode and pull modes
+as alternatives), and a language that is designed around auditability by humans–even those not familiar with the program.</p>
+
+<h2 id="playbooks">Playbooks</h2>
+<p>Playbooks are Ansible’s configuration, deployment, and orchestration language. They can describe a policy you want your remote
+systems to enforce, or a set of steps in a general IT process. Playbooks uses <a href="http://yaml.org">YAML</a> as support language. In
+general playbooks consist of tasks. Every tasks executes specific module with parameters.</p>
+
+<h2 id="modules">Modules</h2>
+<p>Ansible ships with a number of modules (called the ‘module library’) that can be executed directly on remote hosts or through 
+Playbooks. Modules have to be idempotent. The concept that change commands should only be applied when they need to be applied,
+and that it is better to describe the desired state of a system than the process of how to get to that state. This feature page
+describes oVirt ansible modules.</p>
+
+<h1 id="ansible-ovirt-modules">Ansible oVirt modules</h1>
+<p>You can see all Ansible oVirt modules source code <a href="https://github.com/ansible/ansible/blob/devel/lib/ansible/modules/cloud/ovirt/">here</a> and the documentation <a href="http://docs.ansible.com/ansible/list_of_cloud_modules.html#ovirt">here</a>.</p>
+
+<p><strong>Important</strong>: Ansible oVirt modules works with oVirt version 4 and higher.</p>
+
+<p><strong>Note</strong>: Links to modules documentation which will be in Ansible 2.3 are temporary on readthedocs page
+once, the modules will be merged and Ansible 2.3 will be release we will change links to official documentation.</p>
+
+<h1 id="ansible-22">Ansible 2.2</h1>
+<p>Following modules has been merged and can be used in Ansible version 2.2.</p>
+
+<p>The following table shows oVirt modules and version of Ansible where the modules are shipped:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Version</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#ovirtauth">ovirt_auth</a></td>
+      <td>2.2</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtvms">ovirt_vms</a></td>
+      <td>2.2</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtdisks">ovirt_disks</a></td>
+      <td>2.2</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtdatacenters">ovirt_datacenters</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtclusters">ovirt_clusters</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtnetworks">ovirt_networks</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtstoragedomains">ovirt_storage_domains</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirthosts">ovirt_hosts</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirthostpm">ovirt_host_pm</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirthostnetworks">ovirt_host_networks</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtexternalproviders">ovirt_external_providers</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtnics">ovirt_nics</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirttemplates">ovirt_templates</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtvmpools">ovirt_vmpools</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtusers">ovirt_users</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtgroups">ovirt_groups</a></td>
+      <td>2.3</td>
+    </tr>
+    <tr>
+      <td><a href="#ovirtpermissions">ovirt_permissions</a></td>
+      <td>2.3</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="ovirt_auth">ovirt_auth</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_auth_module.html">ovirt_auth</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_auth.py">[source]</a>
+module authenticates to oVirt engine and creates SSO
+token, which should be later used in all other oVirt modules, so all modules don’t need to perform login and logout. This
+module returns an Ansible fact called <em>ovirt_auth</em>. Every module can use this fact as auth parameter, to perform authentication</p>
+
+<h3 id="example">Example</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Obtain SSO token with using username/password credentials</span>&#x000A;<span class="na">no_log</span><span class="pi">:</span> <span class="no">true</span>&#x000A;<span class="na">ovirt_auth</span><span class="pi">:</span>&#x000A;  <span class="na">url</span><span class="pi">:</span> <span class="s">https://ovirt.example.com/ovirt-engine/api</span>&#x000A;  <span class="na">username</span><span class="pi">:</span> <span class="s">admin@internal</span>&#x000A;  <span class="na">password</span><span class="pi">:</span> <span class="s">123456</span>&#x000A;  <span class="na">ca_file</span><span class="pi">:</span> <span class="s">ca.pem</span>&#x000A;&#x000A;<span class="c1"># Revoke the SSO token returned from previous task</span>&#x000A;<span class="na">ovirt_auth</span><span class="pi">:</span>&#x000A;  <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;  <span class="na">ovirt_auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_vms">ovirt_vms</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_vms_module.html">ovirt_vms</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_vms.py">[source]</a>
+module manages whole lifecycle of the Virtual Machine (VM)
+in oVirt. In addtion you can add disks and network interfaces to VM from this module, but if you need to manage disks and
+network interfaces in more depth you should use modules specifically for it.</p>
+
+<h3 id="example-1">Example</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Creates a new Virtual Machine from template named 'rhel7_template'</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">template</span><span class="pi">:</span> <span class="s">rhel7_template</span>&#x000A;&#x000A;<span class="c1"># Run VM with cloud init:</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">template</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">Default</span>&#x000A;    <span class="na">memory</span><span class="pi">:</span> <span class="s">1GiB</span>&#x000A;    <span class="na">high_availability</span><span class="pi">:</span> <span class="no">true</span>&#x000A;    <span class="na">cloud_init</span><span class="pi">:</span>&#x000A;      <span class="na">nic_boot_protocol</span><span class="pi">:</span> <span class="s">static</span>&#x000A;      <span class="na">nic_ip_address</span><span class="pi">:</span> <span class="s">10.34.60.86</span>&#x000A;      <span class="na">nic_netmask</span><span class="pi">:</span> <span class="s">255.255.252.0</span>&#x000A;      <span class="na">nic_gateway</span><span class="pi">:</span> <span class="s">10.34.63.254</span>&#x000A;      <span class="na">nic_name</span><span class="pi">:</span> <span class="s">eth1</span>&#x000A;      <span class="na">nic_on_boot</span><span class="pi">:</span> <span class="no">true</span>&#x000A;      <span class="na">host_name</span><span class="pi">:</span> <span class="s">example.com</span>&#x000A;      <span class="na">custom_script</span><span class="pi">:</span> <span class="pi">|</span>&#x000A;        <span class="no">write_files:</span>&#x000A;         <span class="no">- content: |</span>&#x000A;             <span class="no">Hello, world!</span>&#x000A;           <span class="no">path: /tmp/greeting.txt</span>&#x000A;           <span class="no">permissions: '0644'</span>&#x000A;      <span class="na">user_name</span><span class="pi">:</span> <span class="s">root</span>&#x000A;      <span class="na">root_password</span><span class="pi">:</span> <span class="s">super_password</span>&#x000A;&#x000A;<span class="c1"># Migrate/Run VM to/on host named 'host1'</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">running</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">host</span><span class="pi">:</span> <span class="s">host1</span>&#x000A;&#x000A;<span class="c1"># Change Vm's CD:</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">cd_iso</span><span class="pi">:</span> <span class="s">drivers.iso</span>&#x000A;&#x000A;<span class="c1"># Stop vm:</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">stopped</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;&#x000A;<span class="c1"># Hot plug memory to already created and running VM:</span>&#x000A;<span class="c1"># (VM won't be restarted)</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">memory</span><span class="pi">:</span> <span class="s">4GiB</span>&#x000A;  &#x000A;<span class="c1"># When change on the VM needs restart of the VM, use next_run state,</span>&#x000A;<span class="c1"># The VM will be updated and rebooted if there are any changes.</span>&#x000A;<span class="c1"># If present state would be used, VM won't be restarted.</span>&#x000A;<span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">next_run</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">boot_devices</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">network</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_disks">ovirt_disks</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_disks_module.html">ovirt_disks</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_disks.py">[source]</a>
+module to manage Virtual Machine and floating disks in oVirt. This module can attach/detach disks from VM, update attached
+disks attributes. This module also handle work with logical units.</p>
+
+<h3 id="examples">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create and attach new disk to VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_disks</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm_disk</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">size</span><span class="pi">:</span> <span class="s">10GiB</span>&#x000A;    <span class="na">format</span><span class="pi">:</span> <span class="s">cow</span>&#x000A;    <span class="na">interface</span><span class="pi">:</span> <span class="s">virtio</span>&#x000A;&#x000A;<span class="c1"># Attach logical unit to VM rhel7</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_disks</span><span class="pi">:</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">logical_unit</span><span class="pi">:</span>&#x000A;      <span class="na">target</span><span class="pi">:</span> <span class="s">iqn.2016-08-09.brq.str-01:omachace</span>&#x000A;      <span class="na">id</span><span class="pi">:</span> <span class="s">1IET_000d0001</span>&#x000A;      <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.204</span>&#x000A;    <span class="na">interface</span><span class="pi">:</span> <span class="s">virtio</span>&#x000A;&#x000A;<span class="c1"># Detach disk from VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_disks</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">detached</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvm_disk</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">size</span><span class="pi">:</span> <span class="s">10GiB</span>&#x000A;    <span class="na">format</span><span class="pi">:</span> <span class="s">cow</span>&#x000A;    <span class="na">interface</span><span class="pi">:</span> <span class="s">virtio</span>&#x000A;</code></pre></div>
+<h1 id="ansible-23">Ansible 2.3</h1>
+<p>Following modules are currently merged in devel branch and will be included in Ansible version 2.3.</p>
+
+<h2 id="ovirt_datacenters">ovirt_datacenters</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_datacenters_module.html">ovirt_datacenters</a>
+<a href="https://github.com/machacekondra/ovirt-ansible-example/blob/master/library/ovirt_datacenters.py">[source]</a>
+module to manage oVirt datacenters. This module can handle create, update and delete action with various parameters on oVirt
+datacenter.</p>
+
+<h3 id="examples-1">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create datacenter</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_datacenters</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;    <span class="na">local</span><span class="pi">:</span> <span class="s">True</span>&#x000A;    <span class="na">compatibility_version</span><span class="pi">:</span> <span class="s">4.0</span>&#x000A;    <span class="na">quota_mode</span><span class="pi">:</span> <span class="s">enabled</span>&#x000A;&#x000A;<span class="c1"># Remove datacenter</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_datacenters</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_clusters">ovirt_clusters</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_clusters_module.html">ovirt_clusters</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_clusters.py">[source]</a>
+module to manage oVirt clusters. This module can handle create, update and delete action with various parameters on oVirt
+cluster.</p>
+
+<h3 id="examples-2">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create cluster</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_clusters</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;    <span class="na">datacenter_name</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;    <span class="na">cpu_type</span><span class="pi">:</span> <span class="s">Intel SandyBridge Family</span>&#x000A;    <span class="na">compatibility_version</span><span class="pi">:</span> <span class="s">4.0</span>&#x000A;&#x000A;<span class="c1"># Remove cluster</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_clusters</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_networks">ovirt_networks</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_clusters_module.html">ovirt_clusters</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_networks.py">[source]</a>
+module to manage oVirt logical datacenter networks. This module can handle create, update and delete action with various
+parameters on oVirt logical datacenter networks.</p>
+
+<h3 id="examples-3">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create network</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_networks</span><span class="pi">:</span>&#x000A;    <span class="na">datacenter_name</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mynetwork</span>&#x000A;    <span class="na">vlan_tag</span><span class="pi">:</span> <span class="s">1</span>&#x000A;    <span class="na">vm_network</span><span class="pi">:</span> <span class="no">true</span>&#x000A;&#x000A;<span class="c1"># Remove network</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_networks</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mynetwork</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_storage_domains">ovirt_storage_domains</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_storage_domains_module.html">ovirt_storage_domains</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_storage_domains.py">[source]</a>
+module to manage oVirt storage domains. This module can handle present, absent and maintanence state of the storage domain
+with various parameters. The supported storage domains types are <em>nfs</em>, <em>iscsi</em>, <em>posixfs</em>, <em>glusterfs</em> and <em>fcp</em>. User can
+also handle importing of export/iso storage domain.</p>
+
+<h3 id="examples-4">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add data NFS storage domain</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">data_nfs</span>&#x000A;    <span class="na">host</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">data_center</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;    <span class="na">nfs</span><span class="pi">:</span>&#x000A;      <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.199</span>&#x000A;      <span class="na">path</span><span class="pi">:</span> <span class="s">/path/data</span>&#x000A;&#x000A;<span class="c1"># Add data iSCSI storage domain:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">data_iscsi</span>&#x000A;    <span class="na">host</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">data_center</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;    <span class="na">iscsi</span><span class="pi">:</span>&#x000A;      <span class="na">target</span><span class="pi">:</span> <span class="s">iqn.2016-08-09.domain-01:nickname</span>&#x000A;      <span class="na">lun_id</span><span class="pi">:</span> <span class="s">1IET_000d0002</span>&#x000A;      <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.204</span>&#x000A;&#x000A;<span class="c1"># Import export NFS storage domain:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;    <span class="na">domain_function</span><span class="pi">:</span> <span class="s">export</span>&#x000A;    <span class="na">host</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">data_center</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;    <span class="na">nfs</span><span class="pi">:</span>&#x000A;      <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.199</span>&#x000A;      <span class="na">path</span><span class="pi">:</span> <span class="s">/path/export</span>&#x000A;&#x000A;<span class="c1"># Remove storage domain</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mystorage_domain</span>&#x000A;    <span class="na">format</span><span class="pi">:</span> <span class="no">true</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_hosts">ovirt_hosts</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_hosts_module.html">ovirt_hosts</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_hosts.py">[source]</a>
+module to manage oVirt hosts. This module can handle <em>present</em>, <em>absent</em>, <em>upgraded</em> and <em>maintanence</em> state of the host with
+various parameters.</p>
+
+<h3 id="examples-5">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add host with username/password</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_hosts</span><span class="pi">:</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">Default</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.61.145</span>&#x000A;    <span class="na">password</span><span class="pi">:</span> <span class="s">secret</span>&#x000A;&#x000A;<span class="c1"># Add host using public key</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_hosts</span><span class="pi">:</span>&#x000A;    <span class="na">public_key</span><span class="pi">:</span> <span class="no">true</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">Default</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost2</span>&#x000A;    <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.61.145</span>&#x000A;&#x000A;<span class="c1"># Switch host into maintenance mode:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_hosts</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">maintenance</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;&#x000A;<span class="c1"># Upgrade host:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_hosts</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">upgraded</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;&#x000A;<span class="c1"># Remove host:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_hosts</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">force</span><span class="pi">:</span> <span class="no">true</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_host_pm">ovirt_host_pm</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_host_pm_module.html">ovirt_host_pm</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_host_pm.py">[source]</a>
+module to manage oVirt host power management. This module can handle create, update and delete action with various
+parameters on oVirt host power management.</p>
+
+<h3 id="examples-6">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add fence agent to host 'myhost'</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_host_pm</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">address</span><span class="pi">:</span> <span class="s">1.2.3.4</span>&#x000A;    <span class="na">options</span><span class="pi">:</span>&#x000A;      <span class="na">myoption1</span><span class="pi">:</span> <span class="s">x</span>&#x000A;      <span class="na">myoption2</span><span class="pi">:</span> <span class="s">y</span>&#x000A;    <span class="na">username</span><span class="pi">:</span> <span class="s">admin</span>&#x000A;    <span class="na">password</span><span class="pi">:</span> <span class="s">admin</span>&#x000A;    <span class="na">type</span><span class="pi">:</span> <span class="s">ipmilan</span>&#x000A;&#x000A;<span class="c1"># Remove ipmilan fence agent with address 1.2.3.4 on host 'myhost'</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_host_pm</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">address</span><span class="pi">:</span> <span class="s">1.2.3.4</span>&#x000A;    <span class="na">type</span><span class="pi">:</span> <span class="s">ipmilan</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_host_networks">ovirt_host_networks</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_host_networks_module.html">ovirt_host_networks</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_host_networks.py">[source]</a>
+module to manage oVirt host networks. This module can create/remove bonds on host interfaces and manage logical networks,
+labels and vlans above them.</p>
+
+<h3 id="examples-7">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create bond on eth0 and eth1 interface, and put 'myvlan' network on top of it:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_host_networks</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">bond</span><span class="pi">:</span>&#x000A;      <span class="na">name</span><span class="pi">:</span> <span class="s">bond0</span>&#x000A;      <span class="na">mode</span><span class="pi">:</span> <span class="s">2</span>&#x000A;      <span class="na">interfaces</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="s">eth0</span>&#x000A;        <span class="pi">-</span> <span class="s">eth1</span>&#x000A;    <span class="na">network</span><span class="pi">:</span> <span class="s">myvlan</span>&#x000A;&#x000A;<span class="c1"># Assign network label to host interface</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_host_networks</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">interface</span><span class="pi">:</span> <span class="s">eth0</span>&#x000A;    <span class="na">labels</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">network_label1</span>&#x000A;&#x000A;<span class="c1"># Assign network to host interface</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_host_networks</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">interface</span><span class="pi">:</span> <span class="s">eth0</span>&#x000A;    <span class="na">network</span><span class="pi">:</span> <span class="s">ovirtmgmt</span>&#x000A;&#x000A;<span class="c1"># Detach network from host</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_host_networks</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;    <span class="na">network</span><span class="pi">:</span> <span class="s">myvlan</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_external_providers">ovirt_external_providers</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_external_providers_module.html">ovirt_external_providers</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_external_providers.py">[source]</a>
+module to manage oVirt external providers. This module can handle create, update and delete action with various parameters on
+oVirt external providers. Supported external providers are <em>OpenStackImageProvider</em>, <em>OpenStackNetworkProvider</em>,
+<em>OpenStackVolumeProvider</em> and <em>ExternalHostProvider</em>.</p>
+
+<h3 id="examples-8">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add image external provider:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_external_providers</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">image_provider</span>&#x000A;    <span class="na">type</span><span class="pi">:</span> <span class="s">os_image</span>&#x000A;    <span class="na">url</span><span class="pi">:</span> <span class="s">http://10.34.63.71:9292</span>&#x000A;    <span class="na">username</span><span class="pi">:</span> <span class="s">admin</span>&#x000A;    <span class="na">password</span><span class="pi">:</span> <span class="s">123456</span>&#x000A;    <span class="na">tenant</span><span class="pi">:</span> <span class="s">admin</span>&#x000A;    <span class="na">auth_url</span><span class="pi">:</span> <span class="s">http://10.34.63.71:35357/v2.0/</span>&#x000A;&#x000A;<span class="c1"># Remove image external provider:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_external_providers</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">image_provider</span>&#x000A;    <span class="na">type</span><span class="pi">:</span> <span class="s">os_image</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_nics">ovirt_nics</h2>
+<p><a href="#ovirtnics">ovirt_nics</a>http://docs.ansible.com/ansible/ovirt_nics_module.html)
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_nics.py">[source]</a>
+module to manage oVirt virtual machines network interfaces. This module can handle <em>present</em>, <em>absent</em>, <em>plugged</em> and
+<em>unplugged</em> state of the network interface with various parameters.</p>
+
+<h3 id="examples-9">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add NIC to VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_nics</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mynic</span>&#x000A;    <span class="na">interface</span><span class="pi">:</span> <span class="s">e1000</span>&#x000A;    <span class="na">mac_address</span><span class="pi">:</span> <span class="s">00:1a:4a:16:01:56</span>&#x000A;    <span class="na">profile</span><span class="pi">:</span> <span class="s">ovirtmgmt</span>&#x000A;&#x000A;<span class="c1"># Plug NIC to VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_nics</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">plugged</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mynic</span>&#x000A;&#x000A;<span class="c1"># Unplug NIC from VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_nics</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">unplugged</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mynic</span>&#x000A;&#x000A;<span class="c1"># Remove NIC from VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_nics</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mynic</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_templates">ovirt_templates</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_templates_module.html">ovirt_templates</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_templates.py">[source]</a>
+module to manage oVirt templates.  This module can handle <em>present</em>, <em>absent</em>, <em>imported</em> and <em>exported</em> state of the template with various parameters.</p>
+
+<h3 id="examples-10">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create template from VM</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_templates</span><span class="pi">:</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">Default</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mytemplate</span>&#x000A;    <span class="na">vm_name</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">cpu_profile</span><span class="pi">:</span> <span class="s">Default</span>&#x000A;    <span class="na">description</span><span class="pi">:</span> <span class="s">Test</span>&#x000A;&#x000A;<span class="c1"># Import template</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_templates</span><span class="pi">:</span>&#x000A;  <span class="na">state</span><span class="pi">:</span> <span class="s">imported</span>&#x000A;  <span class="na">name</span><span class="pi">:</span> <span class="s">mytemplate</span>&#x000A;  <span class="na">export_domain</span><span class="pi">:</span> <span class="s">myexport</span>&#x000A;  <span class="na">storage_domain</span><span class="pi">:</span> <span class="s">mystorage</span>&#x000A;  <span class="na">cluster</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;&#x000A;<span class="c1"># Remove template</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_templates</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mytemplate</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_vmpools">ovirt_vmpools</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_vmpools_module.html">ovirt_vmpools</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_vmpools.py">[source]</a>
+module to manage oVirt templates.  This module can handle <em>present</em>, <em>absent</em> state of the vmpool with various parameters.</p>
+
+<h3 id="examples-11">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create vm pool from template</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_vmpools</span><span class="pi">:</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">Default</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvmpool</span>&#x000A;    <span class="na">template</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;    <span class="na">vm_count</span><span class="pi">:</span> <span class="s">2</span>&#x000A;    <span class="na">prestarted</span><span class="pi">:</span> <span class="s">2</span>&#x000A;    <span class="na">vm_per_user</span><span class="pi">:</span> <span class="s">1</span>&#x000A;&#x000A;<span class="c1"># Remove vmpool</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_vmpools</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">myvmpool</span>&#x000A;    <span class="na">force</span><span class="pi">:</span> <span class="no">true</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_users">ovirt_users</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_users_module.html">ovirt_users</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_users.py">[source]</a>
+module to manage oVirt users. This module can handle create and delete action with various parameters on oVirt users.</p>
+
+<h3 id="examples-12">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add user user1 from authorization provider example.com-authz</span>&#x000A;<span class="na">ovirt_users</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">user1</span>&#x000A;    <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;&#x000A;<span class="c1"># Add user user1 from authorization provider example.com-authz</span>&#x000A;<span class="c1"># In case of Active Directory specify UPN:</span>&#x000A;<span class="na">ovirt_users</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">user1@ad2.example.com</span>&#x000A;    <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;&#x000A;<span class="c1"># Remove user user1 with authorization provider example.com-authz</span>&#x000A;<span class="na">ovirt_users</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">user1</span>&#x000A;    <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_groups">ovirt_groups</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_groups_module.html">ovirt_groups</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_groups.py">[source]</a>
+module to manage oVirt groups. This module can handle create and delete action with various parameters on oVirt groups.</p>
+
+<h3 id="examples-13">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add group group1 from authorization provider example.com-authz</span>&#x000A;<span class="na">ovirt_groups</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">group1</span>&#x000A;    <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;&#x000A;<span class="c1"># Add group group1 from authorization provider example.com-authz</span>&#x000A;<span class="c1"># In case of multi-domain Active Directory setup, you should pass</span>&#x000A;<span class="c1"># also namespace, so it adds correct group:</span>&#x000A;<span class="na">ovirt_groups</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">group1</span>&#x000A;    <span class="na">namespace</span><span class="pi">:</span> <span class="s">dc=ad2,dc=example,dc=com</span>&#x000A;    <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;&#x000A;<span class="c1"># Remove group group1 with authorization provider example.com-authz</span>&#x000A;<span class="na">ovirt_groups</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">group1</span>&#x000A;    <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_permissions">ovirt_permissions</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_permissions_module.html">ovirt_permissions</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_permissions.py">[source]</a>
+module to manage oVirt permissions. This module can handle assigning and removing of permissions to oVirt entities.</p>
+
+<h3 id="examples-14">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add user user1 from authorization provider example.com-authz</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_permissions</span><span class="pi">:</span>&#x000A;    <span class="na">user_name</span><span class="pi">:</span> <span class="s">user1</span>&#x000A;    <span class="na">authz_name</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;    <span class="na">object_type</span><span class="pi">:</span> <span class="s">virtual_machine</span>&#x000A;    <span class="na">object_name</span><span class="pi">:</span> <span class="s">myvm</span>&#x000A;    <span class="na">role</span><span class="pi">:</span> <span class="s">UserVmManager</span>&#x000A;&#x000A;<span class="c1"># Remove permission from user</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_permissions</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">user_name</span><span class="pi">:</span> <span class="s">user1</span>&#x000A;    <span class="na">authz_name</span><span class="pi">:</span> <span class="s">example.com-authz</span>&#x000A;    <span class="na">object_type</span><span class="pi">:</span> <span class="s">cluster</span>&#x000A;    <span class="na">object_name</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;    <span class="na">role</span><span class="pi">:</span> <span class="s">ClusterAdmin</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_affinity_labels">ovirt_affinity_labels</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_affinity_labels_module.html">ovirt_affinity_labels</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_affinity_labels.py">[source]</a>
+module to manage oVirt affinity labels. This module can handle assigning and removing of affinity lables to oVirt hosts and virtaul machines.</p>
+
+<h3 id="examples-15">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create(if not exists) and assign affinity label to vms vm1 and vm2 and host host1</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_affinity_labels</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mylabel</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;    <span class="na">vms</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">vm1</span>&#x000A;      <span class="pi">-</span> <span class="s">vm2</span>&#x000A;    <span class="na">hosts</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">host1</span>&#x000A;&#x000A;<span class="c1"># To detach all VMs from label</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_affinity_labels</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mylabel</span>&#x000A;    <span class="na">cluster</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;    <span class="na">vms</span><span class="pi">:</span> <span class="pi">[]</span>&#x000A;&#x000A;<span class="c1"># Remove affinity label</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_affinity_labels</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mylabel</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_mac_pools">ovirt_mac_pools</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_mac_pools_module.html">ovirt_mac_pools</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_mac_pools.py">[source]</a>
+module to manage oVirt MAC pools. This module can handle creating and removing of MAC pools in oVirt.</p>
+
+<h3 id="examples-16">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Create MAC pool:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_mac_pools</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mymacpool</span>&#x000A;    <span class="na">allow_duplicates</span><span class="pi">:</span> <span class="no">false</span>&#x000A;    <span class="na">ranges</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">00:1a:4a:16:01:51,00:1a:4a:16:01:61</span>&#x000A;      <span class="pi">-</span> <span class="s">00:1a:4a:16:02:51,00:1a:4a:16:02:61</span>&#x000A;      &#x000A;<span class="c1"># Remove MAC pool:</span>&#x000A;<span class="pi">-</span> <span class="na">ovirt_mac_pools</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">mymacpool</span>&#x000A;</code></pre></div>
+<h2 id="ovirt_quotas">ovirt_quotas</h2>
+<p><a href="http://docs.ansible.com/ansible/ovirt_quotas_module.html">ovirt_quotas</a>
+<a href="https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_quotas.py">[source]</a>
+module to manage oVirt quotas. This module can handle creating and removing of quotas in oVirt and also manging it's resources on cluster and storage.</p>
+
+<h3 id="examples-17">Examples</h3>
+<div class="highlight"><pre class="highlight yaml"><code><span class="c1"># Add cluster quota to all clusters with memory limit 30GiB and CPU limit to 15:</span>&#x000A;<span class="na">ovirt_quotas</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">quota2</span>&#x000A;    <span class="na">datacenter</span><span class="pi">:</span> <span class="s">dcX</span>&#x000A;    <span class="na">clusters</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="na">memory</span><span class="pi">:</span> <span class="s">30</span>&#x000A;          <span class="na">cpu</span><span class="pi">:</span> <span class="s">15</span>&#x000A;<span class="c1"># Add storage quota to storage data1 with size limit to 100GiB</span>&#x000A;<span class="na">ovirt_quotas</span><span class="pi">:</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">quota3</span>&#x000A;    <span class="na">datacenter</span><span class="pi">:</span> <span class="s">dcX</span>&#x000A;    <span class="na">storage_grace</span><span class="pi">:</span> <span class="s">40</span>&#x000A;    <span class="na">storage_threshold</span><span class="pi">:</span> <span class="s">60</span>&#x000A;    <span class="na">storages</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">data1</span>&#x000A;          <span class="na">size</span><span class="pi">:</span> <span class="s">100</span>&#x000A;<span class="c1"># Remove quota quota1 (Note the quota must not be assigned to any VM/disk):</span>&#x000A;<span class="na">ovirt_quotas</span><span class="pi">:</span>&#x000A;    <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;    <span class="na">datacenter</span><span class="pi">:</span> <span class="s">dcX</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">quota1</span>&#x000A;</code></pre></div>
+<h1 id="playbook-execution-example">Playbook execution example</h1>
+
+<h3 id="workspace">Workspace</h3>
+<p>First we need to create directory where we will store our playbooks and inventory.</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>mkdir <span class="nv">$HOME</span>/ovirt-ansible&#x000A;</code></pre></div>
+<h3 id="additional-modules">Additional modules</h3>
+<p>In this example we will use all modules which will be part of the Ansible 2.3, which is not yet realeased, so please first
+download all releveant modules and put them into <em>library</em> directory.</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>mkdir <span class="nv">$HOME</span>/ovirt-ansible/library&#x000A;<span class="nv">$ </span>wget https://github.com/ansible/ansible/tree/devel/lib/ansible/modules/cloud/ovirt/ovirt_clusters.py&#x000A;...&#x000A;</code></pre></div>
+<h3 id="ansible-configuration">Ansible configuration</h3>
+<div class="highlight"><pre class="highlight shell"><code><span class="nb">cat</span> <span class="o">&gt;&gt;</span> <span class="nv">$HOME</span>/ovirt-ansible/ansible.cfg <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh">&#x000A;[default]&#x000A;library = HOME/ovirt-ansible/library&#x000A;</span></code></pre></div>
+<h3 id="vault">Vault</h3>
+<p>Create vault with oVirt user password, so we don't use this password in plaintext. There is tool which make it easy for
+your, just enter this command:</p>
+
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span>ansible-vault create ovirt_password.yml&#x000A;</code></pre></div>
+<p>This will fire up your editor. Create there <em>password</em> variable with password of your <em>admin@internal</em> user:</p>
+
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">password</span><span class="pi">:</span> <span class="s">MySuperPasswordOfAdminAtInternal</span>&#x000A;</code></pre></div>
+<p>Next it will ask your for a vault password and then it creates <em>ovirt_password.yml</em> file, with your vault.</p>
+
+<h3 id="playbook-creation">Playbook creation</h3>
+<p>Create a playbook, with tasks you want to execute:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="s">cat &gt;&gt; playbooks/setup_demo.yml &lt;&lt; EOF</span>&#x000A;<span class="nn">---</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Setup oVirt environment</span>&#x000A;  <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>&#x000A;  <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>&#x000A;  <span class="na">vars_files</span><span class="pi">:</span>&#x000A;    <span class="pi">-</span> <span class="s">my_vars.yml</span>&#x000A;  <span class="na">tasks</span><span class="pi">:</span>&#x000A;    <span class="pi">-</span> <span class="na">block</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Include oVirt password</span>&#x000A;          <span class="na">no_log</span><span class="pi">:</span> <span class="no">true</span>&#x000A;          <span class="na">include_vars</span><span class="pi">:</span> <span class="s">ovirt_password.yml</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Obtain SSO token</span>&#x000A;          <span class="na">ovirt_auth</span><span class="pi">:</span>&#x000A;            <span class="na">url</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">url</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">username</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">username</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">password</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">password</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">ca_file</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ca_file</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create datacenter</span>&#x000A;          <span class="na">ovirt_datacenters</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">datacenter</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">description</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;            <span class="na">local</span><span class="pi">:</span> <span class="no">false</span>&#x000A;            <span class="na">compatibility_version</span><span class="pi">:</span> <span class="s">4.0</span>&#x000A;            <span class="na">quota_mode</span><span class="pi">:</span> <span class="s">disabled</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create cluster</span>&#x000A;          <span class="na">ovirt_clusters</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">datacenter_name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">datacenter</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">cpu_type</span><span class="pi">:</span> <span class="s">Intel Nehalem Family</span>&#x000A;            <span class="na">description</span><span class="pi">:</span> <span class="s">mycluster</span>&#x000A;            <span class="na">compatibility_version</span><span class="pi">:</span> <span class="s">4.0</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Add host using public key</span>&#x000A;          <span class="na">ovirt_hosts</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">public_key</span><span class="pi">:</span> <span class="no">true</span>&#x000A;            <span class="na">cluster</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">host</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">address</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">host_address</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Add data NFS storage domain</span>&#x000A;          <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">data_name</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">host</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">data_center</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">datacenter</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">nfs</span><span class="pi">:</span>&#x000A;              <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.199</span>&#x000A;              <span class="na">path</span><span class="pi">:</span> <span class="s">/omachace/data</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Add data iSCSI storage domain</span>&#x000A;          <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">iscsi_name</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">host</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">data_center</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">datacenter</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">iscsi</span><span class="pi">:</span>&#x000A;              <span class="na">target</span><span class="pi">:</span> <span class="s">iqn.2016-08-09.brq.str-01:omachace</span>&#x000A;              <span class="na">lun_id</span><span class="pi">:</span> <span class="s">1IET_000d0002</span>&#x000A;              <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.204</span>&#x000A;          <span class="na">ignore_errors</span><span class="pi">:</span> <span class="no">true</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Import export NFS storage domain</span>&#x000A;          <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">export_name</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">host</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">domain_function</span><span class="pi">:</span> <span class="s">export</span>&#x000A;            <span class="na">data_center</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">datacenter</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">nfs</span><span class="pi">:</span>&#x000A;              <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.199</span>&#x000A;              <span class="na">path</span><span class="pi">:</span> <span class="s">/omachace/export</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create ISO NFS storage domain</span>&#x000A;          <span class="na">ovirt_storage_domains</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">iso_name</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">host</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">host</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">domain_function</span><span class="pi">:</span> <span class="s">iso</span>&#x000A;            <span class="na">data_center</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">datacenter</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">nfs</span><span class="pi">:</span>&#x000A;              <span class="na">address</span><span class="pi">:</span> <span class="s">10.34.63.199</span>&#x000A;              <span class="na">path</span><span class="pi">:</span> <span class="s">/omachace/iso</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Add image external provider</span>&#x000A;          <span class="na">ovirt_external_providers</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">external_provider</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">type</span><span class="pi">:</span> <span class="s">os_image</span>&#x000A;            <span class="na">url</span><span class="pi">:</span> <span class="s">http://10.34.63.71:9292</span>&#x000A;            <span class="na">username</span><span class="pi">:</span> <span class="s">admin</span>&#x000A;            <span class="na">password</span><span class="pi">:</span> <span class="s">qum5net</span>&#x000A;            <span class="na">tenant</span><span class="pi">:</span> <span class="s">admin</span>&#x000A;            <span class="na">auth_url</span><span class="pi">:</span> <span class="s">http://10.34.63.71:35357/v2.0/</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Import template</span>&#x000A;          <span class="na">ovirt_templates</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">template</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">state</span><span class="pi">:</span> <span class="s">imported</span>&#x000A;            <span class="na">export_domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">export_name</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">storage_domain</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">data_name</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">cluster</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Create and run VM from template</span>&#x000A;          <span class="na">ovirt_vms</span><span class="pi">:</span>&#x000A;            <span class="na">auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">vm</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">template</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">template</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">cluster</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">cluster</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;            <span class="na">memory</span><span class="pi">:</span> <span class="s">1GiB</span>&#x000A;            <span class="na">high_availability</span><span class="pi">:</span> <span class="no">true</span>&#x000A;            <span class="na">cloud_init</span><span class="pi">:</span>&#x000A;              <span class="na">host_name</span><span class="pi">:</span> <span class="s">mydomain.local</span>&#x000A;              <span class="na">custom_script</span><span class="pi">:</span> <span class="pi">|</span>&#x000A;                <span class="no">write_files:</span>&#x000A;                 <span class="no">- content: |</span>&#x000A;                     <span class="no">Hello, world!</span>&#x000A;                   <span class="no">path: /tmp/greeting.txt</span>&#x000A;                   <span class="no">permissions: '0644'</span>&#x000A;              <span class="na">user_name</span><span class="pi">:</span> <span class="s">root</span>&#x000A;              <span class="na">root_password</span><span class="pi">:</span> <span class="s1">'</span><span class="s">1234567'</span>&#x000A;&#x000A;      <span class="na">always</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Revoke the SSO token</span>&#x000A;          <span class="na">ovirt_auth</span><span class="pi">:</span>&#x000A;            <span class="na">state</span><span class="pi">:</span> <span class="s">absent</span>&#x000A;            <span class="na">ovirt_auth</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">ovirt_auth</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;<span class="s">EOF</span>&#x000A;</code></pre></div>
+<h3 id="playbook-execution">Playbook execution</h3>
+<p>To execute the playbook run following command:</p>
+<div class="highlight"><pre class="highlight shell"><code><span class="nv">$ </span><span class="nb">cd</span> <span class="nv">$HOME</span>/ovirt-ansible&#x000A;<span class="nv">$ </span>ansible-playbook playbooks/setup_demo.yml <span class="nt">--ask-vault-pass</span>&#x000A;Vault password: &#x000A;&#x000A;PLAY <span class="o">[</span>Setup oVirt environment] <span class="k">*************************************************</span>&#x000A;&#x000A;TASK <span class="o">[</span>setup] <span class="k">*******************************************************************</span>&#x000A;ok: <span class="o">[</span>localhost]&#x000A;&#x000A;TASK <span class="o">[</span>Include oVirt password] <span class="k">**************************************************</span>&#x000A;ok: <span class="o">[</span>localhost]&#x000A;.....&#x000A;</code></pre></div><p>It will ask you for the password of the vault and then execute the playbook. Now try to re-run the playbook, and see that no
+changes was done on environment.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/ansible_modules.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/ansible_modules.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 8 Dec 2016 13:09 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+engine-cleanup &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/integration/">Integration</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="engine-cleanup">engine-cleanup</h1>
+
+<h2 id="engine-cleanup-work-in-progress">Engine Cleanup (Work in progress)</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>This utility is intended to bring the host to a state it can be reused by oVirt engine</p>
+
+<h3 id="owner">Owner</h3>
+
+<p>This should link to your home wiki page so we know who you are</p>
+
+<ul>
+  <li>Name: TBD (MyUser)</li>
+</ul>
+
+<p>Include you email address that you can be reached should people want to contact you about helping with your feature, status is requested, or technical issues need to be resolved</p>
+
+<ul>
+  <li>Email: TBD</li>
+</ul>
+
+<h3 id="present">Present</h3>
+
+<p>(To be replaced to a link when a design page is created)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  * Drop DB - works both on local and remote&#x000A;  * Remove keystore (not perfect)&#x000A;  * cleanup symlinks&#x000A;  * stop services (jbossas, notifer)&#x000A;  * non-interactive switch -u/--unattended, default is drop DB.&#x000A;  * switch: -d/--dont-drop-db&#x000A;</code></pre></div>
+<h3 id="absent">Absent</h3>
+
+<p>Missing to comply with the purpose definition:</p>
+
+<hr />
+
+<div class="highlight"><pre class="highlight plaintext"><code>  * Default mode is interactive - asking if to drop DB or not.&#x000A;    Message: Drop data base? if you want to reuse the existing database for the future installation choose no.&#x000A;  * Message at the end: Finished cleanup it is now safe to rerun engine-setup.&#x000A;  * If it did not dropped DB add: Note that after re-install you'll have to run Hosts re-install/re-approve&#x000A;  * Add -h/--help&#x000A;  * Add message (Hide all options except -d/-u/-h in the usage message/help)&#x000A;</code></pre></div>
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>The cleanup should provide:</p>
+
+<ol>
+  <li>
+    <p>Reset a failed installation to a state in which you can safely rerun: engine-setup</p>
+  </li>
+  <li>
+    <p>Clean up before a new installation before or after the user has run:</p>
+
+    <p># yum remove</p>
+  </li>
+</ol>
+
+<p>and the later tries it a second time without a formal clean-up being performed</p>
+
+<ul>
+  <li>
+    <p>Meaning the sequence I (first example) :</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-cleanup&#x000A;# yum remove ovirt-engine&#x000A;# yum install ovirt-engine&#x000A;# engine-setup &#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Or the sequence II (second example):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum remove ovirt-engine,&#x000A;# yum install ovirt-engine&#x000A;# engine-cleanup&#x000A;#  engine-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>If sequence II is not possible, don't start cleanup at all, but exit with proper message.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>Reset an existing installation without dropping DB.</li>
+</ol>
+
+<ul>
+  <li>
+    <p>Use cases: fix failed upgrade or a corrupted installation</p>
+  </li>
+  <li>
+    <p>Next required 'Manual' steps:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum remove engine&#x000A;# yum install engine&#x000A;# engine-setup   # This script should know how to reuse an existing DB, and to perform an upgrade if necessary&#x000A;</code></pre></div>  </li>
+</ul>
+
+<p>Note 1: The above includes Reports and DHW</p>
+
+<p>Note 2. This utility is not intended to leave the machine clean for other application to reuse - only to be reused by a oVirt Manager</p>
+
+<p>Note 3: Preserve DB is not intended to relocate db from local to remote and vice versa - Need to provide a procedure to do that.</p>
+
+<p>Note 4: It will not remove any local NFS export, including the one it created during last installation. If we wish for engine-setup to reuse, this is enhancement to for engine-setup.</p>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>This feature saved the need to re-install the host OS if a re-install of the engine is required. Currently in some cases even an initial installation failure may require clean install</p>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<p>The clean-up script should be idempotent. If not, it needs a bug filed noting the deficiency. That is, one should be able to repeatedly run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-cleanup&#x000A;  # engine-cleanup&#x000A;  # engine-cleanup # ... &#x000A;</code></pre></div>
+<p>with no additional changes occurring on the second and following runs, beyond what occurred on the first, and supplementation of the log files</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/integration/engine-cleanup.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/integration/engine-cleanup.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 9 Nov 2017 10:56 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

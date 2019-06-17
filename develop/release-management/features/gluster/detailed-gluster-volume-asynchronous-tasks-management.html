@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Detailed Gluster Volume Asynchronous Tasks Management &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-gluster-volume-asynchronous-tasks-management">Detailed Gluster Volume Asynchronous Tasks Management</h1>
+
+<h2 id="gluster-volume-asynchronous-tasks">Gluster Volume Asynchronous Tasks</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>This feature provide the support for managing the asynchronous tasks on Gluster volumes. See: <a href="/develop/release-management/features/gluster/gluster-volume-asynchronous-tasks-management/">Gluster Volume Asynchronous Tasks Management</a></p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Sahina Bose (Sahina)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>Target Release: TBD</li>
+  <li>Status: Development in progress</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<h3 id="database-changes">Database changes</h3>
+
+<ul>
+  <li>Change to stored procedure CheckIfJobHasTasks
+    <ul>
+      <li>Add 'GLUSTER' as external system type to check if a job has tasks.</li>
+    </ul>
+  </li>
+  <li>Add a stored procedure GetStepsByExternalTaskId
+    <ul>
+      <li>Returns the Step entities associated with an external task id
+        <ul>
+          <li>used to update status of step when external task status changes.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="entity-changes">Entity Changes</h4>
+
+<p><big>gluster_volumes</big></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Change</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>taskid</td>
+      <td>int, nullable</td>
+      <td>Addition</td>
+      <td>stores the gluster task id for operation in progress on volume.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><big>gluster_volume_bricks</big></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column</th>
+      <th>Type</th>
+      <th>Change</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>taskid</td>
+      <td>int, nullable</td>
+      <td>Addition</td>
+      <td>stores the gluster task id for operation in progress on brick.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="class-diagram">Class Diagram</h3>
+
+<p><img alt="" width="1283" height="801" src="/images/wiki/GlusterAsyncTaskClassDiagram.png?1560777613" /></p>
+
+<ul>
+  <li>GlusterTasksSyncJob - a periodic background job that queries for list of tasks along with status</li>
+</ul>
+
+<p><em>uses</em></p>
+
+<ul>
+  <li>GlusterTaskService - to get the list of running tasks in cluster</li>
+</ul>
+
+<p><em>which returns</em></p>
+
+<ul>
+  <li>GlusterAsyncTask - encapsulates information about the Gluster task
+    <ul>
+      <li>GlusterTaskType
+        <ul>
+          <li>REBALANCE</li>
+          <li>REMOVE_BRICK</li>
+        </ul>
+      </li>
+      <li>GlusterTaskStatus
+        <ul>
+          <li>RUNNING</li>
+          <li>FAILED</li>
+          <li>COMPLETED</li>
+          <li>ABORTED</li>
+          <li>PAUSED</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>If GlusterTaskService returns a task that is not currently in the database, the information related to the task needs to be persisted in the engine database for further monitoring.</p>
+
+<ul>
+  <li>AddInternalJobCommand to be introduced to achieve this</li>
+</ul>
+
+<p>All long running commands will inherit from</p>
+
+<ul>
+  <li>GlusterAsyncCommandBase
+    <ul>
+      <li>Creates a SUB-STEP on execution of command and associate the step with external task id</li>
+      <li>Abstract method getStepType - inheriting classes to return the StepEnum to be added as Sub step when executing the command</li>
+      <li>Abstract method executeAndReturnTask which inheriting classes should implement by calling the corresponding VDS command. The method should return a GlusterAsyncTask object that holds the id of the gluster task that was started due to the command.</li>
+      <li>Start of async operations will acquire a lock. The lock will be released when Stop of corresponding command is called by the user or when the tasks sync job discovers that the task has been completed.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The following sequence diagram explains the Gluster tasks monitoring mechanism <img alt="" width="1310" height="1184" src="/images/wiki/GlusterTasksSeqDiagram.png?1560777613" /></p>
+
+<h3 id="rest-api">REST API</h3>
+
+<ul>
+  <li>
+    <p>Add startrebalance action on the gluster volumes resource</p>
+
+    <p>/api/clusters/{id}/glustervolumes/{id}/rebalance</p>
+  </li>
+</ul>
+
+<p>This will return a step id which can be monitored from jobs/step api url</p>
+
+<ul>
+  <li>
+    <p>Add stoprebalance action on the gluster volumes resource</p>
+
+    <p>/api/clusters/{id}/glustervolumes/{id}/stoprebalance</p>
+  </li>
+</ul>
+
+<p>This will stop the rebalance action that is currently in progress</p>
+
+<ul>
+  <li>
+    <p>Modify the delete verb for bricks</p>
+
+    <p>DELETE /api/clusters/{id}/glustervolumes/{id}/bricks/</p>
+  </li>
+</ul>
+
+<p>Deletes a collection of bricks without data migration.</p>
+
+<ul>
+  <li>
+    <p>Add migrate action to the gluster bricks resource</p>
+
+    <p> /api/clusters/{id}/glustervolumes/{id}/bricks/migrate</p>
+  </li>
+</ul>
+
+<p>Allow data on collection of bricks to be migrated. This will return a step id which can be monitored from jobs/step api url. If false, data is lost and remove returns synchronously.</p>
+
+<ul>
+  <li>
+    <p>Add stop migrate action to the gluster bricks resource</p>
+
+    <p>/api/clusters/{id}/glustervolumes/{id}/bricks/stopmigrate</p>
+  </li>
+</ul>
+
+<p>This will stop the migration of data from the bricks that is currently in progress</p>
+
+<ul>
+  <li>
+    <p>Add commit action to the gluster bricks resource</p>
+
+    <p>/api/clusters/{id}/glustervolumes/{id}/bricks/commit</p>
+  </li>
+</ul>
+
+<p>This will commit the removal of brick. This can be called only when data is successfully migrated from the brick</p>
+
+<p>How do we monitor the status of the rebalance and remove-brick operations?</p>
+
+<ul>
+  <li>
+    <ul>
+      <li>Step id will be used to monitor the status of the rebalance and migrate operation. This will be returned once remove or migrate is called</li>
+      <li>api/jobs/{id}/steps/{id} will contain detailed status if All-Content is set to true</li>
+    </ul>
+  </li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/detailed-gluster-volume-asynchronous-tasks-management.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/detailed-gluster-volume-asynchronous-tasks-management.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Administering the Self-Hosted Engine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/self-hosted/">Self-hosted</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-5-administering-the-self-hosted-engine">Chapter 5: Administering the Self-Hosted Engine</h1>
+
+<h2 id="maintaining-the-self-hosted-engine">Maintaining the Self-Hosted Engine</h2>
+
+<p>The maintenance modes enable you to start, stop, and modify the engine virtual machine without interference from the high-availability agents, and to restart and modify the hosts in the environment without interfering with the engine.</p>
+
+<p>There are three maintenance modes that can be enforced:</p>
+
+<ul>
+  <li>
+    <p><code>global</code> - All high-availability agents in the cluster are disabled from monitoring the state of the engine virtual machine. The global maintenance mode must be applied for any setup or upgrade operations that require the engine to be stopped, such as upgrading to a later version of oVirt.</p>
+  </li>
+  <li>
+    <p><code>local</code> - The high-availability agent on the host issuing the command is disabled from monitoring the state of the engine virtual machine. The host is exempt from hosting the engine virtual machine while in local maintenance mode; if hosting the engine virtual machine when placed into this mode, the engine will be migrated to another host, provided there is a suitable contender. The local maintenance mode is recommended when applying system changes or updates to the host.</p>
+  </li>
+  <li>
+    <p><code>none</code> - Disables maintenance mode, ensuring that the high-availability agents are operating.</p>
+  </li>
+</ul>
+
+<p><strong>Maintaining an EL-Based Self-Hosted Engine (Local Maintenance)</strong></p>
+
+<ol>
+  <li>
+    <p>Place a self-hosted engine host into the local maintenance mode:</p>
+
+    <ul>
+      <li>
+        <p>In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> and select a self-hosted engine node.</p>
+      </li>
+      <li>
+        <p>Click <strong>Management</strong> → <strong>Maintenance</strong>. The local maintenance mode is automatically triggered for that node.</p>
+      </li>
+      <li>
+        <p>You can also set the maintenance mode from the command line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # hosted-engine --set-maintenance --mode=local&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p>After you have completed any maintenance tasks, disable the maintenance mode:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-maintenance --mode=none&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Maintaining an EL-Based Self-Hosted Engine (Global Maintenance)</strong></p>
+
+<ol>
+  <li>
+    <p>Place a self-hosted engine host into the global maintenance mode:</p>
+
+    <ul>
+      <li>
+        <p>In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> select any self-hosted engine node, and click <strong>More Actions</strong> → <strong>Enable Global HA Maintenance</strong>.</p>
+      </li>
+      <li>
+        <p>You can also set the maintenance mode from the command line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # hosted-engine --set-maintenance --mode=global&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p>After you have completed any maintenance tasks, disable the maintenance mode:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-maintenance --mode=none&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h2 id="administering-the-engine-virtual-engine">Administering the Engine Virtual engine</h2>
+
+<p>The <code>hosted-engine</code> utility is provided to assist with administering the Engine virtual machine. It can be run on any self-hosted engine nodes in the environment. For all the options, run <code>hosted-engine --help</code>. For additional information on a specific command, run <code>hosted-engine --command --help</code>.</p>
+
+<p>The following procedure shows you how to update the self-hosted engine configuration file (<strong>/var/lib/ovirt-hosted-engine-ha/broker.conf</strong>) on the shared storage domain after the initial deployment. Currently, you can configure email notifications using SMTP for any HA state transitions on the self-hosted engine nodes. The keys that can be updated include: <code>smtp-server</code>, <code>smtp-port</code>, <code>source-email</code>, <code>destination-emails</code>, and <code>state_transition</code>.</p>
+
+<p><strong>Updating the Self-Hosted Engine Configuration on the Shared Storage Domain</strong></p>
+
+<ol>
+  <li>
+    <p>On a self-hosted engine node, set the <code>smtp-server</code> key to the desired SMTP server address:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-shared-config smtp-server smtp.example.com --type=broker&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p><strong>Note:</strong> To verify that the self-hosted engine configuration file has been updated, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # hosted-engine --get-shared-config smtp-server --type=broker&#x000A;      broker : smtp.example.com, type : broker&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Check that the default SMTP port (port 25) has been configured:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --get-shared-config smtp-port --type=broker&#x000A; broker : 25, type : broker&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Specify an email address you want the SMTP server to use to send out email notifications. Only one address can be specified.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-shared-config source-email source@example.com --type=broker&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Specify the destination email address to receive email notifications. To specify multiple email addresses, separate each address by a comma.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # hosted-engine --set-shared-config destination-emails destination1@example.com,destination2@example.com --type=broker&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>To verify that SMTP has been properly configured for your self-hosted engine environment, change the HA state on a self-hosted engine node and check if email notifications were sent. For example, you can change the HA state by placing HA agents into maintenance mode.</p>
+
+<h2 id="configuring-memory-slot-reserved-for-the-self-hosted-engine-on-additional-hosts">Configuring Memory Slot Reserved for the Self-Hosted Engine on Additional hosts</h2>
+
+<p>If the Engine virtual machine shuts down or needs to be migrated, there must be enough memory on a self-hosted engine node for the Engine virtual machine to restart on or migrate to it. This memory can be reserved on multiple self-hosted engine nodes by using a scheduling policy. The scheduling policy checks if enough memory to start the Engine virtual machine will remain on the specified number of additional self-hosted engine nodes before starting or migrating any virtual machines. See Creating a Scheduling Policy in the Administration Guide for more information about scheduling policies.</p>
+
+<p><strong>Configuring Memory Slots Reserved for the Self-Hosted Engine on Additional Hosts</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Clusters</strong> and select the cluster containing the self-hosted engine nodes.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Scheduling Policy</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>+</strong> and select <strong>HeSparesCount</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the number of additional self-hosted engine nodes that will reserve enough free memory to start the Engine virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="installing-additional-self-hosted-engine-nodes">Installing Additional Self-Hosted Engine nodes</h2>
+
+<p>Additional self-hosted engine nodes are added in the same way as a regular host, with an additional step to deploy the host as a self-hosted engine node. The shared storage domain is automatically detected and the node can be used as a failover host to host the Engine virtual machine when required. You can also attach regular hosts to a self-hosted engine environment, but they cannot host the Engine virtual machine. Red Hat highly recommends having at least two self-hosted engine nodes to ensure the Engine virtual machine is highly available. Additional hosts can also be added using the REST API.</p>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>For an EL-based self-hosted engine environment, you must have prepared a freshly installed Enterprise Linux system on a physical host, and attached the required subscriptions.</p>
+  </li>
+  <li>
+    <p>For a oVirt Engine-based self-hosted engine environment, you must have prepared a freshly installed oVirt Node system on a physical host.</p>
+  </li>
+  <li>
+    <p>If you are reusing a self-hosted engine node, remove its existing self-hosted engine configuration.</p>
+  </li>
+</ul>
+
+<p><strong>Adding an Additional Self-Hosted Engine Node</strong></p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Use the drop-down list to select the <strong>Data Center</strong> and <strong>Host Cluster</strong> for the new host.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> and the <strong>Address</strong> of the new host. The standard SSH port, port 22, is auto-filled in the <strong>SSH Port</strong> field.</p>
+  </li>
+  <li>
+    <p>Select an authentication method to use for the Engine to access the host.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>Enter the root user’s password to use password authentication.</p>
+  </li>
+  <li>
+    <p>Alternatively, copy the key displayed in the <strong>SSH PublicKey</strong> field to <strong>/root/.ssh/authorized_keys</strong> on the host to use public key authentication.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Optionally, configure power management, where the host has a supported power management card.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Hosted Engine</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select <strong>Deploy</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="reinstalling-an-existing-host-as-a-self-hosted-engine-nodes">Reinstalling an Existing Host as a Self-Hosted Engine Nodes</h2>
+
+<p>You can convert an existing, regular host in a self-hosted engine environment to a self-hosted engine node capable of hosting the Engine virtual machine.</p>
+
+<p><strong>Reinstalling an Existing Host as a Self-Hosted Engine Node</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong> and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Installation</strong> → <strong>Reinstall</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Hosted Engine</strong> tab and select <strong>DEPLOY</strong> from the drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The host is reinstalled with self-hosted engine configuration, and is flagged with a crown icon in the Administration Portal.</p>
+
+<h2 id="removing-a-host-from-a-self-hosted-engine-environment">Removing a Host from a Self-Hosted Engine Environment</h2>
+
+<p>If you wish to remove a self-hosted engine host from your environment, you will need to place the host into maintenance, disable the HA services, and remove the self-hosted engine configuration file.</p>
+
+<p><strong>Removing a Host from a Self-Hosted Engine Environment</strong></p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, <strong>Compute</strong> → <strong>Hosts</strong> and select the self-hosted engine node.</p>
+  </li>
+  <li>
+    <p>Click <strong>Management</strong> → <strong>Maintenance</strong> and click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Installation</strong> → <strong>Reinstall</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Hosted Engine</strong> tab and select <strong>UNDEPLOY</strong> from the drop-down list. This action stops the <code>ovirt-ha-agent</code> and <code>ovirt-ha-broker</code> services and removes the self-hosted engine configuration file.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+  <li>
+    <p>Optionally, click <strong>Remove</strong> to open the <strong>Remove Host(s)</strong> confirmation window and click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Migrating_from_Bare_Metal_to_an_EL-Based_Self-Hosted_Environment">Chapter 4: Migrating from Bare Metal to an EL-Based Self-Hosted Environment</a> <br />
+<strong>Next:</strong> <a href="chap-upgrading_the_self-hosted_engine">Chapter 6: Upgrading the Self-Hosted Engine</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/self-hosted_engine_guide/chap-administering_the_self-hosted_engine">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/self-hosted/chap-Maintenance_and_Upgrading_Resources.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/self-hosted/chap-Maintenance_and_Upgrading_Resources.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

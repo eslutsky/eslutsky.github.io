@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Ovn</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/ovn.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Security group support in OVN external networks</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/05/ovn-security-groups.html"/>
+    <id>http://ovirt.org/blog/2019/05/ovn-security-groups.html</id>
+    <published>2019-05-27T15:35:00+00:00</published>
+    <updated>2019-06-16T09:11:54+00:00</updated>
+    <author>
+      <name>mdbarroso</name>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce and showcase how security groups can be used to
+enable certain scenarios.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://developer.openstack.org/api-ref/network/v2/#security-groups-security-groups"&gt;Security groups&lt;/a&gt;
+allow fine-grained access control to - and from - the oVirt VMs attached to
+external OVN networks.&lt;/p&gt;
+
+&lt;p&gt;The Networking API v2 defines security groups as a white list of rules - the
+user specifies in it which traffic is allowed. That means, that when the rule
+list is empty, neither incoming nor outgoing traffic is allowed (from the VMs
+perspective).&lt;/p&gt;
+
+&lt;p&gt;A demo recording of the security group feature can be found below.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.youtube.com/watch?v=RCdV6W_tFWw"&gt;&lt;img alt="here" src="http://img.youtube.com/vi/RCdV6W_tFWw/0.jpg" /&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="provided-tools"&gt;Provided tools&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo"&gt;This repo&lt;/a&gt;
+adds tools, and information on how to use them, to help manage the security
+groups in oVirt, since currently there is no supported mechanism to provision
+security groups, other than the REST API, and ManageIQ. ManageIQ also doesn't
+fully support security groups, since it lacks a way to attach security groups
+to logical ports.&lt;/p&gt;
+
+&lt;h2 id="demo-scenarios"&gt;Demo scenarios&lt;/h2&gt;
+&lt;p&gt;In the following links you can also find playbooks that can be built upon to
+reach different types of scenarios.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#icmp-configuration"&gt;Allow ICMP traffic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#web-server-configuration"&gt;Allow web traffic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#group-membership-based-access-scenario"&gt;Configure access based on group membership&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Upgraded DPDK support in oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/07/ovn-dpdk.html"/>
+    <id>http://ovirt.org/blog/2018/07/ovn-dpdk.html</id>
+    <published>2018-07-29T10:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>lgoldber</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://dpdk.org/"&gt;DPDK (Data Plane Development Kit)&lt;/a&gt; is a set of open-source high-performance packet processing libraries and user space drivers.&lt;/p&gt;
+
+&lt;p&gt;oVirt &lt;a href="https://www.ovirt.org/blog/2017/09/ovs-dpdk/"&gt;support for DPDK&lt;/a&gt; was introduced in 2017, and is now enhanced in terms of deployment via &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;Ansible&lt;/a&gt; and usage via &lt;a href="http://www.ovn.org/"&gt;Open Virtual Network&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While still experimental, OVN-DPDK in oVirt is now available in version 4.2.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1 id="whats-new"&gt;What's new?&lt;/h1&gt;
+
+&lt;h3 id="ansible-dpdk-host-setup"&gt;Ansible DPDK host setup&lt;/h3&gt;
+
+&lt;p&gt;Host configuration for DPDK usage is now automated using Ansible. This primarly includes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Hugepages configuration – hugepage size and quantity in the kernel.&lt;/li&gt;
+  &lt;li&gt;CPU partitioning.&lt;/li&gt;
+  &lt;li&gt;Binding NICs to userspace drivers.&lt;/li&gt;
+  &lt;li&gt;OVS-DPDK related configuration (initialization, socket memory, pmd thread core binding, etc).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The role is installed via Ansible galaxy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An example playbook:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;- hosts: dpdk_host_0
+  vars:
+    pci_drivers:
+      "0000:02:00.1": "vfio-pci"
+      "0000:02:00.2": "igb"
+      "0000:02:00.3": ""
+    configure_kernel: true
+    bind_drivers: true
+    set_ovs_dpdk: false
+  roles:
+    - ovirt-ansible-dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The role is controlled by 3 boolean variables (all set to &lt;code&gt;true&lt;/code&gt; by default) and a dictionary of devices and their drivers:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;configure_kernel&lt;/code&gt; – determines whether the kernel should be configured for DPDK usage (hugepages, CPU partitioning). &lt;strong&gt;WARNING&lt;/strong&gt;: When set to &lt;code&gt;true&lt;/code&gt; it is very likely to trigger a reboot of the host, unless all required configuration is already pre-set.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;bind_drivers&lt;/code&gt; – determines whether the role should bind devices to their specified drivers.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;set_ovs_dpdk&lt;/code&gt; – determines whether the role should initialize and configure OVS for DPDK usage.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pci_drivers&lt;/code&gt; – a dictionary of the PCI addresses of network interface cards as keys and drivers as values. An empty string represents the default Linux driver for the specified device. Non-DPDK compatible drivers may be set; However, NICs with such drivers will not be configured for OVS-DPDK usage and will not have their CPU isolated in multiple NUMA environments. PCI addresses can be retrieved via &lt;code&gt;lshw -class network -businfo&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Additionally, there are several optional performance related variables:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;pmd_threads_count&lt;/code&gt; – determines the number of PMD threads per NIC (default: &lt;code&gt;1&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_2mb_hugepages&lt;/code&gt; – determines the number of 2MB hugepages, if 2MB hugepages are to be used (default: &lt;code&gt;1024&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_1gb_hugepages&lt;/code&gt; – determines the number of 1GB hugepages, if 1GB hugepages are to be used (default: &lt;code&gt;4&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;use_1gb_hugepages&lt;/code&gt; – determines whether 1GB hugepages should be used, where 1GB hugepages are supported (default: &lt;code&gt;true&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For additional information, refer to the role's &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id="ovn-integration"&gt;OVN Integration&lt;/h3&gt;
+&lt;p&gt;DPDK in oVirt now leverages the capabilities of OVN in the form of an OVN localnet. This allows seamless connectivity across OVN networks, benefiting from OVN's software defined routers, switches, security groups, and ACL's.&lt;/p&gt;
+
+&lt;p&gt;For more information about OVN localnet integration in oVirt, refer to oVirt's &lt;a href="https://ovirt.org/develop/release-management/features/network/provider-physical-network/"&gt;Provider Physical Network RFE&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id="usage-in-ovirt"&gt;Usage in oVirt&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install &lt;code&gt;oVirt.dpdk-setup&lt;/code&gt; Ansible role via ansible-galaxy:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; # ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Execute the role as described above.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Unless the host was already configured, the host will restart for kernel changes to be applied. After reboot, the following values are changed (if they are not, you may have incompatible hardware):&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;IOMMU: &lt;code&gt;/sys/devices/virtual/iommu/&amp;lt;DMAR device&amp;gt;/devices/&amp;lt;PCI address&amp;gt;&lt;/code&gt; should exist. DMAR devices are typically annotated by &lt;code&gt;dmar0&lt;/code&gt;, &lt;code&gt;dmar1&lt;/code&gt;, and so forth.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;hugepages: &lt;code&gt;grep Huge /proc/meminfo&lt;/code&gt; should reflect the desired state as defined in the Ansible playbook (i.e. &lt;code&gt;Hugepagesize&lt;/code&gt; and &lt;code&gt;HugePages_Total&lt;/code&gt;)&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;CPU partitioning: based on the devices that are to be used with a DPDK compatible driver, CPUs should be partitioned separately between each NUMA node. Refer to &lt;code&gt;lscpu&lt;/code&gt; to see live CPU NUMA separation information, e.g.: &lt;code&gt;NUMA node1 CPU(s): 8-15&lt;/code&gt;&lt;/p&gt;
+
+        &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: NICs using userspace drivers do not appear in the kernel; &lt;code&gt;ip&lt;/code&gt; commands won't list devices using userspace drivers. in oVirt, such devices appear as &lt;code&gt;dpdk0&lt;/code&gt;, &lt;code&gt;dpdk1&lt;/code&gt;, and so forth.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an oVirt network &lt;code&gt;phys-net-demo&lt;/code&gt; on your data center and attach it to your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Attach &lt;code&gt;phys-net-demo&lt;/code&gt; to DPDK NICs accross your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/set-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an external OVN network &lt;code&gt;ext-net-demo&lt;/code&gt;, setting &lt;code&gt;phys-net-demo&lt;/code&gt; as its physical network. This configuration between &lt;code&gt;ext-net-demo&lt;/code&gt; and &lt;code&gt;phys-net-demo&lt;/code&gt; will enable traffic between &lt;code&gt;phys-net-demo&lt;/code&gt; (which DPDK's physical port is part of) and the rest of the ports present in OVN's &lt;code&gt;ext-net-demo&lt;/code&gt; network.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-ext-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code&gt;ext-net-demo&lt;/code&gt; vNic's may now be added to virtual machines. These vNics now share L2 connectivity with other remote ports in &lt;code&gt;ext-net-demo&lt;/code&gt; via DPDK's NIC (and other local ports internally).&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/ext-net-demo.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Temporarily, SElinux needs to be set to permissive. This is due to an &lt;a href="https://bugzilla.redhat.com/1598435"&gt;open bug&lt;/a&gt; where SElinux blocks the creation of a QEMU socket. Once the bug is resolved, this step should be skipped.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Host to VM packets are transmitted and received on buffers allocated on shared hugepages memory. As such, virtual machines using DPDK based NIC's need to enable hugepage sharing; this is done by running VM's with custom properties:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Review engine custom properties:&lt;br /&gt;
+&lt;code&gt;engine-config -g UserDefinedVMProperties&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Add engine custom properties for hugepages support:&lt;br /&gt;
+&lt;code&gt;engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Restart engine for changes to take effect:&lt;br /&gt;
+&lt;code&gt;systemctl restart ovirt-engine&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;In the VM run once menu dialog, add the following custom properties:&lt;br /&gt;
+&lt;code&gt;hugepages_shared&lt;/code&gt; – &lt;code&gt;true&lt;/code&gt;.&lt;br /&gt;
+&lt;code&gt;hugepages&lt;/code&gt; – the number of hugepages to share.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/hugepages.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</content>
+  </entry>
+</feed>

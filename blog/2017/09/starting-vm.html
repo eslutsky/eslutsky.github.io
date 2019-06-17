@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How VM is started &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='pkotas' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='How VM is started' property='og:title'>
+<meta content='Starting up a virtual machine (VM) is not an easy task, there are a lot of things going on hidden from the plain sight and studying it alone is a challenging task. The goal of this post is to simplify the process of learning how the oVirt hypervisor works. The concept of the oVirt is illustrated in the process of starting up the VM, which covers everything from top to the bottom.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/09/starting-vm.html' property='og:url'>
+<meta content='2017-09-21T11:00:00Z' property='article:published_time'>
+<meta content='pkotas' property='article:author:username'>
+<meta content='4.1.1' property='article:tag'>
+<link href='/blog/tag/4.1.1.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='release notes' property='article:tag'>
+<link href='/blog/tag/release notes.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='How VM is started' name='twitter:title'>
+<meta content='Starting up a virtual machine (VM) is not an easy task, there are a lot of things going on hidden from the plain sight and studying it alone is a challenging task. The goal of this post is to simplify the process of learning how the oVirt hypervisor works. The concept of the oVirt is illustrated in the process of starting up the VM, which covers everything from top to the bottom.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>09</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+How VM is started
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/pkotas.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/pkotas/">pkotas</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-09-21T11:00:00Z'>
+Thursday 21 September 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Starting up a virtual machine (VM) is not an easy task, there are a lot of things going on hidden from the plain sight and studying it alone is a challenging task. The goal of this post is to simplify the process of learning how the oVirt hypervisor works. The concept of the oVirt is illustrated in the process of starting up the VM, which covers everything from top to the bottom.</p>
+
+<p></p>
+
+<p><strong>Disclaimer:</strong> I am an engineer working close to the host part of the oVirt, therefore my knowledge of the engine is limited.</p>
+
+<p><img alt="ovirt web admin" width="1751" height="974" src="/images/ovirt-startvm/webadmin.png?1560777613" /></p>
+
+<h2 id="architecture">Architecture</h2>
+
+<p>Let me start with explaining the main parts oVirt hypervisor architecture. It will help a lot in understanding the overall process of the VM startup flow. Following is the simplified architecture, where I omit auxiliary components and support scripts. This will allow me to focus on the core concept without distractions.</p>
+
+<p>The architecture comprises of three main components: 1) web UI and engine, 2) VDSM, 3) guest agent.</p>
+
+<p>The web UI is where the user makes the first contact with the oVirt hypervisor. The web UI is the main command center of the engine and allows a user to control all aspects and states of the VMs.</p>
+
+<p>The engine is the hypervisor brain that manages all VMs and all hosts. It also orchestrates the migration of VMs and control that highly available VMs are really highly available.</p>
+
+<p>Of course, for the engine to be able to execute commands it needs a worker running on each host. In the oVirt, this worker is named the VDSM and handles all the tasks linked with direct manipulation of the VMs and a preparation of host.</p>
+
+<p>Last but not least, for the engine to know the health status of the running VMs it also needs the daemon running in each VM. This daemon is called the oVirt guest agent and thanks to its service the engine knows important information about each VM. This information is: VM IP, list of installed software, health, installed OS and up time.</p>
+
+<h2 id="web-ui-andengine">Web UI and Engine</h2>
+
+<p>The engine is the brain of the oVirt hypervisor, but what does it mean, right? The engine does all the hard work of managing the VM. It knows the states, setups and current capacity of all hosts as well as the running states of all VMs. Therefore it can do the scheduling for the deployment of <a href="https://en.wikipedia.org/wiki/High_availability">highly available</a> VMs or decide on which host the VM will be started according to host capacity.</p>
+
+<p>At this point, it is a good time to tell you, that the engine is composed of three parts: 1) the web UI, 2) the Java backend and 3) the PostgreSQL database. The web UI server as the main command center for the whole oVirt and it is the entry point from where you start your VM. By pressing “VM run” button.</p>
+
+<p><img alt="ovirt engine" width="445" height="292" src="/images/ovirt-startvm/ovirt-engine.png?1560777613" /></p>
+
+<p>Once the user presses the button, the Java backend starts to build the VM configuration. The process begins by accessing the Postgresql database. If the VM already exists, the list of its devices, storage drives, current state (new, paused, hibernated) and guest agent version is retrieved. From the retrieved data, the backend builds the VM configuration.</p>
+
+<p>From the built configuration, the VDSM command for running the VM is created, which is sent to the host running VDSM via JSON RPC. The run command contains information about machine start-up, the guest agent version, devices setup and if the machine should start paused (used for accessing the boot manager). Once the command is built, it is sent to the VDSM for execution.</p>
+
+<h2 id="host">Host</h2>
+
+<p><img alt="VDSM and QEMU" width="253" height="396" src="/images/ovirt-startvm/vdsm-libvirt-qemu.png?1560777613" /></p>
+
+<p>Now, when the VDSM receives the command, it starts the work on running the VM. As you can see from the picture, before any VM can be run in the <a href="https://www.qemu.org">QEMU</a>, the VDSM needs to go through <a href="https://libvirt.org">libVirt</a> as its middleman. Furthermore, the VDSM needs to handle states of the VMs running on its host. While it might not seem like a big deal, things can get complicated really fast.</p>
+
+<p>I will start with the high-level overview. As I have already mentioned, the virtualization platform for the oVirt is the QEMU set up on <a href="https://www.linux-kvm.org">KVM</a>. Communication with QEMU is actually pretty complicated and it covers a lot of work related to handling networks and hardware devices. A good project does not reinvent the wheel where the wheel is already available, therefore VDSM manages QEMU through adapter called the libVirt. LibVirt nicely implements all the low-level routines needed to operate QEMU and allows VDSM to use high-level commands like “create domain”, which creates Virtual Machine, obviously. Besides communication with libVirt, the VDSM has a small registry with all VMs running on its host, where it stores current state and operation. VDSM also communicates with the quest agent running inside the VM and passes the communication to the engine. Besides that, it does quite a few other things, which I will cover in some next post.</p>
+
+<p>So now we know what is the main purpose of the VDSM, but how it is all implemented and how it will launch my VM?</p>
+
+<p>Well first the VDSM need to create a connection to the <a href="https://github.com/oVirt/vdsm/blob/1b5dfb9dec2a8de8577ac8a939120306df3d5565/lib/vdsm/libvirtconnection.py#L45">libVirt and start listening for its events</a>. This is done in a separate thread, so it is nonblocking and allows to pass control to the rest of application. The connection goes both ways, it can pass the commands to the libVirt and it actively listens for events on libVirt and <a href="https://github.com/oVirt/vdsm/blob/1b5dfb9dec2a8de8577ac8a939120306df3d5565/lib/vdsm/clientIF.py#L522">allows for reaction</a>.</p>
+
+<p>To listen to the oVirt engine, the VDSM has to create an <a href="https://en.wikipedia.org/wiki/Remote_procedure_call">RPC</a> server, to which the engine sends its commands. The code doing exactly this resides in the <a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/clientIF.py#L67">clientIF</a>, which is the VDSM interface class providing the API. The client runs in a separate thread, which is started by <a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/clientIF.py#L319">start()</a> method.</p>
+
+<p>Which method it is to start the VM, you ask? It is the <a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/clientIF.py#L451">createVM</a> method called through the <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/API.py#L161">API create</a>, but there is more to it. Let me walk you through the whole process, it is actually quite interesting how much work is needed to run one VM.</p>
+
+<p>The whole action starts with checking if <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/API.py#L170">VM already exists</a>, we do not want multiple identical VMs running. Next is time for checking whether <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/API.py#L174">VM was hibernated</a>; if so, load stored machine and update its parameters accordingly. Following is <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/API.py#L197">parameter validation</a>. This checks required options and fails if they are not present. Next <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/API.py#L199">parameter fix</a> is in place, this simply fills missing optional parameters by defaults. The fix is followed by <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/API.py#L201">check for supported</a> graphics display. After these checks, <a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/clientIF.py#L451">the clientIF method createVM</a> is called.</p>
+
+<p><a href="https://github.com/oVirt/vdsm/blob/2e1c061429bee3fd829cd71ba0d6e7e088ec5406/lib/vdsm/clientIF.py#L451">CreateVM</a> is actually quite a simple method, it creates new VM, adds it to the dictionary and runs it. The VM class is where most of the magic happens. <a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2307">VM run</a> method executes in a separate thread, thus it is non-blocking and can pass control to other thread while doing I/O.</p>
+
+<p>The run starts with <a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2313">creating VM devices</a> (network, graphics, etc.) and if the VM is not <a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2322">recovering</a> setting them up. Following there are four options for starting the VM, depending on the previous state of the VM.</p>
+
+<ol>
+  <li><a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2325">Recover from failure</a></li>
+</ol>
+
+<p>This means, the libVirt connection already exists, but something failed. So repair it and run VM again.</p>
+
+<ol>
+  <li><a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2337">Start after migration</a></li>
+</ol>
+
+<p>This one is tricky since at this point the code does nothing. It waits for the migration from one host to other to finish and then disconnects the point of origin, so that only one VM of that kind is running.</p>
+
+<ol>
+  <li><a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2339">Start from file, aka resume from hibernation</a></li>
+</ol>
+
+<p>This does what it says, it loads the VM from a file, apply hooks before starting it. Then it starts the VM by passing the configuration via connection to libVirt. There is one catch, the difference between transient and persistent VM. They start little bit different and for a clear and thorough explanation, I suggest reading the <a href="https://wiki.libvirt.org/page/VM_lifecycle">libVirt documentation</a>.</p>
+
+<ol>
+  <li><a href="https://github.com/oVirt/vdsm/blob/c1147c232485f51ef972203f1a214439dd38a805/lib/vdsm/virt/vm.py#L2375">Fresh start</a></li>
+</ol>
+
+<p>No previous VM exists, so it needs to be created, setup and run. As with resume from hibernation, the custom hooks are applied before starting it and. Then it is created and passed via connection to libVirt. Again, persistent VMs are started a little bit different as mentioned.</p>
+
+<p>It is worth noting that, the libVirt connection accepts the <a href="https://libvirt.org/formatdomain.html">libVirt XML format</a> as its VM configuration, which was translated from engine configuration to the XML format in createVM phase.</p>
+
+<p>Finally, once the libVirt has the XML, it handles the rest and notifies back on any change.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/4-1-1.html">4.1.1</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/release-notes.html">release notes</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-09-21-starting-vm.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-09-21-starting-vm.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 26 Sep 2017 09:02 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

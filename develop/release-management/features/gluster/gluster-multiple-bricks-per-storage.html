@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Support for multiple GlusterFS bricks on a block device(s) &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="support-for-multiple-glusterfs-bricks-on-a-block-devices">Support for multiple GlusterFS bricks on a block device(s)</h1>
+
+<h1 id="summary">Summary</h1>
+
+<p>This feature introduces ability to create multiple GlusterFS bricks on the same block device(s).</p>
+
+<p>Having one (or more) physical block device, user should be able to create a LVM volume group on top of it and use LVM logical volumes as a brick backend device. That approach will allow better management of the local storage alongside with support for thin provisioning for the GlusterFS and SSD caching.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: <a href="https://github.com/akashihi">Denis Chaplygin</a></li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#099;&#104;&#097;&#112;&#108;&#121;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#099;&#104;&#097;&#112;&#108;&#121;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 4.3</li>
+  <li>Status: Planning</li>
+  <li>Last updated: January 08, 2018</li>
+</ul>
+
+<h1 id="detailed-description">Detailed description</h1>
+
+<p>Current oVirt's GlusterFS brick/volume management implementation implies that bricks should occupy the whole block device, thus limiting possible number of bricks to the number of physically available block devices. That approach could be quite limiting, especially in case of small deployments or hyperconverged environments, when you have just one or two relatively big drives for you VM payloads.</p>
+
+<p>This change will introduce multiple bricks sharing same block device into oVirt, thus allowing users to manage their local storage using oVirt UI and use LVM logical volumes as a block devices for GlusterFS bricks. It will also bring LVM specific features, such as thin provisioning and SSD caching.</p>
+
+<h1 id="implementation-details">Implementation details</h1>
+
+<h2 id="engine">Engine</h2>
+
+<ul>
+  <li>Engine should support creation of physical volumes, volume groups and logical volumes. This can be implemented using engine Ansible integration, to not to pollute vdsm with that code. Engine should be able to retrieve current LVM configuration.</li>
+  <li>Engine should support LVM thin pools and allow creation of thin logical volumes. Thin pool implementation details should be hidden from the user.</li>
+  <li>Alongside with thin pools, engine must support SSD caching configuration. Implementation details should be hidden from the user.</li>
+  <li>Thin pool support adds a 'second' size to the logical volumes (and, therefore, to gluster bricks, gluster volumes and storage domains running on top of them) - with thin pool every logical volume will have a 'reported' size and 'physical' size. First one, 'reported' is a size of a logical volume, as reported by df command or similar. 'Physical' size is a size of thin pool itself. Obviously, they could differ and actual usage of both filesystem and thin pool may differ, so both sizes must be reported by vdsm to the engine, stored at the database and presented to the user.</li>
+  <li>It would be nice if engine will actually know type of each block device (solid/spinning) and will only allow solid drives to be used as SSD cache. We need that information to be reported by VDSM and stored at the database.</li>
+</ul>
+
+<h2 id="vdsm">VDSM</h2>
+
+<ul>
+  <li>VDSM LVM filtering needs to work correctly with new engine LVM management.</li>
+  <li>VDSM should report underlying thin pool size/usage, probably using additional field at VolumeGroupInfo</li>
+  <li>VDSM should report block device type (solid/spinning), probaly using additional field at BlockDeviceInfo</li>
+  <li>VDSM blivet support should be dropped and replaced with ansible brick/volume management at the engine side.</li>
+</ul>
+
+<h2 id="rest-api">REST API</h2>
+
+<ul>
+  <li>Support for additional fields, introduced above, must be added.</li>
+</ul>
+
+<h2 id="ovirt-ui">oVirt UI</h2>
+
+<ul>
+  <li>'Physical' size needs to be added alongside with existing 'reported' size field</li>
+  <li>Gluster brick management dialog needs to be extended and support for multiple bricks on the same device should be added.</li>
+  <li>Gluster brick management dialog should allow thin pool creation</li>
+  <li>Gluster brick management dialog should allow SSD cache configration, only in case of presence of unused SSD block devices and, at the same time, with thin pool enabled</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Simplification of hyperconverged deploys</li>
+  <li>Fine grained local storage management</li>
+</ul>
+
+<h2 id="open-issues">Open issues</h2>
+
+<ul>
+  <li>[BUG-1515299: (https://bugzilla.redhat.com/1515299)[RFE] - Support multiple bricks per storage device and configuring lvmcache]</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/gluster-multiple-bricks-per-storage.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/gluster-multiple-bricks-per-storage.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 2 Feb 2018 12:06 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

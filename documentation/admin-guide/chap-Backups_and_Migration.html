@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Backups and Migration &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-12-backups-and-migration">Chapter 12: Backups and Migration</h1>
+
+<h2 id="backing-up-and-restoring-the-ovirt-engine">Backing Up and Restoring the oVirt Engine</h2>
+
+<h3 id="backing-up-ovirt-engine---overview">Backing up oVirt Engine - Overview</h3>
+
+<p>Use the <code>engine-backup</code> tool to take regular backups of the oVirt Engine. The tool backs up the engine database and configuration files into a single file and can be run without interrupting the <code>ovirt-engine</code> service.</p>
+
+<h3 id="syntax-for-the-engine-backup-command">Syntax for the engine-backup Command</h3>
+
+<p>The <code>engine-backup</code> command works in one of two basic modes:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-backup --mode=backup&#x000A;&#x000A;# engine-backup --mode=restore&#x000A;</code></pre></div>
+<p>These two modes are further extended by a set of parameters that allow you to specify the scope of the backup and different credentials for the engine database. Run <code>engine-backup --help</code> for a full list of parameters and their function.</p>
+
+<p><strong>Basic Options</strong></p>
+
+<dl>
+  <dt><code>--mode</code></dt>
+  <dd>Specifies whether the command will perform a backup operation or a restore operation. Two options are available - <code>backup</code>, and <code>restore</code>. This is a required parameter.</dd>
+  <dt><code>--file</code></dt>
+  <dd>Specifies the path and name of a file into which backups are to be taken in backup mode, and the path and name of a file from which to read backup data in restore mode. This is a required parameter in both backup mode and restore mode.</dd>
+  <dt><code>--log</code></dt>
+  <dd>Specifies the path and name of a file into which logs of the backup or restore operation are to be written. This parameter is required in both backup mode and restore mode.</dd>
+  <dt><code>--scope</code></dt>
+  <dd>Specifies the scope of the backup or restore operation. There are four options: <code>all</code>, which backs up or restores all databases and configuration data; <code>files</code>, which backs up or restores only files on the system; <code>db</code>, which backs up or restores only the Engine database; and <code>dwhdb</code>, which backs up or restores only the Data Warehouse database. The default scope is <code>all</code>.
+
+    <p>The <code>--scope</code> parameter can be specified multiple times in the same <code>engine-backup</code> command.</p>
+  </dd>
+</dl>
+
+<p><strong>Engine Database Options</strong></p>
+
+<p>The following options are only available when using the <code>engine-backup</code> command in <code>restore</code> mode. The option syntax below applies to restoring the Engine database. The same options exist for restoring the Data Warehouse database. See <code>engine-backup --help</code> for the Data Warehouse option syntax.</p>
+
+<dl>
+  <dt><code>--provision-db</code></dt>
+  <dd>Creates a PostgreSQL database for the Engine database backup to be restored to. This is a required parameter when restoring a backup on a remote host or fresh installation that does not have a PostgreSQL database already configured.</dd>
+  <dt><code>--change-db-credentials</code></dt>
+  <dd>Allows you to specify alternate credentials for restoring the Engine database using credentials other than those stored in the backup itself. See <code>engine-backup --help</code> for the additional parameters required by this parameter.</dd>
+  <dt><code>--restore-permissions</code> or <code>--no-restore-permissions</code></dt>
+  <dd>Restores (or does not restore) the permissions of database users. One of these parameters is required when restoring a backup.
+
+    <p><strong>Note:</strong> If a backup contains grants for extra database users, restoring the backup with the <code>--restore-permissions</code> and <code>--provision-db</code> (or <code>--provision-dwh-db</code>) options will create the extra users with random passwords. You must change these passwords manually if the extra users require access to the restored system.</p>
+  </dd>
+</dl>
+
+<h3 id="creating-a-backup-with-the-engine-backup-command">Creating a Backup with the engine-backup Command</h3>
+
+<p>The oVirt Engine can be backed up using the <code>engine-backup</code> command while the Engine is active. Append one of the following options to <code>--scope</code> to specify which backup to perform:</p>
+
+<ul>
+  <li>
+    <p><code>all</code>: A full backup of all databases and configuration files on the Engine</p>
+  </li>
+  <li>
+    <p><code>files</code>: A backup of only the files on the system</p>
+  </li>
+  <li>
+    <p><code>db</code>: A backup of only the Engine database</p>
+  </li>
+  <li>
+    <p><code>dwhdb</code>: A backup of only the Data Warehouse database</p>
+
+    <p><strong>Important:</strong> To restore a database to a fresh installation of oVirt Engine, a database backup alone is not sufficient; the Engine also requires access to the configuration files. Any backup that specifies a scope other than the default, <code>all</code>, must be accompanied by the <code>files</code> scope, or a filesystem backup.</p>
+  </li>
+</ul>
+
+<p><strong>Example Usage of the engine-backup Command</strong></p>
+
+<ol>
+  <li>
+    <p>Log on to the machine running the oVirt Engine.</p>
+  </li>
+  <li>
+    <p>Create a backup:</p>
+
+    <p><strong>Creating a Full Backup</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --scope=all --mode=backup --file=file_name --log=log_file_name&#x000A;</code></pre></div>
+    <p><strong>Creating a Engine Database Backup</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --scope=files --scope=db --mode=backup --file=file_name --log=log_file_name&#x000A;</code></pre></div>
+    <p>Replace the <code>db</code> option with <code>dwhdb</code> to back up the Data Warehouse database.</p>
+
+    <p>A <code>tar</code> file containing a backup is created using the path and file name provided.</p>
+  </li>
+</ol>
+
+<p>The <code>tar</code> files containing the backups can now be used to restore the environment.</p>
+
+<h3 id="restoring-a-backup-with-the-engine-backup-command">Restoring a Backup with the engine-backup Command</h3>
+
+<p>Restoring a backup using the engine-backup command involves more steps than creating a backup does, depending on the restoration destination. For example, the <code>engine-backup</code> command can be used to restore backups to fresh installations of oVirt, on top of existing installations of oVirt, and using local or remote databases.</p>
+
+<p><strong>Important:</strong> Backups can only be restored to environments of the same major release as that of the backup. For example, a backup of a oVirt version 4.0 environment can only be restored to another oVirt version 4.0 environment. To view the version of oVirt contained in a backup file, unpack the backup file and read the value in the <code>version</code> file located in the root directory of the unpacked files.</p>
+
+<h3 id="restoring-a-backup-to-a-fresh-installation">Restoring a Backup to a Fresh Installation</h3>
+
+<p>The <code>engine-backup</code> command can be used to restore a backup to a fresh installation of the oVirt Engine. The following procedure must be performed on a machine on which the base operating system has been installed and the required packages for the oVirt Engine have been installed, but the <code>engine-setup</code> command has not yet been run. This procedure assumes that the backup file or files can be accessed from the machine on which the backup is to be restored.</p>
+
+<p><strong>Restoring a Backup to a Fresh Installation</strong></p>
+
+<ol>
+  <li>
+    <p>Log on to the Engine machine. If you are restoring the engine database to a remote host, you will need to log on to and perform the relevant actions on that host. Likewise, if also restoring the Data Warehouse to a remote host, you will need to log on to and perform the relevant actions on that host.</p>
+  </li>
+  <li>
+    <p>Restore a complete backup or a database-only backup.</p>
+
+    <ul>
+      <li>
+        <p>Restore a complete backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --provision-db --restore-permissions&#x000A;</code></pre></div>
+        <p>If Data Warehouse is also being restored as part of the complete backup, provision the additional database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --provision-db --provision-dwh-db --restore-permissions&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>Restore a database-only backup by restoring the configuration files and database backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=db --file=file_name --log=log_file_name --provision-db --restore-permissions&#x000A;</code></pre></div>
+        <p>The example above restores a backup of the Engine database.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=dwhdb --file=file_name --log=log_file_name --provision-dwh-db --restore-permissions&#x000A;</code></pre></div>
+        <p>The example above restores a backup of the Data Warehouse database.</p>
+      </li>
+    </ul>
+
+    <p>If successful, the following output displays:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> You should now run engine-setup.&#x000A; Done.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the following command and follow the prompts to configure the restored Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The oVirt Engine has been restored to the version preserved in the backup. To change the fully qualified domain name of the new oVirt system, see <a href="Ovirt_Engine_Rename_Tool">Ovirt Engine Rename Tool</a>.</p>
+
+<h3 id="restoring-a-backup-to-overwrite-an-existing-installation">Restoring a Backup to Overwrite an Existing Installation</h3>
+
+<p>The <code>engine-backup</code> command can restore a backup to a machine on which the oVirt Engine has already been installed and set up. This is useful when you have taken a backup up of an installation, performed changes on that installation, and then want to restore the installation from the backup.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** When restoring a backup to overwrite an existing installation, you must run the `engine-cleanup` command to clean up the existing installation before using the `engine-backup` command. Because the `engine-cleanup` command only cleans the engine database, and does not drop the database or delete the user that owns that database, you do not need to create a new database or specify the database credentials because the user and database already exist.&#x000A;</code></pre></div>
+<p><strong>Restoring a Backup to Overwrite an Existing Installation</strong></p>
+
+<ol>
+  <li>
+    <p>Log on to the oVirt Engine machine.</p>
+  </li>
+  <li>
+    <p>Remove the configuration files and clean the database associated with the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-cleanup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restore a full backup or a database-only backup:</p>
+
+    <ul>
+      <li>
+        <p>Restore a full backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --restore-permissions&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>Restore a database-only backup by restoring the configuration files and the database backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=db --file=file_name --log=log_file_name --restore-permissions&#x000A;</code></pre></div>
+        <p>The example above restores a backup of the Engine database. If necessary, also restore the Data Warehouse database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=dwhdb --file=file_name --log=log_file_name --restore-permissions&#x000A;</code></pre></div>      </li>
+    </ul>
+
+    <p>If successful, the following output displays:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> You should now run engine-setup.&#x000A; Done.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the following command and follow the prompts to reconfigure the firewall and ensure the <literal>ovirt-engine</literal> service is correctly configured:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="restoring-a-backup-with-different-credentials">Restoring a Backup with Different Credentials</h3>
+
+<p>The <code>engine-backup</code> command can restore a backup to a machine on which the oVirt Engine has already been installed and set up, but the credentials of the database in the backup are different to those of the database on the machine on which the backup is to be restored. This is useful when you have taken a backup of an installation and want to restore the installation from the backup to a different system.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** When restoring a backup to overwrite an existing installation, you must run the `engine-cleanup` command to clean up the existing installation before using the `engine-backup` command. Because the `engine-cleanup` command only cleans the engine database, and does not drop the database or delete the user that owns that database, you do not need to create a new database or specify the database credentials because the user and database already exist. However, if the credentials for the owner of the engine database are not known, you must change them before you can restore the backup.&#x000A;</code></pre></div>
+<p><strong>Restoring a Backup with Different Credentials</strong></p>
+
+<ol>
+  <li>
+    <p>Log on to the machine on which the oVirt Engine is installed.</p>
+  </li>
+  <li>
+    <p>Run the following command and follow the prompts to remove the configuration files for and clean the database associated with the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-cleanup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Change the password for the owner of the engine database if the credentials of that user are not known:</p>
+
+    <ol>
+      <li>
+        <p>Enter the postgresql command line:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # su postgres&#x000A; $ psql&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>Change the password of the user that owns the <code>engine</code> database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> postgres=# alter role user_name encrypted password 'new_password';&#x000A;</code></pre></div>
+        <p>Repeat this for the user that owns the <code>ovirt_engine_dwh</code> database if necessary.</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>Restore a complete backup or a database-only backup with the <code>--change-db-credentials</code> parameter to pass the credentials of the new database. The <code>database_location</code> for a database local to the Engine is <code>localhost</code>.</p>
+
+    <p><strong>Note:</strong> The following examples use a <code>--*password</code> option for each database without specifying a password, which will prompt for a password for each database. Passwords can be supplied for these options in the command itself, however this is not recommended as the password will then be stored in the shell history. Alternatively, <code>--*passfile=password_file</code> options can be used for each database to securely pass the passwords to the <code>engine-backup</code> tool without the need for interactive prompts.</p>
+
+    <ul>
+      <li>
+        <p>Restore a complete backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --change-db-credentials --db-host=database_location --db-name=database_name --db-user=engine --db-password --no-restore-permissions&#x000A;</code></pre></div>
+        <p>If Data Warehouse is also being restored as part of the complete backup, include the revised credentials for the additional database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  engine-backup --mode=restore --file=file_name --log=log_file_name --change-db-credentials --db-host=database_location --db-name=database_name --db-user=engine --db-password --change-dwh-db-credentials --dwh-db-host=database_location --dwh-db-name=database_name --dwh-db-user=ovirt_engine_history --dwh-db-password --no-restore-permissions&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>Restore a database-only backup by restoring the configuration files and the database backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=db --file=file_name --log=log_file_name --change-db-credentials --db-host=database_location --db-name=database_name --db-user=engine --db-password --no-restore-permissions&#x000A;</code></pre></div>
+        <p>The example above restores a backup of the Engine database.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --scope=files --scope=dwhdb --file=file_name --log=log_file_name --change-dwh-db-credentials --dwh-db-host=database_location --dwh-db-name=database_name --dwh-db-user=ovirt_engine_history --dwh-db-password --no-restore-permissions&#x000A;</code></pre></div>
+        <p>The example above restores a backup of the Data Warehouse database.</p>
+      </li>
+    </ul>
+
+    <p>If successful, the following output displays:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> You should now run engine-setup.&#x000A; Done.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the following command and follow the prompts to reconfigure the firewall and ensure the <code>ovirt-engine</code> service is correctly configured:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h3 id="migrating-the-engine-database-to-a-remote-server-database">Migrating the Engine Database to a Remote Server Database</h3>
+
+<p>You can migrate the <code>engine</code> database to a remote database server after the oVirt Engine has been initially configured. Use <code>engine-backup</code> to create a database backup and restore it on the new database server. This procedure assumes that the new database server has Enterprise Linux 7 installed and the appropriate subscriptions configured. See "Subscribing to the Required Entitlements" in the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>.</p>
+
+<p><strong>Migrating the Database</strong></p>
+
+<ol>
+  <li>
+    <p>Log in to the oVirt Engine machine and stop the <code>ovirt-engine</code> service so that it does not interfere with the engine backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl stop ovirt-engine.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create the <code>engine</code> database backup:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --scope=files --scope=db --mode=backup --file=file_name --log=log_file_name&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Copy the backup file to the new database server:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scp /tmp/engine.dump root@new.database.server.com:/tmp&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Log in to the new database server and install <code>engine-backup</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine-tools-backup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Restore the database on the new database server. <code>file_name</code> is the backup file copied from the Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --mode=restore --scope=files --scope=db --file=file_name --log=log_file_name --provision-db --no-restore-permissions&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Now that the database has been migrated, start the <code>ovirt-engine</code> service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl start ovirt-engine.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<h2 id="backing-up-and-restoring-virtual-machines-using-the-backup-and-restore-api">Backing Up and Restoring Virtual Machines Using the Backup and Restore API</h2>
+
+<h3 id="the-backup-and-restore-api">The Backup and Restore API</h3>
+
+<p>The backup and restore API is a collection of functions that allows you to perform full or file-level backup and restoration of virtual machines. The API combines several components of oVirt, such as live snapshots and the REST API, to create and work with temporary volumes that can be attached to a virtual machine containing backup software provided by an independent software provider.</p>
+
+<h3 id="backing-up-a-virtual-machine">Backing Up a Virtual Machine</h3>
+
+<p>Use the backup and restore API to back up a virtual machine. This procedure assumes you have two virtual machines: the virtual machine to back up, and a virtual machine on which the software for managing the backup is installed.</p>
+
+<p><strong>Backing Up a Virtual Machine</strong></p>
+
+<ol>
+  <li>
+    <p>Using the REST API, create a snapshot of the virtual machine to back up:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> POST /api/vms/11111111-1111-1111-1111-111111111111/snapshots/ HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;snapshot&gt;&#x000A;     &lt;description&gt;BACKUP&lt;/description&gt;&#x000A; &lt;/snapshot&gt;&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> When you take a snapshot of a virtual machine, a copy of the configuration data of the virtual machine as at the time the snapshot was taken is stored in the <code>data</code> attribute of the <code>configuration</code> attribute in <code>initialization</code> under the snapshot.</p>
+
+    <p><strong>Important:</strong> You cannot take snapshots of disks that are marked as shareable or that are based on direct LUN disks.</p>
+  </li>
+  <li>
+    <p>Retrieve the configuration data of the virtual machine from the <code>data</code> attribute under the snapshot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> GET /api/vms/11111111-1111-1111-1111-111111111111/snapshots/11111111-1111-1111-1111-111111111111 HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Identify the disk ID and snapshot ID of the snapshot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> GET /api/vms/11111111-1111-1111-1111-111111111111/snapshots/11111111-1111-1111-1111-111111111111/disks HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Attach the snapshot to the backup virtual machine and activate the disk:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> POST /api/vms/22222222-2222-2222-2222-222222222222/disks/ HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;disk id="11111111-1111-1111-1111-111111111111"&gt;&#x000A;     &lt;snapshot id="11111111-1111-1111-1111-111111111111"/&gt;&#x000A;     &lt;active&gt;true&lt;/active&gt;&#x000A; &lt;/disk&gt;&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Use the backup software on the backup virtual machine to back up the data on the snapshot disk.</p>
+  </li>
+  <li>
+    <p>Detach the snapshot disk from the backup virtual machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> DELETE /api/vms/22222222-2222-2222-2222-222222222222/disks/11111111-1111-1111-1111-111111111111 HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;action&gt;&#x000A;     &lt;detach&gt;true&lt;/detach&gt;&#x000A; &lt;/action&gt;&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Optionally, delete the snapshot:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> DELETE /api/vms/11111111-1111-1111-1111-111111111111/snapshots/11111111-1111-1111-1111-111111111111 HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>You have backed up the state of a virtual machine at a fixed point in time using backup software installed on a separate virtual machine.</p>
+
+<h3 id="restoring-a-virtual-machine">Restoring a Virtual Machine</h3>
+
+<p>Restore a virtual machine that has been backed up using the backup and restore API. This procedure assumes you have a backup virtual machine on which the software used to manage the previous backup is installed.</p>
+
+<p><strong>Restoring a Virtual Machine</strong></p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, create a floating disk on which to restore the backup. See <a href="Creating_Unassociated_Virtual_Machine_Hard_Disks">Creating Unassociated Virtual Machine Hard Disks</a> for details on how to create a floating disk.</p>
+  </li>
+  <li>
+    <p>Attach the disk to the backup virtual machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> POST /api/vms/22222222-2222-2222-2222-222222222222/disks/ HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;disk id="11111111-1111-1111-1111-111111111111"&gt;&#x000A; &lt;/disk&gt;&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Use the backup software to restore the backup to the disk.</p>
+  </li>
+  <li>
+    <p>Detach the disk from the backup virtual machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> DELETE /api/vms/22222222-2222-2222-2222-222222222222/disks/11111111-1111-1111-1111-111111111111 HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;action&gt;&#x000A;     &lt;detach&gt;true&lt;/detach&gt;&#x000A; &lt;/action&gt;&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Create a new virtual machine using the configuration data of the virtual machine being restored:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> POST /api/vms/ HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;vm&gt;&#x000A;     &lt;cluster&gt;&#x000A;         &lt;name&gt;cluster_name&lt;/name&gt;&#x000A;     &lt;/cluster&gt;&#x000A;     &lt;name&gt;NAME&lt;/name&gt;&#x000A;     ...&#x000A; &lt;/vm&gt;&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Attach the disk to the new virtual machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> POST /api/vms/33333333-3333-3333-3333-333333333333/disks/ HTTP/1.1&#x000A; Accept: application/xml&#x000A; Content-type: application/xml&#x000A;&#x000A; &lt;disk id="11111111-1111-1111-1111-111111111111"&gt;&#x000A; &lt;/disk&gt;&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>You have restored a virtual machine using a backup that was created using the backup and restore API.</p>
+
+<p><strong>Prev:</strong> <a href="chap-External_Providers">Chapter 11: External Providers</a><br />
+<strong>Next:</strong> <a href="chap-Errata_Management_with_Foreman">Chapter 13: Errata Management with Foreman</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-backups_and_migration">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Backups_and_Migration.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Backups_and_Migration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

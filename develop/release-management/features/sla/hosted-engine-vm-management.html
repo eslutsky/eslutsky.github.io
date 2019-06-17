@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hosted engine VM management &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="hosted-engine-vm-management-enhancements">Hosted engine VM management enhancements</h1>
+
+<h2 id="summary">Summary</h2>
+
+<ol>
+  <li>Allow editing the Hosted engine VM, storage domain, disks, networks etc - new feature</li>
+  <li>Have a shared configuration for the hosted engine VM - new feature</li>
+  <li>Have a backup for the hosted engine VM configuration - new feature</li>
+</ol>
+
+<p>the 1st feature by-products are the 2nd and 3rd.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Roy Golan <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#103;&#111;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#114;&#103;&#111;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Sandro Bonazzola <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Managing the hosted-engine engine VM is a non trivial taks and mostly manual today. if the engine Vm needs tuning, or some addition(add a device), one must reach all the hosted engine capable hosts and alter the local /etc/ovirt-hosted-engine/vm.conf instances. Although visible in the UI, the engine-VM have most of the provisioning actions blocked, as the VM is a external or foreign VM to the setup, as we don't manage its Storage Domains, Disks, Data-Center and Networks.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>The engine-VM should be treated as any other VM in the system, from provisioning standpoint. We should be able to edit its configuration using webadmin or API and expect the next time it will run it will take effect. This saves the time consuming, error-prone, non-trivial task of updating the vm.conf under each and every capable host in the system. As a regular VM, the engine VM would automatically gain most of the functionally supported by ovirt. More-over, the engine VM configuration would be backed up in the engine DB and in the OVF_STORE under the preconfigured hosted engine storage domain.</p>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<ul>
+  <li>vdsmcli API must be changed for allowing to start a VM provided the VM UUID (OVF can be taken from OVF_STORE automatically just giving the VM UUID)</li>
+  <li>host-deploy must be changed in order to allow the deployment / configuration of the ha daemons (<a href="https://bugzilla.redhat.com/1200469">Bug 1200469</a> - [RFE] add support for hosted-engine deployment on additional hosts)</li>
+  <li>[<a href="https://bugzilla.redhat.com/1139793">Bug 1139793</a> - [RFE] Keep hosted engine VM configuration in the shared storage</li>
+  <li>ovirt-engine must be changed for allowing hosted-engine storage domain to be visible / handled</li>
+  <li>ovirt-engine must be changed to allow the deployment of hosted-engine nodes from the portal (<a href="https://bugzilla.redhat.com/1167262">Bug 1167262</a> - [RFE] allow to deploy additional hosts from webadmin portal)</li>
+  <li>ovirt-ha daemons should use vdscli new API instead of using legacy vdsClient (<a href="https://bugzilla.redhat.com/1101554">Bug 1101554</a> - [RFE] Use vdsm api instead of vdsClient ) in order to start the VM by UUID</li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<h3 id="high-level-flow">High level flow</h3>
+
+<p><img alt="" title="High Level Design - Edit HE VM(2).png" src="/images/HighLevelDesign-EditHEVM(2).png" /></p>
+
+<ol>
+  <li>installation creates and upload the OVF {VM guid}.ovf to a pre-created OVF_DISK</li>
+  <li>HA Agent read’s OVF from OVF_STORE</li>
+  <li>watchdog send a vdsm “create” verb with the OVF as argument. VM starts.</li>
+  <li>Installation imports the SD into ovirt-engine</li>
+  <li>Installation imports the engine VM from the OVF which resides in OVF_STORE</li>
+  <li>Changes made to the engine VM are persisted back to the OVF_STORE under the OVF file</li>
+  <li>Regular API usage apply to the engine VM - should we prevent the engine VM deletion or one of its disks? (for sure make it delete protected at first)</li>
+</ol>
+
+<h3 id="user-experience">User Experience</h3>
+
+<h4 id="crud">CRUD</h4>
+
+<ul>
+  <li>Waiting for the RFE for full requirements*</li>
+</ul>
+
+<p>engine VM is auto added to engine(no change 3.5) Initially, once the Host is doing the first Vm monitoring cycle it will auto add the engine VM to ovirt-engine. the VM then will be an “External VM” - it can’t be edited. import storage domain <strong><em>[4]</em></strong> Now the storage domain which have the OVF_STORE disks previously created by hosted-engine setup must be imported into the engine. Engine 3.5 already support importing a storage domain.</p>
+
+<p>import the VM from OVF_STORE disks <strong><em>[5]</em></strong> Once the domain is imported, the OVFs in the OVF_STORE can be read by engine and be imported into the setup. Importing a VM from OVF on OVF_STORE disk is supported in 3.5</p>
+
+<p><strong>Once the engine VM is imported a user can:</strong></p>
+
+<ul>
+  <li>add/edit VM configuration</li>
+  <li>add/edit disks</li>
+  <li>add/edit nics</li>
+  <li>edit certain storage domain attributes //TODO need editing</li>
+</ul>
+
+<p>overall interface has on real change.</p>
+
+<p>could be nice to have - a special icon/markup on the VMs grid to distinguish it from other VMs</p>
+
+<p><strong>Some operation are blocked altogether using CanDoAction:</strong></p>
+
+<ul>
+  <li>remove storage domain</li>
+  <li>remove OVF_STORE disk</li>
+  <li>any other actions should be prevented in order not to chop the branch we sit on</li>
+</ul>
+
+<h4 id="installupgrade">Install/Upgrade</h4>
+
+<h5 id="fresh-install">Fresh install</h5>
+
+<ol>
+  <li>ovirt-hosted-engine-setup shall create an OVF_STORE disk (using vdsm api)</li>
+  <li>ovirt hosted-engine-setup shall store the vm config as OVF in the disk (using vdsm api)</li>
+  <li>post VM install and verification, setup should add the SD which the OVF_STORE</li>
+  <li>located on the engine-VM (engine api)</li>
+  <li>engine VM shall be imported from the SD above mentioned (engine api)</li>
+</ol>
+
+<h5 id="upgrade">Upgrade</h5>
+
+<ol>
+  <li>convert the current vm.conf to OVF(some python util?) or export the OVF from the engine DB (should be there under vm_ovf_generations)</li>
+  <li>create OVF store disk on the existing hosted engine SD (vdsm api) - or maybe it already exists? need to check that</li>
+  <li>import SD (engine api)</li>
+  <li>import VM (engine api)</li>
+</ol>
+
+<h5 id="persistency">Persistency</h5>
+
+<p>Once imported, the VM is considered a regular VM and every changed to its configuration is exported to its underlying OVF on the OVF_STORE. That way changes are persistent and shared across all cluster nodes.</p>
+
+<p>All VM changes are persisted to OVF_STORE once an hour by a task which isn’t good for this case. Changes to Engine VM should be persisted synchronously <strong><em>[6]</em></strong> user should be able to edit the VM and after short time the changes should already be persisted.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>This means that editing an engine-VM must trigger a new upload of tar.gz to the host of the new OVF. ovirt-engine must have a nice separation in CRUD operations on</td>
+      <td>engine-VM in order not to fill up the code with if-(hosted-engine)-then(do)-else It would be an enhancement if VDSM would be able to get a single ovf updated instead of whole new tar.gz</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<p>There is no easy way to convert an OVF to vm.conf in a standalone way. OVF have engine specific information which VDSM isn’t aware of (cluster-specific details, osinfo details, internal engine enum id’s and so on) - see Documentation / External references</p>
+
+<p>TODO - map what fields rely on engine - some may be not that important for now and some may be extended to be non engine dependant in some way (e.g display protocol as sting “vnc” instead of a number) - see Documentation / External references VDSM maintainers might not accept to handle OVF file as an alternative argument for the “create” verb. so instead of putting the translation of OVF-vmParams in VDSM we might expose that tool differently.</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>Bug: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1160094">1160094</a></li>
+  <li>OVF -&gt; vm.conf compatibility - in effort to understand the gap for of OVF to vm.conf or vmParameters (the vm arguments for starting a VM using VDSM API)</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>//TODO</p>
+
+<h2 id="release-notes">Release Notes</h2>
+
+<h2 id="your-feature-heading">Your feature heading</h2>
+
+<p><a href="/develop/release-management/features/">Hosted engine VM management</a> <a href="Category:oVirt 4.0 Proposed Feature">Hosted engine VM management</a> <a href="category:Integration">Hosted engine VM management</a> <a href="/documentation/sla/">Hosted engine VM management</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/hosted-engine-vm-management.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/hosted-engine-vm-management.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 31 Aug 2017 12:41 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

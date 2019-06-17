@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+VDSM Stable API Plan &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/api/">Api</a></li>
+<li><a href="/develop/api/design/">Design</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<!-- TODO: Content review -->
+
+<h1 id="vdsm-stable-api-plan">VDSM Stable API Plan</h1>
+
+<h2 id="api-schema">API Schema</h2>
+
+<ul>
+  <li>Decide on a formal format (are there any existing schema representation formats?)</li>
+</ul>
+
+<p>Things to declare</p>
+
+<ul>
+  <li>Object names</li>
+  <li>Async vs Sync Call</li>
+  <li>Parameter hard types (incl. int types and string lengths)</li>
+  <li>Valid options for enums (maybe use introspection? Will be better for compatibility?)</li>
+  <li>Response</li>
+  <li>Object and struct details (Hard Types)</li>
+  <li>Events</li>
+</ul>
+
+<h2 id="vdsm-supportability-guidelines">VDSM Supportability Guidelines</h2>
+
+<h3 id="versioning">Versioning</h3>
+
+<ul>
+  <li>The API will be grouped by capabilities and each will be individually versioned. This has to be done to accommodate optional features.</li>
+  <li>The API is version as a whole, deprecation means a version bump where the deprecated methods are "forbidden" from use. For example if doSomething() became deprecated in version 2.1.X any application checking against version 2.1.X shouldn't use the verb.</li>
+  <li>The versioning scheme in the form of LATEST_API.OLDEST_API.BUGFIX. A client checking to see if the host is compatible needs to see if the API version it was made to work with is between and including MAJOR and MINOR. There will be a verb when you can put your version and it will say if it's supported for convenience.</li>
+  <li>Experimental verbs are unversioned and can appear or disappear at any time without notice.</li>
+  <li>
+    <p>VDSM Can export support for multiple supported API versions.</p>
+
+    <p> {"Image Manipulator": "1.0.0",
+    "Networking": "2.1.2",
+    "Storage Connection Management": "3.0.4",
+    "GlusterFS Support": "1.0.12"]}</p>
+  </li>
+  <li>Release with an API change is a new API version.</li>
+  <li>Versioning features separately means that clients that don't use certain parts of VDSM will not have to care if the bits they are not using change.</li>
+</ul>
+
+<h3 id="documentation">Documentation</h3>
+
+<ul>
+  <li>All API calls must be documented.</li>
+  <li>TBD. In code? In Schema?</li>
+</ul>
+
+<h3 id="api-change">API Change</h3>
+
+<ul>
+  <li>For API changes we will use the +1/-1 system.</li>
+  <li>For every API change there needs to be acks of at least 2 core developers. One of them has to be specialized at the subsystem in question.</li>
+  <li>Anyone can nack an API change.</li>
+  <li>Complex types should be easily extendable</li>
+</ul>
+
+<h3 id="experimental-verbs">Experimental Verbs</h3>
+
+<ul>
+  <li>All new APIs start their lives as experimental</li>
+  <li>Experimental verbs are mangled in a way where it's obvious to the user the call is experimental and WILL be changed.</li>
+  <li>When cementing an experimental call the same patch has to bump the version accordingly.</li>
+  <li>It's preferable to cement related calls as a group to prevent frequent API version changes.</li>
+</ul>
+
+<h3 id="deprecation">Deprecation</h3>
+
+<ul>
+  <li>Deprecation should be done sparsely</li>
+  <li>Once marked deprecated, the API will remain available for at least 1 major release.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/api/design/vdsm-stable-api-plan.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/api/design/vdsm-stable-api-plan.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

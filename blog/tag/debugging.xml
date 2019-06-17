@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Debugging</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/debugging.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>oVirt Webadmin GWT Debug Quick Refresh</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/08/ovirt-webadmin-gwt-debug-quick-refresh.html"/>
+    <id>http://ovirt.org/blog/2017/08/ovirt-webadmin-gwt-debug-quick-refresh.html</id>
+    <published>2017-08-04T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Greg Sheremeta</name>
+    </author>
+    <content type="html">&lt;p&gt;As a developer, one drawback of using Google Web Toolkit (GWT) for the oVirt Administration Portal (aka webadmin) is that the GWT compile process takes an exceptionally long time. If you make a change in some code and rebuild the ovirt-engine project using &lt;code&gt;make install-dev ...&lt;/code&gt;, you'll be waiting several minutes to test your change. In practice, such a long delay in the usual code-compile-refresh-test cycle would be unbearable.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Luckily, we can use GWT Super Dev Mode ("SDM") to start up a quick refresh-capable instance of the application. With SDM running, you can make a change in GWT and test the refreshed change within seconds.&lt;/p&gt;
+
+&lt;p&gt;If you want to step through code and use the Chrome debugger, oVirt and SDM don't work well together for debugging due to the oVirt Administration Portal's code and source map size. Therefore, below we demonstrate how to disable source maps.&lt;/p&gt;
+
+&lt;h2 id="demo-40-seconds"&gt;Demo (40 seconds)&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href="http://www.youtube.com/watch?feature=player_embedded&amp;amp;v=IRGxIrwfnlo     " target="_blank"&gt;&lt;img src="http://img.youtube.com/vi/IRGxIrwfnlo/0.jpg" alt="demo" width="480" height="360" border="10" /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id="steps"&gt;Steps&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Open a terminal, build the engine normally, and start it.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; make clean install-dev PREFIX=$HOME/ovirt-engine DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.cssResourceStyle=pretty -Dgwt.userAgent=safari" BUILD_UT=0 DEV_EXTRA_BUILD_FLAGS="-Dgwt.compiler.localWorkers=1"
+
+ ...
+
+ $HOME/ovirt-engine/share/ovirt-engine/services/ovirt-engine/ovirt-engine.py start
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;p&gt;&lt;img alt="screen" width="905" height="702" src="/images/../images/blog/2017-08-04/1.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="977" height="702" src="/images/../images/blog/2017-08-04/2.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1400" height="810" src="/images/../images/blog/2017-08-04/3.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;In a second terminal, run:&lt;/p&gt;
+
+    &lt;p&gt;Chrome:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; make gwt-debug DEV_BUILD_GWT_SUPER_DEV_MODE=1 DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.userAgent=safari"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;p&gt;or&lt;/p&gt;
+
+    &lt;p&gt;Firefox:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; make gwt-debug DEV_BUILD_GWT_SUPER_DEV_MODE=1 DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.userAgent=gecko1_8"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+    &lt;p&gt;&lt;img alt="screen" width="977" height="702" src="/images/../images/blog/2017-08-04/4.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;Wait about two minutes until "code server running at http://&amp;lt;&amp;gt;:9876/" displays, and then the GWT Dev Mode app will open.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1217" height="745" src="/images/../images/blog/2017-08-04/5.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Open your browser and go to http://localhost:9876/ &lt;em&gt;*You must use localhost. The procedure breaks with IPs.&lt;/em&gt;&lt;/p&gt;
+
+    &lt;p&gt;Now you'll see two buttons, Dev Mode On and Dev Mode Off.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/6.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;Drag those buttons to the browser bookmark bar, as it says on that page.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="524" height="105" src="/images/../images/blog/2017-08-04/7.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Ignore the link under the two buttons. Instead, open another browser window and enter http://localhost:8080 in the address bar to go to webadmin.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/8.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Log in and navigate to the Administration Portal.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;[Chrome only] Press F12 and click the hamburger menu, followed by Settings. Disable both JavaScript and CSS source maps. The Administration Portal is too large and the source maps crash Chrome.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1920" height="1032" src="/images/../images/blog/2017-08-04/9.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1920" height="1032" src="/images/../images/blog/2017-08-04/10.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/11.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Click Dev Mode On&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/12.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Drag the Compile button to your bookmarks bar&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/13.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Click Compile&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/14.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;The first compilation is slow, taking up to two minutes.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Make a change to the GWT code. Here I am creating a new "About" dialog box that has an image as a background. I will tweak the font properties of the dialog's Close button to demonstrate the refresh.&lt;/p&gt;
+
+    &lt;p&gt;Before:&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/15.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1069" height="475" src="/images/../images/blog/2017-08-04/16.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;Change:&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1069" height="475" src="/images/../images/blog/2017-08-04/17.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;Let's test.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Click Compile. Make sure it says "On". If it doesn't, did you use localhost above?&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/18.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/19.png?1560777613" /&gt;&lt;/p&gt;
+
+    &lt;p&gt;In the second terminal, you will see:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;  Link succeeded
+  [INFO]          Linking succeeded -- 3.654s
+  [INFO]       7.537s total -- Compile completed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The browser should refresh, and the app will now display the change.
+    &lt;img alt="screen" width="1187" height="806" src="/images/../images/blog/2017-08-04/20.png?1560777613" /&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

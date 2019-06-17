@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Subclusters in oVirt 4.0 - Label-Based VM to Host Affinity &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Martin Sivak' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Subclusters in oVirt 4.0 - Label-Based VM to Host Affinity' property='og:title'>
+<meta content='Before I start discussing the feature itself I have to explain a bit about the use cases that we were trying to solve.
+
+
+  
+    Let us imagine you have a special piece of software with a node-licensing model that only cares about physical machines when counting the number of licenses needed. This specifically allows you to run that software in virtual machines, but you need to control the physical host on which the VMs are running.
+  
+  
+    The other case is basically related to hardware capabilities. Some NICs might be faster than others and you want to place all high traffic VMs on hosts that have them. Or a special custom device is needed and VMs that need it won’t run on a host that does not have it.' property='og:description'>
+<meta content='http://ovirt.org/blog/2016/07/affinity-labels.html' property='og:url'>
+<meta content='2016-07-25T15:00:00Z' property='article:published_time'>
+<meta content='msivak' property='article:author:username'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='documentation' property='article:tag'>
+<link href='/blog/tag/documentation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='infrastructure' property='article:tag'>
+<link href='/blog/tag/infrastructure.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Subclusters in oVirt 4.0 - Label-Based VM to Host Affinity' name='twitter:title'>
+<meta content='Before I start discussing the feature itself I have to explain a bit about the use cases that we were trying to solve.
+
+
+  
+    Let us imagine you have a special piece of software with a node-licensing model that only cares about physical machines when counting the number of licenses needed. This specifically allows you to run that software in virtual machines, but you need to control the physical host on which the VMs are running.
+  
+  
+    The other case is basically related to hardware capabilities. Some NICs might be faster than others and you want to place all high traffic VMs on hosts that have them. Or a special custom device is needed and VMs that need it won’t run on a host that does not have it.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2016</li>
+<li class='active'>07</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Subclusters in oVirt 4.0 - Label-Based VM to Host Affinity
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/msivak.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/msivak/">Martin Sivak</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2016-07-25T15:00:00Z'>
+Monday 25 July 2016
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Before I start discussing the feature itself I have to explain a bit about the use cases that we were trying to solve.</p>
+
+<ul>
+  <li>
+    <p>Let us imagine you have a special piece of software with a node-licensing model that only cares about physical machines when counting the number of licenses needed. This specifically allows you to run that software in virtual machines, but you need to control the physical host on which the VMs are running.</p>
+  </li>
+  <li>
+    <p>The other case is basically related to hardware capabilities. Some NICs might be faster than others and you want to place all high traffic VMs on hosts that have them. Or a special custom device is needed and VMs that need it won’t run on a host that does not have it.</p>
+  </li>
+</ul>
+
+<p></p>
+
+<p>Both cases follow the same basic scenario: There is a small subset of VMs that need a special capability (license, device), but there are not enough of them to fully utilize a separate cluster. To achieve efficient utilization of your cluster, you need to add many common VMs with no special needs and some hosts to handle the full load. But… how do you keep the special VMs from migrating to the hosts without the special capabilities?</p>
+
+<p>We already had <a href="/documentation/admin-guide/administration-guide/#affinity-groups">VM to host pinning</a> that allowed limiting VM placement to <a href="/develop/release-management/features/vmpinningtomultiplehosts/">single or multiple hosts</a>, but with no migration enabled for that VM. Our team also just implemented a new feature that allows you to define pinning and still keep migration enabled. Affinity labels allow you to take a subset of hosts and attach a label to them. Any VM with the same affinity label will be then constrained to the labeled hosts. Standard VMs with no labels won’t notice anything and will still happily run anywhere according to the normal oVirt scheduling rules.</p>
+
+<p>Now the bad news, there is no edit enabled user interface for now and all changes need to be done using the oVirt engine REST API. We have a development version of read only view for host and VM to affinity label assignments for getting a quick overview of the configuration and we plan to have full fledged UI in the future.</p>
+
+<p>The rest of this post will show you how to implement an example setup with three groups of hosts: webserver, storage and applications:</p>
+
+<p><img alt="Example affinity groups layout" width="300" height="370" src="/images/affinity-label-example-diagram.png?1560777613" /></p>
+
+<p>I will be using my local server <code>localhost:8080</code>, <code>curl</code>, <code>jq</code>, and a specially crafted shell alias to avoid repeating the login and content type parameters in every example call. Tweak the admin@internal user and letmein password to match the user you will be using. Please note that if you are not using the admin account then you need to make sure the user has the <em>TagManager</em> permissions.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>alias cengine='curl -s -u admin@internal:letmein -H "Content-Type: application/json" -H "Accept: application/json"'&#x000A;</code></pre></div>
+<h2 id="creating-and-updating-a-label">Creating and Updating a Label</h2>
+
+<p>Creating a new affinity label is a straightforward operation, just send a POST request to the right endpoint while saving the ID to a variable:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ STORAGELABEL=$(cengine -f -X POST -d '{"name": "test"}' http://localhost:8080/ovirt-engine/api/affinitylabels | jq -r '.id'); echo $STORAGELABEL&#x000A;&#x000A;cc8bcf08-bc78-40e9-a01a-38a0fe99ea26&#x000A;</code></pre></div>
+<p>Operations for listing all labels and updating a label’s name are also supported, of course:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cengine -f http://localhost:8080/ovirt-engine/api/affinitylabels | jq -r '.affinity_label[] | {id, name}'&#x000A;&#x000A;{&#x000A;  "id": "cc8bcf08-bc78-40e9-a01a-38a0fe99ea26",&#x000A;  "name": "test"&#x000A;}&#x000A;&#x000A;cengine -X PUT -d '{"name": "storage_subcluster"}' http://localhost:8080/ovirt-engine/api/affinitylabels/$STORAGELABEL | jq -r '{id, name}'&#x000A;&#x000A;{&#x000A;  "id": "cc8bcf08-bc78-40e9-a01a-38a0fe99ea26",&#x000A;  "name": "storage_subcluster"&#x000A;}&#x000A;</code></pre></div>
+<h2 id="attaching-hosts-and-vms-to-a-label">Attaching Hosts and VMs to a Label</h2>
+
+<p>Affinity labels reference all labeled objects using their id, although the API accepts the full object representation. It will ignore all fields except id, though. There are two ways to manipulate affinity label assignments to hosts and VMs:</p>
+
+<ul>
+  <li>Posting the host or VM to the proper affinity label subcollection</li>
+  <li>Posting the affinity label to the host’s or VM’s affinitylabels subcollection</li>
+</ul>
+
+<p>We need some VMs and Hosts for the following examples so create hosts red, green, and blue as well as some VMs: webserver, storage, application1, and application2.</p>
+
+<p>I will now show you how to express the following rules using the affinity labels:</p>
+
+<ul>
+  <li>Webserver VM should be allowed to run anywhere</li>
+  <li>Storage VM should be restricted to host red (special HBA card maybe?)</li>
+  <li>Application VMs should be restricted to hosts red and blue (as you have license for two physical nodes, for example)</li>
+</ul>
+
+<p>We will first attach the storage VM and the red host to the already created storage_subcluster affinity label:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cengine -f -X POST -d "{\"id\": \"$REDHOSTID\"}" http://localhost:8080/ovirt-engine/api/affinitylabels/$STORAGELABEL/hosts | jq -r '.status'&#x000A;&#x000A;complete&#x000A;&#x000A;$ cengine -f -X POST -d "{\"id\": \"$STORAGEVMID\"}" http://localhost:8080/ovirt-engine/api/affinitylabels/$STORAGELABEL/vms | jq -r '.status'&#x000A;&#x000A;complete&#x000A;</code></pre></div>
+<p>Now we can create the application affinity group and attach the necessary hosts and VMs:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ APPLABEL=$(cengine -f -X POST -d '{"name": "app_subcluster"}' http://localhost:8080/ovirt-engine/api/affinitylabels | jq -r '.id'); echo $APPLABEL&#x000A;&#x000A;d7d91849-262d-4274-bb47-3ad711566fc7&#x000A;&#x000A;$ for host in $REDHOSTID $BLUEHOSTID; do cengine -f -X POST -d "{\"id\": \"$APPLABEL\"}" http://localhost:8080/ovirt-engine/api/hosts/$host/affinitylabels | jq -r '.status'; done&#x000A;&#x000A;completed&#x000A;completed&#x000A;&#x000A;$ for vm in $APP1VMID $APP2VMID; do cengine -f -X POST -d "{\"id\": \"$APPLABEL\"}" http://localhost:8080/ovirt-engine/api/vms/$vm/affinitylabels | jq -r '.status'; done&#x000A;&#x000A;completed&#x000A;completed&#x000A;</code></pre></div>
+<h2 id="deleting-labels-or-assignments">Deleting Labels or Assignments</h2>
+
+<p>That concludes the setup. You can use a standard REST DELETE call in case you need to remove a label to host assignment (just replace hosts with VMs to make it work for label to VM assignments):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cengine -f -X DELETE http://localhost:8080/ovirt-engine/api/hosts/$hostid/affinitylabels/$labelid | jq -r '.status'&#x000A;</code></pre></div>
+<p>or</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>cengine -f -X DELETE http://localhost:8080/ovirt-engine/api/affinitylabels/$labelid/hosts/$hostid | jq -r '.status'&#x000A;</code></pre></div>
+<h2 id="the-result">The Result</h2>
+
+<p>The situation now is as described at the beginning, and will be obeyed during VM startups and VM migrations.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cengine -f http://localhost:8080/ovirt-engine/api/affinitylabels | jq -r '.affinity_label[] | {id, name, vms, hosts}'&#x000A;&#x000A;{&#x000A;  "id": "cc8bcf08-bc78-40e9-a01a-38a0fe99ea26",&#x000A;  "name": "storage_subcluster",&#x000A;  "vms": {&#x000A;    "vm": [&#x000A;      {“id": "bd6e32cd-1df5-4c5c-a44e-371371e44168"}&#x000A;    ]&#x000A;  },&#x000A;  "hosts": {&#x000A;    "host": [&#x000A;      {"id": "4d711089-a3e3-45b7-935a-dc66c4c4ccef"}&#x000A;    ]&#x000A;  }&#x000A;}&#x000A;{&#x000A;  "id": "d7d91849-262d-4274-bb47-3ad711566fc7",&#x000A;  "name": "app_subcluster",&#x000A;  "vms": {&#x000A;    "vm": [&#x000A;      {"id": "a98d58ee-73e4-40be-95f8-bf360e646473"},&#x000A;      {"id": "7506d8f9-7b40-4ee2-85be-6a7b02024729"}&#x000A;    ]&#x000A;  },&#x000A;  "hosts": {&#x000A;    "host": [&#x000A;      {"id": "e2715dfc-5e21-45c1-9e9e-c2d316dc51dd"},&#x000A;      {"id": "4d711089-a3e3-45b7-935a-dc66c4c4ccef"}&#x000A;    ]&#x000A;  }&#x000A;}&#x000A;</code></pre></div>
+<p>I hope this new feature will be useful for you, and should you have any questions, do not hesitate to ask on <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#117;&#115;&#101;&#114;&#115;&#064;&#111;&#118;&#105;&#114;&#116;&#046;&#111;&#114;&#103;">&#117;&#115;&#101;&#114;&#115;&#064;&#111;&#118;&#105;&#114;&#116;&#046;&#111;&#114;&#103;</a>.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/community.html">community</a></li>
+<li><a href="../../tag/documentation.html">documentation</a></li>
+<li><a href="../../tag/infrastructure.html">infrastructure</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2016-07-25-affinity-labels.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2016-07-25-affinity-labels.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 28 Oct 2016 10:09 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

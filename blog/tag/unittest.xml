@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Unittest</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/unittest.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Dependency Injection and Mockito</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2016/07/dependency-injection-and-mockito.html"/>
+    <id>http://ovirt.org/blog/2016/07/dependency-injection-and-mockito.html</id>
+    <published>2016-07-12T13:15:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Jenny Tokar</name>
+    </author>
+    <content type="html">&lt;p&gt;Recently I encountered a small issue in a static helper class that was full of static helper methods. After I finished dealing with the issue at hand and as part of following the Boy Scout rule (always leave the campground cleaner than you found it) I decided to refactor the class and the code using it.&lt;/p&gt;
+
+&lt;p&gt;More specifically to remove all the static modifiers and to inject this class whenever it was needed.
+The refactoring was easy enough but things got a bit more interesting once I got to a class that was using one of the static helper methods.&lt;/p&gt;
+
+&lt;p&gt;The class had a wrapper method that called the static method and did nothing more.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="nd"&gt;@Inject&lt;/span&gt;
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;HostedEngineHelper&lt;/span&gt; &lt;span class="n"&gt;hostedEngineHelper&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;boolean&lt;/span&gt; &lt;span class="nf"&gt;isHostedEngine&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StorageDomain&lt;/span&gt; &lt;span class="n"&gt;storageDomain&lt;/span&gt;&lt;span class="o"&gt;){&lt;/span&gt;
+            &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;hostedEngineHelper&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;isHostedEngineStorageDomain&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;storageDomain&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Those kind of wrapper methods are common in code that uses mocking testing frameworks for unit testing. They certainly are very easy to mock. However, code shouldn’t exist for the sake of tests and unnecessary methods that are dirtying it should be removed.&lt;/p&gt;
+
+&lt;h2 id="introducing-injectmocks"&gt;Introducing @InjectMocks&lt;/h2&gt;
+
+&lt;p&gt;And here comes the nice part: Mockito supports injecting mock classes into the tested class in a very neat way.
+You simply add the helper class you need with the &lt;strong&gt;“@Mock”&lt;/strong&gt; annotation and put the &lt;strong&gt;“@InjectMocks”&lt;/strong&gt; annotation on the class you are mocking for testing and that’s it.&lt;/p&gt;
+
+&lt;p&gt;Mockito will inject the mocked instance to the mocked class so you won’t fall on null pointer exceptions and you will be able to mock the methods you are not testing directly.&lt;/p&gt;
+
+&lt;p&gt;So instead of having something like this in your test class:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;StorageDomainCommandBase&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;StorageDomainParametersBase&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;spy&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;TestStorageCommandBase&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;StorageDomainParametersBase&lt;/span&gt;&lt;span class="o"&gt;()));&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Test&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shouldElectActiveDataDomain&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;StorageDomain&lt;/span&gt; &lt;span class="n"&gt;domain&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;prepareStorageDomainForElection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StorageDomainStatus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Active&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"not he domain name"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;doReturn&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;false&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;when&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;isHostedEngine&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;any&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StorageDomain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;));&lt;/span&gt;
+        &lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;domain&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;electNewMaster&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You end up with something like this:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="nd"&gt;@Mock&lt;/span&gt;
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;HostedEngineHelper&lt;/span&gt; &lt;span class="n"&gt;hostedEngineHelper&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@InjectMocks&lt;/span&gt;
+    &lt;span class="nd"&gt;@Spy&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="n"&gt;StorageDomainCommandBase&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;StorageDomainParametersBase&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;TestStorageCommandBase&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;StorageDomainParametersBase&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Test&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shouldElectActiveDataDomain&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="kd"&gt;final&lt;/span&gt; &lt;span class="n"&gt;StorageDomain&lt;/span&gt; &lt;span class="n"&gt;domain&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;prepareStorageDomainForElection&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StorageDomainStatus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;Active&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="s"&gt;"not he domain name"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;when&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hostedEngineHelper&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;isHostedEngineStorageDomain&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;any&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StorageDomain&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;))).&lt;/span&gt;&lt;span class="na"&gt;thenReturn&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;false&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;assertEquals&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;domain&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;electNewMaster&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Injecting the helper class instead of using it in a static way allows a much cleaner way for writing clear and concise code that doesn't leave the readers wondering about redundant methods.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

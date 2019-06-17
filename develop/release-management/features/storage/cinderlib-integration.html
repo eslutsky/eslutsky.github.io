@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Managed Block Storage &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="managed-block-storage">Managed Block Storage</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Many storage vendors provide a offloading API allowing to do fast storage side actions with minimal network usage from the virt management side. Such APIs already are integrated in Cinder.</p>
+
+<p>This feature enables the user to be able to consume any storage backend supported in Cinder in order to create virtual disks for its VMs, without the need of a full OpenStack deployment.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Fred Rolland (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#114;&#111;&#108;&#108;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#102;&#114;&#111;&#108;&#108;&#097;&#110;&#100;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+  <li>Benny Zlotnik (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#098;&#122;&#108;&#111;&#116;&#110;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#098;&#122;&#108;&#111;&#116;&#110;&#105;&#107;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+  <li>Eyal Shenitzky (<a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#101;&#115;&#104;&#101;&#110;&#105;&#116;&#122;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#101;&#115;&#104;&#101;&#110;&#105;&#116;&#122;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>)</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p>Cinder Library [1] provides a Python library that give the possibility to use the Cinder drivers directly without the need of a full OpenStack/Cinder deployment supporting over 80 storage drivers.</p>
+
+<ul>
+  <li>The user is able to configure a Storage Domain with the name of the Cinder driver and a set of parameters needed by the driver implementation.</li>
+  <li>The user is able to create/delete/clone disks on that Storage Domain.</li>
+  <li>The user is able to create/delete snapshots of the disks created on that Storage Domain.</li>
+  <li>The user is able to run VMs with disks created on that Storage Domain.</li>
+  <li>The user is able to create a VM from a template with disks on that storage domain.</li>
+</ul>
+
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>With this feature the user will be able to use any storage vendor supported in Cinder (over 80 storage drivers) and beneficiate from the offloading features the storage vendors has implemented.</p>
+
+<h3 id="user-experience">User Experience</h3>
+
+<p>On the UX side, the storage flows are without any changes, except for the new Storage Domain type, where the user will have to provide a set of parameters needed by the driver (name/value pairs).
+Sensitive fields, such as passwords, will be separated from others and masked in the GUI. These fields will be stored encrypted in the DB.</p>
+
+<p>For example:</p>
+<ul>
+  <li>volume_driver='cinder.volume.drivers.dell_emc.xtremio.XtremIOISCSIDriver'</li>
+  <li>san_ip='10.10.10.1'</li>
+  <li>xtremio_cluster_name='xtremio_cluster'</li>
+  <li>san_login='xtremio_user'</li>
+  <li>san_password='xtremio_password'</li>
+</ul>
+
+<p>Here is a screenshot of the UI for the Storage Domain:</p>
+
+<p><img alt="" width="1164" height="472" src="/images/wiki/CinderLibStorageDomain.png?1560777613" /></p>
+
+<h3 id="high-level-flow">High level flow</h3>
+
+<p>Cinderlib needs to persist volumes metadata in order to perform some of the operation. The persistency of the volumes will be stored in a Postgres DB in a new database.</p>
+
+<p>The Cinderlib APIs will be invoked by the Engine, along with the DB parameters and the Drivers parameters.
+The Engine needs access to the Storage Management API network.</p>
+
+<p>Provisioning operations are done only on the Engine side.</p>
+
+<h4 id="create-storage-domain">Create Storage Domain</h4>
+<p>The user configures a new Storage Domain with all the needed parameters for the Cinder driver:</p>
+<ul>
+  <li>The Engine calls a Cinderlib API to test the given parameters.</li>
+  <li>If the call to Cinderlib API is successful, the Engine stores the data in the DB.</li>
+</ul>
+
+<p>In case that some of the driver parameters contains sensitive information like passwords, the user can specify them as <code>driver_sensitive_options</code>. These parameters will be stored encrypted in the DB ans masked in the UI.</p>
+
+<p>Here are examples of the REST API usage:</p>
+
+<p>HP 3PAR:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;storage_domain&gt;&#x000A;   &lt;name&gt;cinder-hp3par&lt;/name&gt;&#x000A;   &lt;type&gt;managed_block_storage&lt;/type&gt;&#x000A;   &lt;storage&gt;&#x000A;      &lt;type&gt;managed_block_storage&lt;/type&gt;&#x000A;      &lt;driver_options&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;volume_driver&lt;/name&gt;&#x000A;            &lt;value&gt;cinder.volume.drivers.hpe.hpe_3par_fc.HPE3PARFCDriver&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;          &lt;property&gt;&#x000A;            &lt;name&gt;hpe3par_api_url&lt;/name&gt;&#x000A;            &lt;value&gt;https://3par-cli.mgmt.acme.com:8080/api/v1&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;          &lt;property&gt;&#x000A;            &lt;name&gt;san_ip&lt;/name&gt;&#x000A;            &lt;value&gt;10.10.10.10&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;      &lt;/driver_options&gt;&#x000A;      &lt;driver_sensitive_options&gt;&#x000A;          &lt;property&gt;&#x000A;            &lt;name&gt;san_login&lt;/name&gt;&#x000A;            &lt;value&gt;admin&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;san_password&lt;/name&gt;&#x000A;            &lt;value&gt;my_secret&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;      &lt;/driver_sensitive_options&gt;&#x000A;   &lt;/storage&gt;&#x000A;   &lt;host&gt;&#x000A;      &lt;name&gt;vdsm-01&lt;/name&gt;&#x000A;   &lt;/host&gt;&#x000A;&lt;/storage_domain&gt;&#x000A;</code></pre></div>
+<p>Ceph:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;storage_domain&gt;&#x000A;   &lt;name&gt;ceph-cinder&lt;/name&gt;&#x000A;   &lt;type&gt;managed_block_storage&lt;/type&gt;&#x000A;   &lt;storage&gt;&#x000A;      &lt;type&gt;managed_block_storage&lt;/type&gt;&#x000A;      &lt;driver_options&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;rbd_ceph_conf&lt;/name&gt;&#x000A;            &lt;value&gt;/etc/ceph/ceph.conf&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;rbd_pool&lt;/name&gt;&#x000A;            &lt;value&gt;volumes&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;rbd_user&lt;/name&gt;&#x000A;            &lt;value&gt;admin&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;use_multipath_for_image_xfer&lt;/name&gt;&#x000A;            &lt;value&gt;true&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;volume_driver&lt;/name&gt;&#x000A;            &lt;value&gt;cinder.volume.drivers.rbd.RBDDriver&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;         &lt;property&gt;&#x000A;            &lt;name&gt;rbd_keyring_conf&lt;/name&gt;&#x000A;            &lt;value&gt;/etc/ceph/ceph.client.admin.keyring&lt;/value&gt;&#x000A;         &lt;/property&gt;&#x000A;      &lt;/driver_options&gt;&#x000A;   &lt;/storage&gt;&#x000A;   &lt;host&gt;&#x000A;      &lt;name&gt;vdsm-01&lt;/name&gt;&#x000A;   &lt;/host&gt;&#x000A;&lt;/storage_domain&gt;&#x000A;&#x000A;</code></pre></div>
+<h4 id="create-disk">Create Disk</h4>
+
+<p>The user creates a disk on the storage domain:</p>
+<ul>
+  <li>The Engine calls a Cinderlib API with the driver backend parameters, the volume id, the volume size and the DB URL.</li>
+  <li>If the call to Cinderlib API is successful, the Engine creates the Disk in the DB.</li>
+</ul>
+
+<h4 id="delete-disk">Delete Disk</h4>
+
+<p>The user delete a disk on the storage domain:</p>
+<ul>
+  <li>The Engine calls a Cinderlib API with the driver backend parameters, the volume id and the DB URL to delete the volume.</li>
+  <li>If the call to Cinderlib API is successful, the Engine deletes the disk in the DB</li>
+</ul>
+
+<h4 id="extend-disk-size">Extend Disk size</h4>
+<p>The user update a disk size on the storage domain:
+    - The Engine calls a Cinderlib API with the driver backend parameters, the volume id, the new size and the DB URL.
+    - If the call to Cinderlib API is successful, the Engine updates the disk size in the DB</p>
+
+<h3 id="connector-information-from-vdsm-host">Connector information from Vdsm host</h3>
+
+<p>In order to be able to expose the volume to a host, Cinderlib needs to have its connector information.</p>
+
+<p>As part of GetCapabilities Verb a new entry will be added to provide the needed information.</p>
+
+<h4 id="run-vm">Run VM</h4>
+
+<p>The user runs a VM with a Cinderlib disk :</p>
+<ul>
+  <li>The Engine calls a Cinderlib API to connect the volume using the connector information for the specific host and return the data needed for the attachment.</li>
+  <li>The Engine calls a Vdsm verb to attach the volume with the data needed. The Vdsm stores locally the attachment details that will be needed for detach, and then return the path.</li>
+  <li>The Engine stores the result in the DB and uses the returned path for the volume in the VM XML.</li>
+</ul>
+
+<h4 id="stop-vm">Stop VM</h4>
+
+<p>The user stops a VM with a Cinderlib disk :</p>
+<ul>
+  <li>The Engine calls a Vdsm verb to detach the volume with the volume ID. The Vdsm use the ID provided by the Engine, fetches the needed data from its local DB and disconnect the volume.</li>
+  <li>The Engine calls a Cinderlib API to disconnect the volume.</li>
+</ul>
+
+<h3 id="vdsm">VDSM</h3>
+
+<h4 id="hostgetcapabilities">Host.GetCapabilities</h4>
+
+<p>The Vdsm uses the Cinder's 'os_brick' library to collect the data. If the 'os_brick' library is not installed on the host, the 'connector_info' will not be available and VMs with MBS disk will not able to run on that host.</p>
+
+<p>Here an example of the 'connector_info'</p>
+
+<div class="highlight"><pre class="highlight json"><code><span class="s2">"connector_info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">&#x000A;        </span><span class="s2">"initiator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iqn.1994-05.com.acme:b82360563cee"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"ip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.10.10.1"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"platform"</span><span class="p">:</span><span class="w"> </span><span class="s2">"x86_64"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"host"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vdsm02"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"do_local_attach"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"os_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"linux2"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"multipath"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">&#x000A;    </span><span class="p">}</span><span class="w">&#x000A;</span></code></pre></div>
+<h4 id="managedvolumeattach_volume">ManagedVolume.attach_volume</h4>
+
+<p>When the user wants to run a VM, Engine will first call CinderLib API to expose the volume to the host according to the "connector_info".
+The Storage Management API will provide the connection information needed by the host to attach.  Then Engine calls the ManagedVolume.attach_volume with this information and the volume ID. The structure of the data is according to os_brick/Cinder format.</p>
+
+<p>Here an example of the connection information (iSCSI volume):</p>
+
+<div class="highlight"><pre class="highlight json"><code><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"driver_volume_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iscsi"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"data"</span><span class="p">:</span><span class="w">&#x000A;    </span><span class="p">{</span><span class="w">&#x000A;        </span><span class="s2">"target_lun"</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"target_iqn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"iqn.2009-01.com.kaminario:storage.k2.22612"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"target_portal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3.2.1.1:3260"</span><span class="p">,</span><span class="w">&#x000A;        </span><span class="s2">"target_discovered"</span><span class="p">:</span><span class="w"> </span><span class="s2">"True"</span><span class="w">&#x000A;    </span><span class="p">}</span><span class="w">&#x000A;</span><span class="p">}</span><span class="w">&#x000A;</span></code></pre></div>
+<p>Vdsm will call an os_brick API to attach the volume and will return the volume information data to Engine that will persist it in the DB.
+The volume information consists of the volume path that Engine will use in the VM XML and of the volume attachment as returned from os_brick. The structure of the volume attachment data is according to os_brick/Cinder
+format.</p>
+
+<p>Here examples of the volume information:</p>
+
+<p>For iSCSI volume with multipath:</p>
+
+<div class="highlight"><pre class="highlight json"><code><span class="p">{</span><span class="w">&#x000A;  </span><span class="s2">"path"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev/mapper/20024f400585401ce"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w">&#x000A;  </span><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev/dm-25"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"scsi_wwn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20024f400585401ce"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"multipath_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20024f400585401ce"</span><span class="w">&#x000A;  </span><span class="p">}</span><span class="w">&#x000A;</span><span class="p">}</span><span class="w">&#x000A;</span></code></pre></div>
+<p>For RBD volume:</p>
+
+<div class="highlight"><pre class="highlight json"><code><span class="p">{</span><span class="w">&#x000A;  </span><span class="s2">"path"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev/rbd1"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w">&#x000A;  </span><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev/rbd1"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"conf"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/brickrbd_WimcIm"</span><span class="w">&#x000A;  </span><span class="p">}</span><span class="w">&#x000A;</span><span class="p">}</span><span class="w">&#x000A;</span></code></pre></div>
+<p>Vdsm stores the volume information along with the connection information of the attached volumes in a local DB.
+The volume ID will be the key of the data in the DB.
+The stored data is used to be able to filter them from GetDeviceList result and to detach a volume.</p>
+
+<h4 id="managedvolumedetach_volume">ManagedVolume.detach_volume</h4>
+
+<p>When the user wants to stop a VM, Engine will call Vdsm to detach the volume with the volume ID using ManagedVolume.detach_volume.</p>
+
+<p>The needed data (device info and connection info) for performing the detachment is retrieved from the local DB.</p>
+
+<h4 id="managedvolumevolumes_info">ManagedVolume.volumes_info</h4>
+
+<p>The user is able to get the information of specific volumes using ManagedVolume.volumes_info with the volume IDs. List of all volumes can be obtained by using ManagedVolume.volumes_info without specifying a volume id.
+Vdsm will return the volume information, similar to the attach flow.
+Besides information contained in attach flow, it also includes volume ID and parameter <code>exists</code>, which is set to <code>True</code> if multipath device is connected and path exists on local machine.</p>
+
+<p>For example:</p>
+
+<div class="highlight"><pre class="highlight json"><code><span class="p">[{</span><span class="w">&#x000A;  </span><span class="s2">"vol_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"01713ade-9688-43ff-a46c-0e2e35974dce"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="s2">"True"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"path"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev/mapper/20024f400585401ce"</span><span class="p">,</span><span class="w">&#x000A;  </span><span class="s2">"attachment"</span><span class="p">:</span><span class="w">&#x000A;  </span><span class="p">{</span><span class="w">&#x000A;    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/dev/sda"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"scsi_wwn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20024f400585401ce"</span><span class="p">,</span><span class="w">&#x000A;    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="w">&#x000A;  </span><span class="p">}</span><span class="w">&#x000A;</span><span class="p">}]</span><span class="w">&#x000A;</span></code></pre></div>
+<h3 id="engine">Engine</h3>
+
+<ul>
+  <li>Add DB support for additional Storage Domain information.</li>
+  <li>Block not supported storage operations.</li>
+  <li>Python executable giving API to Cinderlib</li>
+  <li>Setup an additional DB.</li>
+</ul>
+
+<h3 id="installation">Installation</h3>
+
+<p>Cinderlib will be packaged in RPM.
+The Cinder drivers and Cinderlib needs to be installed in the Engine.
+OS-Brick needs to installed on the hosts</p>
+
+<h4 id="manual-install">Manual Install</h4>
+
+<p>Since that some of the required libraries are currently not part of oVirt installation, the following steps are required:</p>
+
+<p>On Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ yum install -y centos-release-openstack-pike&#x000A;$ yum-config-manager --enable openstack-pike&#x000A;$ yum install -y openstack-cinder python-pip&#x000A;$ pip install cinderlib&#x000A;</code></pre></div>
+<p>On all the hosts: (Vdsm needs to be restarted after installing the packages)</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ yum install -y centos-release-openstack-pike&#x000A;$ yum-config-manager --enable openstack-pike&#x000A;$ yum install -y python2-os-brick&#x000A;</code></pre></div>
+<p>For Ceph backend, the following package is needed in the Engine and in all the hosts:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ yum install -y ceph-common&#x000A;</code></pre></div>
+<p>Also for Ceph backend, a keyring file and ceph.conf file is needed in the Engine.</p>
+
+<h4 id="enable-managed-block-domain-in-engine">Enable Managed Block Domain in Engine</h4>
+
+<p>Managed Block Domain is not enabled by default in the Engine. In order to enable it, run the following command and restart the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ engine-config -s ManagedBlockDomainSupported=true&#x000A;&#x000A;Please select a version:&#x000A;&#x000A;    1. 4.3&#x000A;    2. 4.1&#x000A;    3. 4.2&#x000A;# Select 1&#x000A;</code></pre></div>
+<h3 id="open-issues--limitations">Open Issues / Limitations</h3>
+
+<ul>
+  <li>Cinderlib needs to be packaged in RPM that will be required by the Engine.</li>
+  <li>os-brick needs to be installed on the hosts.</li>
+  <li>Currently, for installing Cinderlib it will be necessary to install the whole openstack-cinder libraries.</li>
+  <li>The Engine in oVirt will need to have access to the Storage Management API network.</li>
+  <li>Not all storage flows are supported in the first release of these feature. For example :
+    <ul>
+      <li>Storage migration (cold &amp; live)</li>
+      <li>OVF</li>
+      <li>Master domain</li>
+      <li>Leases</li>
+      <li>Storage Domain monitoring</li>
+    </ul>
+  </li>
+  <li>Some drivers requires additional packages that will need to be installed on the hosts. See here :[2]</li>
+</ul>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+<p>[1] <a href="https://github.com/openstack/cinderlib">Cinder Library</a></p>
+
+<p>[2] <a href="https://github.com/openstack/cinder/blob/master/driver-requirements.txt">Additional Drivers required package</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/cinderlib-integration.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/cinderlib-integration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 1 Apr 2019 14:53 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Testing ovirt-engine patches with Lago &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+<li><a href="/develop/infra/testing/">Testing</a></li>
+<li><a href="/develop/infra/testing/lago/">Lago</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="testing-ovirt-engine-patches-with-lago">Testing ovirt-engine patches with Lago</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p><a href="http://lago.readthedocs.io/">Lago</a> is an ad-hoc virtual testing environment framework, that can be used to test ovirt-engine patches using the <a href="http://ovirt-system-tests.readthedocs.io/en/latest/">ovirt-system-tests</a> test suites. Lago can handle the setup of ovirt-engine as well as virtual machine hosts and storage.</p>
+
+<p>This guide will describe how to adapt ovirt-system-tests test suites, that are mainly designed for CI testing, to manually test ovirt-engine patches.</p>
+
+<p>This guide assumes that you have lago and all the ovirt-system-tests requirements installed on your machine, <a href="http://ovirt-system-tests.readthedocs.io/en/latest/docs/general/installation.html">according to the documentation</a>, and that you got yourself previously familiarized with ovirt-system-tests.</p>
+
+<h2 id="creating-the-test-suite">Creating the test suite</h2>
+
+<p>ovirt-system-tests is composed by several test suites designed for CI testing. To test our patches, we will copy one of these test-suites and change it to suit our needs.</p>
+
+<p>The first thing to do is select which test suite can be used as base for our manual test. This guide will be testing a patch for ovirt-engine's master branch, then it will be based on <code>basic_suite_master</code>.</p>
+
+<p>Inside the ovirt-system-tests repository, copy the test suite directory:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cp -r basic_suite_master manual_suite_master&#x000A;</code></pre></div>
+<p>Now we need to edit the Lago initialization file. This file is usually a symlink to a common initialization file. We will copy the actual file, so we can change it.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cd manual_suite_master&#x000A;$ cp --remove-destination $(realpath LagoInitFile.in) LagoInitFile.in&#x000A;</code></pre></div>
+<p>Edit the <code>LagoInitFile.in</code> file to suit your needs. Easier way to do it is keep the predefined machines and just edit their parameters, if they are reasonable for your tests. If you need more machines to reproduce a real environment, or less machines to save resources, you'll need to edit the test scenarios later.</p>
+
+<h2 id="editing-test-scenarios">Editing test scenarios</h2>
+
+<p>ovirt-system-tests' suites come with test scenarios, that are ran by Lago. As our base test suite was designed to test ovirt-engine setup, these steps are part of test scenarios, not of deployment scripts. We will still need to run these tests to get engine up and running.</p>
+
+<p>We need to remove the tests that are not doing engine setup. Please note that, depending on the patch you are testing, you may want to keep those tests/update them to test the new behaviour introduced by your patch):</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cd test-scenarios&#x000A;$ rm 004_basic_sanity.py 005_aaa-ldap.py&#x000A;</code></pre></div>
+<p>Also, if you added or removed machines in the Lago initialization file, you'll need to edit <code>002_bootstrap.py</code> to reflect the new environment, implementing the code needed to add the new machines to the engine. You may also want to check the engine-setup answer file used by <code>001_initialize_engine.py</code> and modify it if you need some different answers.</p>
+
+<h2 id="preparing-a-build-with-your-patch">Preparing a build with your patch</h2>
+
+<p>To be able to use your modifications in lago, you must build a modified RPM. Lago is built on <a href="http://repoman.readthedocs.io/">repoman</a>, so it can fetch RPMs from several places, including <a href="http://jenkins.ovirt.org/">oVirt Jenkins instance</a>.</p>
+
+<p>The easier way to build an RPM is using jenkins' <code>build-artifacts</code> jobs, but they take around 1 hour to run, and the artifacts will be removed after some time. You must also consider that these jobs are used by the scheduled jobs that update the <code>ovirt-master-snapshot</code> repository, then your job may need to wait on the build queue.</p>
+
+<p>For this example we will use the following job: <a href="http://jenkins.ovirt.org/job/ovirt-engine_master_build-artifacts-el7-x86_64/">http://jenkins.ovirt.org/job/ovirt-engine_master_build-artifacts-el7-x86_64/</a>.</p>
+
+<p>To build a Gerrit patch manually on it, you must authenticate and click on the "Build with Parameters" link. It will ask for two paramenters:</p>
+
+<ul>
+  <li>GERRIT_REFSPEC: Go to your Gerrit patch and click on Download. The URLs have the git refspec, that looks similar to <code>refs/changes/54/64454/1</code>. This is the value you need.</li>
+  <li>GERRIT_BRANCH: No need to change.</li>
+</ul>
+
+<p>When it is done, artifacts will be attached to the build page. You will need the build page URL, that looks similar to <a href="http://jenkins.ovirt.org/job/ovirt-engine_master_build-artifacts-el7-x86_64/1008/">http://jenkins.ovirt.org/job/ovirt-engine_master_build-artifacts-el7-x86_64/1008/</a>.</p>
+
+<p>If you want to build locally, just create the RPM as usual, and use its path instead of the Jenkins URL in the next steps.</p>
+
+<h2 id="running-the-test-suite">Running the test suite</h2>
+
+<p>To run the test suite with the custom patch, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ cd ../../&#x000A;$ ./run_suite.sh -s $CUSTOM_BUILD_URL manual_suite_master&#x000A;</code></pre></div>
+<p>Where <code>$CUSTOM_BUILD_URL</code> is your Jenkins URL or the path to your custom RPM</p>
+
+<p>If everything was done correctly, Lago will deploy your environment with your custom package, will run the 2 first test scenarios to do the basic setup, and will keep the environment running, so you can do your manual tests. You will want to check Lago documentation to see how to tunnel the engine service to your local machine, so you can use it in your browser.</p>
+
+<h2 id="cleaning-up">Cleaning up</h2>
+
+<p>When you are done, you can kill the environment with the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ ./run_suite.sh -c manual_suite_master&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/testing/lago/testing-engine-patches-with-lago.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/testing/lago/testing-engine-patches-with-lago.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 7 Oct 2016 08:54 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

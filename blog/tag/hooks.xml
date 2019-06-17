@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Hooks</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/hooks.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Modifying oVirt-Generated ifcfg Files</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2016/05/modify-ifcfg-files.html"/>
+    <id>http://ovirt.org/blog/2016/05/modify-ifcfg-files.html</id>
+    <published>2016-05-25T14:21:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Marcin Mirecki</name>
+    </author>
+    <content type="html">&lt;p&gt;oVirt is using a bridge based setup to configure networks on the managed hosts. The setup process is done by generating and maintaining network interface configuration files (ifcfg file), which define the network devices used by oVirt.
+Should any changes be done to these files by an outside party, oVirt will try to restore them to the desired state, to keep the network configuration intact.
+There are however situations in which the user want to intentionally introduce permanent changes into some of these files, and prohibit oVirt from overwritting them. In order to do so, VDSM hook script can be used.&lt;/p&gt;
+
+&lt;p&gt;Lets look at an example, where the user want to add the following entries to the 'ens11' network interface:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;USERCTL=yes
+ETHTOOL_OPTS="autoneg on speed 1000 duplex full"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;A VDSM hook invoked before ifcfg file modification can be used to accomplish this.
+The hook script should be placed inside the "/usr/libexec/vdsm/hooks/before_ifcfg_write/" directory on the VDSM host. VDSM must have execute permissions for this script. VDSM will check this directory every time ifcfg configuration is changed, and executes each script it finds in this directory.
+The script will receive a json dictionary as input. The dictionary contains two elements:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ifcfg_file - full path of the ifcfg file to be written&lt;/li&gt;
+  &lt;li&gt;config - the contents of the ifcfg file to be written&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For example:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;{
+    "config": "DEVICE=ens13\nHWADDR=52:54:00:d1:3d:c8\nBRIDGE=z\nONBOOT=yes\nMTU=1500\nNM_CONTROLLED=no\nIPV6INIT=no\n",
+    "ifcfg_file": "/etc/sysconfig/network-scripts/ifcfg-ens7"
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Modified ifcfg file contents (under the "config" entry) can be returned,and will be used by VDSM as the new ifcfg file content. If nothing is returned, VDSM will use the unmodified content.&lt;/p&gt;
+
+&lt;p&gt;A sample hook script will look as follows:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight python"&gt;&lt;code&gt;&lt;span class="c"&gt;#!/usr/bin/python&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;datetime&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;json&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;hooking&lt;/span&gt;
+
+&lt;span class="n"&gt;hook_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hooking&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_json&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="n"&gt;ifcfg_file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hook_data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'ifcfg_file'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;config_data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;hook_data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'config'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="c"&gt;# adding to ens11 ifcfg file: USERCTL=yes and ETHTOOL_OPTS="autoneg on speed 1000 duplex full"&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s"&gt;'ens11'&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;ifcfg_file&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;config_data&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="s"&gt;"USERCTL=yes&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;ETHTOOL_OPTS=&lt;/span&gt;&lt;span class="se"&gt;\"&lt;/span&gt;&lt;span class="s"&gt;autoneg on speed 1000 duplex full&lt;/span&gt;&lt;span class="se"&gt;\"\n&lt;/span&gt;&lt;span class="s"&gt;"&lt;/span&gt;
+    &lt;span class="n"&gt;hook_data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'config'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;config_data&lt;/span&gt;
+    &lt;span class="n"&gt;hooking&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;hook_data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Following is a description of the hook script.&lt;/p&gt;
+
+&lt;p&gt;Reading in the data from the json file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;hook_data = hooking.read_json()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Getting the value of the new ifcfg file content:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;config_data = hook_data['config']
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Getting the name of the ifcfg file which will be modified:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ifcfg_file = hook_data['ifcfg_file']
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Modify the content of the ifcfg file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;config_data += "USERCTL=yes\nETHTOOL_OPTS=\"autoneg on speed 1000 duplex full\"\n"
+hook_data['config'] = config_data
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Write the content of the ifcfg file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;hooking.write_json(hook_data)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content>
+  </entry>
+</feed>

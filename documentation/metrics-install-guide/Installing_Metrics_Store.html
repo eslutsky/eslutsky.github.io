@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing Metrics Store &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/metrics-install-guide/">Metrics-install-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-2-installing-ovirt-metrics-store">Chapter 2. Installing oVirt Metrics Store</h1>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>Computing resources:</p>
+
+    <p>For metrics store virtual machine:</p>
+    <ul>
+      <li>4 cores</li>
+      <li>30 GB RAM</li>
+      <li>650 GB SSD disk</li>
+    </ul>
+
+    <p>For metrics store installer virtual machine:</p>
+    <ul>
+      <li>4 cores</li>
+      <li>8 GB RAM</li>
+      <li>100 GB SSD disk</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>NOTE</strong>
+The computing resource requirements are for an all-in-one installation, with a single Metrics Store virtual machine.
+The all-in-one installation can collect data from up to ~1000 virtual machines.</p>
+
+<ul>
+  <li>Operating system: Centos 7.6 or later</li>
+  <li>Software: oVirt 4.2 or later</li>
+  <li>
+    <p>Network configuration:</p>
+
+    <ul>
+      <li>Create a wildcard DNS record <code>(*.example.com)</code> for the DNS zone of the Metrics Store virtual machines.</li>
+      <li>Add the hostname of the Metrics Store virtual machines to your DNS server.</li>
+      <li>In all-in-one installation, the metrics store machine FQDN would be master0.example.com, where <code>example.com</code> is your <code>public_hosted_zone</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="creating-the-metrics-store-virtual-machines">Creating the Metrics Store virtual machines</h2>
+
+<p>Creating the Metrics Store virtual machines involves the following steps:</p>
+
+<ol>
+  <li>Configuring the Metrics Store installation with <code>metrics-store-config.yml</code></li>
+  <li>
+    <p>Creating the following Metrics Store virtual machines:</p>
+
+    <ul>
+      <li>The Metrics Store installer, a temporary virtual machine for deploying OpenShift and services on the Metrics Store virtual machines</li>
+      <li>One or more Metrics Store virtual machines (Currently only one virtual machine is supported)</li>
+    </ul>
+  </li>
+  <li>Verifying the Metrics Store virtual machines</li>
+</ol>
+
+<h3 id="procedure">Procedure</h3>
+
+<ol>
+  <li>Log in to the engine machine using SSH.</li>
+  <li>Copy <code>metrics-store-config.yml.example</code> to create <code>metrics-store-config.yml</code>:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code># cp /etc/ovirt-engine-metrics/metrics-store-config.yml.example /etc/ovirt-engine-metrics/config.yml.d/metrics-store-config.yml&#x000A;</code></pre></div><ol>
+  <li>Edit the parameters in <code>metrics-store-config.yml</code> and save the file. The parameters are documented in the file.</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vi /etc/ovirt-engine-metrics/config.yml.d/metrics-store-config.yml&#x000A;</code></pre></div>
+<ol>
+  <li>Copy <code>secure_vars.yaml.example</code> to create <code>secure_vars.yaml</code>:
+<div class="highlight"><pre class="highlight plaintext"><code># cp /etc/ovirt-engine-metrics/secure_vars.yaml.example /etc/ovirt-engine-metrics/secure_vars.yaml&#x000A;</code></pre></div></li>
+  <li>Edit the parameters in <code>secure_vars.yaml</code> and save the file. The parameters are documented in the file.
+<div class="highlight"><pre class="highlight plaintext"><code># vi /etc/ovirt-engine-metrics/secure_vars.yaml&#x000A;</code></pre></div></li>
+  <li>Encrypt secure_vars.yaml file
+<div class="highlight"><pre class="highlight plaintext"><code># ansible-vault encrypt /etc/ovirt-engine-metrics/secure_vars.yaml&#x000A;</code></pre></div></li>
+  <li>Go to the ovirt-engine-metrics directory:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code># cd /usr/share/ovirt-engine-metrics&#x000A;</code></pre></div><ol>
+  <li>Run the ovirt-metrics-store-installation playbook to create the virtual machines:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ANSIBLE_JINJA2_EXTENSIONS="jinja2.ext.do" ./configure_ovirt_machines_for_metrics.sh \&#x000A;  --playbook=ovirt-metrics-store-installation.yml --ask-vault-pass&#x000A;</code></pre></div>
+<ol>
+  <li>Log in to the Administration Portal.</li>
+  <li>Click <strong>Compute → Virtual Machines</strong> to verify the successful creation of the <code>metrics-store-installer</code> virtual machine and the Metrics Store virtual machines.</li>
+</ol>
+
+<h2 id="setup-virtual-machine-static-ip-and-mac-address-optional">Setup virtual machine static IP and Mac address (Optional)</h2>
+
+<ol>
+  <li>Log in to the Administration Portal.</li>
+  <li>Click <strong>Compute → Virtual Machines</strong> and edit the etrics Store virtual machine.</li>
+  <li>Update the virtual machine mac address and or IP address to your needs, save the changes and reboot it.</li>
+</ol>
+
+<h2 id="deploying-openshift-and-metrics-store-services">Deploying OpenShift and Metrics Store services</h2>
+
+<p>Deploy OpenShift, Elasticsearch, Curator (for managing Elasticsearch indices and snapshots), and Kibana on the Metrics Store virtual machines.</p>
+
+<h3 id="procedure-1">Procedure</h3>
+
+<ol>
+  <li>Log in to the <code>metrics-store-installer</code> virtual machine.</li>
+  <li>Run the install_okd playbook to deploy OpenShift and Metrics Store services to the Metrics Store virtual machines:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code># ANSIBLE_CONFIG="/usr/share/ansible/openshift-ansible/ansible.cfg" \&#x000A;  ANSIBLE_ROLES_PATH="/usr/share/ansible/roles/:/usr/share/ansible/openshift-ansible/roles" \&#x000A;  ansible-playbook -i integ.ini install_okd.yaml -e @vars.yaml -e @secure_vars.yaml --ask-vault-pass&#x000A;</code></pre></div>
+<ol>
+  <li>Verify the deployment by logging in to each Metrics Store virtual machine:</li>
+</ol>
+
+<p>3.1. Log in to the <code>openshift-logging</code> project:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc project openshift-logging&#x000A;</code></pre></div>
+<p>3.2. Check that the Elasticsearch, Curator, and Kibana pods are running:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc get pods&#x000A;</code></pre></div>
+<p>If Elasticsearch is not running, see <a href="https://docs.okd.io/3.11/install_config/aggregate_logging.html#logging-troubleshooting">Troubleshooting related to ElasticSearch</a> in the OpenShift Container Platform 3.11 documentation.</p>
+
+<p>3.3. Check that the Elasticsearch and Kibana services have external IP addresses and ports:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc get svc&#x000A;</code></pre></div>
+<p>3.4. Check the Kibana host name and record it so that you can access the Kibana console in <a href="Verifying_the_Installation">Section 2.4, “Verifying the Metrics Store installation”</a>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># oc get routes&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Log in to the Administration Portal.</p>
+  </li>
+  <li>
+    <p>You can now click <strong>Compute → Virtual Machines</strong> and delete the metrics-store-installer virtual machine.</p>
+  </li>
+</ol>
+
+<p><strong>IMPORTANT</strong>
+Do not delete the <code>metrics-store-config.yml</code> file.</p>
+
+<p><strong>Prev:</strong> <a href="Metrics_Store_installation_overview">Chapter 1: Metrics Store installation overview</a><br />
+<strong>Next:</strong> <a href="Verifying_the_Installation">Chapter 3: Verifying the Installation</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.3/html-single/metrics_store_installation_guide/index#Installing_metrics_store">Adapted from RHV 4.3 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/metrics-install-guide/Installing_Metrics_Store.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/metrics-install-guide/Installing_Metrics_Store.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 11 Apr 2019 08:12 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

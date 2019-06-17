@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+An Introduction to oVirt Ansible Roles &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='mgoldboim' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='An Introduction to oVirt Ansible Roles' property='og:title'>
+<meta content='Today I would like to share with you some of the integration work with Ansible 2.3 that was done in the latest oVirt 4.1 release.
+The Ansible integration work was quite extensive and included Ansible modules that can be utilized for automating a wide range of
+oVirt tasks, including tiered application deployment and virtualization infrastructure management.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/07/ovirt-ansible-roles-an-introduction.html' property='og:url'>
+<meta content='2017-07-19T15:00:00Z' property='article:published_time'>
+<meta content='mgoldboim' property='article:author:username'>
+<meta content='Ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Automation' property='article:tag'>
+<link href='/blog/tag/automation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Configuration management' property='article:tag'>
+<link href='/blog/tag/configuration management.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Roles' property='article:tag'>
+<link href='/blog/tag/roles.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='An Introduction to oVirt Ansible Roles' name='twitter:title'>
+<meta content='Today I would like to share with you some of the integration work with Ansible 2.3 that was done in the latest oVirt 4.1 release.
+The Ansible integration work was quite extensive and included Ansible modules that can be utilized for automating a wide range of
+oVirt tasks, including tiered application deployment and virtualization infrastructure management.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>07</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+An Introduction to oVirt Ansible Roles
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/mgoldboim.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/mgoldboim/">mgoldboim</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-07-19T15:00:00Z'>
+Wednesday 19 July 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Today I would like to share with you some of the integration work with Ansible 2.3 that was done in the latest oVirt 4.1 release.
+The Ansible integration work was quite extensive and included <a href="http://docs.ansible.com/ansible/list_of_cloud_modules.html#ovirt">Ansible modules</a> that can be utilized for automating a wide range of
+oVirt tasks, including tiered application deployment and virtualization infrastructure management.</p>
+
+<p></p>
+
+<p>While Ansible has multiple levels of integrations, I would like to focus this article on oVirt Ansible roles. As stated in the Ansible documentation: “Roles in Ansible build on the idea of include files and combine them to form clean, reusable abstractions – they allow you to focus more on the big picture and only dive into the details when needed.”</p>
+
+<p>We used the above logic as a guideline for developing the oVirt Ansible roles.
+We will cover three of the many Ansible roles available for oVirt:</p>
+
+<ul>
+  <li><a href="https://github.com/oVirt/ovirt-ansible/blob/master/roles/ovirt-infra/README.md">oVirt infra</a></li>
+  <li><a href="https://github.com/oVirt/ovirt-ansible/tree/master/roles/ovirt-image-template">oVirt-image-template</a></li>
+  <li><a href="https://github.com/oVirt/ovirt-ansible/tree/master/roles/ovirt-vm-infra">oVirt-vm-infra</a></li>
+</ul>
+
+<p>For each example, I will describe the role's purpose and how it is used.</p>
+
+<h2 id="ovirt-infra">oVirt Infra</h2>
+
+<p>The purpose of this role is to automatically configure and manage an oVirt  datacenter. It will take a newly deployed- but not yet configured- oVirt engine (RHV-M for RHV users), hosts, and storage and configure them to your requirements and specifications. The oVirt engine should already be installed (post engine-setup). Hosts and storage should be deployed but not configured.</p>
+
+<p>This role will take a <a href="https://github.com/oVirt/ovirt-ansible/blob/master/examples/ovirt_infra_vars.yml">yml-based variable file</a> such as the following (/path/to/file):</p>
+
+<div class="highlight"><pre class="highlight yaml"><code>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># REST API variables</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">engine_url</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/api</span>&#x000A;<span class="na">engine_user</span><span class="pi">:</span> <span class="s">admin@internal</span>&#x000A;<span class="na">engine_cafile</span><span class="pi">:</span> <span class="s">/etc/pki/ovirt-engine/ca.pem</span>&#x000A;&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Common</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">compatibility_version</span><span class="pi">:</span> <span class="s">4.1</span>&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Data center</span>&#x000A;<span class="na">data_center_name</span><span class="pi">:</span> <span class="s">mydatacenter</span>&#x000A;<span class="c1">###########################</span>&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Clusters</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">clusters</span><span class="pi">:</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">production</span>&#x000A;  <span class="na">cpu_type</span><span class="pi">:</span> <span class="s">Intel Conroe Family</span>&#x000A;  <span class="na">profile</span><span class="pi">:</span> <span class="s">production</span>&#x000A;&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Hosts</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">hosts</span><span class="pi">:</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">myhost</span>&#x000A;  <span class="na">address</span><span class="pi">:</span> <span class="s">1.2.3.5</span>&#x000A;  <span class="na">cluster</span><span class="pi">:</span> <span class="s">production</span>&#x000A;  <span class="na">password</span><span class="pi">:</span> <span class="s">123456</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">myhost1</span>&#x000A;  <span class="na">address</span><span class="pi">:</span> <span class="s">1.2.3.6</span>&#x000A;  <span class="na">cluster</span><span class="pi">:</span> <span class="s">production</span>&#x000A;  <span class="na">password</span><span class="pi">:</span> <span class="s">123456</span>&#x000A;&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Storage</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">storages</span><span class="pi">:</span>&#x000A;<span class="na">mynfsstorage</span><span class="pi">:</span>&#x000A; <span class="na">master</span><span class="pi">:</span> <span class="no">true</span>&#x000A; <span class="na">state</span><span class="pi">:</span> <span class="s">present</span>&#x000A; <span class="na">nfs</span><span class="pi">:</span>&#x000A;  <span class="na">address</span><span class="pi">:</span> <span class="s">1.2.3.4</span>&#x000A;  <span class="na">path</span><span class="pi">:</span> <span class="s">/om02</span>&#x000A;<span class="na">myiscsistorage</span><span class="pi">:</span>&#x000A; <span class="na">iscsi</span><span class="pi">:</span>&#x000A;  <span class="na">target</span><span class="pi">:</span> <span class="s">iqn.2014-07.org.ovirt:storage</span>&#x000A;  <span class="na">port</span><span class="pi">:</span> <span class="s">3260</span>&#x000A;  <span class="na">address</span><span class="pi">:</span> <span class="s">192.168.200.3</span>&#x000A;  <span class="na">username</span><span class="pi">:</span> <span class="s">username</span>&#x000A;  <span class="na">password</span><span class="pi">:</span> <span class="s">password</span>&#x000A;  <span class="na">lun_id</span><span class="pi">:</span> <span class="s">3600140551fcc8348ea74a99b6760fbb4</span>&#x000A;<span class="na">mytemplates</span><span class="pi">:</span>&#x000A; <span class="na">domain_function</span><span class="pi">:</span> <span class="s">export</span>&#x000A; <span class="na">nfs</span><span class="pi">:</span>&#x000A;  <span class="na">address</span><span class="pi">:</span> <span class="s">192.168.200.3</span>&#x000A;  <span class="na">path</span><span class="pi">:</span> <span class="s">/exports/nfs/exported</span>&#x000A;<span class="na">myisostorage</span><span class="pi">:</span>&#x000A; <span class="na">domain_function</span><span class="pi">:</span> <span class="s">iso</span>&#x000A; <span class="na">nfs</span><span class="pi">:</span>&#x000A;  <span class="na">address</span><span class="pi">:</span> <span class="s">192.168.200.3</span>&#x000A;  <span class="na">path</span><span class="pi">:</span> <span class="s">/exports/nfs/iso</span>&#x000A;&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Networks</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">logical_networks</span><span class="pi">:</span>&#x000A;<span class="pi">-</span>  <span class="na">name</span><span class="pi">:</span> <span class="s">mynetwork</span>&#x000A;  <span class="na">clusters</span><span class="pi">:</span>&#x000A;   <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">development</span>&#x000A;     <span class="na">assigned</span><span class="pi">:</span> <span class="no">false</span>&#x000A;     <span class="na">required</span><span class="pi">:</span> <span class="no">true</span>&#x000A;     <span class="na">display</span><span class="pi">:</span> <span class="no">false</span>&#x000A;     <span class="na">migration</span><span class="pi">:</span> <span class="no">true</span>&#x000A;     <span class="na">gluster</span><span class="pi">:</span> <span class="no">false</span>&#x000A;&#x000A;&#x000A;&#x000A;<span class="na">host_networks</span><span class="pi">:</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">myhost1</span>&#x000A;  <span class="na">check</span><span class="pi">:</span> <span class="no">true</span>&#x000A;  <span class="na">save</span><span class="pi">:</span> <span class="no">true</span>&#x000A;  <span class="na">bond</span><span class="pi">:</span>&#x000A;   <span class="na">name</span><span class="pi">:</span> <span class="s">bond0</span>&#x000A;   <span class="na">mode</span><span class="pi">:</span> <span class="s">2</span>&#x000A;   <span class="na">interfaces</span><span class="pi">:</span>&#x000A;    <span class="pi">-</span> <span class="s">eth2</span>&#x000A;    <span class="pi">-</span> <span class="s">eth3</span>&#x000A;  <span class="na">networks</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span>  <span class="na">name</span><span class="pi">:</span> <span class="s">mynetwork</span>&#x000A;     <span class="na">boot_protocol</span><span class="pi">:</span> <span class="s">dhcp</span>&#x000A;&#x000A;&#x000A;&#x000A;<span class="c1">###########################</span>&#x000A;<span class="c1"># Users &amp; Groups</span>&#x000A;<span class="c1">###########################</span>&#x000A;<span class="na">users</span><span class="pi">:</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">user1</span>&#x000A;  <span class="na">authz_name</span><span class="pi">:</span> <span class="s">internal-authz</span>&#x000A;  <span class="na">password</span><span class="pi">:</span> <span class="s">1234568</span>&#x000A;  <span class="na">valid_to</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2018-01-01</span><span class="nv"> </span><span class="s">00:00:00Z"</span>&#x000A;<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">user2</span>&#x000A;  <span class="na">authz_name</span><span class="pi">:</span> <span class="s">internal-authz</span>&#x000A;  <span class="na">password</span><span class="pi">:</span> <span class="s">1234568</span>&#x000A;  <span class="na">valid_to</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2018-01-01</span><span class="nv"> </span><span class="s">00:00:00Z"</span>&#x000A;&#x000A;</code></pre></div><p>The yml variable file describes the environment configuration and translates it to API calls that will configure the datacenter in minimal time. It will utilize the oVirt Ansible component roles to configure the datacenters, clusters, hosts, storage domains, networks, and optionally add users.</p>
+
+<p>Not only can the role configure a new environment but it can also manage and reconfigure an existing one, giving the capabilities to add and remove entities from the system.
+In addition, it also includes some special tweaks like cluster profiles. We defined two cluster profiles which designate the cluster as either “production” (with specific SLA and management level characteristics) or “development” (to squeeze more compute power out of the physical hardware).</p>
+
+<h2 id="ovirt-image-template">ovirt-image-template</h2>
+
+<p>How many times have you performed the routine task of creating a VM for the sole purpose of converting it to a template? If you find this task tedious, this role comes to the rescue. It’s a very simple and straightforward role. Specify the disk image URL and template properties, and the role automates the process of downloading the qcow2, creating an image, and then converting it into a template for you.</p>
+
+<div class="highlight"><pre class="highlight yaml"><code>&#x000A;&#x000A; <span class="na">name</span><span class="pi">:</span> <span class="s">oVirt image template</span>&#x000A; <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>&#x000A; <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>&#x000A; <span class="na">gather_facts</span><span class="pi">:</span> <span class="no">false</span>&#x000A;&#x000A;&#x000A;&#x000A; <span class="na">vars_files</span><span class="pi">:</span>&#x000A;   <span class="c1"># Contains encrypted `engine_password` varibale using ansible-vault</span>&#x000A;   <span class="pi">-</span> <span class="s">passwords.yml</span>&#x000A;&#x000A;&#x000A;&#x000A; <span class="na">vars</span><span class="pi">:</span>&#x000A;   <span class="na">engine_url</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/api</span>&#x000A;   <span class="na">engine_user</span><span class="pi">:</span> <span class="s">admin@internal</span>&#x000A;   <span class="na">engine_cafile</span><span class="pi">:</span> <span class="s">/etc/pki/ovirt-engine/ca.pem</span>&#x000A;&#x000A;&#x000A;&#x000A;   <span class="na">qcow_url</span><span class="pi">:</span> <span class="s">https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2</span>&#x000A;   <span class="na">template_cluster</span><span class="pi">:</span> <span class="s">production</span>&#x000A;   <span class="na">template_name</span><span class="pi">:</span> <span class="s">centos7_template</span>&#x000A;   <span class="na">template_memory</span><span class="pi">:</span> <span class="s">2GiB</span>&#x000A;   <span class="na">template_cpu</span><span class="pi">:</span> <span class="s">2</span>&#x000A;   <span class="na">template_disk_size</span><span class="pi">:</span> <span class="s">10GiB</span>&#x000A;   <span class="na">template_disk_storage</span><span class="pi">:</span> <span class="s">nfs</span>&#x000A;&#x000A;&#x000A;&#x000A; <span class="na">roles</span><span class="pi">:</span>&#x000A;   <span class="pi">-</span> <span class="s">ovirt-image-template</span>&#x000A;</code></pre></div>
+<h2 id="ovirt-vm-infra">Ovirt-vm-infra</h2>
+
+<p>This role is for laying down the application infrastructure. Let’s take a simple example, say you would like to deploy a LAMP application, one VM for the database and one VM for the web-server. This role can help you to create a consistent configuration for this deployment type and redeployment, with one command line (This is the base for a N-tier application deployment using Ansible dynamic inventory, a topic for another article).
+To use this role, edit a simple yml file which describes the virtual application infrastructure you would like to create. Here is one such example:</p>
+
+<div class="highlight"><pre class="highlight yaml"><code>&#x000A; <span class="na">name</span><span class="pi">:</span> <span class="s">oVirt infra</span>&#x000A; <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>&#x000A; <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>&#x000A; <span class="na">gather_facts</span><span class="pi">:</span> <span class="no">false</span>&#x000A;&#x000A;&#x000A;&#x000A; <span class="na">vars_files</span><span class="pi">:</span>&#x000A;   <span class="c1"># Contains encrypted `engine_password` varibale using ansible-vault</span>&#x000A;   <span class="pi">-</span> <span class="s">passwords.yml</span>&#x000A;&#x000A;&#x000A;&#x000A; <span class="na">vars</span><span class="pi">:</span>&#x000A;   <span class="na">engine_url</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/api</span>&#x000A;   <span class="na">engine_user</span><span class="pi">:</span> <span class="s">admin@internal</span>&#x000A;   <span class="na">engine_cafile</span><span class="pi">:</span> <span class="s">/etc/pki/ovirt-engine/ca.pem</span>&#x000A;&#x000A;&#x000A;&#x000A;   <span class="na">httpd_vm</span><span class="pi">:</span>&#x000A;     <span class="na">cluster</span><span class="pi">:</span> <span class="s">production</span>&#x000A;     <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com</span>&#x000A;     <span class="na">template</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;     <span class="na">memory</span><span class="pi">:</span> <span class="s">2GiB</span>&#x000A;     <span class="na">cores</span><span class="pi">:</span> <span class="s">2</span>&#x000A;     <span class="na">ssh_key</span><span class="pi">:</span> <span class="s">ssh-rsa AAA...LGx user@fqdn</span>&#x000A;     <span class="na">disks</span><span class="pi">:</span>&#x000A;       <span class="pi">-</span> <span class="na">size</span><span class="pi">:</span> <span class="s">10GiB</span>&#x000A;         <span class="na">name</span><span class="pi">:</span> <span class="s">data</span>&#x000A;         <span class="na">storage_domain</span><span class="pi">:</span> <span class="s">mynfsstorage</span>&#x000A;         <span class="na">interface</span><span class="pi">:</span> <span class="s">virtio</span>&#x000A;&#x000A;&#x000A;&#x000A;   <span class="na">db_vm</span><span class="pi">:</span>&#x000A;     <span class="na">cluster</span><span class="pi">:</span> <span class="s">production</span>&#x000A;     <span class="na">domain</span><span class="pi">:</span> <span class="s">example.com</span>&#x000A;     <span class="na">template</span><span class="pi">:</span> <span class="s">rhel7</span>&#x000A;     <span class="na">memory</span><span class="pi">:</span> <span class="s">4GiB</span>&#x000A;     <span class="na">cores</span><span class="pi">:</span> <span class="s">1</span>&#x000A;     <span class="na">ssh_key</span><span class="pi">:</span> <span class="s">ssh-rsa AAA...LGx user@fqdn</span>&#x000A;     <span class="na">disks</span><span class="pi">:</span>&#x000A;       <span class="pi">-</span> <span class="na">size</span><span class="pi">:</span> <span class="s">50GiB</span>&#x000A;         <span class="na">name</span><span class="pi">:</span> <span class="s">data</span>&#x000A;         <span class="na">storage_domain</span><span class="pi">:</span> <span class="s">mynfsstorage</span>&#x000A;         <span class="na">interface</span><span class="pi">:</span> <span class="s">virtio</span>&#x000A;&#x000A;&#x000A;&#x000A;   <span class="na">vms</span><span class="pi">:</span>&#x000A;     <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">postgresql-vm-0</span>&#x000A;       <span class="na">tag</span><span class="pi">:</span> <span class="s">postgresql_vm</span>&#x000A;       <span class="na">profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">db_vm</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;     <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">postgresql-vm-1</span>&#x000A;       <span class="na">tag</span><span class="pi">:</span> <span class="s">postgresql_vm</span>&#x000A;       <span class="na">profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">db_vm</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;     <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">apache-vm</span>&#x000A;       <span class="na">tag</span><span class="pi">:</span> <span class="s">httpd_vm</span>&#x000A;       <span class="na">profile</span><span class="pi">:</span> <span class="s2">"</span><span class="s">{{</span><span class="nv"> </span><span class="s">httpd_vm</span><span class="nv"> </span><span class="s">}}"</span>&#x000A;&#x000A;&#x000A;&#x000A; <span class="na">roles</span><span class="pi">:</span>&#x000A;   <span class="pi">-</span> <span class="s">ovirt-vm-infra</span>&#x000A;&#x000A;</code></pre></div>
+<p>Note the profiles concept. Each VM type is specified with a profile from which many instances can be created later on.</p>
+
+<p>Additional information and recommendations:</p>
+
+<p>Get all the Ansible roles and modules for oVirt from <a href="https://galaxy.ansible.com/ovirt/ovirt-ansible-roles/">Ansible Galaxy</a>, straight from <a href="https://github.com/oVirt/ovirt-ansible">oVirt GitHub</a>. This is where you will also find documentation and demos for each role. In the future, we plan to package all of the roles into a single RPM.</p>
+
+<p>The preferred means of running playbooks is to use a bastion machine on which the oVirt python SDK and Ansible 2.3 would be installed. This way, the Ansible playbook will be translated into REST API calls which will be executed against the engine. You can also run it from the local engine or in other topologies, but using the bastion host would be more secure and performant.
+If you decide to go with this option, make sure that the connection parameters are set correctly in the playbook:</p>
+
+<div class="highlight"><pre class="highlight yaml"><code>&#x000A; <span class="na">name</span><span class="pi">:</span> <span class="s">oVirt infra</span>&#x000A;&#x000A; <span class="na">hosts</span><span class="pi">:</span> <span class="s">localhost</span>&#x000A;&#x000A; <span class="na">connection</span><span class="pi">:</span> <span class="s">local</span>&#x000A;&#x000A; <span class="na">gather_facts</span><span class="pi">:</span> <span class="no">false</span>&#x000A;&#x000A; <span class="na">vars</span><span class="pi">:</span>&#x000A;&#x000A;   <span class="na">engine_url</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/api</span>&#x000A;&#x000A;   <span class="na">engine_user</span><span class="pi">:</span> <span class="s">admin@internal</span>&#x000A;&#x000A;   <span class="na">engine_cafile</span><span class="pi">:</span> <span class="s">/etc/pki/ovirt-engine/ca.pem</span>&#x000A;&#x000A;</code></pre></div>
+<p>To avoid sending passwords in cleartext, use Ansible vault and encrypt them in an <a href="https://github.com/oVirt/ovirt-ansible/blob/master/examples/passwords.yml">extra-vars file</a></p>
+
+<p>Wrapping up, I just wanted to give kudos to Ondra Machacek the lead developer of this integration, and the whole oVirt infra team which helped to push this integration forward.</p>
+
+<p>We would love to get your feedback and patches in order to improve those roles and others which are in development.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/ansible.html">Ansible</a></li>
+<li><a href="../../tag/automation.html">Automation</a></li>
+<li><a href="../../tag/configuration-management.html">Configuration management</a></li>
+<li><a href="../../tag/roles.html">Roles</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-07-19-ovirt-ansible-roles-an-introduction.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-07-19-ovirt-ansible-roles-an-introduction.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 19 Jul 2017 17:12 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

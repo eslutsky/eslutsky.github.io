@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Gluster Volume Performance Statistics &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-volume-performance-statistics">Gluster Volume Performance Statistics</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature provides the support for monitoring and measuring the performance of Gluster volumes and bricks.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Feature owner: Sahina Bose <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner: Anmol Babu <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#110;&#098;&#097;&#098;&#117;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#110;&#098;&#097;&#098;&#117;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>Engine Component owner: Sahina Bose <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>QA Owner: Sudhir Dharanendraiah <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#100;&#104;&#097;&#114;&#097;&#110;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status:
+    <ul>
+      <li>Gluster Volume Profile: Completed. Available from 3.5</li>
+      <li>Gluster Volume Top: In Progress</li>
+    </ul>
+  </li>
+  <li>Last updated date: ,</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="top">Top</h3>
+
+<p>Display results of the 'gluster volume top' command on GUI. GlusterFS Volume Top command allows you to view the glusterfs bricks’ performance metrics like read, write, file open calls, file read calls, file write calls, directory open calls, and directory read calls.</p>
+
+<p><a href="http://gluster.org/community/documentation/index.php/Gluster_3.2:_Running_GlusterFS_Volume_Top_Command">Gluster Volume Top</a> has further details on this</p>
+
+<h4 id="vdsm-changes">VDSM Changes</h4>
+
+<ol>
+  <li>glusterVolumeTopOpen (volumeName, brickName=None, nfs=False, listCount=None/100?)</li>
+</ol>
+
+<p>This receives volume-name, brick-name, list-count as a input and executes gluster volume top open command and return a dictionary which contains a list of file names (top number of list-count items) and its call count values. List count is an optional numeric parameter which helps to filter the number of items to be returned. Brick-name is also an optional parameter. If brick-name is not given, it returns all bricks info of the volume.</p>
+
+<p>If nfs is True, then the top open output is per NFS server.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    Output dictionary which contains open fd count and maximum fd count:&#x000A;     {'statusCode' : CODE,&#x000A;         'brickCount': BRICK-COUNT,&#x000A;         'bricks': {BRICK-NAME: {'count':FILE-COUNT,&#x000A;                                               'currentOpenFds': CURRENT-OPEN-FDS-COUNT, &#x000A;                                                         'maxOpen': MAX-OPEN, &#x000A;                                                         'maxOpenTime': MAX-OPEN-TIME, &#x000A;                                                         'files': [{FILE-NAME: FILE-OPEN-COUNT}, ...]&#x000A;                                                      }, ...} }&#x000A;</code></pre></div>
+<ol>
+  <li>glusterVolumeTopRead (volumeName,brickName=[ ], nfs=True/False?, listCount=None/100?)</li>
+</ol>
+
+<p>This gives an output dictionary of a list of highest read calls on each brick. If brick name or list count is not given it works with the default value (all bricks, 100 files). This will use gluster volume top read gluster cli command internally.</p>
+
+<ul>
+  <li>We can get the list of values either for all bricks or a specific brick</li>
+</ul>
+
+<ol>
+  <li>glusterVolumeTopWrite (volumeName,brickName=[ ], nfs=True/False?, listCount=None/100?)</li>
+</ol>
+
+<p>This provides the list of highest file write calls on a specific brick or the list of bricks based on the input request. This calls gluster volume top write gluster cli command internally to fetch the values.</p>
+
+<ol>
+  <li>glusterVolumeTopOpenDir (volumeName, brickName=None, listCount=None)</li>
+</ol>
+
+<p>This returns list of files which has highest open calls on directories of each brick. If brick name is not specified, then the metrics of all the bricks belonging to that volume will be displayed. This uses gluster volume top opendir gluster cli command.</p>
+
+<ol>
+  <li>glusterVolumeTopReadDir (volumeName, brickName=None, listCount=None)</li>
+</ol>
+
+<p>Uses gluster volume top readdir gluster cli command and returns the dictionary as below:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>         Output dictionary:&#x000A;         {'statusCode': CODE,&#x000A;                 'brickCount': BRICK-COUNT,&#x000A;                 'topOp': TOP-OP,&#x000A;                 'bricks': {BRICK-NAME: {  'count':READ-DIR-COUNT,&#x000A;                                                              'files': [{DIR-NAME: DIR-READ-COUNT}, ...]&#x000A;                                                           }, ...} }&#x000A;</code></pre></div>
+<ol>
+  <li>glusterVolumeTopReadPerf (volumeName, blockSize=None, count=None, brickName=None, listCount=None)</li>
+</ol>
+
+<p>This functionality helps to identify disk performance based on specific block size</p>
+
+<ul>
+  <li>if the block size and the count is not specified, it will give the output based on historical data.</li>
+  <li>Proper validation is required before passing blockSize and count value to this function.</li>
+</ul>
+
+<p>the output will be dictionary which contains a list of read throughput of files on each brick. (What if the (dd) file size (blockSize * count) exceeds the size limit of the brick?)</p>
+
+<ul>
+  <li>The brick name parameter is an optional one. This will not accept a list of brick names.</li>
+</ul>
+
+<p>The values of blockSize and count will be passed to an appropriate gluster cli command and the gluster cli command will initiate a dd for the specified count and block size and measures the corresponding throughput.</p>
+
+<ol>
+  <li>glusterVolumeTopWritePerf (volumeName, blockSize=None, count=None, brickName=[], listCount=100)</li>
+</ol>
+
+<p>This provides write throughput of files on a specific brick/brick-wise</p>
+
+<h4 id="entities">Entities</h4>
+
+<File:TopClassDiagram.png>
+
+**\1**
+
+*   OPEN
+*   READ
+*   WRITE
+*   OPENDIR
+*   READDIR
+*   READ-PERF
+*   WRITE-PERF
+
+#### REST API
+
+*   GET: /api/clusters/<cluster-id>/glustervolumes/<volume-id>/top;type=<TopStatisticType>
+    -   Other matrix parameters
+        -   nfs=true/false
+        -   blocksize
+        -   count
+*   GET: /api/clusters/<cluster-id>/glustervolumes/<volume-id>/bricks/<brick-id>/top;type=<TopStatisticType>
+
+### Profile
+
+Display results of 'gluster volume profile' command on the GUI.
+
+Gluster volume profile can be used to diagnose performance issues with any gluster volume. To start diagnosis, the user needs to start profiling on the volume
+
+Once profiling is enabled, the profile info can be viewed at intervals and can be used for diagnosis.
+
+Once diagnosis is complete, profiling needs to be stopped on the volume.
+
+See [Gluster Volume Profile](http://gluster.org/community/documentation/index.php/Gluster_3.2:_Displaying_the_I/0_Information) for detailed information on gluster volume profile
+
+#### User Flows
+
+Volume profiling can be started from the Volumes tab, by selecting a volume
+
+![](/images/wiki/Vol-profile-start.png)
+
+User can start profiling, view profile info and stop profiling using this sub menu
+
+To view the profile info, "Details" sub-menu of the Profiling menu needs to be clicked. This will show a pop-up dialog like below
+
+![](/images/wiki/Vol-Profile-Details-Bricks.png) ![](/images/wiki/Vol-Profile-Details-NFS.png)
+
+*   User can choose to export the data returned for the sampling interval using the "Export" button
+*   User can refresh the profile data using the "Refresh" icon
+
+#### REST API
+
+*   GET: /api/clusters/<cluster_id>/glustervolumes/<volume_id>/profilestatistics
+
+` `<profileinfo>
+`      `<profilestatstype>`CUMULATIVE|INTERVAL`</profilestatstype>
+`      `<duration>`..`</duration>
+`      `<totalbytesread>`..`<totalbytesread>
+`      `<totalbyteswrite>`..`<totalbyteswrite>
+`      `<blockinfo>
+`      `<blockstatistics>`../`</blockstatistics>
+`      `<blockstatistics>`../`</blockstatistics>
+`      `</blockinfo>
+`      `<fopinfo>
+            `<fopstatistics>`...`</fopstatistics>`  
+`      `<fopstatistics>`...`</fopstatistics>
+`      `</fopinfo>
+&lt;/profileinfo&gt;
+
+*   POST: /api/clusters/<cluster_id>/glustervolumes/<volume_id>/startprofiling
+*   POST:/api/clusters/<cluster_id>/glustervolumes/<volume_id>/stopprofiling
+
+#### HOW TO
+
+1.  Create a gluster volume using the Volumes tab or you can use an existing volume
+2.  Start profiling on the volume by clicking on "Profiling" sub tab after selecting the volume
+3.  Mount the volume using NFS or any other client if not already mounted and perform some read/write operations on it
+4.  You can now view the profile statistics using "Profiling" sub tab or the API
+
+## Design
+
+</volume_id></cluster_id></volume_id></cluster_id></totalbyteswrite></totalbyteswrite></totalbytesread></totalbytesread></profileinfo></volume_id></cluster_id></TopStatisticType></brick-id></volume-id></cluster-id></TopStatisticType></volume-id></cluster-id></File:TopClassDiagram.png>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/gluster-volume-performance-statistics.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/gluster-volume-performance-statistics.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

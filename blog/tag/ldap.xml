@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Ldap</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/ldap.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Federate oVirt engine authentication to OpenID Connect infrastructure</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/01/sso-keycloak-ovirt-openidc-389ds.html"/>
+    <id>http://ovirt.org/blog/2019/01/sso-keycloak-ovirt-openidc-389ds.html</id>
+    <published>2019-01-22T17:32:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Ravi Nori</name>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce how to integrate OIDC with oVirt engine using &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; and LDAP user federation.&lt;/p&gt;
+
+&lt;p&gt;Prerequisites: I assume you have already setup the &lt;code&gt;389ds&lt;/code&gt; directory server, but the solution is very similar for any other LDAP provider.
+As OIDC is not integrated into oVirt directly, we use Apache to do the OIDC authentication for us. The &lt;a href="https://github.com/zmartzone/mod_auth_openidc"&gt;mod_auth_openidc&lt;/a&gt; module nicely covers all needed functionality.&lt;/p&gt;
+
+&lt;p&gt;Overview&lt;/p&gt;
+
+&lt;p&gt;Integrate with external OpenID Connect Identity Provider (IDP) to provide Single Sign-On  (SSO) across products that use the IDP for authenticating users. We currently have oVirt SSO for providing unified authentication across Administrator and VM portals. The oVirt engine SSO also provides tokens for REST API clients and supports bearer authentication to reuse tokens to access oVirt engine RESTAPI. With external IDP integration the internal oVirt SSO is disabled and browser users will be redirected to the external IDP for authentication. After successful authentication users can access both Admin and VM portals as they normally do. REST API clients don't have to change, they can still obtain a token from engine SSO and use the token for bearer authentication to access oVirt engine RESTAPI. Engine SSO acts as a proxy obtaining the token from external IDP on behalf of the RESTAPI client.&lt;/p&gt;
+
+&lt;p&gt;To access Administrator portal users need to belong to LDAP group named “ovirt-administrator” or an LDAP group that has been manually granted permissions to access Admin portal.&lt;/p&gt;
+
+&lt;p&gt;Note&lt;/p&gt;
+
+&lt;p&gt;In the examples and configuration below we use keycloak.example.com as the Keycloak server FQDN and engineopenid.example.com as the oVirt engine server FQDN. Please note that these should be replaced with real FQDNs from your setup.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="keycloak"&gt;Keycloak&lt;/h2&gt;
+&lt;p&gt;Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the OIDC provider.&lt;/p&gt;
+
+&lt;h2 id="keycloak-configuration"&gt;Keycloak configuration&lt;/h2&gt;
+&lt;p&gt;For our example, we'll use default master realm. First let's create user federation with our &lt;code&gt;389ds&lt;/code&gt; directory server.
+Fill the values of your 389ds server as show in the image below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1502" height="869" src="/images/../images/blog/2019-01-22/user_federation.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Add ldap groups mapper&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1456" height="837" src="/images/../images/blog/2019-01-22/ldap_group_mapper.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After testing the connection and authentication, click the &lt;code&gt;save&lt;/code&gt; button And then Synchronize All Users using the button at the bottom of User Federation Provider page.. Check if your users are searchable, as shown in image below.
+&lt;img alt="" width="1679" height="659" src="/images/../images/blog/2019-01-22/user_search.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that user federation is working and is integrated, let's configure the OIDC client.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1456" height="837" src="/images/../images/blog/2019-01-22/add_client.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt; After the client is created, we must change &lt;code&gt;Access Token Lifespan&lt;/code&gt; to &lt;code&gt;10 days&lt;/code&gt;. This is required because oVirt manages the token lifespan and we do not want Keycloak invalidating the tokens.
+&lt;img alt="" width="900" height="269" src="/images/../images/blog/2019-01-22/life_span.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Make a note of client id and client secret from the client credentials page, the client id and secret is needed to configure the Apache mod_auth_openidc and also ovirt-engine.
+&lt;img alt="" width="1456" height="667" src="/images/../images/blog/2019-01-22/client_id_secret.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Create a mapper to add groups to the claim
+&lt;img alt="" width="1183" height="695" src="/images/../images/blog/2019-01-22/groups_claim.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Add the build in mapper for username
+&lt;img alt="" width="1183" height="970" src="/images/../images/blog/2019-01-22/user_name.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Create the scopes need by ovirt engine, ovirt-app-api and ovirt-app-admin
+&lt;img alt="" width="1183" height="736" src="/images/../images/blog/2019-01-22/scope_ovirt_app_api.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="1183" height="723" src="/images/../images/blog/2019-01-22/scope_ovirt_app_admin.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Set up optional client scopes for the ovirt-engine client
+&lt;img alt="" width="1183" height="733" src="/images/../images/blog/2019-01-22/client_scopes.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="mod_auth_openidc-configuration"&gt;mod_auth_openidc configuration&lt;/h2&gt;
+&lt;p&gt;First we need to configure Apache on oVirt engine machine. SSH to the oVirt engine and install mod_auth_openidc and ovirt-engine-extension-aaa-misc.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engineopenid
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; mod_auth_openidc
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; ovirt-engine-extension-aaa-misc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We need to create a file &lt;code&gt;/etc/httpd/conf.d/ovirt-openidc.conf&lt;/code&gt; to configure mod_auth_openidc as follows:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight html"&gt;&lt;code&gt;LoadModule auth_openidc_module modules/mod_auth_openidc.so
+ServerName engineopenid.example.com
+
+OIDCProviderMetadataURL https://keycloak.example.com:8443/auth/realms/master/.well-known/openid-configuration
+OIDCSSLValidateServer Off
+    
+OIDCClientID ovirt-engine
+OIDCClientSecret c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a
+OIDCRedirectURI https://engineopenid.example.com/ovirt-engine/callback
+OIDCDefaultURL https://engineopenid.example.com/ovirt-engine/login?scope=ovirt-app-admin+ovirt-app-portal+ovirt-ext%3Dauth%3Asequence-priority%3D%7E
+    
+# maps the prefered_username claim to the REMOTE_USER environment variable
+OIDCRemoteUserClaim preferred_username
+OIDCCryptoPassphrase random1234
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;sso&lt;/span&gt;&lt;span class="err"&gt;/(&lt;/span&gt;&lt;span class="na"&gt;interactive-login-negotiate&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;oauth&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;token-http-auth&lt;/span&gt;&lt;span class="err"&gt;)|^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;callback&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;If&lt;/span&gt; &lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="na"&gt;req&lt;/span&gt;&lt;span class="err"&gt;('&lt;/span&gt;&lt;span class="na"&gt;Authorization&lt;/span&gt;&lt;span class="err"&gt;')&lt;/span&gt; &lt;span class="err"&gt;!~&lt;/span&gt; &lt;span class="err"&gt;/^(&lt;/span&gt;&lt;span class="na"&gt;Bearer&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;Basic&lt;/span&gt;&lt;span class="err"&gt;)/&lt;/span&gt;&lt;span class="na"&gt;i&lt;/span&gt;&lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+    
+      Require valid-user
+      AuthType openid-connect
+    
+      ErrorDocument 401 "&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&amp;lt;meta&lt;/span&gt; &lt;span class="na"&gt;http-equiv=&lt;/span&gt;&lt;span class="s"&gt;\"refresh\"&lt;/span&gt; &lt;span class="na"&gt;content=&lt;/span&gt;&lt;span class="s"&gt;\"0;&lt;/span&gt; &lt;span class="na"&gt;url=&lt;/span&gt;&lt;span class="s"&gt;/ovirt-engine/sso/login-unauthorized\"/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;\"/ovirt-engine/sso/login-unauthorized\"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Here&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/span&gt;"
+    &lt;span class="nt"&gt;&amp;lt;/If&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+    
+OIDCOAuthIntrospectionEndpoint https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/token/introspect
+OIDCOAuthSSLValidateServer    Off
+OIDCOAuthIntrospectionEndpointParams token_type_hint=access_token
+OIDCOAuthClientID ovirt-engine
+OIDCOAuthClientSecret c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a
+OIDCOAuthRemoteUserClaim sub
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;api&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+   AuthType oauth20
+   Require valid-user
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create /etc/ovirt-engine/extensions.d/openidc-authn.properties&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = openidc-authn
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn
+ovirt.engine.aaa.authn.profile.name = openidchttp
+ovirt.engine.aaa.authn.authz.plugin = openidc-authz
+ovirt.engine.aaa.authn.mapping.plugin = openidc-http-mapping
+config.artifact.name = HEADER
+config.artifact.arg = OIDC_CLAIM_preferred_username
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create /etc/ovirt-engine/extensions.d/openidc-http-mapping.properties&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = openidc-http-mapping
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping
+config.mapAuthRecord.type = regex
+config.mapAuthRecord.regex.mustMatch = false
+config.mapAuthRecord.regex.pattern = ^(?&amp;lt;user&amp;gt;.*?)((\\\\(?&amp;lt;at&amp;gt;@)(?&amp;lt;suffix&amp;gt;.*?)@.*)|(?&amp;lt;realm&amp;gt;@.*))$
+config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create /etc/ovirt-engine/extensions.d/openidc-authz.properties&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = openidc-authz
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthzExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz
+config.artifact.name.arg = OIDC_CLAIM_preferred_username
+config.artifact.groups.arg = OIDC_CLAIM_groups
+config.globals.baseDN.simple_baseDN = dc=example,dc=com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create 99-enable-external-auth.conf in /etc/ovirt-engine/engine.conf.d/&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ENGINE_SSO_ENABLE_EXTERNAL_SSO=true
+ENGINE_SSO_EXTERNAL_SSO_LOGOUT_URI="${ENGINE_URI}/callback"
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create 99-config-external-auth.conf in /etc/ovirt-engine/engine.conf.d/&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;EXTERNAL_OIDC_USER_INFO_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/userinfo
+EXTERNAL_OIDC_TOKEN_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/token
+EXTERNAL_OIDC_LOGOUT_END_POINT=https://keycloak.example.com:8443/auth/realms/master/protocol/openid-connect/logout
+EXTERNAL_OIDC_CLIENT_ID=ovirt-engine
+EXTERNAL_OIDC_CLIENT_SECRET="c0f7a8ba-72d2-4003-ace2-b86cf4a27e6a"
+EXTERNAL_OIDC_HTTPS_PKI_TRUST_STORE="/home/cacerts"
+EXTERNAL_OIDC_HTTPS_PKI_TRUST_STORE_PASSWORD=""
+EXTERNAL_OIDC_SSL_VERIFY_CHAIN=false
+EXTERNAL_OIDC_SSL_VERIFY_HOST=false
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Restart ovirt-engine and httpd&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart httpd
+systemctl restart ovirt-engine
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="test-the-setup"&gt;Test the setup&lt;/h2&gt;
+
+&lt;p&gt;Obtain token from engine&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;curl -k -H "Accept: application/json" 'https://engineopenid.example.com/ovirt-engine/sso/oauth/token?grant_type=password&amp;amp;username=user1@openidchttp&amp;amp;password=123456&amp;amp;scope=ovirt-app-api'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Use token to access api&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;curl -v -k -H "Authorization: Bearer $1" -L https://engineopenid.rnori.redhat.com/ovirt-engine/api
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using python SDK to access engine, SDK directly obtains token from engine and doesn’t have to deal with Keycloak&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;import logging
+import pdb
+import ovirtsdk4 as sdk
+import ovirtsdk4.types as types
+
+logging.basicConfig(level=logging.DEBUG, filename='example.log')
+
+# This example will connect to the server and print the names and identifiers of all the data centers and virtual machines:
+
+# Create the connection to the server:
+connection = sdk.Connection(
+    url='https://engineopenid.example.com/ovirt-engine/api',
+    username='user1@openidchttp',
+    password='123456',
+    debug=True,
+    log=logging.getLogger(),
+    insecure=True
+)
+
+# Verify connection
+if connection.test(raise_exception=False):
+    print("Connection works.")
+else:
+    print("Connection doesn't work.")
+
+# Get the reference to the "vms" service:
+dcs_service = connection.system_service().data_centers_service()
+
+# Use the "list" method of the "vms" service to list all the virtual machines of the system:
+dcs = dcs_service.list()
+
+# Print the virtual machine names and identifiers:
+for dc in dcs:
+  print("%s " % (dc.name))
+
+# Get the reference to the "vms" service:
+vms_service = connection.system_service().vms_service()
+
+# Use the "list" method of the "vms" service to list all the virtual machines of the system:
+vms = vms_service.list()
+
+# Print the virtual machine names and identifiers:
+for vm in vms:
+  print("%s: %s" % (vm.name, vm.id))
+
+# Close the connection to the server:
+connection.close()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Login to webadmin, user1 belongs to group ovirt-administrator in ldap, so user1 should be able to login to webadmin without any additional permission settings.&lt;/p&gt;
+
+&lt;h2 id="configuring-ovn"&gt;Configuring OVN&lt;/h2&gt;
+
+&lt;p&gt;Configuring ovn requires to create 20-setup-ovirt-provider-ovn.conf config file under /etc/ovirt-provider-ovn/conf.d/ with the contents. Where user1 belongs to ldap group ovirt-administrator and openidchttp is the profile configured for aaa-ldap-misc&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;[OVIRT]
+ovirt-admin-user-name=user1@openidchttp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Restart ovirt-provider-ovn&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart ovirt-provider-ovn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Login in webadmin to update the password for ovn under Administration -&amp;gt; Providers&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="" width="808" height="566" src="/images/../images/blog/2019-01-22/providers_passwd.png?1560777613" /&gt;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>oVirt SAML with keyloak using 389ds user federation</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html"/>
+    <id>http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html</id>
+    <published>2018-08-03T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce how simple it is to integrate SAML with oVirt using &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; and LDAP user federation.&lt;/p&gt;
+
+&lt;p&gt;Prerequisites: I assume you have already setup the &lt;code&gt;389ds&lt;/code&gt; directory server, but the solution is very similar for any other LDAP provider.
+As SAML is not integrated into oVirt directly, we use Apache to do the SAML authentication for us. The &lt;a href="https://github.com/Uninett/mod_auth_mellon"&gt;mod_auth_mellon&lt;/a&gt; module nicely covers all needed functionality.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="mod_auth_mellon-configuration"&gt;mod_auth_mellon configuration&lt;/h2&gt;
+&lt;p&gt;First we need to configure oVirt's apache. SSH to the oVirt engine and create a directory where we'll store all SAML related certificates.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engine
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; mod_auth_mellon
+mkdir &lt;span class="nt"&gt;-p&lt;/span&gt; /etc/httpd/saml2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When we install the &lt;code&gt;mod_auth_mellon&lt;/code&gt; package, it will create &lt;code&gt;/etc/httpd/conf.d/auth_mellon.conf&lt;/code&gt;.
+We need to modify this file to our needs, as follows:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight html"&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;Location&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    MellonEnable "info"
+    MellonDecoder "none"
+    MellonVariable "cookie"
+    MellonSecureCookie On
+    MellonSessionDump On
+    MellonSamlResponseDump On
+    MellonSessionLength 86400
+
+    MellonUser "NAME_ID"
+    MellonEndpointPath /saml2
+
+    MellonSPCertFile /etc/httpd/saml2/ovirtsp-cert.cert
+    MellonSPPrivateKeyFile /etc/httpd/saml2/ovirtsp-key.key
+    MellonSPMetadataFile /etc/httpd/saml2/ovirtsp-metadata.xml
+    MellonIdPMetadataFile /etc/httpd/saml2/idp-metadata.xml
+
+    RewriteEngine On
+    RewriteCond %{LA-U:REMOTE_USER} ^(.*)$
+    RewriteRule ^(.*)$ - [L,NS,P,E=REMOTE_USER:%1]
+    RequestHeader set X-Remote-User %{REMOTE_USER}s
+&lt;span class="nt"&gt;&amp;lt;/Location&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;sso&lt;/span&gt;&lt;span class="err"&gt;/(&lt;/span&gt;&lt;span class="na"&gt;interactive-login-negotiate&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;oauth&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;token-http-auth&lt;/span&gt;&lt;span class="err"&gt;)|^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;api&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;If&lt;/span&gt; &lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="na"&gt;req&lt;/span&gt;&lt;span class="err"&gt;('&lt;/span&gt;&lt;span class="na"&gt;Authorization&lt;/span&gt;&lt;span class="err"&gt;')&lt;/span&gt; &lt;span class="err"&gt;!~&lt;/span&gt; &lt;span class="err"&gt;/^(&lt;/span&gt;&lt;span class="na"&gt;Bearer&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;Basic&lt;/span&gt;&lt;span class="err"&gt;)/&lt;/span&gt;&lt;span class="na"&gt;i&lt;/span&gt;&lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+
+    Require valid-user
+    AuthType "Mellon"
+    AuthName "SAML Login"
+    MellonEnable "auth"
+
+    ErrorDocument 401 "&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&amp;lt;meta&lt;/span&gt; &lt;span class="na"&gt;http-equiv=&lt;/span&gt;&lt;span class="s"&gt;\"refresh\"&lt;/span&gt; &lt;span class="na"&gt;content=&lt;/span&gt;&lt;span class="s"&gt;\"0;&lt;/span&gt; &lt;span class="na"&gt;url=&lt;/span&gt;&lt;span class="s"&gt;/ovirt-engine/sso/login-unauthorized\"/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;\"/ovirt-engine/sso/login-unauthorized\"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Here&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/span&gt;"
+  &lt;span class="nt"&gt;&amp;lt;/If&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You'll notice in the configuration file that we are using the following four files:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Certificate file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-cert.cert&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Private key file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-key.key&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Sp metadata file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-metadata.xml&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Idp metadata file - &lt;code&gt;/etc/httpd/saml2/idp-metadata.xml&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We need to create those files using the provided script from the &lt;code&gt;mod_auth_mellon&lt;/code&gt; package:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /etc/httpd/saml2
+/usr/libexec/mod_auth_mellon/mellon_create_metadata.sh https://&amp;lt;ovirt-fqdn&amp;gt; https://&amp;lt;ovirt-fqdn&amp;gt;/saml2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we rename the created files to match the file names that we defined in &lt;code&gt;/etc/httpd/conf.d/auth_mellon.conf&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;mv https_&amp;lt;ovirt-fqdn&amp;gt;.key  ovirtsp-key.key
+mv https_&amp;lt;ovirt-fqdn&amp;gt;.cert ovirtsp-cert.cert
+mv https_&amp;lt;ovirt-fqdn&amp;gt;.xml  ovirtsp-metadata.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now that we have generated the Service provider &lt;code&gt;ovirtsp-metadata.xml&lt;/code&gt; we can configure Identity provider using &lt;code&gt;Keycloak&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id="keycloak"&gt;Keycloak&lt;/h2&gt;
+&lt;p&gt;Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the SAML provider.&lt;/p&gt;
+
+&lt;h2 id="keycloak-configuration"&gt;Keycloak configuration&lt;/h2&gt;
+&lt;p&gt;For our example, we'll use default master realm. First let's create user federation with our &lt;code&gt;389ds&lt;/code&gt; directory server.
+Fill the values of your 389ds server as show in the image below.
+&lt;img alt="" width="1569" height="897" src="/images/../images/blog/2018-08-03/user_federation.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After testing the connection and authentication, click the &lt;code&gt;save&lt;/code&gt; button and check if your users are searchable, as shown in image below.
+&lt;img alt="" width="1578" height="889" src="/images/../images/blog/2018-08-03/user_search.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that user federation is working and is integrated, let's configure the SAML client. For this we need to upload &lt;code&gt;ovirtsp-metadata.xml&lt;/code&gt; created in the previous step to &lt;code&gt;Keycloak&lt;/code&gt;:
+&lt;img alt="" width="1573" height="621" src="/images/../images/blog/2018-08-03/add_client.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt; After the client is created, we must change &lt;code&gt;Name ID Format&lt;/code&gt; format from the default value &lt;code&gt;transient&lt;/code&gt; to &lt;code&gt;username&lt;/code&gt;,
+and we must enable the &lt;code&gt;Force Name ID Format&lt;/code&gt; option. This is required because oVirt is using username to search in LDAP providers.
+&lt;img alt="" width="900" height="80" src="/images/../images/blog/2018-08-03/name_id.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Our identity provider is configured, so now we add it to our engine configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engine
+&lt;span class="nb"&gt;cd&lt;/span&gt; /etc/httpd/saml2
+curl &lt;span class="nt"&gt;-s&lt;/span&gt; &lt;span class="nt"&gt;-o&lt;/span&gt; idp-metadata.xml http://&amp;lt;keycloak-server&amp;gt;:8080/auth/realms/master/protocol/saml/descriptor
+systemctl restart httpd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="ovirt-aaa-configuration"&gt;oVirt AAA configuration&lt;/h2&gt;
+&lt;p&gt;oVirt AAA is the last piece of configuration needed.&lt;/p&gt;
+
+&lt;h3 id="installation"&gt;Installation&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# yum install -y ovirt-engine-extension-aaa-ldap ovirt-engine-extension-aaa-misc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-authnproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-authn.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-authn
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn
+ovirt.engine.aaa.authn.profile.name = saml-http
+ovirt.engine.aaa.authn.authz.plugin = saml-authz
+ovirt.engine.aaa.authn.mapping.plugin = saml-http-mapping
+config.artifact.name = HEADER
+config.artifact.arg = X-Remote-User
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-http-mappingproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-http-mapping.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-http-mapping
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping
+config.mapAuthRecord.type = regex
+config.mapAuthRecord.regex.mustMatch = false
+config.mapAuthRecord.regex.pattern = ^(?&amp;lt;user&amp;gt;.*?)((\\\\(?&amp;lt;at&amp;gt;@)(?&amp;lt;suffix&amp;gt;.*?)@.*)|(?&amp;lt;realm&amp;gt;@.*))$
+config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-authzproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-authz.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-authz
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz
+config.profile.file.1 = ../aaa/saml-ldap.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineaaasaml-ldapproperties"&gt;Create /etc/ovirt-engine/aaa/saml-ldap.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;include = &amp;lt;389ds.properties&amp;gt;
+
+vars.server = 389ds.example.com
+vars.user = uid=user1,ou=users,dc=389ds,dc=example,dc=com
+vars.password = password
+
+pool.default.auth.simple.bindDN = ${global:vars.user}
+pool.default.auth.simple.password = ${global:vars.password}
+pool.default.serverset.type = single
+pool.default.serverset.single.server = ${global:vars.server}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now restart ovirt-engine:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart ovirt-engine.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now when you login to webadmin, you will be redirected to &lt;code&gt;Keycloak&lt;/code&gt; (if you're not already logged in). Enter credentials from your 389ds ldap setup and login should succeed. Note that by default your users won't have permissions to login, so you must first assign permissions to them in webadmin.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

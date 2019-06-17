@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CPU SLA &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="cpu-sla">CPU SLA</h1>
+
+<p><strong>CPU SLA</strong></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>The CPU SLA feature enables users to limit the CPU usage of a virtual machine.</p>
+
+<h2 id="owners">Owners</h2>
+
+<h4 id="initial-design-and-implementation">Initial design and implementation</h4>
+
+<ul>
+  <li>Name: Kobi Ianko (kianku) <s>kobi@redhat.com</s></li>
+</ul>
+
+<h4 id="maintainers">Maintainers</h4>
+
+<ul>
+  <li>Name: Roy Golan (rgolan) rgolan@redhat.com</li>
+  <li>Name: Martin Sivak (msivak) msivak@redhat.com</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 3.5</li>
+  <li>Status: completed</li>
+  <li>Last updated: April 14, 2015</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>CPU is one of the important component which each guest has.</p>
+
+<p>Currently RHEV doesn't support SLA features which limits guest's and qemu's cpu resource consumption. Therefore all guests working on the same host may be affected by other guests' cpu workload.</p>
+
+<p>On the other hand, customers expect that virtualized systems work as stably as the systems on bare servers.</p>
+
+<p>To provide same stability in virtualized environment, we need to limit cpu bandwidth of each guest and isolate each guest from others.</p>
+
+<p>To accomplish this target a CPU Profile element will be introduced.
+The CPU Profile will be selected by the end user from a predefined list in the Add VM popup window, and will be created in the Cluster level of the system.</p>
+
+<p>Each cluster will contain its own list of CPU Profile that are available for the use of the VMs running in that Cluster.</p>
+
+<p>Each CPU Profile will contain a Qos element.
+The Qos element will be defined in the DataCenter level of the system, and will be constructed out of a single field that represent the CPU processing power that is permitted for this VM out of the total CPU Processing capacity.</p>
+
+<p>For representing the CPU qos we have three different approaches:</p>
+<ol>
+  <li>using a percentage number - currently this is the preferred approach</li>
+</ol>
+
+<p>This approach will be consistent over different hosts, when a VM migrate to host with different CPU capabilities.</p>
+
+<ol>
+  <li>using a fixed MHz number</li>
+</ol>
+
+<p>This is the old school approach, it will be clear to the user what exact input he is giving, but on different host this input could act slightly different.</p>
+
+<ol>
+  <li>using bogomips</li>
+</ol>
+
+<p>This is an unscientific measurement of CPU speed (http://en.wikipedia.org/wiki/BogoMips)</p>
+
+<p><strong>The selected approach is the percentage (1).</strong></p>
+
+<h2 id="gui">GUI</h2>
+
+<p>The user will configure the CPU limitation at the VM popup, our goal is to create a new side-bar for SLA and to place Cpu Profile in it.
+The following is a draft using the existing Resource Allocation side-bar, for getting the look and feel of using the CPU limits feature
+<img alt="" width="705" height="644" src="/images/wiki/CpuLimit.png?1560777613" /></p>
+
+<p>The administrator will allocate CPU profiles to be used in the Cluster at the Cluster main tab, using the CPU Profile sub tab.
+<img alt="" width="1680" height="644" src="/images/wiki/CpuLimitClusterSubTab.png?1560777613" /></p>
+
+<h2 id="vdsm">VDSM</h2>
+
+<p><strong>TODO - this section needs update</strong></p>
+
+<p>In the VDSM we will be using the libvirt API of CPU tuning (http://libvirt.org/formatdomain.html#elementsCPUTuning), and MOM. The Qos entered by the user will be picked by the engine's "Sync MOM Policy", and forward to Libvirt dom xml meta-data section.
+For using the metadata section we will define a URI that will serve as a namespace from vm tunable parameters ("<a href="/documentation/admin-guide/virt/tuning/1.0/">vm/tune/1.0</a>"). A MOM policy will convert Qos value into the libvirt period and quota parameters, and set the value to Libvirt using a MOM controller, ensuring that the CPU limits are enforced.</p>
+
+<p>To do that we will use the following algorithm:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     1. pick a fixed number to be used as anchor [1000 - 1000000], we will use the minimum*100 (because we use percentage)   = 100000 = anchor.&#x000A;     2. period = anchor / #NumOfCpuInHost&#x000A;     3. quota = (anchor*(#userSelection/100)) / #numOfVcpusInVm&#x000A;</code></pre></div>
+<h2 id="db">DB</h2>
+
+<p>The VM_STATIC will introduce a new field of CPU_PROFILE, this field will be a FK to the new table of CPU_PROFILES. CPU_PROFILES table will contain the following fields:
+id (PK)
+name
+qos_id (FK)
+cluster_id (FK)</p>
+
+<h2 id="rest-api">Rest API</h2>
+
+<p>A new element of cpu_profile will be added to the API, and the VM element will extend to contain the new CPU profile property.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;cpu_profile href="/ovirt-engine/api/cpuprofiles/dd806259-d121-4914-9b32-5998dd40b26f" id="dd806259-d121-4914-9b32-5998dd40b26f"&gt;&#x000A;    &lt;name&gt;gold_profile&lt;/name&gt;&#x000A;    &lt;link href="/ovirt-engine/api/cpuprofiles/dd806259-d121-4914-9b32-5998dd40b26f/permissions" rel="permissions"/&gt;&#x000A;    &lt;cluster href="/ovirt-engine/api/clusters/3e9dacfa-65bf-4433-b584-07383c50aef6" id="3e9dacfa-65bf-4433-b584-07383c50aef6"/&gt;&#x000A;&lt;/cpu_profile&gt;&#x000A;&#x000A;&lt;vm&gt;&#x000A;    ...&#x000A;    ...&#x000A;    &lt;memory&gt;1073741824&lt;/memory&gt;&#x000A;    &lt;cpu&gt;&#x000A;        &lt;topology sockets="1" cores="1"/&gt;&#x000A;        &lt;architecture&gt;X86_64&lt;/architecture&gt;&#x000A;    &lt;/cpu&gt;&#x000A;    &lt;cpu_shares&gt;0&lt;/cpu_shares&gt;&#x000A;    &lt;cpu_limit&gt;25&lt;/cpu_limit&gt;&#x000A;    &lt;os type="other"&gt;&#x000A;        &lt;boot dev="hd"/&gt;&#x000A;    &lt;/os&gt;&#x000A;    ...&#x000A;    ...&#x000A;&lt;/vm&gt;&#x000A;</code></pre></div>
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>When running a VM, the VM should run as an independent unit and should be affected by other VMs as little as possible.
+This feature enable the user to limit the CPU resources of a specific VM, this will ensure that in cases were several VMs are running on the same host, one VM will not cause performance decline in another VMs.
+Another good use for this feature is in cases a growth in the number of VMs is expected, the user can limit the CPU resource to a VM leaving enough CPU resources for the future VMs, this way users of the guests will not have an impact on performance once other VMs will join the host.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/cpu-sla.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/cpu-sla.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

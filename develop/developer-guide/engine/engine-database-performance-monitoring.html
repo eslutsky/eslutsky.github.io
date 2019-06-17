@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Engine database performance monitoring &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/engine/">Engine</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="engine-database-performance-monitoring">Engine database performance monitoring</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>An extensive or improper usage of database calls can cause an application performance bottleneck. The PostgreSQL database provides several tools, which can monitor or provide statistics for possible problems. Useful tools:</p>
+
+<ol>
+  <li>pg_statements_stat module</li>
+  <li>pg_top tool</li>
+  <li>database debug logging</li>
+</ol>
+
+<h2 id="pg_statements_stat-module">pg_statements_stat module</h2>
+
+<p>The <strong>pg_stat_statements</strong> module provides basic statistics of all SQL statements executed by a server. First, before usage, it must be activated.</p>
+
+<p>More information can be found here:</p>
+
+<ul>
+  <li><a href="http://www.postgresql.org/docs/9.1/static/pgstatstatements.html">http://www.postgresql.org/docs/9.1/static/pgstatstatements.html</a></li>
+</ul>
+
+<p>Increase maximum shared memory used by the kernel (Fedora 17). Current values can be displayed:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># cat /proc/sys/kernel/shmmax&#x000A;# 33554432&#x000A;# cat /proc/sys/kernel/shmall&#x000A;# 2097152&#x000A;</code></pre></div>
+<p>Or increase memory temporarily:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># sysctl -w kernel.shmmax=134217728&#x000A;</code></pre></div>
+<p>You can also increase the shared memory permanently by editing /etc/sysctl.conf file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>kernel.shmmax=134217728&#x000A;kernel.shmall=2097152&#x000A;</code></pre></div>
+<p>Reload to activate the changes:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># sysctl -p&#x000A;</code></pre></div>
+<p>Load pg_stat_module module to the database. Edit db configuration file:</p>
+
+<ul>
+  <li>/var/lib/pgsql/data/postgresql.conf</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>shared_preload_libraries = 'pg_stat_statements'&#x000A;custom_variable_classes = 'pg_stat_statements'&#x000A;pg_stat_statements.max = 10000&#x000A;pg_stat_statements.track = all&#x000A;</code></pre></div>
+<p>Restart the db service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># service postgresql restart&#x000A;# systemctl status postgresql&#x000A;</code></pre></div>
+<p>Activate pg_stat_module</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ psql engine -U postgres -c "CREATE EXTENSION pg_stat_statements;"&#x000A;</code></pre></div>
+<p>Do not forget to deactivate the extention before the oVirt Engine db upgrade, else the upgrade is not possible:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ psql engine -U postgres -c "DROP EXTENSION pg_stat_statements;"&#x000A;</code></pre></div>
+<p>From now you can watch the queries statistics by running:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ psql engine -U postgres -c "select query, calls, rows from pg_stat_statements() order by calls desc;"&#x000A;</code></pre></div>
+<p>The statistics can be reset by the command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>$ psql engine -U postgres -c "SELECT pg_stat_statements_reset();"&#x000A;</code></pre></div>
+<h2 id="pg_top-tool">pg_top tool</h2>
+
+<p><strong>pg_top</strong> allows to monitor PostgreSQL processes. The usage is similar to Unix top command for monitoring of OS processes. Instalation on Fedora:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># yum install pg_top&#x000A;</code></pre></div>
+<p>Project site:</p>
+
+<ul>
+  <li><a href="http://ptop.projects.pgfoundry.org/">http://ptop.projects.pgfoundry.org/</a></li>
+</ul>
+
+<p>Usage:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>pg_top -U postgres -d engine -p 5432&#x000A;</code></pre></div>
+<p>Purpose:</p>
+
+<ol>
+  <li>running SQL statement of a process</li>
+  <li>query plan of a currently running SQL statement</li>
+  <li>locks held by a process.</li>
+  <li>user table statistics</li>
+  <li>user index statistics</li>
+</ol>
+
+<h2 id="database-debug-logging">Database debug logging</h2>
+
+<p>Edit PostgreSQL configuration file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># vi /var/lib/pgsql/data/postgresql.conf&#x000A;</code></pre></div>
+<p>Set the following values inside the file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>log_line_prefix = '%t %c %u ' # time sessionid user&#x000A;log_statement = 'all'  # none, ddl, mod, all&#x000A;</code></pre></div>
+<p>Restart the service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># service postgresql restart&#x000A;</code></pre></div>
+<p>And watch the log files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># cd /var/lib/pgsql/data/pg_log&#x000A;# tail -f postgresql-Wed.log&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/engine/engine-database-performance-monitoring.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/engine/engine-database-performance-monitoring.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

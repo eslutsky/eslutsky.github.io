@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+API Link Following &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h2 id="feature-name">Feature Name</h2>
+
+<p>API Link Following</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature enables oVirt API users to request that the contents of some of the entity's links be returned inline, inside the requested entity.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>
+    <p>Name: Ori Liel (oliel)</p>
+  </li>
+  <li>
+    <p>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#111;&#108;&#105;&#101;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#111;&#108;&#105;&#101;&#108;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></p>
+  </li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Motivation:</p>
+
+<p>Currently, when there is a need to retrieve multiple related objects from the API, the only option is to retrieve the first one, and then send additional requests to retrieve the related objects. For example, if you need a virtual machine and also the disks and NICs, first you need to send a request like this:</p>
+
+<p><code>GET /ovirt-engine/api/vms/123</code></p>
+
+<p>And then additional requests to get the disk attachments, the disks, and the NICs:</p>
+
+<p><code>GET /ovirt-engine/api/vms/123/diskattachments</code>
+  <code>GET /ovirt-engine/api/disks/456</code>
+  <code>GET /ovirt-engine/api/disks/789</code>
+  <code>GET /ovirt-engine/api/vms/123/nics</code></p>
+
+<p>In an environment with high latency this multiplies the time required to retrieve the data. In addition, it means that multiple queries have to be sent to the database to retrieve the data.</p>
+
+<p>To improve these two areas the new <code>follow</code> parameter will be introduced. This parameter will be a list of links that the server should follow and populate. For example, the previous scenario will be solved sending this request:</p>
+
+<p><code>GET /ovirt-engine/api/vms/123?follow=diskattachments.disks,nics</code></p>
+
+<p>That will return the virtual machine with the disks and the NICs embedded in the same response, thus avoiding the multiple network round-trips.</p>
+
+<p>The multiple database queries will be avoided only if the server is modified to retrieve that data with more efficient queries. Otherwise the server will use the naive approach of calling itself to retrieve it, which won’t improve the number of queries.</p>
+
+<p>The first step is analyzing the value of follow and using it to fetch the desired hrefs - the actual links to be followed. Single entities contain their href directly inside them (e.g: <code>vm.getCluster().getHref())</code>, and hrefs of sub-collections (e.g: nics, disks) are stored in the links collection (1. vm.getLinks() 2. Find specific link. 3.link.getHref()). This division exists for historic reasons.</p>
+
+<p>This requires the value <code>cluster</code> from <code>follow=cluster,...</code> to be translated to: <code>vm.getCluster()</code>. This is done by string manipulation. Ideally, an explicit annotation on the getter method would be used: <code>@Link(name="cluster", method="getter")</code>. However it's impossible to add such an annotation because the generation of business-entities is done by a third-party (the xjc compiler).</p>
+
+<p>The href attribute of the returned entity/entities is used to fetch it/them. This is done by crawling along the API tree to the context where the information can be retrieved.</p>
+
+<p>Crawling along the API tree is done using <code>ServiceTree</code> class, which was enhanced to provide this kind of service (https://gerrit.ovirt.org/#/c/76077/).</p>
+
+<p>After the information has been retrieved it needs to be set in the original entity (for example, <code>vm.setCluster(cluster)</code>. Getting from follow=cluster,… to vm.setCluster() is done by string manipulation, but would ideally be done using an annotation.</p>
+
+<p>All business-logic described above is placed in: <code>follow(ActionableResource entity)</code> in <code>BaseBackendResource</code> - the parent class for all API resources.</p>
+
+<p>This method is transparently invoked. To achieve transparent invocation, generated Jax-rs interfaces were made to include <code>doGet(), doList()</code> methods, and jax-rs <code>@GET</code> annotations was moved to them, making GET requests land there. These methods have a default implementation which invokes <code>follow()</code>:</p>
+
+<p><code>@GET</code>
+<code>default public Host doGet(String id) {</code>
+<code>   Host host = get();</code>
+<code>   follow(host);</code>
+<code>   return host;</code>
+<code>}</code></p>
+
+<p>This <code>follow()</code> method is final, purposely forbidding developers from overriding it. But as part of its flow it invokes another signature of <code>follow()</code>. This method is the entry point for developers who need to add the specific following logic.</p>
+
+<p>For cases like <code>GET ...api/vms?follow="a,b,c"</code>, when developer adds specific logic for following a, his code should include:</p>
+
+<ol>
+<li>Check if a exists in follow url parameter.</li>
+<li>Follow a and insert results into the vm</li>
+<li>Mark a as followed.</li>
+</ol>
+
+<p>Example: get VMs with Nics.
+• Class: <code>BackendVmsResource</code>
+• Override <code>follow( ActionableResource entity, LinksTreenode linksTree )</code>
+Decide whether to intervene: <coce>Boolean exists = linksTree.pathExists(“nics”)&lt;/code&gt;
+Run engine query: <code>getBackendCollection(VdcQueryType.GetVmsWithNics). </code>
+Map and set data
+Mark followed=true: <code>linksTree.markAsFollowed(“nics”)</code></coce></p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>None</p>
+
+<h2 id="limitations">Limitations</h2>
+
+<p>The generic solution is naive and costly in terms of performance. Frequent cases requiring link-following should be handled manually (the infrastructure provides an intervention point).</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>This feature saves the need for client-side scripts for following links, and enables running designated queries for common scenarios (e.g: get vms+nics+disks).</p>
+
+<h2 id="user-experience">User Experience</h2>
+
+<p>Commas separate the links that are to be followed:
+<code>GET .../api/vms?follow=nics,disk_attachments</code></p>
+
+<p>Dots denote levels of depth. Limitless levels of following possible:
+<code>GET ...api/vms?follow=disk_attachments.template</code></p>
+
+<p>Combinations possible:
+<code>GET .../api/vms?follow=nics.x, nics.y</code></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/link-following.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/link-following.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 10 May 2019 13:50 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+UIRefreshSynchronization &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/ux/">Ux</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ui-refresh-synchronization">UI Refresh Synchronization</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Solve UI consistency issues related to the UI not being updated when certain actions/events happen.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Alexander Wels (awels)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#119;&#101;&#108;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#119;&#101;&#108;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li><strong>Complete</strong>: Solution implementation merged into master</li>
+  <li><strong>Complete</strong>: Identify existing issues</li>
+  <li><strong>Complete</strong>: Design solution based on the existing issues and proposed solutions.</li>
+</ul>
+
+<h1 id="existing-problems">Existing problems</h1>
+
+<h2 id="actions-are-not-immediately-shown-in-updated-ui-elements">Actions are not immediately shown in updated UI elements</h2>
+
+<p>Quite frequently it happens that one performs an action on lets say a VM, and after the action completes it takes the UI a few seconds to show the updated status. For instance if I delete an existing VM from my grid after I click the ok button, the dialog disappears, as illustrated by the following image. <img alt="" width="1167" height="675" src="/images/wiki/Remove_dialog.png?1560777612" /> but it takes a few seconds for VM to be removed from the VM grid, as illustrated by the following image (The VM is still there after clicking the ok button). <img alt="" width="1161" height="446" src="/images/wiki/Remove_dialog_finished.png?1560777612" /> This is especially noticeable if you have the refresh of the grid set to 30 or 60 seconds.</p>
+
+<h3 id="actions-cause-an-immediate-refresh-however-the-result-of-the-action-takes-a-while-to-materialize">Actions cause an immediate refresh, however the result of the action takes a while to materialize</h3>
+
+<p>This is a somewhat related issue to actions not immediately showing updated UI elements. In fact the client makes an attempt to update the appropriate elements, however since the action doesn't have an immediate result, the refresh retrieves the same data that was there, and there is no notification once a result is available. So the UI elements are never updated until the next normal refresh cycle after the result is available. The user experience is identical to the client not attempting to refresh at all, it takes a while for the user to see changes they made appear in their UI.</p>
+
+<h2 id="the-event-log-is-updated-but-the-rest-of-the-ui-elements-are-not">The event log is updated, but the rest of the UI elements are not</h2>
+
+<p>This is related but slightly different problem from the one described above. In this case something in the system caused an event to be generated and this event shows up in the event log in the UI but there is no corresponding change in the rest of the UI. For instance someone removed a VM and the event shows up in the event log, however the VM is still visible in the VM grid. This is illustrated in the following image. <img alt="" width="953" height="500" src="/images/wiki/Event_out_of_sync.png?1560777613" /> This is caused by the fact that the event log is refresh at a different interval than the rest of the UI, in fact you cannot change the refresh of the event log, but you can change the refresh of the rest of the UI (like the VM grid).</p>
+
+<h1 id="proposed-solutions">Proposed solutions</h1>
+
+<h2 id="action-solution">Action solution</h2>
+
+<p>The problem is the fact that an action changes the state of a particular model or sets of models on the back-end and the front-end doesn't know about those changes immediately. However the front-end does know about the fact that a particular action has completed (namely in the form of a callback from the GWT-RPC code). In a perfect world the action would know which models would potentially be affected and would notify them to refresh their state. However this would create tightly coupled actions and model which is something we want to avoid. As well as it becoming a maintenance nightmare to keep track of which models are associated with which actions.</p>
+
+<p>We can reverse the situation and make the models aware of which actions would require them to refresh themselves. This way we can fire an event when an action completes and all interested models in that event can check if they are interested in the action associated with that event. Based on that information the model can decide if it wants to refresh or not. This of course has the potential for many models to be notified at once, so we can maybe utilize action groups or something to lower the number of models that get notified. We can also remove/add the listeners based on if the standard refresh timer is active on that model.</p>
+
+<p>As demonstrated in this figure:</p>
+
+<p><img alt="" width="622" height="804" src="/images/wiki/UI_Sync_action.png?1560777612" /></p>
+
+<p>Unfortunately this does not solve the problem of an action taking a little longer to complete. The refresh happens immediately and afterwards there is no notification that the action completed one way or the other. To remedy this situation the ideal solution would be some sort of notification from the back-end that the action completed and that we can refresh the model. Unfortunately we not yet ready to fully support push technology so we have to use some creative solutions.</p>
+
+<p>As with the solution above we can immediately refresh like before, but at the same time if we just completed an action we can set the refresh timer to be really fast so we will be guaranteed to get the update when it completes. In order not to spam the back-end completely we should stop after a period of time. A good period of time is the current refresh timer. If the action takes that long to complete we can return to a normal refresh period after one period has expired. We should also slow down the refresh the further we get into the refresh time period. The longer the action takes to complete the longer we can have the refresh interval without giving a bad experience to the end user.</p>
+
+<p>This is illustrated here. dots are refreshes while pipes are the refresh timeout.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>|.... . . . .  .  .  .  .    .    .    .    .     .     .     |.                                                   |.&#x000A;</code></pre></div>
+<h2 id="event-solution">Event solution</h2>
+
+<p>The problem is something besides the interactions of the user with the UI has made changes to a model or a set of models on the back-end and the front-end doesn't know about these changes. Interactions by the user are captured by the 'action solution' above. Some/all of those changes generate an event which is retrieved using a periodic event query. This event query is not in sync with the rest of the normal model queries. So we can get a situation where an event is reported in the event log but the associated UI elements have not been updated yet.</p>
+
+<p>The solution to this problem is very similar to the solution of the actions. Instead of looking for action results, we look for query results for the event query. If we find such a results we can fire a similar event to the action completed event and have models listen for that event. Then the models can decide if they need to be refreshed or not.</p>
+
+<p>As demonstrated by the following figure:</p>
+
+<p><img alt="" width="622" height="804" src="/images/wiki/UI_Sync_event.png?1560777612" /></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/ux/uirefreshsynchronization.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/ux/uirefreshsynchronization.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

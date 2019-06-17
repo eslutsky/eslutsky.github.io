@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+WipeVolumesUsingBlkdiscard &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="wipe-volumes-using-blkdiscard">Wipe volumes using blkdiscard</h1>
+
+<h2 id="summary">Summary</h2>
+
+<h3 id="how-volumes-are-wiped-today">How volumes are wiped today</h3>
+<p>When a disk on a block domain has its <strong><em>Wipe After Delete</em></strong> property enabled and it is removed, <em>vdsm</em> first wipes its volumes (writes zeros on them) and only then removes them.<br />
+Today, <em>vdsm</em> uses the <code>dd</code> linux command to wipe volumes.</p>
+
+<h3 id="what-can-be-improved">What can be improved</h3>
+<p>The problem with using <code>dd</code> to wipe volumes is that it is <strong>very slow</strong> (~ 7 minutes to wipe a 10GB volume on a storage that supports it).<br />
+To zero volumes more efficiently, <em>vdsm</em> can use the <code>blkdiscard</code> command from the <em>util-linux</em> package, which can run up to ~ 10 times faster.</p>
+
+<h3 id="for-whom-is-this-feature-useful">For whom is this feature useful</h3>
+<p>This feature is useful for security-conscious users who use <em>Wipe After Delete</em> and modern storage arrays that support <em>discard</em>.</p>
+
+<h2 id="owner">Owner</h2>
+<ul>
+  <li>Idan Shaby</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#105;&#115;&#104;&#097;&#098;&#121;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#105;&#115;&#104;&#097;&#098;&#121;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+<p>This feature is in research and is planned for oVirt 4.1.</p>
+
+<ul>
+  <li>It seems like <code>blkdiscard -z</code> sometimes fails when it is run by <em>vdsm</em> instead of <code>dd</code>.</li>
+  <li>The next thing that needs to be checked is whether the failure is related to the priority that <em>vdsm</em> gives it when running it using <code>execCmd</code>.
+It's possible that since <em>vdsm</em> runs it with a low priority, it gets a lot of timeouts, and when it tries to do it in parallel for more than one or two disks - it fails.</li>
+  <li>It can also be considered to use <code>sg_unmap</code> or <code>sg_write_same</code> if things don't work out with blkdiscard.</li>
+</ul>
+
+<h2 id="general-functionality-and-restrictions">General Functionality and Restrictions</h2>
+
+<h3 id="under-the-hood">Under the hood</h3>
+<p>To understand what <code>blkdiscard</code> can do, let's first take a look at the following declarations:</p>
+
+<ul>
+  <li>Let <em>lunX</em> be a device and <em>dm-X</em> be its corresponding dm device for a natural number X. Then <em>lunX</em> is considered to <strong><em>support write same</em></strong> iff the value of <code>/sys/block/dm-X/queue/write_same_max_bytes</code> is bigger than 0 <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</li>
+  <li>A device that <em>supports write same</em> is a device that allows to write a single data block to a range of several contiguous blocks in the storage.<br />
+That means that instead of writing a 1MB block of zeros 1024 times to zero a volume of 1GB (as <em>vdsm</em> does with <code>dd</code> today), a single request to write that 1MB block of zeros to the right range is enough, and the rest is done by the storage array.</li>
+</ul>
+
+<p>When calling <code>blkdiscard -z &lt;block_device&gt;</code>:</p>
+
+<ul>
+  <li>If the block device <em>supports write same</em>, then the kernel quickly zeroes it using <em>write same</em>.</li>
+  <li>Else, the kernel zeroes it by writing pages of zeros.</li>
+</ul>
+
+<h3 id="restrictions">Restrictions</h3>
+<p>There are no restrictions when using <code>blkdiscard -z</code>, although <code>blkdiscard</code> performs roughly the same as <code>dd</code> if the storage does not <em>support write same</em>.</p>
+
+<h2 id="usage">Usage</h2>
+<p><code>blkdiscard</code> will completely replace <code>dd</code> for wiping disks, so the usage is the same as the usage of <em>Wipe After Delete</em> - the user should remove a disk that resides on a block storage domain with its <em>Wipe After Delete</em> property enabled.</p>
+
+<h2 id="future-plans">Future Plans</h2>
+<p>We might consider to use even a more efficient way to wipe volumes. To understand it, let's first take a look at the following declarations:</p>
+
+<ul>
+  <li>Let <em>lunX</em> be a device and <em>dm-X</em> be its corresponding dm device for a natural number X. Then <em>lunX</em> supports the property that <strong><em>discard zeroes the data</em></strong> iff the value of <code>/sys/block/dm-X/queue/discard_zeroes_data</code> is 1 <sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>.</li>
+  <li>A lun that supports the property that <em>discard zeroes the data</em> guarantees that previously discarded blocks are read back as zeros from it.</li>
+</ul>
+
+<p>A better way to wipe a volume would be:</p>
+
+<ul>
+  <li>If the block device supports the property that <em>discard zeroes the data</em> - zero the disk by discarding its blocks.</li>
+  <li>Else, if it <em>supports write same</em>, zero the disk using <em>write same</em>.</li>
+  <li>Else, write zeros block by block.</li>
+</ul>
+
+<h2 id="related-bugs">Related Bugs</h2>
+<ul>
+  <li>Wipe volumes using "blkdiscard" instead of "dd" (<a href="https://bugzilla.redhat.com/1367806">Bug 1367806</a>)</li>
+</ul>
+
+<h2 id="related-features">Related Features</h2>
+<ul>
+  <li><a href="/develop/release-management/features/storage/pass-discard-from-guest-to-underlying-storage/">Pass discard from guest to underlying storage</a></li>
+  <li><a href="/develop/release-management/features/storage/discard-after-delete/">Discard after delete</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>See "write_same_max_bytes" in "Queue sysfs files" - <a href="https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt">https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt</a> <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>See "discard_zeroes_data" in "Queue sysfs files" - <a href="https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt">https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt</a> <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/wipe-volumes-using-blkdiscard.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/wipe-volumes-using-blkdiscard.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 18 Aug 2016 08:30 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

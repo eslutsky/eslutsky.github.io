@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Migrating from Bare Metal to an EL-Based Self-Hosted Environment &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/self-hosted/">Self-hosted</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-4-migrating-from-bare-metal-to-an-el-based-self-hosted-environment">Chapter 4: Migrating from Bare Metal to an EL-Based Self-Hosted Environment</h1>
+
+<h2 id="migrating-to-a-self-hosted-environment">Migrating to a Self-Hosted Environment</h2>
+
+<p>To migrate an existing instance of a standard oVirt to a self-hosted engine environment, use the <code>hosted-engine</code> script to assist with the task. The script asks you a series of questions, and configures your environment based on your answers. The Engine from the standard oVirt environment is referred to as the BareMetal-Engine in the following procedure.</p>
+
+<p>The oVirt Engine Virtual Appliance shortens the process by reducing the required user interaction with the Engine virtual machine. However, although the appliance can automate <code>engine-setup</code> in a standard installation, in the migration process <code>engine-setup</code> must be run manually so that you can restore the BareMetal-Engine backup file on the new Engine virtual machine beforehand.</p>
+
+<p>The migration involves the following key actions:</p>
+
+<ul>
+  <li>
+    <p>Run the <code>hosted-engine</code> script to configure the host to be used as a self-hosted engine host and to create a new oVirt virtual machine.</p>
+  </li>
+  <li>
+    <p>Back up the the engine database and configuration files using the <code>engine-backup</code> tool, copy the backup to the new Engine virtual machine, and restore the backup using the <code>--mode=restore</code> parameter of <code>engine-backup</code>. Run <code>engine-setup</code> to complete the Engine virtual machine configuration.</p>
+  </li>
+  <li>
+    <p>Follow the <code>hosted-engine</code> script to complete the setup.</p>
+  </li>
+</ul>
+
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>Prepare a new host with the <code>ovirt-hosted-engine-setup</code> package installed. See <a href="chap-Deploying_Self-Hosted_Engine">Chapter 2: Deploying Self-Hosted Engine</a> for more information on subscriptions and package installation. The host must be a supported version of the current oVirt environment.</p>
+
+    <p><strong>Note:</strong> If you intend to use an existing host, place the host in maintenance and remove it from the existing environment. See "Removing a Host" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a> for more information.</p>
+  </li>
+  <li>
+    <p>Prepare storage for your self-hosted engine environment. The self-hosted engine requires a shared storage domain dedicated to the Engine virtual machine. This domain is created during deployment, and must be at least 68 GB.</p>
+
+    <p><strong>Important:</strong> If you are using iSCSI storage, do not use the same iSCSI target for the shared storage domain and data storage domain.</p>
+  </li>
+  <li>
+    <p>Obtain the oVirt Engine Virtual Appliance by installing the <code>ovirt-engine-appliance</code> package. The oVirt Engine Virtual Appliance is always based on the latest supported Engine version. Ensure the Engine version in your current environment is updated to the latest supported Y-stream version as the Engine version needs to be the same for the migration.</p>
+  </li>
+  <li>
+    <p>To use the oVirt Engine Virtual Appliance for the Engine installation, ensure one directory is at least 60 GB. The <code>hosted-engine</code> script first checks if <code>/var/tmp</code> has enough space to extract the appliance files. If not, you can specify a different directory or mount external storage. The VDSM user and KVM group must have read, write, and execute permissions on the directory.</p>
+  </li>
+  <li>
+    <p>The fully qualified domain name of the new Engine must be the same fully qualified domain name as that of the BareMetal-Engine. Forward and reverse lookup records must both be set in DNS.</p>
+  </li>
+  <li>
+    <p>You must have access and can make changes to the BareMetal-Engine.</p>
+  </li>
+  <li>
+    <p>The virtual machine to which the BareMetal-Engine is being migrated must have the same amount of RAM as the physical machine from which the BareMetal-Engine is being migrated.</p>
+  </li>
+</ul>
+
+<p><strong>Migrating to a Self-Hosted Environment</strong></p>
+
+<ol>
+  <li>
+    <p><strong>Initiating a Self-Hosted Engine Deployment</strong></p>
+
+    <p><strong>Note:</strong> If your original installation was version 3.5 or earlier, and the name of the management network is <strong>rhevm</strong>, you must modify the answer file before running <code>hosted-engine --deploy --noansible</code>.</p>
+  </li>
+</ol>
+
+<p>Run the <code>hosted-engine</code> script. To escape the script at any time, use the <strong>CTRL</strong> + <strong>D</strong> keyboard combination to abort deployment. It is recommended to use the <code>screen</code> window manager to run the script to avoid losing the session in case of network or terminal disruption. If not already installed, install the <code>screen</code> package, which is available in the standard Red Hat Enterprise Linux repository.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # yum install screen&#x000A;&#x000A;    # screen&#x000A;&#x000A;    # hosted-engine --deploy&#x000A;&#x000A;**Note:** In the event of session timeout or connection disruption, run `screen -d -r` to recover the `hosted-engine` deployment session.&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p><strong>Configuring Storage</strong></p>
+
+    <p>Select the type of storage to use.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> During customization use CTRL-D to abort.&#x000A; Please specify the storage you would like to use (glusterfs, iscsi, fc, nfs3, nfs4)[nfs3]:&#x000A;</code></pre></div>
+    <ul>
+      <li>
+        <p>For NFS storage types, specify the full address, using either the FQDN or IP address, and path name of the shared storage domain.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Please specify the full shared storage connection path to use (example: host:/path): storage.example.com:/hosted_engine/nfs&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For iSCSI, specify the iSCSI portal IP address, port, user name and password, and select a target name from the auto-detected list. You can only select one iSCSI target during the deployment.</p>
+
+        <p><strong>Note:</strong> If you wish to specify more than one iSCSI target, you must enable multipathing before deploying the self-hosted engine. There is also a Multipath Helper tool that generates a script to install and configure multipath with different options.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Please specify the iSCSI portal IP address:&#x000A;  Please specify the iSCSI portal port [3260]:&#x000A;  Please specify the iSCSI portal user:&#x000A;  Please specify the iSCSI portal password:&#x000A;  Please specify the target name (auto-detected values) [default]:&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Gluster storage, specify the full address, using either the FQDN or IP address, and path name of the shared storage domain.</p>
+
+        <p><strong>Important:</strong> Only replica 3 Gluster storage is supported. Ensure the following configuration has been made:</p>
+
+        <ul>
+          <li>
+            <p>In the <code>/etc/glusterfs/glusterd.vol</code> file on all three Gluster servers, set <code>rpc-auth-allow-insecure</code> to <code>on</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  option rpc-auth-allow-insecure on&#x000A;</code></pre></div>          </li>
+          <li>
+            <p>Configure the volume as follows:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  gluster volume set volume cluster.quorum-type auto&#x000A;  gluster volume set volume network.ping-timeout 10&#x000A;  gluster volume set volume auth.allow \*&#x000A;  gluster volume set volume group virt&#x000A;  gluster volume set volume storage.owner-uid 36&#x000A;  gluster volume set volume storage.owner-gid 36&#x000A;  gluster volume set volume server.allow-insecure on&#x000A;</code></pre></div>          </li>
+        </ul>
+
+        <p><!-- comment ends bullet list so next line is parsed as pre --></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Please specify the full shared storage connection path to use (example: host:/path): storage.example.com:/hosted_engine/gluster_volume&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>For Fibre Channel, the host bus adapters must be configured and connected, and the <code>hosted-engine</code> script will auto-detect the LUNs available. The LUNs must not contain any existing data.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  The following luns have been found on the requested target:&#x000A;  [1]     3514f0c5447600351       30GiB   XtremIO XtremApp&#x000A;                          status: used, paths: 2 active&#x000A;&#x000A;  [2]     3514f0c5447600352       30GiB   XtremIO XtremApp&#x000A;                          status: used, paths: 2 active&#x000A;&#x000A;  Please select the destination LUN (1, 2) [1]:&#x000A;</code></pre></div>      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>Configuring the Network</strong></p>
+
+    <p>The script detects possible network interface controllers (NICs) to use as a management bridge for the environment. It then checks your firewall configuration and offers to modify it for console (SPICE or VNC) access HostedEngine-VM. Provide a pingable gateway IP address, to be used by the <code>ovirt-ha-agent</code> to help determine a host's suitability for running HostedEngine-VM.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please indicate a nic to set rhvm bridge on: (eth1, eth0) [eth1]:&#x000A; iptables was detected on your computer, do you wish setup to configure it? (Yes, No)[Yes]:&#x000A; Please indicate a pingable gateway IP address [X.X.X.X]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuring the Virtual Machine</strong></p>
+
+    <p>The script creates a virtual machine to be configured as the oVirt Engine, referred to in this procedure as HostedEngine-VM. Select <strong>disk</strong> for the boot device type, and the script will automatically detect the oVirt Engine Appliances available. Select an appliance.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please specify the device to boot the VM from (choose disk for the oVirt engine appliance)&#x000A;          (cdrom, disk, pxe) [disk]:&#x000A;          Please specify the console type you would like to use to connect to the VM (vnc, spice) [vnc]: vnc&#x000A; [ INFO ] Detecting available oVirt engine appliances&#x000A;          The following appliance have been found on your system:&#x000A;                [1] - The oVirt Engine Appliance image (OVA)&#x000A;                [2] - Directly select an OVA file&#x000A;          Please select an appliance (1, 2) [1]:&#x000A; [ INFO ] Checking OVF archive content (could take a few minutes depending on archive size)&#x000A;</code></pre></div>
+    <p>Specify <code>Yes</code> if you want cloud-init to take care of the initial configuration of the Engine virtual machine. Specify <strong>Generate</strong> for cloud-init to take care of tasks like setting the root password, configuring networking, and configuring the host name. Optionally, select <strong>Existing</strong> if you have an existing cloud-init script to take care of more sophisticated functions of cloud-init. Specify the FQDN for the Engine virtual machine. This must be the same FQDN provided for the BareMetal-Engine.</p>
+
+    <p><strong>Note:</strong> For more information on cloud-init, see <a href="https://cloudinit.readthedocs.org/en/latest/">https://cloudinit.readthedocs.org/en/latest/</a>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Would you like to use cloud-init to customize the appliance on the first boot (Yes, No)[Yes]? Yes&#x000A; Would you like to generate on-fly a cloud-init no-cloud ISO image or do you have an existing one(Generate, Existing)[Generate]? Generate&#x000A; Please provide the FQDN you would like to use for the engine appliance.&#x000A; Note: This will be the FQDN of the engine VM you are now going to launch.&#x000A; It should not point to the base host or to any other existing machine.&#x000A; Engine VM FQDN: (leave it empty to skip): manager.example.com&#x000A;</code></pre></div>
+    <p>You must answer <code>No</code> to the following question so that you can restore the BareMetal-Engine backup file on HostedEngine-VM before running <code>engine-setup</code>.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Automatically execute engine-setup on the engine appliance on first boot (Yes, No)[Yes]? No&#x000A;</code></pre></div>
+    <p>Configure the Engine domain name, root password, networking, hardware, and console access details.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Enter root password that will be used for the engine appliance (leave it empty to skip): p@ssw0rd&#x000A; Confirm appliance root password: p@ssw0rd&#x000A; The following CPU types are supported by this host:&#x000A;     - model_Penryn: Intel Penryn Family&#x000A;     - model_Conroe: Intel Conroe Family&#x000A; Please specify the CPU type to be used by the VM [model_Penryn]:&#x000A; Please specify the number of virtual CPUs for the VM [Defaults to appliance OVF value: 4]:&#x000A; You may specify a MAC address for the VM or accept a randomly generated default [00:16:3e:77:b2:a4]:&#x000A; How should the engine VM network be configured (DHCP, Static)[DHCP]? Static&#x000A; Please enter the IP address to be used for the engine VM: 192.168.x.x&#x000A; Please provide a comma-separated list (max3) of IP addresses of domain name servers for the engine VM&#x000A; Engine VM DNS (leave it empty to skip):&#x000A; Add lines for the appliance itself and for this host to /etc/hosts on the engine VM?&#x000A; Note: ensuring that this host could resolve the engine VM hostname is still up to you (Yes, No)[No] Yes&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuring the Self-Hosted Engine</strong></p>
+
+    <p>Specify the name for Host-HE1 to be identified in the oVirt environment, and the password for the <code>admin@internal</code> user to access the Administration Portal. Finally, provide the name and TCP port number of the SMTP server, the email address used to send email notifications, and a comma-separated list of email addresses to receive these notifications.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Enter engine admin password: p@ssw0rd&#x000A; Confirm engine admin password: p@ssw0rd&#x000A; Enter the name which will be used to identify this host inside the Administrator Portal [hosted_engine_1]:&#x000A; Please provide the FQDN for the engine you would like to use.&#x000A;           This needs to match the FQDN that you will use for the engine installation within the VM.&#x000A;           Note: This will be the FQDN of the VM you are now going to create,&#x000A;           it should not point to the base host or to any other existing machine.&#x000A;           Engine FQDN:  []: manager.example.com&#x000A; Please provide the name of the SMTP server through which we will send notifications [localhost]:&#x000A; Please provide the TCP port number of the SMTP server [25]:&#x000A; Please provide the email address from which notifications will be sent [root@localhost]:&#x000A; Please provide a comma-separated list of email addresses which will get notifications [root@localhost]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuration Preview</strong></p>
+
+    <p>Before proceeding, the <code>hosted-engine</code> script displays the configuration values you have entered, and prompts for confirmation to proceed with these values.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Bridge interface                 : eth1&#x000A; Engine FQDN                      : manager.example.com&#x000A; Bridge name                      : ovirtmgmt&#x000A; Host address                     : host.example.com&#x000A; SSH daemon port                  : 22&#x000A; Firewall manager                 : iptables&#x000A; Gateway address                  : X.X.X.X&#x000A; Host name for web application    : Host-HE1&#x000A; Host ID                          : 1&#x000A; Image size GB                    : 50&#x000A; Storage connection               : storage.example.com:/hosted_engine/nfs&#x000A; Console type                     : vnc&#x000A; Memory size MB                   : 4096&#x000A; MAC address                      : 00:16:3e:77:b2:a4&#x000A; Boot type                        : pxe&#x000A; Number of CPUs                   : 2&#x000A; CPU Type                         : model_Penryn&#x000A;&#x000A; Please confirm installation settings (Yes, No)[Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Creating HostedEngine-VM</strong></p>
+
+    <p>The script creates the virtual machine to be configured as HostedEngine-VM and provides connection details. You must manually run <code>engine-setup</code> after restoring the backup file on HostedEngine-VM before the <code>hosted-engine</code> script can proceed on Host-HE1.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [ INFO  ] Stage: Transaction setup&#x000A; ...&#x000A; [ INFO  ] Creating VM&#x000A;           You can now connect to the VM with the following command:&#x000A;                   /bin/remote-viewer vnc://localhost:5900&#x000A;           Use temporary password "3463VnKn" to connect to vnc console.&#x000A;           Please note that in order to use remote-viewer you need to be able to run graphical applications.&#x000A;           This means that if you are using ssh you have to supply the -Y flag (enables trusted X11 forwarding).&#x000A;           Otherwise you can run the command from a terminal in your preferred desktop environment.&#x000A;           If you cannot run graphical applications you can connect to the graphic console from another host or connect to the serial console using the following command:&#x000A;           socat UNIX-CONNECT:/var/run/ovirt-vmconsole-console/8f74b589-8c6f-4a32-9adf-6e615b69de07.sock,user=ovirt-vmconsole STDIO,raw,echo=0,escape=1&#x000A;           Please ensure that your Guest OS is properly configured to support serial console according to your distro documentation.&#x000A;           Follow http://www.ovirt.org/Serial_Console_Setup#I_need_to_access_the_console_the_old_way for more info.&#x000A;           If you need to reboot the VM you will need to start it manually using the command:&#x000A;           hosted-engine --vm-start&#x000A;           You can then set a temporary password using the command:&#x000A;           hosted-engine --add-console-password&#x000A;           Please install and setup the engine in the VM.&#x000A;           You may also be interested in subscribing to "agent" RHN/Satellite channel and installing rhevm-guest-agent-common package in the VM.&#x000A;&#x000A;&#x000A;           The VM has been rebooted.&#x000A;           To continue please install oVirt-Engine in the VM&#x000A;           (Follow http://www.ovirt.org/Quick_Start_Guide for more info).&#x000A;&#x000A;           Make a selection from the options below:&#x000A;           (1) Continue setup - oVirt-Engine installation is ready and ovirt-engine service is up&#x000A;           (2) Abort setup&#x000A;           (3) Power off and restart the VM&#x000A;           (4) Destroy VM and abort setup&#x000A;&#x000A;           (1, 2, 3, 4)[1]:  Connect to the virtual machine using the VNC protocol with the following command. Replace FQDN with the fully qualified domain name or the IP address of the self-hosted engine host.&#x000A;&#x000A; # /bin/remote-viewer vnc://FQDN:5900&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Enabling SSH on HostedEngine-VM</strong></p>
+
+    <p>SSH password authentication is not enabled by default on the oVirt Engine Virtual Appliance. Connect to HostedEngine-VM via VNC and enable SSH password authentication so that you can access the virtual machine via SSH later to restore the BareMetal-Engine backup file and configure the new Engine. Verify that the <code>sshd</code> service is running. Edit <code>/etc/ssh/sshd_config</code> and change the following two options to <code>yes</code>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> [...]&#x000A; PermitRootLogin yes&#x000A; [...]&#x000A; PasswordAuthentication yes&#x000A;</code></pre></div>
+    <p>Restart the <code>sshd</code> service for the changes to take effect.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl restart sshd.service&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Disabling BareMetal-Engine</strong></p>
+
+    <p>Connect to BareMetal-Engine, the Engine of your established oVirt environment, and stop the engine and prevent it from running.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl stop ovirt-engine.service&#x000A; # systemctl disable ovirt-engine.service&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Though stopping BareMetal-Engine from running is not obligatory, it is recommended as it ensures no changes will be made to the environment after the backup has been created. Additionally, it prevents BareMetal-Engine and HostedEngine-VM from simultaneously managing existing resources.</p>
+  </li>
+  <li>
+    <p><strong>Updating DNS</strong></p>
+
+    <p>Update your DNS so that the FQDN of the oVirt environment correlates to the IP address of HostedEngine-VM and the FQDN previously provided when configuring the <code>hosted-engine</code> deployment script on Host-HE1. In this procedure, FQDN was set as <code>manager.example.com</code> because in a migrated hosted-engine setup, the FQDN provided for the engine must be identical to that given in the engine setup of the original engine.</p>
+  </li>
+  <li>
+    <p><strong>Creating a Backup of BareMetal-Engine</strong></p>
+
+    <p>Connect to BareMetal-Engine and run the <code>engine-backup</code> command with the <code>--mode=backup</code>, <code>--file=FILE</code>, and <code>--log=LogFILE</code> parameters to specify the backup mode, the name of the backup file created and used for the backup, and the name of the log file to be created to store the backup log.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-backup --mode=backup --file=FILE --log=LogFILE&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Copying the Backup File to HostedEngine-VM</strong></p>
+
+    <p>On BareMetal-Engine, secure copy the backup file to HostedEngine-VM. In the following example, <code>manager.example.com</code> is the FQDN for HostedEngine-VM, and <code>/backup/</code> is any designated folder or path. If the designated folder or path does not exist, you must connect to HostedEngine-VM and create it before secure copying the backup from BareMetal-Engine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># scp -p FILE LogFILE manager.example.com:/backup/&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Restoring the Backup File on HostedEngine-VM</strong></p>
+
+    <p>Use the <code>engine-backup</code> tool to restore a complete backup. If you configured the BareMetal-Engine database(s) manually during <code>engine-setup</code>, follow the instructions at <a href="Restoring_the_Self-Hosted_Engine_Engine_Manually">Restoring the Self-Hosted Engine Engine Manually</a> to restore the backup environment manually.</p>
+
+    <ul>
+      <li>
+        <p>If you are only restoring the Engine, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-backup --mode=restore --file=file_name --log=log_file_name --provision-db --restore-permissions&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>If you are restoring the Engine and Data Warehouse, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-backup --mode=restore --file=file_name --log=log_file_name --provision-db --provision-dwh-db --restore-permissions&#x000A;</code></pre></div>      </li>
+    </ul>
+
+    <p>If successful, the following output displays:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>You should now run engine-setup.&#x000A;Done.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Configuring HostedEngine-VM</strong></p>
+
+    <p>Configure the restored Engine virtual machine. This process identifies the existing configuration settings and database content. Confirm the settings. Upon completion, the setup provides an SSH fingerprint and an internal Certificate Authority hash.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># engine-setup&#x000A;&#x000A;[ INFO  ] Stage: Initializing&#x000A;[ INFO  ] Stage: Environment setup&#x000A;Configuration files: ['/etc/ovirt-engine-setup.conf.d/10-packaging.conf', '/etc/ovirt-engine-setup.conf.d/20-setup-ovirt-post.conf']&#x000A;Log file: /var/log/ovirt-engine/setup/ovirt-engine-setup-20140304075238.log&#x000A;Version: otopi-1.1.2 (otopi-1.1.2-1.el6ev)&#x000A;[ INFO  ] Stage: Environment packages setup&#x000A;[ INFO  ] Yum Downloading: rhel-65-zstream/primary_db 2.8 M(70%)&#x000A;[ INFO  ] Stage: Programs detection&#x000A;[ INFO  ] Stage: Environment setup&#x000A;[ INFO  ] Stage: Environment customization&#x000A;&#x000A;          --== PACKAGES ==--&#x000A;&#x000A;[ INFO  ] Checking for product updates...&#x000A;[ INFO  ] No product updates found&#x000A;&#x000A;          --== NETWORK CONFIGURATION ==--&#x000A;&#x000A;Setup can automatically configure the firewall on this system.&#x000A;Note: automatic configuration of the firewall may overwrite current settings.&#x000A;Do you want Setup to configure the firewall? (Yes, No) [Yes]:&#x000A;[ INFO  ] iptables will be configured as firewall manager.&#x000A;&#x000A;          --== DATABASE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;          --== OVIRT ENGINE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;          --== PKI CONFIGURATION ==--&#x000A;&#x000A;&#x000A;          --== APACHE CONFIGURATION ==--&#x000A;&#x000A;&#x000A;          --== SYSTEM CONFIGURATION ==--&#x000A;&#x000A;&#x000A;          --== END OF CONFIGURATION ==--&#x000A;&#x000A;[ INFO  ] Stage: Setup validation&#x000A;[ INFO  ] Cleaning stale zombie tasks&#x000A;&#x000A;          --== CONFIGURATION PREVIEW ==--&#x000A;&#x000A;          Default SAN wipe after delete           : False&#x000A;          Firewall manager                        : iptables&#x000A;          Update Firewall                         : True&#x000A;          Host FQDN                               : manager.example.com&#x000A;          Engine database secured connection      : False&#x000A;          Engine database host                    : X.X.X.X&#x000A;          Engine database user name               : engine&#x000A;          Engine database name                    : engine&#x000A;          Engine database port                    : 5432&#x000A;          Engine database host name validation    : False&#x000A;          Engine installation                     : True&#x000A;          PKI organization                        : example.com&#x000A;          NFS mount point                         : /var/lib/exports/iso&#x000A;          Configure VMConsole Proxy               : True&#x000A;          Engine Host FQDN                        : manager.example.com&#x000A;          Configure WebSocket Proxy               : True&#x000A;&#x000A;          Please confirm installation settings (OK, Cancel) [OK]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Synchronizing the Host and the Engine</strong></p>
+
+    <p>Return to Host-HE1 and continue the <code>hosted-engine</code> deployment script by selecting option 1:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>(1) Continue setup - oVirt-Engine installation is ready and ovirt-engine service is up&#x000A;</code></pre></div>
+    <p>The script displays the internal Certificate Authority hash, and prompts you to select the cluster to which to add Host-HE1.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[ INFO  ] Engine replied: DB Up!Welcome to Health Status!&#x000A;[ INFO  ] Acquiring internal CA cert from the engine&#x000A;[ INFO  ] The following CA certificate is going to be used, please immediately interrupt if not correct:&#x000A;[ INFO  ] Issuer: C=US, O=example.com, CN=manager.example.com.23240, Subject: C=US, O=example.com, CN=manager.example.com.23240, Fingerprint (SHA-1): XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&#x000A;[ INFO  ] Connecting to the Engine&#x000A;          Enter the name of the cluster to which you want to add the host (DB1, DB2, Default) [Default]:&#x000A;[ INFO  ] Waiting for the host to become operational in the engine. This may take several minutes...&#x000A;[ INFO  ] The VDSM Host is now operational&#x000A;[ INFO  ] Saving hosted-engine configuration on the shared storage domain&#x000A;          Please shutdown the VM allowing the system to launch it as a monitored service.&#x000A;          The system will wait until the VM is down.&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Shutting Down HostedEngine-VM</strong></p>
+
+    <p>Shut down HostedEngine-VM.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># shutdown -h now&#x000A;</code></pre></div>  </li>
+  <li>
+    <p><strong>Setup Confirmation</strong></p>
+
+    <p>Return to Host-HE1 to confirm it has detected that HostedEngine-VM is down.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[ INFO  ] Enabling and starting HA services&#x000A;[ INFO  ] Stage: Clean up&#x000A;[ INFO  ] Generating answer file '/var/lib/ovirt-hosted-engine-setup/answers/answers-20160509162843.conf'&#x000A;[ INFO  ] Generating answer file '/etc/ovirt-hosted-engine/answers.conf'&#x000A;[ INFO  ] Stage: Pre-termination&#x000A;[ INFO  ] Stage: Termination&#x000A;[ INFO  ] Hosted Engine successfully set up&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Your oVirt Engine has been migrated to a self-hosted engine setup. The Engine is now operating on a virtual machine on Host-HE1, called HostedEngine-VM in the environment. As HostedEngine-VM is highly available, it is migrated to other hosts in the environment when applicable.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Troubleshooting">Chapter 3: Troubleshooting</a> <br />
+<strong>Next:</strong> <a href="chap-Maintenance_and_Upgrading_Resources">Chapter 5: Administering the Self-Hosted Engine</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/self-hosted_engine_guide/chap-migrating_from_bare_metal_to_a_rhel-based_self-hosted_environment">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/self-hosted/chap-Migrating_from_Bare_Metal_to_an_EL-Based_Self-Hosted_Environment.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/self-hosted/chap-Migrating_from_Bare_Metal_to_an_EL-Based_Self-Hosted_Environment.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

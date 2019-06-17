@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CLI &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<blockquote>
+  <p><strong><code>ovirt-shell</code> is Deprecated</strong>: It uses the v3 REST API, and lacks all features available since oVirt 4.0. 
+Consider using Ansible as a replacement for automation purposes.</p>
+</blockquote>
+
+<h1 id="cli">CLI</h1>
+
+<p>oVirt CLI is a dynamic, runtime interface discovering command line interface for the oVirt engine</p>
+
+<p><strong>TOC</strong></p>
+
+<h2 id="concepts">Concepts</h2>
+
+<ul>
+  <li>dynamic interface that can work against any version of sdk discovering it at runtime</li>
+  <li>Interactive prompt</li>
+  <li>Smart auto-completion</li>
+  <li>Smart help</li>
+  <li>Generic interface (list, show, add, update, action verbs).</li>
+  <li>Self descriptive.</li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="help">Help</h3>
+
+<h4 id="syntax">syntax</h4>
+
+<ul>
+  <li>
+    <p>note help is dynamically created for each command respectively</p>
+
+    <p> help
+   
+   or
+   
+   help <code>&lt;command&gt;</code> [arguments] [options]</p>
+  </li>
+</ul>
+
+<h3 id="auto-completion">Auto-Completion</h3>
+
+<h4 id="available-commands">available commands</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# &lt;TAB&gt;&lt;TAB&gt;&#x000A;EOF         clear       console     remove      echo        help        ping        &#x000A;show        update      action      connect     add         disconnect&#x000A;exit        list        shell       status&#x000A;</code></pre></div>
+<h4 id="available-options-for-specific-command">available options for specific command</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# add &lt;TAB&gt;&lt;TAB&gt;&#x000A;cdrom          datacenter     group          network        permission     role           storagedomain  template       vm&#x000A;cluster        disk           host           nic            permit         snapshot       tag            user           vmpool&#x000A;</code></pre></div>
+<h4 id="available-options-for-command-on-specific-resource">available options for command on specific resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# add vm &lt;TAB&gt;&lt;TAB&gt;&#x000A;cluster-id                               display-type                             os-boot-dev                              template-id&#x000A;cluster-name                             domain-name                              os-cmdline                               template-name&#x000A;cpu-topology-cores                       high_availability-enabled                os-initRd                                timezone&#x000A;cpu-topology-sockets                     high_availability-priority               os-kernel                                type&#x000A;custom_properties-custom_property        memory                                   os-type                                  usb-enabled&#x000A;description                              name                                     placement_policy-affinity                &#x000A;display-monitors                         origin                                   stateless&#x000A;</code></pre></div>
+<h4 id="available-options-for-command-on-specific-sub-resource">available options for command on specific sub-resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# add nic --vm-identifier xxx `&lt;TAB&gt;&lt;TAB&gt;` &#x000A;interface     mac-address   name          network-id    network-name&#x000A;</code></pre></div>
+<ul>
+  <li>note typing beginning of the option name and then hitting <TAB>, will convert</TAB></li>
+</ul>
+
+<p>option to appropriate option format adding prefix or suffix.</p>
+
+<h3 id="connect">Connect</h3>
+
+<h4 id="get-help-for-connect">get help for connect</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[mpastern@ovirt-engine-cli (master)]$ ovirt-shell --help&#x000A;&#x000A;Usage: ovirt-shell [options]&#x000A;       ovirt-shell [options] command...&#x000A;This program is a command-line interface to oVirt Virtualization.&#x000A;Options:&#x000A; -h, --help            show this help message and exit&#x000A; -l URL, --url=URL     specifies the API entry point URL&#x000A;                       (http[s]://server[:port]/api)&#x000A; -u USERNAME, --username=USERNAME&#x000A;                       connect as this user&#x000A; -K KEY_FILE, --key-file=KEY_FILE&#x000A;                       specify client PEM key-file&#x000A; -C CERT_FILE, --cert-file=CERT_FILE&#x000A;                       specify client PEM cert-file&#x000A; -A CA_FILE, --ca-file=CA_FILE&#x000A;                       specify server CA cert-file&#x000A; -I, --insecure        allow connecting to SSL sites without certificates&#x000A; -F, --filter          enables user permission based filtering&#x000A; -P PORT, --port=PORT  specify port&#x000A; -T TIMEOUT, --timeout=TIMEOUT&#x000A;                       specify timeout&#x000A; -c, --connect         automatically connect&#x000A; -f FILE, --file=FILE  read commands from FILE instead of stdin&#x000A;</code></pre></div>
+<h4 id="connect-from-ovirt-shell">connect from ovirt-shell</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[mpastern@ovirt-engine-cli (master)]$ ovirt-shell&#x000A;&#x000A; ++++++++++++++++++++++++++++++++++++++++++&#x000A;&#x000A;           Welcome to oVirt shell&#x000A;&#x000A; ++++++++++++++++++++++++++++++++++++++++++&#x000A;&#x000A;[oVirt shell (disconnected)]# connect --url "`[`http://server:8080/api`](http://server:8080/api)`" --user "user@domain" --password 'password'&#x000A;&#x000A;==========================================&#x000A;&gt;&gt;&gt; connected to oVirt manager 3.2.0.0 &lt;&lt;&lt;&#x000A;==========================================&#x000A;&#x000A;[oVirt shell (connected)]# &#x000A;</code></pre></div>
+<h4 id="connect-from-linux-shell">connect from linux shell</h4>
+
+<h5 id="configuration-file-based-login">configuration file based login</h5>
+
+<p>1. <code>vi ~/.ovirtshellrc</code></p>
+
+<p>2. set args:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[ovirt-shell]&#x000A;username = user@domain&#x000A;url = http[s]://server[:port]/api&#x000A;#insecure = False&#x000A;#filter = False&#x000A;#timeout = -1&#x000A;password = ******&#x000A;</code></pre></div><p>* NOTE: if <code>url/username/password</code> is not configured/commented in <code>.ovirtshellrc</code>
+    and <code>ovirt-shell</code> executed in <code>auto-connect</code> mode (<code>ovirt-shell -c/--connect</code>), 
+    you will be prompted to specify it upon login</p>
+
+<p>3. run <code>ovirt-shell</code></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[mpastern@ovirt-engine-cli (master)]$ ovirt-shell -c&#x000A;&#x000A;==========================================&#x000A;&gt;&gt;&gt; connected to oVirt manager 3.2.0.0 &lt;&lt;&lt;&#x000A;==========================================&#x000A;++++++++++++++++++++++++++++++++++++++++++&#x000A;&#x000A;       Welcome to oVirt shell&#x000A;&#x000A;++++++++++++++++++++++++++++++++++++++++++&#x000A;[oVirt shell (connected)]# &#x000A;</code></pre></div>
+<h5 id="cli-options-based-login">cli options based login</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[mpastern@ovirt-engine-cli (master)]$ ovirt-shell -c -l "`[`http://server:8080/api`](http://server:8080/api)`" -u "user@domain"&#x000A;Password: ****&#x000A;==========================================&#x000A;&gt;&gt;&gt; connected to oVirt manager 3.1.0.0 &lt;&lt;&lt;&#x000A;==========================================&#x000A;&#x000A;++++++++++++++++++++++++++++++++++++++++++&#x000A;&#x000A;     Welcome to oVirt shell&#x000A;&#x000A;++++++++++++++++++++++++++++++++++++++++++&#x000A;&#x000A;&#x000A;[oVirt shell (connected)]# &#x000A;</code></pre></div>
+<h3 id="querying">Querying</h3>
+
+<h4 id="list">list</h4>
+
+<h5 id="list-resources">list resources</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# list vms&#x000A;&#x000A;id         : aa849efc-4194-4b00-b274-ab32d4c222c9&#x000A;name       : aa&#x000A;&#x000A;id         : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;name       : demo&#x000A;&#x000A;[oVirt shell (connected)]# list vms --show-all&#x000A;&#x000A;id                        : aa849efc-4194-4b00-b274-ab32d4c222c9&#x000A;name                      : aa&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2012-02-16T20:00:50.859+02:00&#x000A;display-monitors          : 1&#x000A;display-type              : spice&#x000A;high_availability-enabled : False&#x000A;high_availability-priority: 1&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : ovirt&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T13:36:27.880Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;&#x000A;id                        : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;name                      : demo&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2012-02-16T11:15:56.014+02:00&#x000A;display-address           : 10.35.1.127&#x000A;display-monitors          : 1&#x000A;display-type              : vnc&#x000A;high_availability-enabled : False&#x000A;high_availability-priority: 1&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : ovirt&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T13:36:27.887Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;</code></pre></div>
+<ul>
+  <li>notice: <code>--show-all</code> option extends listed entities (default mode is collapsed).</li>
+</ul>
+
+<h5 id="list-resources-using-ovirt-query-engine-filtering">list resources using oVirt query engine filtering</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# list vms --query "name=demo"&#x000A;&#x000A;id         : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;name       : demo&#x000A;</code></pre></div>
+<h5 id="list-resources-using-client-side-filtering">list resources using client side filtering</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# list vms --kwargs "memory=1073741824"&#x000A;&#x000A;id         : aa849efc-4194-4b00-b274-ab32d4c222c9&#x000A;name       : aa&#x000A;&#x000A;id         : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;name       : demo&#x000A;&#x000A;id         : f4a51ae1-4f31-45ee-ab6d-d5965e3bcf71&#x000A;name       : iscsi_desktop&#x000A;description: myvm&#x000A;&#x000A;id         : fea05ded-c246-4e51-885e-fef33a7ef2ad&#x000A;name       : pythond_sdk_poc2&#x000A;</code></pre></div>
+<h5 id="list-sub-resources">list sub-resources</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# list disks --vm-identifier nfs_desktop&#x000A;&#x000A;id         : 889bad90-6efa-42c5-a545-d0ce2033218d&#x000A;name       : Disk 2&#x000A;&#x000A;id         : 7a014754-a10e-42b3-91ff-6a325043f9b0&#x000A;name       : Disk 4&#x000A;&#x000A;id         : 4d267464-e126-45fa-8e42-381e2f82354a&#x000A;name       : Disk 1&#x000A;&#x000A;id         : b007747c-ad99-4c03-a318-42ad502afb23&#x000A;name       : Disk 3&#x000A;&#x000A;[oVirt shell (connected)]# list nics --vm-identifier demo&#x000A;&#x000A;id         : fbc1f30f-7c21-44e7-9c0a-7e4ffb57fcb4&#x000A;name       : nic3&#x000A;&#x000A;id         : 1f295a64-0a4a-4fba-928d-162b458503a5&#x000A;name       : nic1&#x000A;&#x000A;id         : 7ba3c79c-c619-422f-9035-6b5c8e5ea9e6&#x000A;name       : nic2&#x000A;</code></pre></div>
+<ul>
+  <li>note: ether id or name can be used as <code>--resource-identifier</code></li>
+</ul>
+
+<h5 id="list-sub-resources-using-client-side-filtering">list sub-resources using client side filtering</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# list disks --vm-identifier nfs_desktop --kwargs "name=Disk 3"&#x000A;&#x000A;id         : b007747c-ad99-4c03-a318-42ad502afb23&#x000A;name       : Disk 3&#x000A;&#x000A;[oVirt shell (connected)]# list vms --kwargs "usb-enabled=True"&#x000A;&#x000A;id         : aa849efc-4194-4b00-b274-ab32d4c222c9&#x000A;name       : aa&#x000A;&#x000A;id         : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;name       : demo&#x000A;</code></pre></div>
+<ul>
+  <li>note: ether id or name can be used as –resource-identifier</li>
+</ul>
+
+<h4 id="show">show</h4>
+
+<h5 id="show-resource">show resource</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# show vm demo&#x000A;&#x000A;id                        : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;name                      : demo&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2012-02-16T11:15:56.014+02:00&#x000A;display-address           : 10.35.1.127&#x000A;display-monitors          : 1&#x000A;display-type              : vnc&#x000A;high_availability-enabled : False&#x000A;high_availability-priority: 1&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : ovirt&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T13:55:15.443Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;&#x000A;[oVirt shell (connected)]# show vm --name nfs_desktop&#x000A;&#x000A;id                        : e0adee2b-2c95-483e-8259-2d8b29aa414d&#x000A;name                      : nfs_desktop&#x000A;description               : updated_desc&#x000A;cluster-id                : f16a5ea6-0b88-11e1-9844-bb5eb66ca68b&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2011-11-10T14:12:09.379+02:00&#x000A;display-address           : 0&#x000A;display-monitors          : 1&#x000A;display-type              : spice&#x000A;high_availability-enabled : False&#x000A;high_availability-priority: 1&#x000A;memory                    : 536870912&#x000A;memory_policy-guaranteed  : 536870912&#x000A;origin                    : rhev&#x000A;os-boot-dev               : hd&#x000A;os-type                   : rhel_6x64&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T13:55:56.448Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 00000000-0000-0000-0000-000000000000&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;</code></pre></div>
+<h5 id="show-resource-using-client-side-filtering">show resource using client side filtering</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# show vm --id f4a51ae1-4f31-45ee-ab6d-d5965e3bcf71&#x000A;&#x000A;id                        : f4a51ae1-4f31-45ee-ab6d-d5965e3bcf71&#x000A;name                      : iscsi_desktop&#x000A;description               : myvm&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2012-01-04T13:27:05.266+02:00&#x000A;display-monitors          : 4&#x000A;display-type              : spice&#x000A;high_availability-enabled : True&#x000A;high_availability-priority: 7&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : rhev&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T13:57:07.096Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;</code></pre></div>
+<h5 id="show-sub-resource">show sub-resource</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# show nic nic1 --vm-identifier demo&#x000A;&#x000A;id         : 1f295a64-0a4a-4fba-928d-162b458503a5&#x000A;name       : nic1&#x000A;interface  : virtio&#x000A;mac-address: 00:1a:4a:16:01:68&#x000A;network-id : d85a5cb2-057b-40ec-8d9c-b4ee6a7646c4&#x000A;vm-id      : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;</code></pre></div>
+<h3 id="add">Add</h3>
+
+<h4 id="add-resource">add resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# add vm --name demo2 --template-name iscsi_desktop_tmpl --cluster-name Default_iscsi&#x000A;&#x000A;id                        : dd981334-afb7-4142-a880-536bb8aef53f&#x000A;name                      : demo2&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_status-state     : pending&#x000A;creation_time             : 2012-02-29T16:01:57.896+02:00&#x000A;display-monitors          : 1&#x000A;display-type              : spice&#x000A;high_availability-enabled : False&#x000A;high_availability-priority: 1&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : ovirt&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T14:02:01.533Z&#x000A;stateless                 : False&#x000A;status-state              : image_locked&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;&#x000A;[oVirt shell (connected)]# add datacenter --name mydc --storage_type nfs --version-major 3 --version-minor 1&#x000A;&#x000A;id                              : 4c490b43-e681-49d8-958c-9300787982eb&#x000A;name                            : mydc&#x000A;status-state                    : uninitialized&#x000A;storage_type                    : nfs&#x000A;supported_versions-version-major: 3&#x000A;supported_versions-version-minor: 1&#x000A;version-major                   : 3&#x000A;version-minor                   : 1&#x000A;</code></pre></div>
+<h4 id="add-sub-resource">add sub-resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# add nic --vm-identifier demo2 --network-name engine --name mynic&#x000A;&#x000A;id         : a211d8bb-8abb-429b-8d36-fc4eb44b6ea8&#x000A;name       : mynic&#x000A;interface  : virtio&#x000A;mac-address: 00:1a:4a:16:01:5a&#x000A;network-id : d85a5cb2-057b-40ec-8d9c-b4ee6a7646c4&#x000A;vm-id      : dd981334-afb7-4142-a880-536bb8aef53f&#x000A;</code></pre></div>
+<h3 id="remove">Remove</h3>
+
+<h4 id="remove-resource">remove resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# remove vm aa&#x000A;</code></pre></div>
+<h4 id="remove-sub-resource">remove sub-resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# remove disk "Disk 1" --vm-identifier demo2&#x000A;</code></pre></div>
+<ul>
+  <li>note: ether id or name can be used as –resource-identifier</li>
+</ul>
+
+<h3 id="update">Update</h3>
+
+<ul>
+  <li>note: You have to quote the description if it contains spaces. E.g. "iscsi_desktop desc"</li>
+</ul>
+
+<h4 id="update-resource">update resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# update vm iscsi_desktop --description iscsi_desktop_desc&#x000A;&#x000A;id                        : f4a51ae1-4f31-45ee-ab6d-d5965e3bcf71&#x000A;name                      : iscsi_desktop&#x000A;description               : iscsi_desktop_desc&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2012-01-04T13:27:05.266+02:00&#x000A;display-monitors          : 4&#x000A;display-type              : spice&#x000A;high_availability-enabled : True&#x000A;high_availability-priority: 7&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : rhev&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T14:08:15.353Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;&#x000A;[oVirt shell (connected)]# update vm iscsi_desktop --display-monitors 2 --description test1&#x000A;&#x000A;id                        : f4a51ae1-4f31-45ee-ab6d-d5965e3bcf71&#x000A;name                      : iscsi_desktop&#x000A;description               : test1&#x000A;cluster-id                : e8861726-0b88-11e1-bd8c-27fb0a7aaa76&#x000A;cpu-topology-cores        : 1&#x000A;cpu-topology-sockets      : 1&#x000A;creation_time             : 2012-01-04T13:27:05.266+02:00&#x000A;display-monitors          : 2&#x000A;display-type              : spice&#x000A;high_availability-enabled : True&#x000A;high_availability-priority: 7&#x000A;memory                    : 1073741824&#x000A;memory_policy-guaranteed  : 1073741824&#x000A;origin                    : rhev&#x000A;os-boot-dev               : hd&#x000A;os-type                   : unassigned&#x000A;placement_policy-affinity : migratable&#x000A;start_time                : 2012-02-29T14:11:13.357Z&#x000A;stateless                 : False&#x000A;status-state              : down&#x000A;template-id               : 9c42b69e-daa3-48d7-bf97-779603892f15&#x000A;type                      : desktop&#x000A;usb-enabled               : True&#x000A;</code></pre></div>
+<h4 id="update-sub-resource">update sub-resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# update nic nic1 --vm-identifier demo --interface virtio&#x000A;&#x000A;id         : 1f295a64-0a4a-4fba-928d-162b458503a5&#x000A;name       : nic1&#x000A;interface  : virtio&#x000A;mac-address: 00:1a:4a:16:01:68&#x000A;network-id : d85a5cb2-057b-40ec-8d9c-b4ee6a7646c4&#x000A;vm-id      : 7b4ebc3f-40ba-4eb3-94ef-ca222d62fbe6&#x000A;</code></pre></div>
+<h3 id="action">Action</h3>
+
+<h4 id="action-on-resource">action on resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# action vm demo start --vm-display-type vnc --async true&#x000A;error: &#x000A;status: 400&#x000A;reason: Bad Request&#x000A;detail: [Cannot run VM. Low disk space on relevant Storage Domain.]&#x000A;</code></pre></div>
+<h4 id="action-on-sub-resource">action on sub-resource</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# action nic bond0 attach --host-identifier grey-vdsa&#x000A;error: &#x000A;status: 400&#x000A;reason: Bad Request&#x000A;detail: Action [network.id|name] required for attach&#x000A;</code></pre></div>
+<h3 id="console">Console</h3>
+
+<h4 id="connect-to-vm-using-vm-name">connect to vm using vm name</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>console 'my_vm'&#x000A;</code></pre></div>
+<h4 id="connect-to-vm-using-vm-id">connect to vm using vm id</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>console '7dff8517-7007-42cd-9cf7-b7a13a9d96b7'&#x000A;</code></pre></div>
+<h3 id="scripting">Scripting</h3>
+
+<h4 id="writing-a-script">Writing a script</h4>
+
+<h5 id="format">Format</h5>
+
+<p>no special format, just commands in plain text</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>less /home/mpastern/script&#x000A;--------------------------&#x000A;&#x000A;list vms&#x000A;show vm test | grep status&#x000A;list vms --query "name=test*" --show-all | grep status&#x000A;list clusters&#x000A;list datacenters&#x000A;...&#x000A;</code></pre></div>
+<h4 id="executing-script">Executing script</h4>
+
+<h5 id="from-linux-shell">From linux shell</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[mpastern@lp /]#  ovirt-shell -f /home/mpastern/script&#x000A;</code></pre></div>
+<h5 id="from-ovirt-shell">From ovirt shell</h5>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[oVirt shell (connected)]# file /home/mpastern/script&#x000A;</code></pre></div>
+<h4 id="examples">Examples</h4>
+
+<h5 id="run-all-vms">Run all vms</h5>
+
+<h6 id="the-script">The script</h6>
+
+<ol>
+  <li>the script (less run_all_vms.txt) will look like:</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>list vms | grep name | sed s/'name       :'/'action vm'/ | sed -e 's/$/ start/' &gt; /home/mpastern/new_script_to_run&#x000A;       file /home/mpastern/new_script_to_run&#x000A;</code></pre></div>
+<ol>
+  <li>run the script</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[RHEVM shell (connected)]# file /home/mpastern/run_all_vms&#x000A;</code></pre></div>
+<h6 id="explanations">Explanations</h6>
+
+<ol>
+  <li>run rhevm command and process the output saving it in to temp script new_script_to_run</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>list vms | grep name | sed s/'name       :'/'action vm'/ | sed -e 's/$/ start/' &gt; /home/mpastern/new_script_to_run&#x000A;</code></pre></div>
+<ol>
+  <li>invoke temp script internally at runtime</li>
+</ol>
+
+<div class="highlight"><pre class="highlight plaintext"><code>file /home/mpastern/new_script_to_run&#x000A;</code></pre></div>
+<h2 id="tweaks">Tweaks</h2>
+
+<h3 id="disable-pagination">disable pagination</h3>
+
+<p>at <code>/home/user/.ovirtshellrc</code> change <code>autopage</code> to <code>False</code></p>
+
+<h2 id="deployment">Deployment</h2>
+
+<h3 id="pypi">pypi</h3>
+
+<p><a href="http://pypi.python.org/pypi/ovirt-shell">http://pypi.python.org/pypi/ovirt-shell</a></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>easy_install ovirt-shell&#x000A;</code></pre></div>
+<h3 id="rpm">rpm</h3>
+
+<p>To build rpm and install it, from ovirt-engine-cli repo:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install -y rpm-build python-devel python-setuptools python-kitchen&#x000A;&#x000A;make rpm&#x000A;&#x000A;yum localinstall rpmtop/RPMS/noarch/ovirt-engine-cli-x.y-z.noarch.rpm&#x000A;</code></pre></div>
+<p>Because lxml is not yet packaged, please follow the instructions below to get lxml installed.</p>
+
+<h3 id="development-deployment">development deployment</h3>
+
+<p>For local install in site-packages, from ovirt-engine-cli repo:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install python-ply libxml2-devel libxslt-devel pexpect python-kitchen&#x000A;python setup.py develop&#x000A;</code></pre></div>
+<p>That will install lxml, because EPEL's python-lxml is not yet up to the version required by CLI.</p>
+
+<ul>
+  <li>note: both deployment procedures require super-user permissions</li>
+</ul>
+
+<h2 id="todo-list">TODO list</h2>
+
+<p><a href="https://bugzilla.redhat.com/buglist.cgi?list_id=6860&amp;classification=Community&amp;query_format=advanced&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;component=ovirt-engine-cli&amp;classificiation=oVirt">Bugzila</a></p>
+
+<h2 id="change-log">Change Log</h2>
+
+<p><a href="cli-changelog">cli-changelog</a></p>
+
+<h2 id="maintainers">Maintainers</h2>
+
+<p>Michael Pasternak: mishka8520@yahoo.com, Juan Hernandez: juan.hernandez@redhat.com</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/cli.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/cli.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 7 Mar 2018 08:20 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

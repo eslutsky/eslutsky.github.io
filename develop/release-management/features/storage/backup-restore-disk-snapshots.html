@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Backup-Restore Disk-Snapshots &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="backup-restore-disk-snapshots">Backup-Restore Disk-Snapshots</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature is a complementary component for providing ability to backup and
+restore virtual machines. The feature introduces a support for downloading and
+uploading disk-snapshots, using the REST-API. Images transfer is facilitated
+using <a href="https://github.com/oVirt/ovirt-imageio">ovirt-imageio</a></p>
+
+<p>The following backup/restore examples are facilitated using oVirt Python-SDK.
+oVirt REST-API/SDKs can be used in a similar manner.</p>
+
+<h2 id="backup">Backup</h2>
+
+<h3 id="download-a-vm-ovf">Download a VM OVF</h3>
+
+<p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/download_vm_ovf.py">Full Example</a></p>
+
+<p>In order to fetch a VM configuration data, 'all_content' flag should be specified.
+Then, it can be written into a new file - that's the OVF. 
+Note: The OVF contains sufficient information about disks and snapshots to restore
+the VM to original state (e.g. alias/description/date). However, it isn't automatically
+parsed by the system, but rather should be done by the SDK user.</p>
+
+<div class="highlight"><pre class="highlight python"><code><span class="n">vm_name</span> <span class="o">=</span> <span class="s">'myvm'</span>&#x000A;<span class="n">vm</span> <span class="o">=</span> <span class="n">vms_service</span><span class="o">.</span><span class="nb">list</span><span class="p">(</span><span class="n">search</span><span class="o">=</span><span class="s">"name=</span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="n">vm_name</span><span class="p">,</span> <span class="n">all_content</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>&#x000A;<span class="n">ovf_filename</span> <span class="o">=</span> <span class="s">"</span><span class="si">%</span><span class="s">s.ovf"</span> <span class="o">%</span> <span class="n">vm</span><span class="o">.</span><span class="nb">id</span>&#x000A;<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ovf_filename</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">ovf_file</span><span class="p">:</span>&#x000A;    <span class="n">ovf_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">vm</span><span class="o">.</span><span class="n">initialization</span><span class="o">.</span><span class="n">configuration</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>&#x000A;</code></pre></div>
+<h3 id="download-disks">Download Disks</h3>
+
+<p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/download_disk_snapshots.py">Full Example</a></p>
+
+<p>The following example demonstrates the procedure of downloading the non-active disk-snapshots
+of a specified disk. Hence, in order to include the active layer as well, either create
+a new snapshot for the disk in advance, or download the active disk-snapshot using the<a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/download_disk.py">Download Disk Example</a></p>
+
+<p>In order to download the active</p>
+
+<ul>
+  <li>
+    <p>For each disk, iterate over its disk-snapshots and execute image transfer.</p>
+
+<div class="highlight"><pre class="highlight python"><code>  <span class="c"># Set relevant disk and stroage domain IDs</span>&#x000A;  <span class="n">disk_id</span> <span class="o">=</span> <span class="s">'ccdd6487-0a8f-40c8-9f45-40e0e2b30d79'</span>&#x000A;  <span class="n">sd_name</span> <span class="o">=</span> <span class="s">'mydata'</span>&#x000A;        &#x000A;  <span class="c"># Get a reference to the storage domains service:</span>&#x000A;  <span class="n">storage_domains_service</span> <span class="o">=</span> <span class="n">system_service</span><span class="o">.</span><span class="n">storage_domains_service</span><span class="p">()</span>&#x000A;        &#x000A;  <span class="c"># Look up for the storage domain by name:</span>&#x000A;  <span class="n">storage_domain</span> <span class="o">=</span> <span class="n">storage_domains_service</span><span class="o">.</span><span class="nb">list</span><span class="p">(</span><span class="n">search</span><span class="o">=</span><span class="s">'name=</span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">sd_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>&#x000A;        &#x000A;  <span class="c"># Get a reference to the storage domain service in which the disk snapshots reside:</span>&#x000A;  <span class="n">storage_domain_service</span> <span class="o">=</span> <span class="n">storage_domains_service</span><span class="o">.</span><span class="n">storage_domain_service</span><span class="p">(</span><span class="n">storage_domain</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>&#x000A;        &#x000A;  <span class="c"># Get a reference to the disk snapshots service:</span>&#x000A;  <span class="n">disk_snapshot_service</span> <span class="o">=</span> <span class="n">storage_domain_service</span><span class="o">.</span><span class="n">disk_snapshots_service</span><span class="p">()</span>&#x000A;        &#x000A;  <span class="c"># Get a list of disk snapshots by a disk ID</span>&#x000A;  <span class="n">all_disk_snapshots</span> <span class="o">=</span> <span class="n">disk_snapshot_service</span><span class="o">.</span><span class="nb">list</span><span class="p">()</span>&#x000A;        &#x000A;  <span class="c"># Filter disk snapshots list by disk id</span>&#x000A;  <span class="n">disk_snapshots</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">all_disk_snapshots</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">disk</span><span class="o">.</span><span class="nb">id</span> <span class="o">==</span> <span class="n">disk_id</span><span class="p">]</span>&#x000A;        &#x000A;  <span class="c"># Download disk snapshots</span>&#x000A;  <span class="k">for</span> <span class="n">disk_snapshot</span> <span class="ow">in</span> <span class="n">disk_snapshots</span><span class="p">:</span>&#x000A;      <span class="n">download_disk_snapshot</span><span class="p">(</span><span class="n">disk_snapshot</span><span class="p">)</span>&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The ImageTransfer object should be specified with a 'snapshot' attribute.</p>
+
+<div class="highlight"><pre class="highlight python"><code>  <span class="n">transfer</span> <span class="o">=</span> <span class="n">transfers_service</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>&#x000A;      <span class="n">types</span><span class="o">.</span><span class="n">ImageTransfer</span><span class="p">(</span>&#x000A;          <span class="n">snapshot</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">DiskSnapshot</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">disk_snapshot_id</span><span class="p">),</span>&#x000A;          <span class="n">direction</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ImageTransferDirection</span><span class="o">.</span><span class="n">DOWNLOAD</span><span class="p">,</span>&#x000A;      <span class="p">)</span>&#x000A;  <span class="p">)</span>&#x000A;</code></pre></div>  </li>
+</ul>
+
+<h2 id="restore">Restore</h2>
+
+<p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/upload_disk_snapshots.py">Full Example</a></p>
+
+<h3 id="compose-disk-snapshots-chain">Compose disk-snapshots chain</h3>
+
+<p>Using the saved images files, create a chain of the disk-snapshots.
+The chain is built by fetching the volume info (using qemu-img)
+of each file, and find the backing filename (volume's parent).
+By maintaing a map between parent and child volumes, we can
+construct the chain, starting from base volume.</p>
+
+<div class="highlight"><pre class="highlight python"><code>    <span class="n">volumes_info</span> <span class="o">=</span> <span class="p">{}</span>   <span class="c"># {filename -&gt; vol_info}</span>&#x000A;    <span class="n">backing_files</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c"># {backing_file (parent) -&gt; vol_info (child)}</span>&#x000A;    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">file_names</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">disk_path</span><span class="p">):</span>&#x000A;        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>&#x000A;            <span class="n">volume_info</span> <span class="o">=</span> <span class="n">get_volume_info</span><span class="p">(</span><span class="s">"</span><span class="si">%</span><span class="s">s/</span><span class="si">%</span><span class="s">s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">disk_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">))</span>&#x000A;            <span class="n">volumes_info</span><span class="p">[</span><span class="n">file_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">volume_info</span>&#x000A;            <span class="k">if</span> <span class="s">'full-backing-filename'</span> <span class="ow">in</span> <span class="n">volume_info</span><span class="p">:</span>&#x000A;                <span class="n">backing_files</span><span class="p">[</span><span class="n">volume_info</span><span class="p">[</span><span class="s">'full-backing-filename'</span><span class="p">]]</span> <span class="o">=</span> <span class="n">volume_info</span>&#x000A;    &#x000A;    <span class="n">base_volume</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">volumes_info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="s">'full-backing-filename'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">v</span> <span class="p">][</span><span class="mi">0</span><span class="p">]</span>&#x000A;    <span class="n">child</span> <span class="o">=</span> <span class="n">backing_files</span><span class="p">[</span><span class="n">base_volume</span><span class="p">[</span><span class="s">'filename'</span><span class="p">]]</span>&#x000A;    <span class="n">images_chain</span> <span class="o">=</span> <span class="p">[</span><span class="n">base_volume</span><span class="p">]</span>&#x000A;    <span class="k">while</span> <span class="n">child</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>&#x000A;        <span class="n">images_chain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>&#x000A;        <span class="n">parent</span> <span class="o">=</span> <span class="n">child</span>&#x000A;        <span class="k">if</span> <span class="n">parent</span><span class="p">[</span><span class="s">'filename'</span><span class="p">]</span> <span class="ow">in</span> <span class="n">backing_files</span><span class="p">:</span>&#x000A;            <span class="n">child</span> <span class="o">=</span> <span class="n">backing_files</span><span class="p">[</span><span class="n">parent</span><span class="p">[</span><span class="s">'filename'</span><span class="p">]]</span>&#x000A;        <span class="k">else</span><span class="p">:</span>&#x000A;            <span class="n">child</span> <span class="o">=</span> <span class="bp">None</span>&#x000A;    &#x000A;    <span class="k">return</span> <span class="n">images_chain</span>&#x000A;</code></pre></div>
+<h3 id="create-disks">Create disks</h3>
+
+<p>For each disk, invoke disk creation for the base image using 
+the generated images chain from previous step. The content of
+the disks will be uploaded in a later step.</p>
+
+<div class="highlight"><pre class="highlight python"><code>    <span class="n">base_image</span> <span class="o">=</span> <span class="n">images_chain</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>&#x000A;    <span class="n">initial_size</span> <span class="o">=</span> <span class="n">base_image</span><span class="p">[</span><span class="s">'actual-size'</span><span class="p">]</span>&#x000A;    <span class="n">provisioned_size</span> <span class="o">=</span> <span class="n">base_image</span><span class="p">[</span><span class="s">'virtual-size'</span><span class="p">]</span>&#x000A;    <span class="n">image_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">base_image</span><span class="p">[</span><span class="s">'filename'</span><span class="p">])</span>&#x000A;&#x000A;    <span class="n">disk</span> <span class="o">=</span> <span class="n">disks_service</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>&#x000A;        <span class="n">types</span><span class="o">.</span><span class="n">Disk</span><span class="p">(</span>&#x000A;            <span class="nb">id</span><span class="o">=</span><span class="n">disk_id</span><span class="p">,</span>&#x000A;            <span class="n">image_id</span><span class="o">=</span><span class="n">image_id</span><span class="p">,</span>&#x000A;            <span class="n">name</span><span class="o">=</span><span class="n">disk_id</span><span class="p">,</span>&#x000A;            <span class="n">format</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">DiskFormat</span><span class="o">.</span><span class="n">RAW</span><span class="p">,</span>&#x000A;            <span class="n">provisioned_size</span><span class="o">=</span><span class="n">provisioned_size</span><span class="p">,</span>&#x000A;            <span class="n">initial_size</span><span class="o">=</span><span class="n">initial_size</span><span class="p">,</span>&#x000A;            <span class="n">storage_domains</span><span class="o">=</span><span class="p">[</span>&#x000A;                <span class="n">types</span><span class="o">.</span><span class="n">StorageDomain</span><span class="p">(</span>&#x000A;                    <span class="n">name</span><span class="o">=</span><span class="n">sd_name</span>&#x000A;                <span class="p">)</span>&#x000A;            <span class="p">]</span>&#x000A;        <span class="p">)</span>&#x000A;    <span class="p">)</span>&#x000A;</code></pre></div>
+<h3 id="add-a-vm-from-ovf">Add a VM from OVF</h3>
+
+<p>Adding the saved VM is done by specifing the ovf data within the configuration element.</p>
+
+<div class="highlight"><pre class="highlight python"><code>    <span class="n">ovf_file_path</span> <span class="o">=</span> <span class="s">'c3a8e806-106d-4aff-b59a-3a113eabf5a9.ovf'</span>&#x000A;    <span class="n">ovf_data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">ovf_file_path</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>&#x000A;    <span class="n">vms_service</span> <span class="o">=</span> <span class="n">system_service</span><span class="o">.</span><span class="n">vms_service</span><span class="p">()</span>&#x000A;    <span class="n">vm</span> <span class="o">=</span> <span class="n">vms_service</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>&#x000A;        <span class="n">types</span><span class="o">.</span><span class="n">Vm</span><span class="p">(</span>&#x000A;            <span class="n">cluster</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Cluster</span><span class="p">(</span>&#x000A;                <span class="n">name</span><span class="o">=</span><span class="s">'Default'</span><span class="p">,</span>&#x000A;            <span class="p">),</span>&#x000A;            <span class="n">initialization</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Initialization</span><span class="p">(</span>&#x000A;                <span class="n">configuration</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span>&#x000A;                    <span class="nb">type</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ConfigurationType</span><span class="o">.</span><span class="n">OVF</span><span class="p">,</span>&#x000A;                    <span class="n">data</span> <span class="o">=</span> <span class="n">ovf_data</span>&#x000A;                <span class="p">)</span>&#x000A;            <span class="p">),</span>&#x000A;        <span class="p">),</span>&#x000A;    <span class="p">)</span>&#x000A;</code></pre></div>
+<h3 id="create-snapshots">Create Snapshots</h3>
+
+<p>For each disk-snapshot in the chain, create a snapshot using the disk ID and image ID
+(and optionally the saved description).</p>
+
+<div class="highlight"><pre class="highlight python"><code>    <span class="c"># Locate the service that manages the snapshots of the virtual machine:</span>&#x000A;    <span class="n">snapshots_service</span> <span class="o">=</span> <span class="n">vm_service</span><span class="o">.</span><span class="n">snapshots_service</span><span class="p">()</span>&#x000A;&#x000A;    <span class="c"># Add the new snapshot:</span>&#x000A;    <span class="n">snapshot</span> <span class="o">=</span> <span class="n">snapshots_service</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>&#x000A;        <span class="n">types</span><span class="o">.</span><span class="n">Snapshot</span><span class="p">(</span>&#x000A;            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>&#x000A;            <span class="n">disk_attachments</span><span class="o">=</span><span class="p">[</span>&#x000A;                <span class="n">types</span><span class="o">.</span><span class="n">DiskAttachment</span><span class="p">(</span>&#x000A;                    <span class="n">disk</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">Disk</span><span class="p">(</span>&#x000A;                        <span class="nb">id</span><span class="o">=</span><span class="n">disk_id</span><span class="p">,</span>&#x000A;                        <span class="n">image_id</span><span class="o">=</span><span class="n">image_id</span>&#x000A;                    <span class="p">)</span>&#x000A;                <span class="p">)</span>&#x000A;            <span class="p">]</span>&#x000A;        <span class="p">),</span>&#x000A;    <span class="p">)</span>&#x000A;</code></pre></div>
+<h3 id="upload-disks">Upload disks</h3>
+
+<p>For each disk-snapshot in the chain, start an upload transfer.</p>
+
+<div class="highlight"><pre class="highlight python"><code>    <span class="c"># Get a reference to the service that manages the image transfer:</span>&#x000A;    <span class="n">transfers_service</span> <span class="o">=</span> <span class="n">system_service</span><span class="o">.</span><span class="n">image_transfers_service</span><span class="p">()</span>&#x000A;&#x000A;    <span class="c"># Add a new image transfer:</span>&#x000A;    <span class="n">transfer</span> <span class="o">=</span> <span class="n">transfers_service</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>&#x000A;        <span class="n">types</span><span class="o">.</span><span class="n">ImageTransfer</span><span class="p">(</span>&#x000A;            <span class="n">snapshot</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">DiskSnapshot</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">disk_snapshot_id</span><span class="p">),</span>&#x000A;            <span class="n">direction</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">ImageTransferDirection</span><span class="o">.</span><span class="n">UPLOAD</span><span class="p">,</span>&#x000A;        <span class="p">)</span>&#x000A;    <span class="p">)</span>&#x000A;&#x000A;    <span class="c"># Get reference to the created transfer service:</span>&#x000A;    <span class="n">transfer_service</span> <span class="o">=</span> <span class="n">transfers_service</span><span class="o">.</span><span class="n">image_transfer_service</span><span class="p">(</span><span class="n">transfer</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>&#x000A;&#x000A;    <span class="k">while</span> <span class="n">transfer</span><span class="o">.</span><span class="n">phase</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">ImageTransferPhase</span><span class="o">.</span><span class="n">INITIALIZING</span><span class="p">:</span>&#x000A;        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>&#x000A;        <span class="n">transfer</span> <span class="o">=</span> <span class="n">transfer_service</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>&#x000A;&#x000A;    <span class="k">try</span><span class="p">:</span>&#x000A;        <span class="n">proxy_url</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">transfer</span><span class="o">.</span><span class="n">proxy_url</span><span class="p">)</span>&#x000A;        <span class="n">proxy_connection</span> <span class="o">=</span> <span class="n">get_proxy_connection</span><span class="p">(</span><span class="n">proxy_url</span><span class="p">)</span>&#x000A;        <span class="n">path</span> <span class="o">=</span> <span class="n">disk_path</span>&#x000A;&#x000A;        <span class="c"># Set needed headers for uploading:</span>&#x000A;        <span class="n">upload_headers</span> <span class="o">=</span> <span class="p">{</span>&#x000A;            <span class="s">'Authorization'</span><span class="p">:</span> <span class="n">transfer</span><span class="o">.</span><span class="n">signed_ticket</span><span class="p">,</span>&#x000A;        <span class="p">}</span>&#x000A;&#x000A;        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">disk</span><span class="p">:</span>&#x000A;            <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>&#x000A;            <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">8</span>&#x000A;            <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>&#x000A;            <span class="k">while</span> <span class="n">pos</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>&#x000A;                <span class="c"># Extend the transfer session.</span>&#x000A;                <span class="n">transfer_service</span><span class="o">.</span><span class="n">extend</span><span class="p">()</span>&#x000A;                <span class="c"># Set the content range, according to the chunk being sent.</span>&#x000A;                <span class="n">upload_headers</span><span class="p">[</span><span class="s">'Content-Range'</span><span class="p">]</span> <span class="o">=</span> <span class="s">"bytes </span><span class="si">%</span><span class="s">d-</span><span class="si">%</span><span class="s">d/</span><span class="si">%</span><span class="s">d"</span> <span class="o">%</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">pos</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>&#x000A;                <span class="c"># Perform the request.</span>&#x000A;                <span class="n">proxy_connection</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>&#x000A;                    <span class="s">'PUT'</span><span class="p">,</span>&#x000A;                    <span class="n">proxy_url</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>&#x000A;                    <span class="n">disk</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">),</span>&#x000A;                    <span class="n">headers</span><span class="o">=</span><span class="n">upload_headers</span><span class="p">,</span>&#x000A;                <span class="p">)</span>&#x000A;                <span class="c"># Print response</span>&#x000A;                <span class="n">r</span> <span class="o">=</span> <span class="n">proxy_connection</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>&#x000A;                <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="s">"Completed"</span><span class="p">,</span> <span class="s">"{:.0</span><span class="si">%</span><span class="s">}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>&#x000A;                <span class="c"># Continue to next chunk.</span>&#x000A;                <span class="n">pos</span> <span class="o">+=</span> <span class="n">chunk_size</span>&#x000A;&#x000A;        <span class="k">print</span> <span class="s">"Completed"</span><span class="p">,</span> <span class="s">"{:.0</span><span class="si">%</span><span class="s">}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>&#x000A;    <span class="k">finally</span><span class="p">:</span>&#x000A;        <span class="c"># Finalize the session.</span>&#x000A;        <span class="n">transfer_service</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>&#x000A;</code></pre></div>
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="python-sdk-examples">Python SDK examples</h3>
+
+<ul>
+  <li>
+    <p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/download_vm_ovf.py">Download VM OVF</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/download_disk_snapshots.py">Download Disk Snapshots</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/upload_disk_snapshots.py">Upload Disk Snapshots</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/download_disk.py">Download Disk</a></p>
+  </li>
+  <li>
+    <p><a href="https://github.com/oVirt/ovirt-engine-sdk/blob/master/sdk/examples/upload_disk.py">Upload Disk</a></p>
+  </li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/backup-restore-disk-snapshots.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/backup-restore-disk-snapshots.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 25 Dec 2017 12:20 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

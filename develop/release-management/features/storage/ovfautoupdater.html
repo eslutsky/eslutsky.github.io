@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+OvfAutoUpdater &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ovfautoupdater">OvfAutoUpdater</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The OvfAutoUpdater introduces a change to the system-wide behaviour of VM/template OVF updates. Currently every change in the VM configuration entails a synchronous vdsm call to update the OVF in the master domain. With OvfAutoUpdater OVF updates would be performed periodically for multiple OVFs of the same data-center in a single vdsm call. OVF deletions in case of VM/Template removal will be done by the OvfAutoUpdater as well periodically instead of during the execution of VM/Template removal by the user, which will make the operations execution faster.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Liron Aravot</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#108;&#097;&#114;&#097;&#118;&#111;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#108;&#097;&#114;&#097;&#118;&#111;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>VM/template configurations (including disks info) are stored on the master storage domain for backup purposes and in order to provide the ability to run VMs without having a running engine/db. Currently OVF update/removal is done synchronously when performing various operations on VMs/templates - update, save, remove, adding/removing a disk, etc. What's more, currently updating/removing the OVF (vdsm call) is usually done within a transaction.</p>
+
+<p>The idea behind OvfAutoUpdater is to perform batch OVF update operations that aggregate all outstanding updates per data center. These updates will be done in specified time intervals which will reduce XML-RPC calls and will enable the removal of this synchronous vdsm call from all over the code.</p>
+
+<p>The time interval (minutes) between OvfAutoUpdater runs can be configured by the config value <code>OvfUpdateIntervalInMinutes</code>, defaults to <code>60</code>. The items count per update (in single vdsm update call) can be configured by the config value <code>OvfItemsCountPerUpdate</code>, defaults to <code>100</code>.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Reduce vdsm xml-rpc calls.</li>
+  <li>Removal of OVF update call from all flows.</li>
+  <li>Prevent running OVF update within transactions.</li>
+</ul>
+
+<h2 id="detailed-design">Detailed Design</h2>
+
+<h3 id="db-changes">DB Changes</h3>
+
+<p><code>vm_static</code> table:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   add column - `db_generation BIGINT default 1`&#x000A;</code></pre></div>
+<p><code>vm_ovf_generations</code> table - newly add table</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   vm_guid UUID PRIMARY KEY,&#x000A;   storage_pool_id UUID REFERENCES storage_pool(id) ON DELETE CASCADE,&#x000A;   ovf_generation BIGINT DEFAULT 0&#x000A;</code></pre></div>
+<p>Add to this table records for all the pre-exiting VMs/templates with initial <code>ovf_generation</code> of <code>1</code> (as their OVF should be already up to date from before)</p>
+
+<p><code>vdc_options</code> table:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   add row - OvfUpdateIntervalInMinutes config value.&#x000A;   add row - OvfItemsCountPerUpdate config value&#x000A;</code></pre></div>
+<h3 id="engine">Engine</h3>
+
+<ul>
+  <li>New singleton - <code>OvfDataUpdater</code> with an instance initiated during server startup - the constructor schedules a quartz job with interval as configured in the <code>OvfUpdateIntervalInMinutes</code> config value.</li>
+  <li>When timer time has elapsed, performs the following:</li>
+</ul>
+
+<ol>
+  <li>Get all Storage Pool in status 'UP' (meaning we have a valid master domain and SPM)</li>
+  <li>For each storage pool in status 'UP' - Get all VM's/Templates within that storage pool that were changed since last run (<code>db_generation &gt; ovf_generation</code>) which are not locked and none of their disks are locked.</li>
+  <li>Try to run <code>UpdateVmInSpm</code> for all those VMs together in a single call (it might be necessary to split the update execution into chunks in order to avoid performing the operation on too many VMs/templates in the same call).</li>
+  <li>If successful - for each VM update the <code>ovf_generation</code> to equal the <code>db_generation</code> that was returned in the VM entity when we performed the query to get the VMs for update.</li>
+  <li>Load all id's of VMs/templates that were deleted since last OvfAutoUpdater run and issue vdsm command to delete their OVFs.</li>
+</ol>
+
+<ul>
+  <li>Replace <code>updateVmInSpm</code> call in commands with an increment to the <code>db_generation</code> version.</li>
+  <li>Increment the <code>db_generation</code> column in <code>vm_static</code> should be performed in the start of the db transaction to prevent possible db deadlocks.</li>
+  <li>Remove <code>removeVmInSpm</code> call in commands (removed VMs/templates will be "collected" automatically after removal in the next OvfAutoUpdater run).</li>
+</ul>
+
+<h3 id="notes">NOTES</h3>
+
+<p>OVFs of VMs/Templates that are being/were updated exactly during their processing by OvfAutoUpdater run will have their OVF updated in the storage the next OvfAutoUpdater run, DB updates will occur regularly.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/ovfautoupdater.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/ovfautoupdater.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Upgrading the Self-Hosted Engine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/self-hosted/">Self-hosted</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-6-upgrading-the-self-hosted-engine">Chapter 6: Upgrading the Self-Hosted Engine</h1>
+
+<h2 id="upgrading-a-self-hosted-engine-environment">Upgrading a Self-Hosted Engine Environment</h2>
+
+<p><strong>Upgrading from 3.6 to 4.2</strong></p>
+
+<p>To upgrade from oVirt 3.6 to oVirt 4.2, see the “Upgrading a oVirt Node 3.6 Self-Hosted Engine to a oVirt Node 4.2 Self-Hosted Engine” below.</p>
+
+<p><strong>Upgrading from 4.0 to 4.2</strong></p>
+
+<p>To upgrade from oVirt 4.0 to oVirt 4.2 you must upgrade sequentially:</p>
+
+<ul>
+  <li>
+    <p>Update to the latest minor version of oVirt 4.0. See the Self-Hosted Engine Guide for oVirt 4.0.</p>
+  </li>
+  <li>
+    <p>Upgrade from 4.0 to 4.1. See the Self-Hosted Engine Guide for oVirt 4.1.</p>
+  </li>
+  <li>
+    <p>Upgrade to 4.2 as described in this section.</p>
+  </li>
+</ul>
+
+<p><strong>Upgrading from 4.1 to 4.2</strong></p>
+
+<p>To upgrade your oVirt self-hosted engine environment from version 4.1 to 4.2, upgrade the Engine virtual machine, the self-hosted engine nodes, and any standard hosts. All hosts in a self-hosted engine environment must be the same version; you cannot upgrade only some of the hosts.</p>
+
+<p>The upgrade process involves the following key steps:</p>
+
+<ul>
+  <li>
+    <p>Place the high-availability agents that manage the Engine virtual machine into the global maintenance mode.</p>
+  </li>
+  <li>
+    <p>Upgrade the 4.1 Engine virtual machine to the latest 4.1 minor version.</p>
+  </li>
+  <li>
+    <p>Upgrade the Engine virtual machine.</p>
+  </li>
+  <li>
+    <p>Place a self-hosted engine node into maintenance. The Engine virtual machine and other virtual machines will be migrated to another host in the cluster if necessary.</p>
+  </li>
+  <li>
+    <p>Update the self-hosted engine node. Repeat for all hosts. Red Hat recommends updating all hosts in the environment, including standard hosts.</p>
+  </li>
+  <li>
+    <p>After all hosts in the cluster and the Engine virtual machine have been upgraded, change the cluster compatibility version to 4.2.</p>
+  </li>
+</ul>
+
+<p>Before upgrading the Engine virtual machine, ensure the <code>/var/tmp</code> directory contains enough free space to extract the appliance files. If it does not, you can specify a different directory or mount alternate storage that does have the required space. The VDSM user and KVM group must have read, write, and execute permissions on the directory.</p>
+
+<p>The upgrade procedure creates a backup disk on the self-hosted engine storage domain. You therefore need additional free space on the storage domain for the new appliance being deployed (50 GB by default). To increase the storage on iSCSI or Fibre Channel storage, you need to manually extend the LUN size on the storage and then extend the storage domain using the Engine. Refer to "Increasing iSCSI or FCP Storage" in the <a href="/documentation/admin-guide/administration-guide/">Administration Guide</a> for more information about resizing a LUN.</p>
+
+<p>The backup created during the upgrade procedure is not automatically deleted. You need to manually delete it after confirming the upgrade has been successful. The backup disks are labeled with <code>hosted-engine-backup-*</code>.</p>
+
+<p><strong>Important:</strong> During the upgrade procedure you will be asked to create a backup of the Engine and copy it to the host machine where the upgrade is being performed.</p>
+
+<p><strong>Upgrading a Self-Hosted Engine Environment</strong></p>
+
+<ol>
+  <li>
+    <p>In the Administration Portal, right-click a self-hosted engine node and select <strong>Enable Global HA Maintenance</strong>.</p>
+  </li>
+  <li>
+    <p>Wait a few minutes and ensure that you see <strong>Hosted Engine HA: Global Maintenance Enabled</strong> in the <strong>General</strong> tab.</p>
+  </li>
+  <li>
+    <p>Log into the Engine virtual machine and upgrade the Engine to the latest minor version:</p>
+  </li>
+</ol>
+
+<p>i. Check if updated packages are available:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # engine-upgrade-check&#x000A;&#x000A;* If there are no updates available, the command will output the text `No upgrade`:&#x000A;&#x000A;        # engine-upgrade-check&#x000A;        VERB: queue package ovirt-engine-setup for update&#x000A;        VERB: package ovirt-engine-setup queued&#x000A;        VERB: Building transaction&#x000A;        VERB: Empty transaction&#x000A;        VERB: Transaction Summary:&#x000A;        No upgrade&#x000A;&#x000A;* If updates are available, the command will list the packages to be updated:&#x000A;&#x000A;        # engine-upgrade-check&#x000A;        VERB: queue package ovirt-engine-setup for update&#x000A;        VERB: package ovirt-engine-setup queued&#x000A;        VERB: Building transaction&#x000A;        VERB: Transaction built&#x000A;        VERB: Transaction Summary:&#x000A;        VERB:     updated    - ovirt-engine-lib-4.1.2-0.50.el7ev.noarch&#x000A;        VERB:     update     - ovirt-engine-lib-4.1.0-0.13.el7ev.noarch&#x000A;        ...&#x000A;&#x000A;        Upgrade available&#x000A;</code></pre></div>
+<p>ii. Update the setup packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # yum update ovirt\*setup\*&#x000A;</code></pre></div>
+<p>iii. Update the oVirt Engine. By running engine-setup, the script will prompt you with some configuration questions like updating the firewall rules, updating PKI certificates, and backing up the Data Warehouse database. The script will then go through the process of stopping the ovirt-engine service, downloading and installing the updated packages, backing up and updating the database, performing post-installation configuration, and starting the ovirt-engine service.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  **Note:** The `engine-setup` script is also used during the oVirt Engine installation process, and it stores the configuration values that were supplied. During an update, the stored values are displayed when previewing the configuration, and may not be up to date if `engine-config` was used to update configuration after installation. For example, if `engine-config` was used to update `SANWipeAfterDelete` to true after installation, engine-setup will output "Default SAN wipe after delete: False" in the configuration preview. However, the updated values will not be overwritten by `engine-setup`.&#x000A;&#x000A;      # engine-setup&#x000A;&#x000A;  **Important:** The update process may take some time; allow time for the update process to complete and do not stop the process once initiated.&#x000A;</code></pre></div>
+<p>iv. Update the base operating system and any optional packages installed on the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # yum update&#x000A;&#x000A;  **Important:** If any kernel packages were updated, reboot the system to complete the update.&#x000A;</code></pre></div>
+<ol>
+  <li>Log in to the Engine virtual machine to upgrade the oVirt Engine:</li>
+</ol>
+
+<p>i. Enable the oVirt Engine, oVirt Tools, and Ansible Engine repositories:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # subscription-manager repos --enable=rhel-7-server-rhv-4.2-manager-rpms&#x000A;      # subscription-manager repos --enable=rhel-7-server-rhv-4-manager-tools-rpms&#x000A;      # subscription-manager repos --enable=rhel-7-server-ansible-2-rpms&#x000A;</code></pre></div>
+<p>ii. Update the setup packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # yum update ovirt\*setup\*&#x000A;</code></pre></div>
+<p>iii. Run <code>engine-setup</code> and follow the prompts to upgrade the oVirt Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # engine-setup&#x000A;</code></pre></div>
+<p>iv. Remove or disable the oVirt Engine 4.1 repositories to ensure the system does not use any oVirt Engine 4.1 packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # subscription-manager repos --disable=rhel-7-server-rhv-4.1-manager-rpms&#x000A;      # subscription-manager repos --disable=rhel-7-server-rhv-4.1-rpms&#x000A;</code></pre></div>
+<p>v. Update the base operating system:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # yum update&#x000A;&#x000A;  **Important:** If any kernel packages were updated, reboot the Engine virtual machine manually to complete the update. See Troubleshooting the Engine Virtual Machine.&#x000A;</code></pre></div>
+<p>vi. In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> and select a self-hosted engine node. Click <strong>More Actions</strong> → <strong>Disable Global HA Maintenance</strong>.</p>
+
+<ol>
+  <li>Update the self-hosted engine nodes, then any standard hosts in the environment:</li>
+</ol>
+
+<p>i. In the Administration Portal, click <strong>Compute</strong> → <strong>Hosts</strong> and select a host. Click <strong>Management</strong> → <strong>Maintenance</strong> to place the host into local maintenance. If the host is hosting the Engine virtual machine, the virtual machine will be migrated to another host. Any other virtual machines will be migrated according to your virtual machine migration policy. The high-availability agents are automatically placed into local maintenance.</p>
+
+<p>ii. Ensure the correct repositories are enabled:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      # subscription-manager repos --enable=rhel-7-server-rhv-4-mgmt-agent-rpms&#x000A;      # subscription-manager repos --enable=rhel-7-server-ansible-2-rpms&#x000A;</code></pre></div>
+<p>iii. Update the host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>* On an Enterprise Linux host, log in to the host machine and run the following command:&#x000A;&#x000A;        # yum update&#x000A;&#x000A;* On an oVirt Node, log in to the Cockpit user interface, click **Terminal**, and run the following command:&#x000A;&#x000A;        # yum update&#x000A;&#x000A;    **Important:** If any kernel packages were updated, reboot the host to complete the update.&#x000A;</code></pre></div>
+<p>iv. Select the same host and click <strong>Management</strong> → <strong>Activate</strong>.</p>
+
+<p>v. Repeat these steps to update all hosts.</p>
+
+<ol>
+  <li>
+    <p>Update the cluster and data center compatibility version to 4.2. See Post-Upgrade Tasks in the Upgrade Guide for more information.</p>
+
+    <p><strong>Important:</strong> Only update the compatibility version if all hosts have been updated to oVirt 4.2, to avoid some hosts becoming non-operational.</p>
+  </li>
+</ol>
+
+<h2 id="upgrading-an-ovirt-node-36-self-hosted-engine-to-an-ovirt-42-self-hosted-engine">Upgrading an oVirt Node 3.6 Self-Hosted Engine to an oVirt 4.2 Self-Hosted Engine</h2>
+
+<p>To upgrade a oVirt 3.6 self-hosted engine environment that contains only oVirt Node to oVirt 4.2, you must remove the hosts and reinstall them as oVirt Node 4.2.</p>
+
+<p>Self-hosted engine nodes in oVirt 3.6 are added using the <code>hosted-engine --deploy</code> command, which cannot be used to add more nodes in oVirt Node 4.2, and self-hosted engine nodes in oVirt 4.1 are added using the UI, which is not available in oVirt 3.6. Therefore, to upgrade the environment from 3.6 to 4.2, you must first install a self-hosted engine node running oVirt Node 4.0, where adding more nodes using the <code>hosted-engine --deploy</code> command is deprecated but still available.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** This scenario does not impact self-hosted engine environments that contain some (or only) Enterprise Linux self-hosted engine nodes, as they can be updated without being removed from the environment.&#x000A;&#x000A;**Important:** Before upgrading the Engine virtual machine, ensure the **/var/tmp** directory contains 5 GB free space to extract the appliance files. If it does not, you can specify a different directory or mount alternate storage that does have the required space. The VDSM user and KVM group must have read, write, and execute permissions on the directory.&#x000A;</code></pre></div>
+<p>Upgrading from a oVirt 3.6 self-hosted engine environment with oVirt Node 3.6 hosts to a oVirt 4.2 environment with oVirt Node 4.2 hosts involves the following key steps:</p>
+
+<ul>
+  <li>
+    <p>Install a new oVirt Node 4.0 host and add it to the 3.6 self-hosted engine environment. The new host can be an existing oVirt Node 3.6 host removed from the environment and reinstalled with oVirt Node 4.0.</p>
+  </li>
+  <li>
+    <p>Upgrade the Engine from 3.6 to 4.0.</p>
+  </li>
+  <li>
+    <p>Remove the rest of the oVirt Node 3.6 hosts and reinstall them with oVirt Node 4.2.</p>
+  </li>
+  <li>
+    <p>Add the oVirt Node 4.2 hosts to the 4.0 environment.</p>
+  </li>
+  <li>
+    <p>Upgrade the Engine from 4.0 to 4.1.</p>
+  </li>
+  <li>
+    <p>Upgrade the Engine from 4.1 to 4.2.</p>
+  </li>
+  <li>
+    <p>Upgrade the remaining oVirt Node 4.0 host to oVirt Node 4.2.</p>
+  </li>
+  <li>
+    <p>Upgrading a oVirt Node 3.6 Self-Hosted Engine to a oVirt Node 4.2 Self-Hosted Engine</p>
+  </li>
+</ul>
+
+<p><strong>Upgrading a oVirt Node 3.6 Self-Hosted Engine to a oVirt Node 4.2 Self-Hosted Engine</strong></p>
+
+<ol>
+  <li>
+    <p>If you are reusing an existing oVirt Node 3.6 host, remove it from the 3.6 environment. See Removing a Host from a Self-Hosted Engine Environment.</p>
+  </li>
+  <li>
+    <p>Upgrade the environment from 3.6 to 4.0 using the instructions in Upgrading a oVirt Node-Based Self-Hosted Engine Environment in the oVirt 4.0 Self-Hosted Engine Guide. These instructions include installing a oVirt Node 4.0 host.</p>
+  </li>
+  <li>
+    <p>Upgrade each remaining oVirt Node 3.6 host directly to oVirt Node 4.2:</p>
+  </li>
+</ol>
+
+<p>i. Remove the host from the self-hosted engine environment.</p>
+
+<p>ii. Reinstall the host with oVirt Node 4.2.</p>
+
+<p>iii. Add the host to the 4.0 environment.</p>
+
+<ol>
+  <li>Upgrade the Engine from 4.0 to 4.1. place the host in global maintenance mode:</li>
+</ol>
+
+<p>i. In the Administration Portal, right-click a self-hosted engine node and select <strong>Enable Global HA Maintenance</strong>.</p>
+
+<p>ii. Wait a few minutes and ensure that you see <strong>Hosted Engine HA: Global Maintenance Enabled</strong> in the <strong>General</strong> tab.</p>
+
+<p>iii. Use the instructions in Upgrading to oVirt Engine 4.1.</p>
+
+<ol>
+  <li>Upgrade the Engine from 4.1 to 4.2 and then upgrade the final remaining oVirt Node 4.0 host to 4.2 using the instructions in Upgrading a Self-Hosted Engine Environment.</li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="chap-Migrating_from_Bare_Metal_to_an_EL-Based_Self-Hosted_Environment">Chapter 5: Migrating from Bare Metal to an EL-Based Self-Hosted Environment</a> <br />
+<strong>Next:</strong> <a href="chap-Backing_up_and_Restoring_an_EL-Based_Self-Hosted_Environment">Chapter 7: Backing up and Restoring an EL-Based Self-Hosted Environment</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/self-hosted_engine_guide/chap-upgrading_the_self-hosted_engine">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/self-hosted/chap-upgrading_the_self-hosted_engine.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/self-hosted/chap-upgrading_the_self-hosted_engine.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

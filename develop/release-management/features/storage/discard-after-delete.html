@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DiscardAfterDelete &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="discard-after-delete">Discard after delete</h1>
+
+<h2 id="summary">Summary</h2>
+
+<h3 id="how-thinly-provisioned-luns-were-used-so-far">How thinly provisioned luns were used so far</h3>
+<p>Generally, the underlying storage can provide two types of luns - <em>pre allocated</em> and <em>thinly provisioned</em>.</p>
+
+<ul>
+  <li>When a <em>pre allocated</em> lun is created with a size of <em>x</em> Gigabytes, the storage array allocates those <em>x</em> Gigabytes for that lun, so that other luns are not able to use those blocks.<br /></li>
+  <li>When a <em>thinly provisioned</em> lun is created with a size of <em>x</em> Gigabytes, the storage array may allocate less than <em>x</em> Gigabytes for that lun, and each time it reaches a certain limit of used space, it is extended by the array until it reaches it's virtual size and cannot be extended anymore.</li>
+</ul>
+
+<h3 id="what-could-be-improved">What could be improved</h3>
+<p>Suppose that a VM contains a disk <em>disk1</em> on a block storage domain <em>sd1</em>, and that <em>disk1</em> is removed. Also suppose that <em>sd1</em> is built on a 20GB lun, <em>lun1</em>.</p>
+
+<ul>
+  <li>If <em>lun1</em> is a <em>pre allocated</em> lun, then there's no reason to go and try to tell the storage array that some blocks were freed because <em>lun1</em> uses the whole 20GB anyway.</li>
+  <li>If <em>lun1</em> is a <em>thinly provisioned</em> lun, and we could tell the storage array that some blocks were freed, it could have shrinked <em>lun1</em> so that other luns in the array could make use of those unused blocks.</li>
+</ul>
+
+<p>This feature is about freeing (discarding) the whole disk space right before removing it.</p>
+
+<h3 id="for-whom-is-this-feature-useful">For whom is this feature useful</h3>
+<p>This feature is useful for users that have thinly provisioned luns and wish to reclaim space when removing a disk from a block storage domain that is built from them.</p>
+
+<h2 id="owner">Owner</h2>
+<ul>
+  <li>Idan Shaby</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#105;&#115;&#104;&#097;&#098;&#121;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#105;&#115;&#104;&#097;&#098;&#121;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+<ul>
+  <li><a href="#usage">First phase</a> - implemented in vdsm config file (per host) - released in oVirt 4.0.</li>
+  <li><a href="#future-plans">Second phase</a> - implemented in the engine (per storage domain) - released in oVirt 4.1.</li>
+</ul>
+
+<h2 id="general-functionality-and-restrictions">General functionality and restrictions</h2>
+
+<h3 id="under-the-hood">Under the hood</h3>
+
+<h4 id="using-vdsms-configuration-file">Using vdsm's configuration file</h4>
+<p>A new parameter was added to the <em>vdsm</em> configuration file, <strong><em>discard_enable</em></strong>.<br />
+When it is <em>true</em> in a specific vdsm host, that host will issue a <em>blkdiscard</em> command on a logical volume right before removing it. That means that each disk or snapshot that this host removes, automatically triggers  it to inform the storage array that this logical volume's blocks were freed and can be used by other luns in the array.<br />
+Note that <strong>this option will be dropped in oVirt 4.2</strong> and thus it is not recommended to use it any more. The right way of using this feature is by configuring the storage domain in the engine's side.</p>
+
+<h4 id="using-engines-storage-domain-configuration">Using engine's storage domain configuration</h4>
+<p>This feature adds a new storage domain property called <strong><em>Discard After Delete</em></strong>.<br />
+If all the <a href="#restrictions">restrictions</a> are met, a <em>blkdiscard</em> command will be issued on each logical volume before it is removed in two possible cases:</p>
+
+<ol>
+  <li><em>Discard After Delete</em> is enabled for the relevant storage domain.<br /></li>
+  <li>The disk is attached to at least one virtual machine with <a href="/develop/release-management/features/storage/pass-discard-from-guest-to-underlying-storage/"><em>Pass Discard</em></a> enabled.<br />
+The logic behind this is that if the user wanted "live" discarding, he will probably want to discard the whole disk when it is removed even if its storage domain's <em>Discard After Delete</em> property is disabled.</li>
+</ol>
+
+<p>The consequences are the same as those from the previous section, when using vdsm configuration file. The differences between the two are:</p>
+
+<ul>
+  <li>The configuration is per storage domain, and not per host.</li>
+  <li>Any host in the data center is capable of issuing the <em>blkdiscard</em> command on a removed disk or snapshot.</li>
+  <li><em>Discard After Delete</em> cannot be enabled for unsupported storage domains, so users should know what to expect.</li>
+</ul>
+
+<h3 id="possible-consumers-of-the-discarded-blocks">Possible consumers of the discarded blocks</h3>
+<p>After a disk is removed from a block storage domain and its blocks are discarded, anything can use them:</p>
+
+<ul>
+  <li>New and existing disks on the same storage domain (if there's enough free space in the storage domain, of course).</li>
+  <li>New and existing disks on other storage domains that are built on luns from the same storage array.</li>
+  <li>Other processes that use luns from the same storage array.</li>
+</ul>
+
+<h3 id="restrictions">Restrictions</h3>
+
+<h4 id="the-storage-type">The storage type</h4>
+<p>This feature is relevant only for <strong>block</strong> storage domains, i.e <em>iSCSI</em> and <em>Fibre Channel</em> storage domains.</p>
+
+<h4 id="the-underlying-storage">The underlying storage</h4>
+<p>Let <em>lunX</em> be a device and <em>dm-X</em> be its corresponding dm device for a natural number X. Then <em>lunX</em> is considered to <strong><em>support discard</em></strong> iff the value of <code>/sys/block/dm-X/queue/discard_max_bytes</code> is bigger than 0 <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+
+<p>The luns in the underlying storage must <em>support discard</em> in order for this to work.<br />
+If the underlying storage doesn't <em>support discard</em>:</p>
+
+<ul>
+  <li>When using vdsm's configuration file - the <em>blkdiscard</em> command that <em>vdsm</em> tries to execute will fail with a log but will not break the lv removal. That is, the lv will be removed but the space will not be reclaimed.</li>
+  <li>When using the storage domain's configuration - the <em>Discard After Delete</em> property cannot be enabled and thus disks and snapshots under that storage domain will not be discarded.</li>
+</ul>
+
+<h4 id="wipe-after-delete-and-discard-after-deletediscard_enable"><em>Wipe After Delete</em> and <em>Discard After Delete</em>/<em>discard_enable</em></h4>
+<p>These two properties are completely independent.<br />
+To understand it better, let's take a look at the flow of removing a disk from a block domain in <em>vdsm</em>:</p>
+
+<ol>
+  <li>If the disk's <em>Wipe After Delete</em> is enabled, then the disk is first wiped. If not, <em>vdsm</em> moves to phase 2.</li>
+  <li>If the the disk should be discarded (see <a href="#under-the-hood">Under the hood</a>), then <em>vdsm</em> issues a <em>blkdiscard</em> command on that disk's logical volumes. If not, it moves to phase 3.</li>
+  <li>The disk's logical volumes are removed.</li>
+</ol>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="using-vdsms-configuration-file-1">Using vdsm's configuration file</h3>
+<p>The administrator should set the <em>discard_enable</em> property in <code>/etc/vdsm/vdsm.conf</code> to <strong><em>true</em></strong> and then <strong>restart the <em>vdsmd</em> service</strong>.<br />
+The value of <em>discard_enable</em> is <strong><em>false</em></strong> by default.<br /></p>
+
+<h3 id="using-engines-storage-domain-configuration-1">Using engine's storage domain configuration</h3>
+<p>The user should enable the <em>Discard After Delete</em> property of the relevant block storage domain.<br /></p>
+
+<h4 id="gui">GUI</h4>
+<p>The <em>Discard After Delete</em> checkbox can be found under the <em>"Advanced Parameters"</em> section in the "Manage Domain" and "New Domain" windows, right bellow the <em>Wipe After Delete</em> checkbox.</p>
+
+<h5 id="manage-domain">Manage Domain</h5>
+<p><img alt="" width="760" height="665" src="/images/wiki/Manage_Domain_With_Discard_After_Delete_Bolded.png?1560777613" /></p>
+
+<h4 id="rest-api">REST-API</h4>
+
+<h5 id="add-a-new-block-domain">Add a new block domain</h5>
+<div class="highlight"><pre class="highlight xml"><code>POST api/storagedomains&#x000A;Content-Type: application/xml&#x000A;&#x000A;<span class="nt">&lt;storage_domain&gt;</span>&#x000A;  <span class="nt">&lt;host</span> <span class="na">id=</span><span class="s">"123"</span><span class="nt">/&gt;</span>&#x000A;  <span class="nt">&lt;type&gt;</span>data<span class="nt">&lt;/type&gt;</span>&#x000A;  <span class="nt">&lt;discard_after_delete&gt;</span>true<span class="nt">&lt;/discard_after_delete&gt;</span>&#x000A;  <span class="nt">&lt;name&gt;</span>xtremio_sd<span class="nt">&lt;/name&gt;</span>&#x000A;  <span class="nt">&lt;storage&gt;</span>&#x000A;    ...&#x000A;  <span class="nt">&lt;/storage&gt;</span>&#x000A;<span class="nt">&lt;/storage_domain&gt;</span>&#x000A;</code></pre></div>
+<h5 id="update-an-existing-block-domain">Update an existing block domain</h5>
+<div class="highlight"><pre class="highlight xml"><code>POST api/storagedomains/<span class="nt">&lt;storage_domain_id&gt;</span>&#x000A;Content-Type: application/xml&#x000A;&#x000A;<span class="nt">&lt;storage_domain&gt;</span>&#x000A;  <span class="nt">&lt;discard_after_delete&gt;</span>true<span class="nt">&lt;/discard_after_delete&gt;</span>&#x000A;<span class="nt">&lt;/storage_domain&gt;</span>&#x000A;</code></pre></div>
+<h2 id="future-plans">Future Plans</h2>
+<ul>
+  <li>The support for <em>discard_enable</em> in vdsm's configuration file should be dropped in oVirt 4.2.</li>
+</ul>
+
+<h2 id="related-bugs">Related Bugs</h2>
+<ul>
+  <li>Send discard when deleting virtual disks from block based storage domain to regain space in thin provisioned storage (<a href="https://bugzilla.redhat.com/981626">Bug 981626</a>)</li>
+  <li>Make discard configurable by a storage domain rather than a host (<a href="https://bugzilla.redhat.com/1342919">Bug 1342919</a>)</li>
+</ul>
+
+<h2 id="related-features">Related Features</h2>
+<ul>
+  <li><a href="/develop/release-management/features/storage/pass-discard-from-guest-to-underlying-storage/">Pass discard from guest to underlying storage</a></li>
+  <li><a href="/develop/release-management/features/storage/wipe-volume-using-blkdiscard/">Wipe volume using blkdiscard</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>See "discard_max_bytes" in "Queue sysfs files" - <a href="https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt">https://www.kernel.org/doc/Documentation/block/queue-sysfs.txt</a> <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/discard-after-delete.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/discard-after-delete.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 2 Mar 2017 10:13 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

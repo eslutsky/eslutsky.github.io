@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+How to write patches for dwh &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<!-- TODO: Content review -->
+
+<h1 id="how-to-write-patches-for-dwh">How to write patches for DWH</h1>
+
+<h2 id="install-talend-di-and-import-the-project">Install Talend DI and import the project</h2>
+
+<ul>
+  <li>
+    <p>Download and install the latest Talend DI version.</p>
+
+    <p>Available from: <code>[</code>http://www.talend.com/download.php<code>](http://www.talend.com/download.php)</code> </p>
+  </li>
+  <li>
+    <p>Import the oVirt DWH project from the path:</p>
+
+    <p>&lt; repository folder path &gt;/ovirt-dwh/tos_project</p>
+  </li>
+  <li>You may now edit the project using the studio.</li>
+  <li>Setup connections context in the Talend DI for the ovirt_engine_history database.</li>
+</ul>
+
+<p>For details on this refer to Talend's documentation.</p>
+
+<ul>
+  <li>You may now run the project and test it in the Talend DI.</li>
+</ul>
+
+<h2 id="if-a-change-to-the-engine-views-is-required">If a change to the engine views is required</h2>
+
+<p>Follow the following steps:</p>
+
+<ul>
+  <li>Have a cloned ovirt-engine git repository</li>
+  <li>Setup a postgreSQL "engine" DB.</li>
+  <li>
+    <p>Make the necessary changes in:</p>
+
+    <p>  ./ovirt-engine/packaging/dbscripts/create_dwh_views.sql</p>
+  </li>
+</ul>
+
+<h2 id="if-a-change-to-the-ovirt_engine_history-db-is-required">If a change to the "ovirt_engine_history" DB is required</h2>
+
+<p>Follow the following steps:</p>
+
+<ul>
+  <li>Have a cloned ovirt-dwh git repository</li>
+  <li>Setup a postgreSQL "ovirt_engine_history" DB.</li>
+  <li>
+    <p>Create an upgrade sql file in the following folder:</p>
+
+    <p>   ./ovirt-dwh/packaging/dbscripts/upgrade/</p>
+  </li>
+</ul>
+
+<p>When needed, update the new column values before removing a related column.</p>
+
+<ul>
+  <li>Test to verify the expected results</li>
+</ul>
+
+<p>Please not the following :</p>
+
+<ul>
+  <li>Upgrade runs are written to "schema_version" table.</li>
+</ul>
+
+<p>In order to rerun an upgrade file, please remove from the "schema_version" table the corresponding line</p>
+
+<p>and change for the previous line the "current" column to TRUE.</p>
+
+<h2 id="if-a-change-to-the-history-views-is-required">If a change to the history views is required</h2>
+
+<p>Follow the following steps:</p>
+
+<ul>
+  <li>Have a cloned ovirt-engine git repository</li>
+  <li>Setup a postgreSQL "engine" DB.</li>
+  <li>
+    <p>Make the necessary changes for the latest views:</p>
+
+    <p>  ./ovirt-dwh/packaging/dbscripts/create_views_X_Y.sql</p>
+  </li>
+</ul>
+
+<h3 id="maintain-legacy-views---make-the-necessary-changes-to-former-views">Maintain Legacy views - Make the necessary changes to former views</h3>
+
+<ul>
+  <li>If a column that existed in former versions was <strong>removed</strong> or its <strong>type was changed</strong>,</li>
+</ul>
+
+<p>It is <strong>mandatory</strong> to make the change to former views so the API will not brake.</p>
+
+<ul>
+  <li>
+    <ul>
+      <li>If Removed , add the column as Null value casted to the column type</li>
+      <li>If the type of the column changed, make sure to cast the column to the previous type.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="update-etl-process-in-talend-open-studio">Update ETL process in Talend Open Studio</h2>
+
+<ul>
+  <li>Have the Talend open Studio installed in the project version.</li>
+  <li>Update the Jobs with the required changes.</li>
+  <li>Close all open jobs.</li>
+</ul>
+
+<p>First,</p>
+
+<ul>
+  <li>Build the Job from the "History ETL" job.</li>
+</ul>
+
+<p><img alt="" title="BuildJob.jpg" src="/images/BuildJob.jpg" /></p>
+
+<ul>
+  <li>
+    <ul>
+      <li>Open the zip file and copy the java files from:</li>
+    </ul>
+
+    <p> ./HistoryETL/src/ovirt_engine_dwh</p>
+  </li>
+</ul>
+
+<p>To the git repository :</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   ./ovirt-dwh/etl_export/src/ovirt_engine_dwh&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <ul>
+      <li>When changing the context - for example added a variable ,</li>
+    </ul>
+  </li>
+</ul>
+
+<p>copy the context from the zip file:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   ./HistoryETL/ovirt_engine_dwh/&#x000A;</code></pre></div>
+<p>To the git repository:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   ./ovirt-dwh/etl_export/ovirt_engine_dwh&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <ul>
+      <li>When upgrading a Talend version, copy the routines from the zip file:</li>
+    </ul>
+
+    <p> ./HistoryETL/src/routines/</p>
+  </li>
+</ul>
+
+<p>To the git repository:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ./ovirt-dwh/etl_export/src/routines&#x000A;</code></pre></div>
+<p>Second,</p>
+
+<ul>
+  <li>Export the project :</li>
+</ul>
+
+<p><img alt="" title="ExportTalendProject.jpg" src="/images/ExportTalendProject.jpg" /></p>
+
+<ul>
+  <li>
+    <p>Copy from the zip file to the git repository :</p>
+
+    <p> ./ovirt-dwh/tos_project </p>
+  </li>
+</ul>
+
+<p>Important ! Copy only into the folders that already exist in the tos_project folder. Do not copy : Metadata, sqlPatterns and temp.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../community/about.html">About</a></li>
+<li><a target="_blank" href="../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/write-patches-for-dwh.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/write-patches-for-dwh.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 15 Dec 2018 19:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

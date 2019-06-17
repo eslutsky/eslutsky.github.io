@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Quality of Service &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-3-quality-of-service">Chapter 3: Quality of Service</h1>
+
+<p>oVirt allows you to define quality of service entries that provide fine-grained control over the level of input and output, processing, and networking capabilities that resources in your environment can access. Quality of service entries are defined at the data center level and are assigned to profiles created under clusters and storage domains. These profiles are then assigned to individual resources in the clusters and storage domains where the profiles were created.</p>
+
+<h2 id="storage-quality-of-service">Storage Quality of Service</h2>
+
+<p>Storage quality of service defines the maximum level of throughput and the maximum level of input and output operations for a virtual disk in a storage domain. Assigning storage quality of service to a virtual disk allows you to fine tune the performance of storage domains and prevent the storage operations associated with one virtual disk from affecting the storage capabilities available to other virtual disks hosted in the same storage domain.</p>
+
+<h3 id="creating-a-storage-quality-of-service-entry">Creating a Storage Quality of Service Entry</h3>
+
+<p><strong>Creating a Storage Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>Storage</strong>, click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>QoS Name</strong> and a <strong>Description</strong> for the quality of service entry.</p>
+  </li>
+  <li>
+    <p>Specify the <strong>Throughput</strong> quality of service by clicking one of the radio buttons:</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p><strong>None</strong></p>
+  </li>
+  <li>
+    <p><strong>Total</strong> - Enter the maximum permitted total throughput in the <strong>MB/s</strong> field.</p>
+  </li>
+  <li>
+    <p><strong>Read/Write</strong> - Enter the maximum permitted throughput for read operations in the left <strong>MB/s</strong> field, and the maximum permitted throughput for write operations in the right <strong>MB/s</strong> field.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>Specify the input and output (<strong>IOps</strong>) quality of service by clicking one of the radio buttons:</li>
+</ol>
+
+<ul>
+  <li>
+    <p><strong>None</strong></p>
+  </li>
+  <li>
+    <p><strong>Total</strong> - Enter the maximum permitted number of input and output operations per second in the <strong>IOps</strong> field.</p>
+  </li>
+  <li>
+    <p><strong>Read/Write</strong> - Enter the maximum permitted number of input operations per second in the left <strong>IOps</strong> field, and the maximum permitted number of output operations per second in the right <strong>IOps</strong> field.</p>
+  </li>
+</ul>
+
+<ol>
+  <li>Click <strong>OK</strong>.</li>
+</ol>
+
+<p>You have created a storage quality of service entry, and can create disk profiles based on that entry in data storage domains that belong to the data center.</p>
+
+<h3 id="removing-a-storage-quality-of-service-entry">Removing a Storage Quality of Service Entry</h3>
+
+<p>Remove an existing storage quality of service entry.</p>
+
+<p><strong>Removing a Storage Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>Storage</strong>, select a storage quality of service entry and click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>If any disk profiles were based on that entry, the storage quality of service entry for those profiles is automatically set to <code>[unlimited]</code>.</p>
+
+<h2 id="virtual-machine-network-quality-of-service">Virtual Machine Network Quality of Service</h2>
+
+<p>Virtual machine network quality of service is a feature that allows you to create profiles for limiting both the inbound and outbound traffic of individual virtual network interface controllers. With this feature, you can limit bandwidth in a number of layers, controlling the consumption of network resources.</p>
+
+<h3 id="creating-a-virtual-machine-network-quality-of-service-entry">Creating a Virtual Machine Network Quality of Service Entry</h3>
+
+<p>Create a virtual machine network quality of service entry to regulate network traffic when applied to a virtual network interface controller (vNIC) profile, also known as a virtual machine network interface profile.</p>
+
+<p><strong>Creating a Virtual Machine Network Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>VM Network</strong>, click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> for the virtual machine network quality of service entry.</p>
+  </li>
+  <li>
+    <p>Enter the limits for the <strong>Inbound</strong> and <strong>Outbound</strong> network traffic.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have created a virtual machine network quality of service entry that can be used in a virtual network interface controller.</p>
+
+<h3 id="settings-in-the-new-virtual-machine-network-qos-and-edit-virtual-machine-network-qos-windows-explained">Settings in the New Virtual Machine Network QoS and Edit Virtual Machine Network QoS Windows Explained</h3>
+
+<p>Virtual machine network quality of service settings allow you to configure bandwidth limits for both inbound and outbound traffic on three distinct levels.</p>
+
+<p><strong>Virtual Machine Network QoS Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Data Center</b></td>
+   <td>The data center to which the virtual machine network QoS policy is to be added. This field is configured automatically according to the selected data center.</td>
+  </tr>
+  <tr>
+   <td><b>Name</b></td>
+   <td>A name to represent the virtual machine network QoS policy within the Engine.</td>
+  </tr>
+  <tr>
+   <td><b>Inbound</b></td>
+   <td>
+    <p>The settings to be applied to inbound traffic. Select or clear the <b>Inbound</b> check box to enable or disable these settings.</p>
+    <ul>
+     <li><b>Average</b>: The average speed of inbound traffic.</li>
+     <li><b>Peak</b>: The speed of inbound traffic during peak times.</li>
+     <li><b>Burst</b>: The speed of inbound traffic during bursts.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Outbound</b></td>
+   <td>
+    <p>The settings to be applied to outbound traffic. Select or clear the <b>Outbound</b> check box to enable or disable these settings.</p>
+    <ul>
+     <li><b>Average</b>: The average speed of outbound traffic.</li>
+     <li><b>Peak</b>: The speed of outbound traffic during peak times.</li>
+     <li><b>Burst</b>: The speed of outbound traffic during bursts.</li>
+    </ul>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<p>To change the maximum value allowed by the <strong>Average</strong>, <strong>Peak</strong>, or <strong>Burst</strong> fields, use the <code>engine-config</code> command to change the value of the <code>MaxAverageNetworkQoSValue</code>, <code>MaxPeakNetworkQoSValue</code>, or <code>MaxBurstNetworkQoSValue</code> configuration keys. You must restart the <strong>ovirt-engine</strong> service for any changes to take effect. For example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # engine-config -s MaxAverageNetworkQoSValue=2048&#x000A;  # systemctl restart ovirt-engine&#x000A;</code></pre></div>
+<h3 id="removing-a-virtual-machine-network-quality-of-service-entry">Removing a Virtual Machine Network Quality of Service Entry</h3>
+
+<p>Remove an existing virtual machine network quality of service entry.</p>
+
+<p><strong>Removing a Virtual Machine Network Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>VM Network</strong>, select a virtual machine network quality of service entry and click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="host-network-quality-of-service">Host Network Quality of Service</h2>
+
+<p>Host network quality of service configures the networks on a host to enable the control of network traffic through the physical interfaces. Host network quality of service allows for the fine tuning of network performance by controlling the consumption of network resources on the same physical network interface controller. This helps to prevent situations where one network causes other networks attached to the same physical network interface controller to no longer function due to heavy traffic. By configuring host network quality of service, these networks can now function on the same physical network interface controller without congestion issues.</p>
+
+<h3 id="creating-a-host-network-quality-of-service-entry">Creating a Host Network Quality of Service Entry</h3>
+
+<p>Create a host network quality of service entry.</p>
+
+<p><strong>Creating a Host Network Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>Host Network</strong>, click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Qos Name</strong> and a description for the quality of service entry.</p>
+  </li>
+  <li>
+    <p>Enter the desired values for <strong>Weighted Share</strong>, <strong>Rate Limit [Mbps]</strong>, and <strong>Committed Rate [Mbps]</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="settings-in-the-new-host-network-quality-of-service-and-edit-host-network-quality-of-service-windows-explained">Settings in the New Host Network Quality of Service and Edit Host Network Quality of Service Windows Explained</h3>
+
+<p>Host network quality of service settings allow you to configure bandwidth limits for outbound traffic.</p>
+
+<p><strong>Host Network QoS Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Data Center</b></td>
+   <td>The data center to which the host network QoS policy is to be added. This field is configured automatically according to the selected data center.</td>
+  </tr>
+  <tr>
+   <td><b>QoS Name</b></td>
+   <td>A name to represent the host network QoS policy within the Engine.</td>
+  </tr>
+  <tr>
+   <td><b>Description</b></td>
+   <td>A description of the host network QoS policy. </td>
+  </tr>
+  <tr>
+   <td><b>Outbound</b></td>
+   <td>
+    <p>The settings to be applied to outbound traffic.</p>
+    <ul>
+     <li><b>Weighted Share</b>: Signifies how much of the logical link's capacity a specific network should be allocated, relative to the other networks attached to the same logical link. The exact share depends on the sum of shares of all networks on that link. By default this is a number in the range 1-100. </li>
+     <li><b>Rate Limit [Mbps]</b>: The maximum bandwidth to be used by a network. </li>
+     <li><b>Committed Rate [Mbps]</b>: The minimum bandwidth required by a network. The Committed Rate requested is not guaranteed and will vary depending on the network infrastructure and the Committed Rate requested by other networks on the same logical link.</li>
+    </ul>
+   </td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="removing-a-host-network-quality-of-service-entry">Removing a Host Network Quality of Service Entry</h3>
+
+<p>Remove an existing network quality of service entry.</p>
+
+<p><strong>Removing a Host Network Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>Host Network</strong>, select a host network quality of service entry and click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> when prompted.</p>
+  </li>
+</ol>
+
+<h2 id="cpu-quality-of-service">CPU Quality of Service</h2>
+
+<p>CPU quality of service defines the maximum amount of processing capability a virtual machine can access on the host on which it runs, expressed as a percent of the total processing capability available to that host. Assigning CPU quality of service to a virtual machine allows you to prevent the workload on one virtual machine in a cluster from affecting the processing resources available to other virtual machines in that cluster.</p>
+
+<h3 id="creating-a-cpu-quality-of-service-entry">Creating a CPU Quality of Service Entry</h3>
+
+<p>Create a CPU quality of service entry.</p>
+
+<p><strong>Creating a CPU Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>CPU</strong>, click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>QoS Name</strong> and a <strong>Description</strong> for the quality of service entry.</p>
+  </li>
+  <li>
+    <p>Enter the maximum processing capability the quality of service entry permits in the <strong>Limit (%)</strong> field, in percentage. Do not include the <code>%</code> symbol.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have created a CPU quality of service entry, and can create CPU profiles based on that entry in clusters that belong to the data center.</p>
+
+<h3 id="removing-a-cpu-quality-of-service-entry">Removing a CPU Quality of Service Entry</h3>
+
+<p>Remove an existing CPU quality of service entry.</p>
+
+<p><strong>Removing a CPU Quality of Service Entry</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong>.</p>
+  </li>
+  <li>
+    <p>Click a data center’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>QoS</strong> tab.</p>
+  </li>
+  <li>
+    <p>Under <strong>CPU</strong>, select the CPU quality of service entry and click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>You have removed the CPU quality of service entry, and that entry is no longer available. If any CPU profiles were based on that entry, the CPU quality of service entry for those profiles is automatically set to <code>[unlimited]</code>.</p>
+
+<p><strong>Prev:</strong> <a href="chap-System_Dashboard">Chapter 2: Dashboard</a><br />
+<strong>Next:</strong> <a href="chap-Data_Centers">Chapter 4: Data Centers</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-quality_of_service">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Quality_of_Service.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Quality_of_Service.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

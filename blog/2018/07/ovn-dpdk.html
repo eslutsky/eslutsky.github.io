@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Upgraded DPDK support in oVirt &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='lgoldber' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Upgraded DPDK support in oVirt' property='og:title'>
+<meta content='DPDK (Data Plane Development Kit) is a set of open-source high-performance packet processing libraries and user space drivers.
+
+oVirt support for DPDK was introduced in 2017, and is now enhanced in terms of deployment via Ansible and usage via Open Virtual Network.
+
+While still experimental, OVN-DPDK in oVirt is now available in version 4.2.' property='og:description'>
+<meta content='http://ovirt.org/blog/2018/07/ovn-dpdk.html' property='og:url'>
+<meta content='2018-07-29T10:00:00Z' property='article:published_time'>
+<meta content='lgoldber' property='article:author:username'>
+<meta content='ansible' property='article:tag'>
+<link href='/blog/tag/ansible.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Open vSwitch' property='article:tag'>
+<link href='/blog/tag/open vswitch.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OVN' property='article:tag'>
+<link href='/blog/tag/ovn.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OVS-DPDK' property='article:tag'>
+<link href='/blog/tag/ovs-dpdk.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Upgraded DPDK support in oVirt' name='twitter:title'>
+<meta content='DPDK (Data Plane Development Kit) is a set of open-source high-performance packet processing libraries and user space drivers.
+
+oVirt support for DPDK was introduced in 2017, and is now enhanced in terms of deployment via Ansible and usage via Open Virtual Network.
+
+While still experimental, OVN-DPDK in oVirt is now available in version 4.2.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2018</li>
+<li class='active'>07</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Upgraded DPDK support in oVirt
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/lgoldber.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/lgoldber/">lgoldber</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2018-07-29T10:00:00Z'>
+Sunday 29 July 2018
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p><a href="http://dpdk.org/">DPDK (Data Plane Development Kit)</a> is a set of open-source high-performance packet processing libraries and user space drivers.</p>
+
+<p>oVirt <a href="https://www.ovirt.org/blog/2017/09/ovs-dpdk/">support for DPDK</a> was introduced in 2017, and is now enhanced in terms of deployment via <a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/">Ansible</a> and usage via <a href="http://www.ovn.org/">Open Virtual Network</a>.</p>
+
+<p>While still experimental, OVN-DPDK in oVirt is now available in version 4.2.</p>
+
+<p></p>
+
+<h1 id="whats-new">What's new?</h1>
+
+<h3 id="ansible-dpdk-host-setup">Ansible DPDK host setup</h3>
+
+<p>Host configuration for DPDK usage is now automated using Ansible. This primarly includes:</p>
+<ul>
+  <li>Hugepages configuration – hugepage size and quantity in the kernel.</li>
+  <li>CPU partitioning.</li>
+  <li>Binding NICs to userspace drivers.</li>
+  <li>OVS-DPDK related configuration (initialization, socket memory, pmd thread core binding, etc).</li>
+</ul>
+
+<p>The role is installed via Ansible galaxy:</p>
+<div class="highlight"><pre class="highlight plaintext"><code># ansible-galaxy install oVirt.dpdk-setup&#x000A;</code></pre></div><p>An example playbook:</p>
+<div class="highlight"><pre class="highlight plaintext"><code>- hosts: dpdk_host_0&#x000A;  vars:&#x000A;    pci_drivers:&#x000A;      "0000:02:00.1": "vfio-pci"&#x000A;      "0000:02:00.2": "igb"&#x000A;      "0000:02:00.3": ""&#x000A;    configure_kernel: true&#x000A;    bind_drivers: true&#x000A;    set_ovs_dpdk: false&#x000A;  roles:&#x000A;    - ovirt-ansible-dpdk-setup&#x000A;</code></pre></div><p>The role is controlled by 3 boolean variables (all set to <code>true</code> by default) and a dictionary of devices and their drivers:</p>
+<ul>
+  <li><code>configure_kernel</code> – determines whether the kernel should be configured for DPDK usage (hugepages, CPU partitioning). <strong>WARNING</strong>: When set to <code>true</code> it is very likely to trigger a reboot of the host, unless all required configuration is already pre-set.</li>
+  <li><code>bind_drivers</code> – determines whether the role should bind devices to their specified drivers.</li>
+  <li><code>set_ovs_dpdk</code> – determines whether the role should initialize and configure OVS for DPDK usage.</li>
+  <li><code>pci_drivers</code> – a dictionary of the PCI addresses of network interface cards as keys and drivers as values. An empty string represents the default Linux driver for the specified device. Non-DPDK compatible drivers may be set; However, NICs with such drivers will not be configured for OVS-DPDK usage and will not have their CPU isolated in multiple NUMA environments. PCI addresses can be retrieved via <code>lshw -class network -businfo</code>.</li>
+</ul>
+
+<p>Additionally, there are several optional performance related variables:</p>
+<ul>
+  <li><code>pmd_threads_count</code> – determines the number of PMD threads per NIC (default: <code>1</code>).</li>
+  <li><code>nr_2mb_hugepages</code> – determines the number of 2MB hugepages, if 2MB hugepages are to be used (default: <code>1024</code>).</li>
+  <li><code>nr_1gb_hugepages</code> – determines the number of 1GB hugepages, if 1GB hugepages are to be used (default: <code>4</code>).</li>
+  <li><code>use_1gb_hugepages</code> – determines whether 1GB hugepages should be used, where 1GB hugepages are supported (default: <code>true</code>).</li>
+</ul>
+
+<p>For additional information, refer to the role's <a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/">repository</a>.</p>
+
+<h3 id="ovn-integration">OVN Integration</h3>
+<p>DPDK in oVirt now leverages the capabilities of OVN in the form of an OVN localnet. This allows seamless connectivity across OVN networks, benefiting from OVN's software defined routers, switches, security groups, and ACL's.</p>
+
+<p>For more information about OVN localnet integration in oVirt, refer to oVirt's <a href="https://ovirt.org/develop/release-management/features/network/provider-physical-network/">Provider Physical Network RFE</a>.</p>
+
+<h1 id="usage-in-ovirt">Usage in oVirt</h1>
+<ol>
+  <li>
+    <p>Install <code>oVirt.dpdk-setup</code> Ansible role via ansible-galaxy:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ansible-galaxy install oVirt.dpdk-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Execute the role as described above.<br /><br /></p>
+  </li>
+  <li>
+    <p>Unless the host was already configured, the host will restart for kernel changes to be applied. After reboot, the following values are changed (if they are not, you may have incompatible hardware):</p>
+
+    <ul>
+      <li>
+        <p>IOMMU: <code>/sys/devices/virtual/iommu/&lt;DMAR device&gt;/devices/&lt;PCI address&gt;</code> should exist. DMAR devices are typically annotated by <code>dmar0</code>, <code>dmar1</code>, and so forth.</p>
+      </li>
+      <li>
+        <p>hugepages: <code>grep Huge /proc/meminfo</code> should reflect the desired state as defined in the Ansible playbook (i.e. <code>Hugepagesize</code> and <code>HugePages_Total</code>)</p>
+      </li>
+      <li>
+        <p>CPU partitioning: based on the devices that are to be used with a DPDK compatible driver, CPUs should be partitioned separately between each NUMA node. Refer to <code>lscpu</code> to see live CPU NUMA separation information, e.g.: <code>NUMA node1 CPU(s): 8-15</code></p>
+
+        <p><strong>Note</strong>: NICs using userspace drivers do not appear in the kernel; <code>ip</code> commands won't list devices using userspace drivers. in oVirt, such devices appear as <code>dpdk0</code>, <code>dpdk1</code>, and so forth.<br /><br /></p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Create an oVirt network <code>phys-net-demo</code> on your data center and attach it to your cluster.</p>
+
+    <p><img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-phys-net.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Attach <code>phys-net-demo</code> to DPDK NICs accross your cluster.</p>
+
+    <p><img alt="" width="1920" height="1080" src="/images/ovn-dpdk/set-phys-net.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Create an external OVN network <code>ext-net-demo</code>, setting <code>phys-net-demo</code> as its physical network. This configuration between <code>ext-net-demo</code> and <code>phys-net-demo</code> will enable traffic between <code>phys-net-demo</code> (which DPDK's physical port is part of) and the rest of the ports present in OVN's <code>ext-net-demo</code> network.</p>
+
+    <p><img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-ext-net.png?1560777613" /></p>
+  </li>
+  <li>
+    <p><code>ext-net-demo</code> vNic's may now be added to virtual machines. These vNics now share L2 connectivity with other remote ports in <code>ext-net-demo</code> via DPDK's NIC (and other local ports internally).</p>
+
+    <p><img alt="" width="1920" height="1080" src="/images/ovn-dpdk/ext-net-demo.png?1560777613" /></p>
+  </li>
+  <li>
+    <p>Temporarily, SElinux needs to be set to permissive. This is due to an <a href="https://bugzilla.redhat.com/1598435">open bug</a> where SElinux blocks the creation of a QEMU socket. Once the bug is resolved, this step should be skipped.<br /><br /></p>
+  </li>
+  <li>
+    <p>Host to VM packets are transmitted and received on buffers allocated on shared hugepages memory. As such, virtual machines using DPDK based NIC's need to enable hugepage sharing; this is done by running VM's with custom properties:</p>
+
+    <ul>
+      <li>Review engine custom properties:<br />
+<code>engine-config -g UserDefinedVMProperties</code></li>
+      <li>Add engine custom properties for hugepages support:<br />
+<code>engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)</code></li>
+      <li>Restart engine for changes to take effect:<br />
+<code>systemctl restart ovirt-engine</code></li>
+      <li>In the VM run once menu dialog, add the following custom properties:<br />
+<code>hugepages_shared</code> – <code>true</code>.<br />
+<code>hugepages</code> – the number of hugepages to share.</li>
+    </ul>
+
+    <p><img alt="" width="1920" height="1080" src="/images/ovn-dpdk/hugepages.png?1560777613" /></p>
+  </li>
+</ol>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/ansible.html">ansible</a></li>
+<li><a href="../../tag/open-vswitch.html">Open vSwitch</a></li>
+<li><a href="../../tag/ovn.html">OVN</a></li>
+<li><a href="../../tag/ovs-dpdk.html">OVS-DPDK</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2018-07-29-ovn-dpdk.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2018-07-29-ovn-dpdk.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 30 Jul 2018 20:22 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

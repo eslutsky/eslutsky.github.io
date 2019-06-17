@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Application-Scoped Tests for oVirt with Arquillian &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Roman Mohr' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Application-Scoped Tests for oVirt with Arquillian' property='og:title'>
+<meta content='oVirt&#39;s heart, ovirt-engine, is a monolith with more
+than one million lines of codes based on Wildfly. One of the problems faced
+when working on such big projects is that sometimes writing tests is extremely
+complex. You spend a tremendous amount of time mocking database access and
+irrelevant services for the unit under test.
+
+One way to deal with that complexity is to treat the
+database as part of the application. While we will see the advantages of this
+for writing tests it does also make a lot of sense for other reasons.
+
+In the past the database was not part of the application, it was the opposite.
+The database was the integration point of different applications and
+services. A database was full of different views for BI, Finance, Shops, and
+many more. This has changed over time. Nowadays the integration mostly happens
+through REST or similar APIs, giving applications the freedom to choose the one
+(or even more than one) database technology suiting their domain.' property='og:description'>
+<meta content='http://ovirt.org/blog/2016/07/application-scoped-tests-for-ovirt-with-arquillian.html' property='og:url'>
+<meta content='2016-07-06T16:30:00Z' property='article:published_time'>
+<meta content='rmohr' property='article:author:username'>
+<meta content='Arquillian' property='article:tag'>
+<link href='/blog/tag/arquillian.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Builder' property='article:tag'>
+<link href='/blog/tag/builder.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Postgres' property='article:tag'>
+<link href='/blog/tag/postgres.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Unit Test' property='article:tag'>
+<link href='/blog/tag/unit test.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='Wildfly' property='article:tag'>
+<link href='/blog/tag/wildfly.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Application-Scoped Tests for oVirt with Arquillian' name='twitter:title'>
+<meta content='oVirt&#39;s heart, ovirt-engine, is a monolith with more
+than one million lines of codes based on Wildfly. One of the problems faced
+when working on such big projects is that sometimes writing tests is extremely
+complex. You spend a tremendous amount of time mocking database access and
+irrelevant services for the unit under test.
+
+One way to deal with that complexity is to treat the
+database as part of the application. While we will see the advantages of this
+for writing tests it does also make a lot of sense for other reasons.
+
+In the past the database was not part of the application, it was the opposite.
+The database was the integration point of different applications and
+services. A database was full of different views for BI, Finance, Shops, and
+many more. This has changed over time. Nowadays the integration mostly happens
+through REST or similar APIs, giving applications the freedom to choose the one
+(or even more than one) database technology suiting their domain.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2016</li>
+<li class='active'>07</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Application-Scoped Tests for oVirt with Arquillian
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/rmohr.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/rmohr/">Roman Mohr</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2016-07-06T16:30:00Z'>
+Wednesday  6 July 2016
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p><a href="/">oVirt's</a> heart, <code>ovirt-engine</code>, is a monolith with more
+than one million lines of codes based on Wildfly. One of the problems faced
+when working on such big projects is that sometimes writing tests is extremely
+complex. You spend a tremendous amount of time mocking database access and
+irrelevant services for the unit under test.</p>
+
+<p>One way to deal with that complexity is to treat the
+database as part of the application. While we will see the advantages of this
+for writing tests it does also make a lot of sense for other reasons.</p>
+
+<p>In the past the database was not part of the application, it was the opposite.
+The database was <em>the</em> integration point of different applications and
+services. A database was full of different views for BI, Finance, Shops, and
+many more. This has changed over time. Nowadays the integration mostly happens
+through REST or similar APIs, giving applications the freedom to choose the one
+(or even more than one) database technology suiting their domain.</p>
+
+<p></p>
+
+<p>Back to the topic of this post; to integrate the database into the tests, some
+requirements need to be met:</p>
+
+<ul>
+  <li>Database rollback after every test</li>
+  <li>An easy way to create, update, and delete test relevant data on the database layer must be provided</li>
+  <li>The main application infrastructure should be up and things like CDI injections should work</li>
+</ul>
+
+<p>Since <code>ovirt-engine</code> is based on <a href="http://wildfly.org/">Wildfly</a>,
+<a href="http://arquillian.org/">Arquillian</a> is the perfect choice for meeting these
+requirements.</p>
+
+<p>Getting started with Arquillian is pretty easy. Add the right dependencies to your Maven <code>pom.xml</code>:</p>
+
+<div class="highlight"><pre class="highlight xml"><code>  <span class="nt">&lt;dependencies&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>javax.enterprise<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>cdi-api<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>org.jboss.spec<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>jboss-javaee-6.0<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>org.jboss.arquillian.junit<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>arquillian-junit-container<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>org.jboss.shrinkwrap.resolver<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>shrinkwrap-resolver-depchain<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>&#x000A;      <span class="nt">&lt;type&gt;</span>pom<span class="nt">&lt;/type&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>org.jboss.arquillian.container<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>arquillian-weld-ee-embedded-1.1<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;version&gt;</span>1.0.0.CR8<span class="nt">&lt;/version&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>org.jboss.weld<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>weld-core<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;version&gt;</span>1.1.5.Final<span class="nt">&lt;/version&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;    <span class="nt">&lt;dependency&gt;</span>&#x000A;      <span class="nt">&lt;groupId&gt;</span>org.slf4j<span class="nt">&lt;/groupId&gt;</span>&#x000A;      <span class="nt">&lt;artifactId&gt;</span>slf4j-simple<span class="nt">&lt;/artifactId&gt;</span>&#x000A;      <span class="nt">&lt;version&gt;</span>1.6.4<span class="nt">&lt;/version&gt;</span>&#x000A;      <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>&#x000A;    <span class="nt">&lt;/dependency&gt;</span>&#x000A;  <span class="nt">&lt;/dependencies&gt;</span>&#x000A;</code></pre></div>
+<p>Create a simple Arquillian test:</p>
+
+<div class="highlight"><pre class="highlight java"><code><span class="nd">@RunWith</span><span class="o">(</span><span class="n">Arquillian</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>&#x000A;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SimpleTest</span> <span class="o">{</span>&#x000A;&#x000A;    <span class="nd">@Inject</span>&#x000A;    <span class="n">TestBean</span> <span class="n">testBean</span><span class="o">;</span>&#x000A;&#x000A;    <span class="nd">@Deployment</span>&#x000A;    <span class="kd">public</span> <span class="kd">static</span> <span class="n">JavaArchive</span> <span class="nf">deploy</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="k">return</span> <span class="n">ShrinkWrap</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">JavaArchive</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>&#x000A;                <span class="o">.</span><span class="na">addClass</span><span class="o">(</span>&#x000A;                        <span class="n">TestBean</span><span class="o">.</span><span class="na">class</span>&#x000A;                <span class="o">).</span><span class="na">addAsManifestResource</span><span class="o">(</span>&#x000A;                        <span class="n">EmptyAsset</span><span class="o">.</span><span class="na">INSTANCE</span><span class="o">,</span>&#x000A;                        <span class="n">ArchivePaths</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"beans.xml"</span><span class="o">)</span>&#x000A;                <span class="o">);</span>&#x000A;    <span class="o">}</span>&#x000A;&#x000A;    <span class="nd">@Test</span>&#x000A;    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldPrintHello</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="n">testBean</span><span class="o">.</span><span class="na">printHello</span><span class="o">();</span>&#x000A;    <span class="o">}</span>&#x000A;&#x000A;    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TestBean</span> <span class="o">{</span>&#x000A;        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">printHello</span><span class="o">()</span> <span class="o">{</span>&#x000A;            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Hi I am injected"</span><span class="o">);</span>&#x000A;        <span class="o">}</span>&#x000A;    <span class="o">}</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre></div><p>and your first test with real injections is running. A good
+starting point for understanding Arquillian better is the <a href="http://arquillian.org/guides/getting_started/">Getting
+Started</a> article on the
+Arquillian homepage.</p>
+
+<p>Arquillian can also do automatic rollback for you with its <a href="http://arquillian.org/modules/transaction-extension/">Transaction
+Extension</a>.  Since this
+requires the download of a full JavaEE Application Server it is not an option
+for oVirt right now. To still get automatic rollback, I only had to create a
+custom Arquillian Extension, which can be found
+<a href="https://github.com/oVirt/ovirt-engine/tree/aa000f27c7bcb17cf82fbd2579059664838cfea7/backend/manager/modules/bll/src/test/java/org/ovirt/engine/arquillian/database">here</a>.
+Look at
+<a href="https://github.com/oVirt/ovirt-engine/blob/aa000f27c7bcb17cf82fbd2579059664838cfea7/backend/manager/modules/bll/src/test/java/org/ovirt/engine/arquillian/database/RollbackRule.java">RollbackRule.java</a>
+in the extension to see how the Spring transaction manager is hooked into
+Arquillian without the need of a real JTA transaction manager. Almost everyting
+in Arquillian is extensible, that is really where this project shines.</p>
+
+<p>All of this is already part of oVirt, so when writing tests, you don't have to
+care about this anymore. Inherit from the right base class and start
+writing your test.</p>
+
+<h2 id="writing-an-ovirt-application-scoped-test-step-by-step">Writing an oVirt Application-Scoped Test Step by Step</h2>
+
+<p>Creating an application scoped test for oVirt is pretty simple:</p>
+
+<div class="highlight"><pre class="highlight java"><code><span class="nd">@Category</span><span class="o">(</span><span class="n">IntegrationTest</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>&#x000A;<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AddVmCommandTest</span> <span class="kd">extends</span> <span class="n">TransactionalCommandTestBase</span> <span class="o">{</span>&#x000A;    <span class="nd">@Deployment</span>&#x000A;    <span class="kd">public</span> <span class="kd">static</span> <span class="n">JavaArchive</span> <span class="nf">createDeployment</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="k">return</span> <span class="n">TransactionalCommandTestBase</span><span class="o">.</span><span class="na">createDeployment</span><span class="o">();</span>&#x000A;    <span class="o">}</span>&#x000A;</code></pre></div>
+<p>The <code>@Category</code> annotation on the class tells Maven that it should launch the
+test in the integration test phase. The advantage of running them not as
+regular unit tests is that we can update the database schema before we run the
+first integration test with the standard Maven life-cycle. Regular unit tests
+can still run in the normal test phase and are independent from any resource
+needs of the integration tests.</p>
+
+<p>Arquillian-based tests need a static method with the <code>@Deployment</code> annotation
+on it. There we return a <code>JavaArchive</code>. Arquillian supports different
+application types (EAR, WAR, JAR). For our scenario the advantage of the
+<code>JavaArchive</code> is that in contrast to WAR and EAR deployments everything on the
+classpath will also be accessible in the tests, whereas the other application
+types are far better isolated. However, to make classes injectable they need to
+be part of the generated JAR itself. The <code>JavaArchive</code> follows a nice builder
+pattern and adding your own services is just a matter of calling
+<code>JavaArchive#addClasses(...)</code>.</p>
+
+<p>All DAOs and the basic <code>ovirt-engine</code> services are already added to the archive by the base class <code>TransactionalCommandTestBase</code>, so just calling
+<code>#createDeployment()</code> of the base class should be enough for many cases.</p>
+
+<p>That is not the only thing the base class does for us. It does:</p>
+
+<ul>
+  <li>Transaction handling. After every test, the database is rolled back</li>
+  <li>Creating a default datacenter with a default host and a default VM in the database.</li>
+  <li>Loading the default config values of ovirt-engine</li>
+  <li>Loading the default OS configuration for different OS types</li>
+  <li>Loading and setting up the ovirt-engine lock manager for the application</li>
+  <li>Packing all DAOs and the most common services in the Arquillian JAR.</li>
+</ul>
+
+<p>The next step is to set up your test:</p>
+
+<div class="highlight"><pre class="highlight java"><code>    <span class="nd">@Inject</span>&#x000A;    <span class="n">BackendInternal</span> <span class="n">backend</span><span class="o">;</span>&#x000A;&#x000A;    <span class="nd">@Inject</span>&#x000A;    <span class="n">StoragePoolDao</span> <span class="n">storagePoolDao</span><span class="o">;</span>&#x000A;&#x000A;&#x000A;    <span class="kd">private</span> <span class="n">AddVmParameters</span> <span class="n">parameters</span><span class="o">;</span>&#x000A;&#x000A;    <span class="nd">@Before</span>&#x000A;    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUp</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="n">parameters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AddVmParameters</span><span class="o">();</span>&#x000A;        <span class="n">vmBuilder</span><span class="o">.</span><span class="na">reset</span><span class="o">().</span><span class="na">cluster</span><span class="o">(</span><span class="n">defaultCluster</span><span class="o">).</span><span class="na">os</span><span class="o">(</span><span class="n">OS_RHEL7_X86_64</span><span class="o">).</span><span class="na">name</span><span class="o">(</span><span class="s">"my_vm"</span><span class="o">);</span>&#x000A;    <span class="o">}</span>&#x000A;</code></pre></div>
+<p>Arquillian gives us the possibility to use injections in the test class itself.
+Here the <code>StoragePoolDao</code> is injected. Further in the <code>@Before</code> method a
+default scenario for the tests is defined. In this case testing the
+<code>AddVmCommand</code> is the goal. Therefore a VM which will make the <code>AddVmCommand</code>
+operation pass is defined (not created yet) with the <code>VmBuilder</code> (The builders
+are an important part of reducing redundant code, see below for more details).</p>
+
+<p>Defining a scenario which will be valid for the code under test is one of
+the key elements for writing tests. Not only for this kind of application
+scoped tests, also for writing unit tests in general. This scenaro is
+enough to make the common use case for the code under test succeed:</p>
+
+<div class="highlight"><pre class="highlight java"><code>    <span class="nd">@Test</span>&#x000A;    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldAddVm</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="n">parameters</span><span class="o">.</span><span class="na">setVm</span><span class="o">(</span><span class="n">vmBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>&#x000A;        <span class="n">VdcReturnValueBase</span> <span class="n">returnValue</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="na">runInternalAction</span><span class="o">(</span><span class="n">VdcActionType</span><span class="o">.</span><span class="na">AddVm</span><span class="o">,</span> <span class="n">parameters</span><span class="o">);</span>&#x000A;        <span class="n">assertThat</span><span class="o">(</span><span class="n">returnValue</span><span class="o">.</span><span class="na">getSucceeded</span><span class="o">()).</span><span class="na">isTrue</span><span class="o">();</span>&#x000A;    <span class="o">}</span>&#x000A;</code></pre></div>
+<p>Recreating the same valid scenario before every test makes it now extremely
+easy to test specific scenarios. The following test tests if the
+<code>AddVmCommand</code> will detect a VM entity without a name by just tweaking the
+default scenario in a minimal way:</p>
+
+<div class="highlight"><pre class="highlight java"><code>    <span class="nd">@Test</span>&#x000A;    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldDetectMissingName</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="n">parameters</span><span class="o">.</span><span class="na">setVm</span><span class="o">(</span><span class="n">vmBuilder</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="kc">null</span><span class="o">).</span><span class="na">build</span><span class="o">());</span>&#x000A;        <span class="n">VdcReturnValueBase</span> <span class="n">returnValue</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="na">runInternalAction</span><span class="o">(</span><span class="n">VdcActionType</span><span class="o">.</span><span class="na">AddVm</span><span class="o">,</span> <span class="n">parameters</span><span class="o">);</span>&#x000A;        <span class="n">assertThat</span><span class="o">(</span><span class="n">returnValue</span><span class="o">.</span><span class="na">getSucceeded</span><span class="o">()).</span><span class="na">isFalse</span><span class="o">();</span>&#x000A;        <span class="n">assertThat</span><span class="o">(</span><span class="n">returnValue</span><span class="o">.</span><span class="na">getValidationMessages</span><span class="o">()).</span><span class="na">contains</span><span class="o">(</span><span class="n">EngineMessage</span><span class="o">.</span><span class="na">ACTION_TYPE_FAILED_NAME_MAY_NOT_BE_EMPTY</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>&#x000A;    <span class="o">}</span>&#x000A;</code></pre></div>
+<p>Since a key feature of these kind of tests is that all changes in the database
+are rolled back after every test, we can also tweak persisted entities in the database to create our scenarios. Here, the default storage pool in the database
+is loaded, set to <code>NotOperational</code> and persisted again. As a result the
+<code>AddVmCommand</code> should fail:</p>
+
+<div class="highlight"><pre class="highlight java"><code>    <span class="nd">@Test</span>&#x000A;    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">shouldDetectNonOperationalStoragePool</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="n">defaultStoragePool</span><span class="o">.</span><span class="na">setStatus</span><span class="o">(</span><span class="n">StoragePoolStatus</span><span class="o">.</span><span class="na">NotOperational</span><span class="o">);</span>&#x000A;        <span class="n">storagePoolDao</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">defaultStoragePool</span><span class="o">);</span>&#x000A;&#x000A;        <span class="n">parameters</span><span class="o">.</span><span class="na">setVm</span><span class="o">(</span><span class="n">vmBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">());</span>&#x000A;        <span class="n">VdcReturnValueBase</span> <span class="n">returnValue</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="na">runInternalAction</span><span class="o">(</span><span class="n">VdcActionType</span><span class="o">.</span><span class="na">AddVm</span><span class="o">,</span> <span class="n">parameters</span><span class="o">);</span>&#x000A;        <span class="n">assertThat</span><span class="o">(</span><span class="n">returnValue</span><span class="o">.</span><span class="na">getSucceeded</span><span class="o">()).</span><span class="na">isFalse</span><span class="o">();</span>&#x000A;        <span class="n">assertThat</span><span class="o">(</span><span class="n">returnValue</span><span class="o">.</span><span class="na">getValidationMessages</span><span class="o">()).</span><span class="na">contains</span><span class="o">(</span><span class="n">EngineMessage</span><span class="o">.</span><span class="na">ACTION_TYPE_FAILED_IMAGE_REPOSITORY_NOT_FOUND</span><span class="o">.</span><span class="na">name</span><span class="o">());</span>&#x000A;    <span class="o">}</span>&#x000A;&#x000A;<span class="o">}</span>&#x000A;</code></pre></div>
+<h2 id="populating-the-database">Populating the Database</h2>
+
+<p>While Arquillian and some custom extensions are preparing the environment to
+reduce the amount of repetitive set-up code for the tests, this does still not
+give us a nice way to populate the database with the data needed for a specific
+test. Currently ovirt-engine uses a fixture file for DAO testing. All entities
+are described there in an XML format and before every test the database is
+populated with that data. While this works it has some drawbacks. Mainly:</p>
+
+<ul>
+  <li>It is hard to add new entities in XML.</li>
+  <li>It is hard to update the entities in the XML file when the entity class changes.</li>
+  <li>All tests need to take into account that there might be unrelated data in the database for other tests.</li>
+  <li>It is hard to see which tests use which parts of the persisted data</li>
+</ul>
+
+<p>A nice trick I have learned some time ago from the excellent engineers behind
+<a href="http://www.friendseek.com/">Frendseek</a> is to use <code>builders</code> for the entities.
+With these builders the basic set-up of a full datacenter in the engine looks
+like this:</p>
+
+<div class="highlight"><pre class="highlight java"><code><span class="nd">@RunWith</span><span class="o">(</span><span class="n">Arquillian</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>&#x000A;<span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">TransactionalTestBase</span> <span class="o">{</span>&#x000A;&#x000A;    <span class="o">[...]</span>&#x000A;&#x000A;    <span class="nd">@Before</span>&#x000A;    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUpDefaultEnvironment</span><span class="o">()</span> <span class="o">{</span>&#x000A;        <span class="o">[...]</span>&#x000A;&#x000A;        <span class="n">MacRange</span> <span class="n">macRange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MacRange</span><span class="o">();</span>&#x000A;        <span class="n">macRange</span><span class="o">.</span><span class="na">setMacFrom</span><span class="o">(</span><span class="s">"00:2A:4A:16:01:51"</span><span class="o">);</span>&#x000A;        <span class="n">macRange</span><span class="o">.</span><span class="na">setMacTo</span><span class="o">(</span><span class="s">"00:2A:4A:16:01:e6"</span><span class="o">);</span>&#x000A;&#x000A;&#x000A;        <span class="n">defaultStoragePool</span> <span class="o">=</span> <span class="n">storagePoolBuilder</span><span class="o">.</span><span class="na">up</span><span class="o">().</span><span class="na">persist</span><span class="o">();</span>&#x000A;        <span class="n">defaultMacPool</span> <span class="o">=</span> <span class="n">macPoolBuilder</span><span class="o">.</span><span class="na">macRanges</span><span class="o">(</span><span class="n">macRange</span><span class="o">).</span><span class="na">persist</span><span class="o">();</span>&#x000A;        <span class="n">defaultCluster</span> <span class="o">=</span> <span class="n">clusterBuilder</span>&#x000A;                <span class="o">.</span><span class="na">macPool</span><span class="o">(</span><span class="n">defaultMacPool</span><span class="o">)</span>&#x000A;                <span class="o">.</span><span class="na">storagePool</span><span class="o">(</span><span class="n">defaultStoragePool</span><span class="o">)</span>&#x000A;                <span class="o">.</span><span class="na">architecture</span><span class="o">(</span><span class="n">ArchitectureType</span><span class="o">.</span><span class="na">x86_64</span><span class="o">)</span>&#x000A;                <span class="o">.</span><span class="na">cpuName</span><span class="o">(</span><span class="s">"Intel Conroe Family"</span><span class="o">)</span>&#x000A;                <span class="o">.</span><span class="na">persist</span><span class="o">();</span>&#x000A;        <span class="n">defaultCpuProfile</span> <span class="o">=</span> <span class="n">cpuProfileBuilder</span><span class="o">.</span><span class="na">cluster</span><span class="o">(</span><span class="n">defaultCluster</span><span class="o">).</span><span class="na">persist</span><span class="o">();</span>&#x000A;        <span class="n">defaultHost</span> <span class="o">=</span> <span class="n">vdsBuilder</span><span class="o">.</span><span class="na">cluster</span><span class="o">(</span><span class="n">defaultCluster</span><span class="o">).</span><span class="na">persist</span><span class="o">();</span>&#x000A;        <span class="n">defaultVM</span> <span class="o">=</span> <span class="n">vmBuilder</span><span class="o">.</span><span class="na">host</span><span class="o">(</span><span class="n">defaultHost</span><span class="o">).</span><span class="na">os</span><span class="o">(</span><span class="n">OS_RHEL7_X86_64</span><span class="o">).</span><span class="na">up</span><span class="o">().</span><span class="na">persist</span><span class="o">();</span>&#x000A;    <span class="o">}</span>&#x000A;<span class="o">}</span>&#x000A;</code></pre></div>
+<p>When calling <code>#persist()</code> on the builder the entity is persisted to the
+database and a fresh loaded copy of the entity is returned. There exists also
+the <code>#build()</code> counterpart on every builder which can also be used in normal
+unit tests without database access.</p>
+
+<p>There are two very important rules when writing builders for new entities:</p>
+
+<ul>
+  <li>Calling <code>builder.reset().persist()</code> should always work. In other words, if values which are required to meet database constraints are missing, fill them with random values to make a call to <code>#persist()</code> always succeed. Don't pre-fill any other values to keep the tests as predictable as possible.</li>
+  <li>Instantiating a builder and calling <code>#build()</code> should work without the need to have CDI or a database present. It basically allows you to reuse the builders for standard unit tests.</li>
+</ul>
+
+<p>The final step to make the usage of the builders and the default environment even more convenient, is to declare them in the base class as protected fields. This allows inherited test cases to easily access the pre-persisted default entities and the builders, like demonstrated on the <code>AddVmCommandTest</code> example above.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Comparing the classic <a href="https://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=backend/manager/modules/bll/src/test/java/org/ovirt/engine/core/bll/AddVmCommandTest.java;h=5cacad4b8058ac10aa45f7e0cfd00c4f38fbbd88;hb=80274308dcadddea46cde895f7418b022cb6224e">AddVmCommandTest</a> with the new <a href="https://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=backend/manager/modules/bll/src/test/java/org/ovirt/engine/core/bll/integration/AddVmCommandTest.java;h=a7da66974beaf3694d26aa0f3507c5b146d67c59;hb=80274308dcadddea46cde895f7418b022cb6224e">integration/AddVmCommandTest</a> immediately shows how much simpler it is to quickly write new tests. Further we can stop imitating application internal DAO and service logic with Mockito, making it easier to refactor the application and the tests. Since we are also not mocking any of the DAOs or core services there is a higher chance of immediately detecting changes of behaviour (intendet or unintended) which would break dependent services.</p>
+
+<p><em>This post was originally published at <a href="http://rmohr.github.io/continuous%20integration/2016/07/04/application-scoped-tests-for-ovirt-with-arquillian">rmohr.github.io</a>.</em></p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/arquillian.html">Arquillian</a></li>
+<li><a href="../../tag/builder.html">Builder</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/postgres.html">Postgres</a></li>
+<li><a href="../../tag/unit-test.html">Unit Test</a></li>
+<li><a href="../../tag/wildfly.html">Wildfly</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2016-07-06-application-scoped-tests-for-ovirt-with-arquillian.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2016-07-06-application-scoped-tests-for-ovirt-with-arquillian.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 28 Oct 2016 10:09 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

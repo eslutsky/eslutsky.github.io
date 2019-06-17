@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+CI Please Build&mdash;How to build your oVirt project on-demand &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Eyal Edri' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='CI Please Build&amp;mdash;How to build your oVirt project on-demand' property='og:title'>
+<meta content='All projects in oVirt CI are built today post merge, using the &#39;build-artifacts&#39; stage from oVirt&#39;s CI standards.
+This ensures that all oVirt projects are built and deployed to oVirt repositories and can be consumed by CI jobs, developers or oVirt users.
+
+However, on some occasions a developer might need to build his project from an open patch.
+Developers need this capability in order to to examine the effects of their changes on a full oVirt installation before merging those changes.
+On some cases developers may even want to hand over packages based on un-merged patches to the QE team to verify that a given change will fix some complex issue or to preview a new feature on its early stages of development.' property='og:description'>
+<meta content='http://ovirt.org/blog/2016/12/ci-please-build.html' property='og:url'>
+<meta content='2016-12-20T10:00:00Z' property='article:published_time'>
+<meta content='eedri' property='article:author:username'>
+<meta content='ci' property='article:tag'>
+<link href='/blog/tag/ci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='developers' property='article:tag'>
+<link href='/blog/tag/developers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='infrastructure' property='article:tag'>
+<link href='/blog/tag/infrastructure.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='CI Please Build&amp;mdash;How to build your oVirt project on-demand' name='twitter:title'>
+<meta content='All projects in oVirt CI are built today post merge, using the &#39;build-artifacts&#39; stage from oVirt&#39;s CI standards.
+This ensures that all oVirt projects are built and deployed to oVirt repositories and can be consumed by CI jobs, developers or oVirt users.
+
+However, on some occasions a developer might need to build his project from an open patch.
+Developers need this capability in order to to examine the effects of their changes on a full oVirt installation before merging those changes.
+On some cases developers may even want to hand over packages based on un-merged patches to the QE team to verify that a given change will fix some complex issue or to preview a new feature on its early stages of development.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2016</li>
+<li class='active'>12</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+CI Please Build&mdash;How to build your oVirt project on-demand
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/eedri.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/eedri/">Eyal Edri</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2016-12-20T10:00:00Z'>
+Tuesday 20 December 2016
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>All projects in oVirt CI are built today post merge, using the 'build-artifacts' stage from <a href="http://ovirt-infra-docs.readthedocs.io/en/latest/CI/Build_and_test_standards.html">oVirt's CI standards</a>.
+This ensures that all oVirt projects are built and deployed to oVirt repositories and can be consumed by CI jobs, developers or oVirt users.</p>
+
+<p>However, on some occasions a developer might need to build his project from an open patch.
+Developers need this capability in order to to examine the effects of their changes on a full oVirt installation before merging those changes.
+On some cases developers may even want to hand over packages based on un-merged patches to the QE team to verify that a given change will fix some complex issue or to preview a new feature on its early stages of development.</p>
+
+<p></p>
+
+<h2 id="the-current-build-option">The Current Build Option</h2>
+
+<p>Until now, to build rpms from a patch, a developer needed to use a custom <a href="http://jenkins.ovirt.org/job/ovirt-engine_master_build-artifacts-el7-x86_64_build_from_patch/">Jenkins job</a>, which was only available to ovirt-engine and only for master branch. Another option was to try and build it locally using standard CI 'mock runner.sh' script which will use the same configuration
+as in CI. For full documentation on how to use 'mock-runner', checkout the <a href="http://infra-docs.readthedocs.io/en/latest/CI/Build_and_test_standards.html#testing-the-scripts-locally">Standard CI</a> page.</p>
+
+<h2 id="the-new-build-option">The New Build Option</h2>
+
+<p>To ease and simplify the build from patch option, the oVirt infra team added a new feature to the <a href="http://ovirt-infra-docs.readthedocs.io/en/latest/CI/Build_and_test_standards.html">oVirt's CI standards framework</a> called 'build on demand'.</p>
+
+<p>It allows any oVirt developer to trigger a build from any open patch just by adding the comment 'ci please build' on the patch in Gerrit.
+It will then trigger a 'build-artifacts-on-demand' job on jenkins which will build rpms from the patch, but not publish them to any repo.</p>
+
+<h2 id="how-do-i-enable-it-for-my-ovirt-project-">How Do I Enable It For My oVirt Project ?</h2>
+
+<p>Enabling the 'build-on-demand' feature to an oVirt project is simple as adding a single line to the project standard yaml file, just add the following line to your 'build-artifacts' section, under 'jobs':</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  - '{project}_{version}_{stage}-on-demand-{distro}-{arch}'&#x000A;</code></pre></div>
+<p>For a full example on how to send a patch for enabling it,
+Checkout an example <a href="https://gerrit.ovirt.org/#/c/68759/">Patch</a> which adds on-demand builds to four different projects.</p>
+
+<h2 id="what-else-can-i-do-with-it--hint-ost">What Else Can I Do With It ? (Hint: OST)</h2>
+
+<p>Maybe the most interesting and valuable thing you can do with the new feature, is to run the oVirt system tests suit on
+the open patch (something that was possible only post merge until today, or required complex actions to do it manually).</p>
+
+<p>Running the OST suite with your newly created RPMs requires also just one line of code, here's how you do it:</p>
+
+<p>After the job you triggered finished running in Jenkins, use the Jenkins build URL you got (<a href="http://jenkins.ovirt.org/job/vdsm_master_build-artifacts-on-demand-el7-x86_64/1/artifact/exported-artifacts/">Example</a>)
+as a parameter to to run OST on your laptop.
+From the OST root dir, run the following to run basic master suite for e.g:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>./run_suite.sh -s http://jenkins.ovirt.org/job/vdsm_master_build-artifacts-on-demand-el7-x86_64/1/artifact/exported-artifacts/ basic_suite_master&#x000A;</code></pre></div>
+<p>For more info and help on using this new feature, feel free to come and ask us on infra@ovirt.org.<br />
+For more info on oVirt system tests, checkout the <a href="http://ovirt-system-tests.readthedocs.io">Project Documentation Page</a></p>
+
+<p>Happy Building!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/ci.html">ci</a></li>
+<li><a href="../../tag/developers.html">developers</a></li>
+<li><a href="../../tag/infrastructure.html">infrastructure</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2016-12-20-ci-please-build.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2016-12-20-ci-please-build.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 4 Jan 2017 13:18 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

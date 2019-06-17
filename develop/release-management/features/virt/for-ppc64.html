@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Vdsm for PPC64 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vdsm-for-ppc64">Vdsm for PPC64</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature provides support for managing KVM on IBM POWER processors via oVirt.</p>
+
+<p>Qemu and Libvirt support for KVM on IBM POWER processors is already available and is part of the respective upstream versions of the packages</p>
+
+<p>All POWER Linux distributions (RHEL 6.x, SLES 11.x, Debian 6.x, Fedora 16+) that support Power7 native mode are supported as KVM guests. This limits older distributions, such as SUSE 10 and RHEL 5.x</p>
+
+<h2 id="original-owners">Original Owners</h2>
+
+<ul>
+  <li>Feature owner: Pradipta Kr. Banerjee <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#098;&#112;&#114;&#097;&#100;&#105;&#112;&#064;&#105;&#110;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#098;&#112;&#114;&#097;&#100;&#105;&#112;&#064;&#105;&#110;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>REST Component owner: Ricardo Marin Matinata <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#109;&#109;&#064;&#098;&#114;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#114;&#109;&#109;&#064;&#098;&#114;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+      <li>Engine Component owner: Ricardo Marin Matinata <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#114;&#109;&#109;&#064;&#098;&#114;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#114;&#109;&#109;&#064;&#098;&#114;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+      <li>VDSM Component owner: Pradipta Kr. Banerjee <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#098;&#112;&#114;&#097;&#100;&#105;&#112;&#064;&#105;&#110;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#098;&#112;&#114;&#097;&#100;&#105;&#112;&#064;&#105;&#110;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+      <li>QA Owner: Li AG Zhang <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#122;&#104;&#108;&#098;&#106;&#064;&#099;&#110;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;">&#122;&#104;&#108;&#098;&#106;&#064;&#099;&#110;&#046;&#105;&#098;&#109;&#046;&#099;&#111;&#109;</a></li>
+      <li>Developers: Leonardo Bianconi <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#108;&#101;&#111;&#110;&#097;&#114;&#100;&#111;&#046;&#098;&#105;&#097;&#110;&#099;&#111;&#110;&#105;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;">&#108;&#101;&#111;&#110;&#097;&#114;&#100;&#111;&#046;&#098;&#105;&#097;&#110;&#099;&#111;&#110;&#105;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;</a>; Vitor de Lima <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#118;&#105;&#116;&#111;&#114;&#046;&#108;&#105;&#109;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;">&#118;&#105;&#116;&#111;&#114;&#046;&#108;&#105;&#109;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;</a>; Gustavo Frederico Temple Pedrosa <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#103;&#117;&#115;&#116;&#097;&#118;&#111;&#046;&#112;&#101;&#100;&#114;&#111;&#115;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;">&#103;&#117;&#115;&#116;&#097;&#118;&#111;&#046;&#112;&#101;&#100;&#114;&#111;&#115;&#097;&#064;&#101;&#108;&#100;&#111;&#114;&#097;&#100;&#111;&#046;&#111;&#114;&#103;&#046;&#098;&#114;</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>Status: Merged</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>This feature will introduce the capability of managing KVM on IBM POWER processors via oVirt. Administrators will be able to perform management fuctionalities like:</p>
+
+<ul>
+  <li>Add/Activate KVM on IBM POWER host</li>
+  <li>Create cluster of KVM on IBM POWER hosts</li>
+  <li>Perform VM lifecycle management on any IBM POWER host
+    <ul>
+      <li>create</li>
+      <li>start</li>
+      <li>stop</li>
+      <li>edit</li>
+      <li>remove</li>
+      <li>pause</li>
+      <li>migrate</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Migrate is still work in progress for KVM on IBM POWER processor</p>
+
+<h3 id="approach">Approach</h3>
+
+<p>Managing KVM on IBM POWER processors requires changes to both vdsm and ovirt-engine. However the intent is to keep ovirt-engine changes to the minimum</p>
+
+<p>Following are the key changes that will be required</p>
+
+<ul>
+  <li>Enhancing the bootstrapping mechanism in VDSM to handle IBM POWER processor and ppc64 specifics (like cpuid, cpu speed, cpu flags)</li>
+  <li>Adding a new CPU type (IBM POWER) to ovirt-engine</li>
+  <li>Enhancing the VM templates based on guest device models (disk, network, video) supported by KVM on IBM POWER</li>
+</ul>
+
+<p>KVM on IBM POWER supports the following device models for guest</p>
+
+<ul>
+  <li>VirtIO-SCSI, virt-io, spapr-vscsi for disk</li>
+  <li>virt-io, e1000, rtl and spapr-vlan for network</li>
+  <li>vga device is supported for guest video</li>
+  <li>Only VNC backend is supported for guest console access.</li>
+</ul>
+
+<p>There is currently no support for SPICE protocol and USB support in guests.</p>
+
+<p>Both NFS and SAN storage is supported for the hosts. iSCSI support is currently work in progress</p>
+
+<h3 id="user-interface">User Interface</h3>
+
+<p>No new user interfaces are required to be added. However few of the existing interfaces needs to be updated to reflect KVM on IBM POWER related specifics.</p>
+
+<p>At the minimum following user interfaces will be affected</p>
+
+<ul>
+  <li>New Server/New Desktop Virtual Machine in userportal</li>
+  <li>New Server/New Desktop Virtual Machine in webadmin</li>
+  <li>Make Template in userportal and webadmin</li>
+  <li>Editing Virtual Disks and Editing Network Interfaces in webadmin</li>
+  <li>New Cluster in webadmin</li>
+</ul>
+
+<h2 id="installing-vdsm-in-a-ppc64-host">Installing VDSM in a ppc64 host</h2>
+
+<ul>
+  <li>Install Fedora Core 20 in your host</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Update your Fedora</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum update&#x000A;</code></pre></div>
+<ul>
+  <li>Build and install RPMs for recent versions of python-cpopen, libvirt, libvirt-python and QEMU</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install fedpkg&#x000A;&#x000A;mkdir ~/srpms&#x000A;&#x000A;cd ~/srpms&#x000A;fedpkg co -a qemu&#x000A;cd qemu&#x000A;fedpkg srpm&#x000A;yum-builddep *.src.rpm&#x000A;rpmbuild --rebuild *.src.rpm&#x000A;&#x000A;cd ~/srpms&#x000A;fedpkg co -a libvirt&#x000A;cd libvirt&#x000A;fedpkg srpm&#x000A;yum-builddep *.src.rpm&#x000A;rpmbuild --rebuild *.src.rpm&#x000A;&#x000A;cd ~/srpms&#x000A;fedpkg co -a libvirt-python&#x000A;cd libvirt-python&#x000A;fedpkg srpm&#x000A;yum-builddep *.src.rpm&#x000A;rpmbuild --rebuild *.src.rpm&#x000A;&#x000A;cd ~/srpms&#x000A;fedpkg co -a python-cpopen&#x000A;cd python-cpopen&#x000A;fedpkg srpm&#x000A;yum-builddep *.src.rpm&#x000A;rpmbuild --rebuild *.src.rpm&#x000A;&#x000A;cd ~/srpms&#x000A;fedpkg co -a seabios&#x000A;cd seabios&#x000A;fedpkg srpm&#x000A;yum-builddep *.src.rpm&#x000A;rpmbuild --rebuild *.src.rpm&#x000A;&#x000A;cd ~/rpmbuild/RPMS/noarch&#x000A;yum install *&#x000A;cd ~/rpmbuild/RPMS/ppc64&#x000A;yum install *&#x000A;</code></pre></div>
+<ul>
+  <li>Replace your POWER7 optimized glibc for the generic ppc64 package (this is a workaround for <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1059428">this</a> bug: ):</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>rpm -e --nodeps --justdb glibc.ppc64p7&#x000A;yum install glibc.ppc64&#x000A;</code></pre></div>
+<ul>
+  <li>Install libguestfs and glusterfs from the Fedora updates repository, this can be done automatically using yum or manually, using the following commands:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>wget http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/libguestfs-1.24.6-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/libguestfs-tools-c-1.24.6-1.fc20.ppc64.rpm&#x000A;yum install libguestfs-1.24.6-1.fc20.ppc64.rpm&#x000A;yum install libguestfs-tools-c-1.24.6-1.fc20.ppc64.rpm&#x000A;&#x000A;wget http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-api-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-api-devel-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-cli-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-devel-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-fuse-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-geo-replication-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-libs-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-rdma-3.4.2-1.fc20.ppc64.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-resource-agents-3.4.2-1.fc20.noarch.rpm http://mirrors.kernel.org/fedora-secondary/updates/20/ppc64/glusterfs-server-3.4.2-1.fc20.ppc64.rpm&#x000A;&#x000A;yum install glusterfs-*&#x000A;</code></pre></div>
+<ul>
+  <li>Clone VDSM from the git repository, install its build dependencies, create and install RPMs</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>yum install gcc rpm-build dosfstools psmisc libnl libselinux-python genisoimage openssl m2crypto python python-devel python-nose python-netaddr python-ethtool python-inotify python-pthreading python-dmidecode python-argparse python-ordereddict python-ethtool python-ioprocess autoconf automake gettext-devel libtool pyflakes python-pep8 systemd-units&#x000A;&#x000A;cd ~/&#x000A;git clone git://gerrit.ovirt.org/vdsm&#x000A;cd vdsm&#x000A;git checkout ovirt-3.4&#x000A;./autogen.sh&#x000A;make NOSE_EXCLUDE=testMirroring\|testMirroringWithDistraction\|testReplacePrio\|test_.*aligned_image\|testStressTest rpm&#x000A;&#x000A;cd ~/rpmbuild/RPMS&#x000A;yum install noarch/vdsm* ppc64/vdsm*&#x000A;</code></pre></div>
+<ul>
+  <li>Configure the bridge Interface:</li>
+</ul>
+
+<p><a href="/develop/developer-guide/vdsm/installing-vdsm-from-rpm/#configuring-the-bridge-interface">Installing VDSM from rpm#Configuring the bridge Interface</a></p>
+
+<ul>
+  <li>Configure and start VDSM</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>vdsm-tool configure --force&#x000A;service vdsmd start&#x000A;</code></pre></div>
+<h2 id="testing-the-ppc64-support">Testing the PPC64 support</h2>
+
+<p>You can follow these steps to test the PPC64 support using the QEMU emulated mode in either x86-64 or ppc64 hosts:</p>
+
+<ul>
+  <li>Install the faqemu VDSM hook</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Create the directory '/etc/ovirt-host-deploy.conf.d'</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Create the '/etc/ovirt-host-deploy.conf.d/50-fake.conf' file with the following contents:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>[environment:enforce]&#x000A;VDSM/checkVirtHardware=bool:False&#x000A;VDSM/configOverride=bool:False&#x000A;</code></pre></div>
+<ul>
+  <li>Create the file '/etc/ovirt-host-deploy.conf.d/50-development.conf' file with the following contents:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>[environment:enforce]&#x000A;VDSM/configOverride=bool:False&#x000A;</code></pre></div>
+<ul>
+  <li>Enable the fake mode in the /etc/vdsm/vdsm.conf file:</li>
+</ul>
+
+<!-- -->
+
+<div class="highlight"><pre class="highlight plaintext"><code>fake_kvm_support = true&#x000A;fake_kvm_architecture = ppc64&#x000A;</code></pre></div>
+<ul>
+  <li>Execute the command to restart VDSM:</li>
+</ul>
+
+<p>systemctl restart vdsmd.service</p>
+
+<h2 id="benefits-to-ovirt">Benefits to oVirt</h2>
+
+<p>oVirt would be able to support KVM running on IBM POWER processor based systems</p>
+
+<h2 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h2>
+
+<p>Affected oVirt projects:</p>
+
+<ul>
+  <li>Engine-core</li>
+  <li>VDSM</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p>KVM on IBM POWER : <a href="http://www.linux-kvm.org/wiki/images/5/5d/2011-forum-KVM_on_the_IBM_POWER7_Processor.pdf">http://www.linux-kvm.org/wiki/images/5/5d/2011-forum-KVM_on_the_IBM_POWER7_Processor.pdf</a></p>
+
+<h2 id="future-work">Future Work</h2>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<p>These features are still a work in progress, so won't work yet:</p>
+
+<ul>
+  <li><a href="http://bugzilla.redhat.com/show_bug.cgi?id=1057178">Migration</a></li>
+  <li><a href="http://bugzilla.redhat.com/show_bug.cgi?id=1070189">Suspend</a></li>
+  <li><a href="http://bugzilla.redhat.com/show_bug.cgi?id=1061774">Memory Snapshot</a></li>
+</ul>
+
+<p>Known limitations:</p>
+
+<ul>
+  <li><a href="http://bugzilla.redhat.com/show_bug.cgi?id=1057724">Support only in the Fedora 20 and onwards</a></li>
+  <li><a href="http://bugzilla.redhat.com/show_bug.cgi?id=1063799">VDSM for ppc64 needs qemu 1.6</a></li>
+</ul>
+
+<p><a href="/develop/release-management/features/">Vdsm_for_PPC64</a> <a href="/develop/release-management/releases/3.4/feature/">Vdsm_for_PPC64</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/for-ppc64.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/for-ppc64.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 16:00 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Spice &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+<li><a href="/develop/infra/testing/">Testing</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="spice">Spice</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The Spice project aims to provide a complete open source solution for interaction with virtualized desktop devices.The Spice project deals with both the virtualized devices and the front-end. Interaction between front-end and back-end is done using VD-Interfaces. The VD-Interfaces (VDI) enable both ends of the solution to be easily utilized by a third-party component. (from <a href="http://spice-space.org/">http://spice-space.org/</a>). Spice is an essential part of Ovirt. Check home page of Spice project for more details <a href="http://spice-space.org/">http://spice-space.org/</a>.</p>
+
+<p>Components:</p>
+
+<ul>
+  <li>Spice client is the interface for the end user.</li>
+  <li>QXL driver is a video driver for the QEMU QXL video accelerator. It's used for improving remote display performance and enhancing the graphic capabilities of the guest graphic system. However, standard VGA is supported when no driver exists.</li>
+  <li>Spice vdagent is an optional component for enhancing user experience and performing guest-oriented management tasks. For example, the agent injects mouse position and state to the guest when using client mouse mode. In addition, it is used for configuration of the guest display settings and provides Clipboard sharing - allows copy paste between clients and the virtual machine.</li>
+  <li>Spice XPI is SPICE extension for mozilla allows the client to be used from a web browser (on linux clients).</li>
+</ul>
+
+<h2 id="testing-spice-with-ovirt">Testing Spice with oVirt</h2>
+
+<p>What do you need?</p>
+
+<ul>
+  <li>A Linux client machine with spice client and spice xpi installed (packages spice-client and spice-xpi in Fedora/RHEL). It's not possible to connect to a guest from Windows client through Ovirt yet.
+    <ul>
+      <li>Fedora 17/RHEL6.3 Beta users can try a new spice-gtk based client remote-viewer - Install virt-viewer package and change priorities of spice clients with using update-alternatives tool ("update-alternatives –config spice-xpi-client" -&gt; Choose remote-viewer). Please Note that SELinux policy bug (preventing remote-viewer connection) was observed, you may switch to SELinux permissive mode.</li>
+      <li>In Ubuntu there is no spice-xpi package. One method that works for Ubuntu 13.04 is to Install the spice-client package which gives you /usr/bin/spicec. Extract the libnsISpicec.so file from the latest Fedora (FC19) RPM. Copy it into /usr/lib/mozilla/plugins/ and restart Firefox.</li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Ovirt instance with some Windows/Linux guests installed with QXL graphic driver and spice vdagent installed (See below how to set up those components).</li>
+</ul>
+
+<h3 id="windows-guest">Windows guest</h3>
+
+<p>Install Spice guest tools (qxl graphic driver and spice-vdagent):</p>
+
+<ul>
+  <li>Download binary from <a href="http://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe">http://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe</a> and execute on Windows guest (reboot of guest is required).</li>
+</ul>
+
+<p>OR</p>
+
+<p>Install qxl graphic driver and spice vdagent separately:</p>
+
+<ul>
+  <li>Download qxl driver (zip file) from <a href="http://www.spice-space.org/download/windows/qxl/qxl-0.1-19/">http://www.spice-space.org/download/windows/qxl/qxl-0.1-19/</a> (broken) , unpack and install suitable version of qxl driver on Windows guest (i.e. with using Device Manager).</li>
+  <li>Download spice vdagent (zip file) from <a href="http://www.spice-space.org/download/windows/vdagent/vdagent-win-0.7.2">http://www.spice-space.org/download/windows/vdagent/vdagent-win-0.7.2</a> (broken) , unpack and install suitable version of service following way:</li>
+</ul>
+
+<ol>
+  <li>Start cmd under Administrator (It's important to run it as Administrator).</li>
+  <li>Move to location where you unpacked binaries (vdservice.exe and vdagent.exe).</li>
+  <li>Run: "vdservice install"</li>
+  <li>Run: "net start vdservice" (note you need to have virtio-serial driver installed).</li>
+</ol>
+
+<p>Note: virtio-serial driver needs to be installed as well.</p>
+
+<h3 id="fedorarhel-guest">Fedora/RHEL guest</h3>
+
+<p>Make sure that xorg-x11-drv-qxl and spice-vdagent packages are installed (qxl driver is in used and spice-vdagentd service running). Note that F15/F16 will be displayed in fallback mode.</p>
+
+<h3 id="ubuntu-14041604-guest">Ubuntu 14.04/16.04 guest</h3>
+
+<p>Make sure that xserver-xorg-video-qxl and spice-vdagent packages are installed (qxl driver is in used and spice-vdagentd service running).</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/testing/spice.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/testing/spice.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

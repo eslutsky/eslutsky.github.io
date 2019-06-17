@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Storage Domain Versions &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<!-- TODO: Content review -->
+
+<h1 id="storage-domain-version-0">Storage Domain Version 0</h1>
+
+<h1 id="storage-domain-version-2">Storage Domain Version 2</h1>
+
+<h1 id="storage-domain-version-3">Storage Domain Version 3</h1>
+
+<p>The storage domain version 3 has been introduced in VDSM on the 30th of January 2012 with the commit 8665716c: Use SANLock for the SPM resource [1]. The new format has been introduced to overcome some of the limitations present in the previous formats (with regard to live snapshots, live merges and internationalization) and mainly to introduce the use of SANLock [2].</p>
+
+<ul>
+  <li><strong>Supported Domain Types:</strong> Block (iSCSI, FCP) and File (NFS, local) domains</li>
+  <li><strong>Supported Domain Classes:</strong> Data, Export</li>
+</ul>
+
+<h2 id="changes">Changes</h2>
+
+<h3 id="vdsm-and-format">VDSM and Format</h3>
+
+<ul>
+  <li>Uses SANLock to acquire the SPM resource [3]</li>
+  <li>Uses SANLock to acquire the volume resources (virtualization subsystem, libvirt) [4]</li>
+  <li>In block domains the permissions of the LVs in the metadata are always RW (to allow live snapshots and live merges)</li>
+  <li>Unicode[5] support in the name and description of:
+    <ul>
+      <li>Storage Pools</li>
+      <li>Storage Domains</li>
+      <li>Disks and NICs</li>
+      <li>Virtual Machines</li>
+    </ul>
+  </li>
+  <li>New mailbox format (in progress)</li>
+</ul>
+
+<h3 id="engine-and-gui">Engine and GUI</h3>
+
+<ul>
+  <li>Display the Storage Domain Version (already present in the "Storage" tab)</li>
+  <li>Support the creation of Storage Domain V3</li>
+  <li>Accept unicode strings for the descriptions (only V3)</li>
+  <li>Block the import of VM containing unicode to V2 domains</li>
+  <li>Prevent moving Storage Domain Version V3 to 3.0 Data Centers</li>
+</ul>
+
+<h2 id="required-actions-on-upgrade">Required Actions On Upgrade</h2>
+
+<h3 id="vdsm">VDSM</h3>
+
+<ul>
+  <li>Initialize the resources for all the volumes in the domain</li>
+  <li>Set all the LVs to RW</li>
+  <li>Check that the volume SIZE in the metadata is consistent with the block size (RAW) or with the qcow2 virtual size (COW) <a href="https://bugzilla.redhat.com/show_bug.cgi?id=811880">BZ811880</a>, <a href="https://bugzilla.redhat.com/show_bug.cgi?id=611183">BZ611183</a>, <a href="https://bugzilla.redhat.com/show_bug.cgi?id=706014">BZ706014</a></li>
+</ul>
+
+<h3 id="engine-and-gui-1">Engine and GUI</h3>
+
+<h2 id="rest-api">REST API</h2>
+
+<p>The operation is driven by pool compatibility change. So there is no need for a new REST API.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ul>
+  <li>All nodes in the cluster must have 5a0b2c9 "Do not lock the image when preparing the VM path" (vdsm &gt;= 4.9.4) to avoid the LVM mda corruption</li>
+</ul>
+
+<h2 id="export-domains">Export Domains</h2>
+
+<p>Export domains cannot be upgraded; they must be created in the version 3 format (and previous versions of VDSM won't be able to attach it to a V1/V2 pool).</p>
+
+<h2 id="upgrade">Upgrade</h2>
+
+<p>At the moment it is planned to support an automatic upgrade to version 3 from the previous versions.</p>
+
+<p><img alt="" title="DomainUpgrade1.png" src="/images/DomainUpgrade1.png" /></p>
+
+<h2 id="references">References</h2>
+
+<references>
+` `[6]
+
+</references>
+
+<p>[1]</p>
+
+<p>[2] <a href="https://fedorahosted.org/sanlock">https://fedorahosted.org/sanlock</a></p>
+
+<p>[3]</p>
+
+<p>[4] <a href="http://gerrit.ovirt.org/1253">http://gerrit.ovirt.org/1253</a></p>
+
+<p>[5] <a href="http://gerrit.ovirt.org/637">http://gerrit.ovirt.org/637</a></p>
+
+<p>[6] <a href="http://gerrit.ovirt.org/726"><code>http://gerrit.ovirt.org/726</code></a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/storage/storage-domain-versions.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/storage/storage-domain-versions.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Integrating Kibana/Elasticsearch on Top of OpenShift with oVirt Engine SSO &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Ravi Nori' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Integrating Kibana/Elasticsearch on Top of OpenShift with oVirt Engine SSO' property='og:title'>
+<meta content='oVirt Engine provides a powerful way to manage users and domains using the oVirt Engine AAA extensions. oVirt Engine supports many different LDAP server types for authentication using the ovirt-engine-extension-aaa-ldap extension and supports managing internal users using the ovirt-engine-extension-aaa-jdbc extension. Clients can use the powerful oVirt Engine user management in their applications by using the OAuth2 or OpenId Connect end points provided by oVirt Engine SSO to authenticate users in their applications.
+
+Below is step-by-step instructions on how to integrate Kibana/Elasticsearch on top of OpenShift with oVirt Engine SSO. The instructions should work for any client application that can be configured to use a OAuth2 or OpenID Connect server to authenticate its users.' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/05/openshift-openId-integration-with-engine-sso.html' property='og:url'>
+<meta content='2017-05-16T12:35:00Z' property='article:published_time'>
+<meta content='rnori' property='article:author:username'>
+<meta content='community' property='article:tag'>
+<link href='/blog/tag/community.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='documentation' property='article:tag'>
+<link href='/blog/tag/documentation.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='howto' property='article:tag'>
+<link href='/blog/tag/howto.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='OpenShift' property='article:tag'>
+<link href='/blog/tag/openshift.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='oVirt' property='article:tag'>
+<link href='/blog/tag/ovirt.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='sso' property='article:tag'>
+<link href='/blog/tag/sso.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Integrating Kibana/Elasticsearch on Top of OpenShift with oVirt Engine SSO' name='twitter:title'>
+<meta content='oVirt Engine provides a powerful way to manage users and domains using the oVirt Engine AAA extensions. oVirt Engine supports many different LDAP server types for authentication using the ovirt-engine-extension-aaa-ldap extension and supports managing internal users using the ovirt-engine-extension-aaa-jdbc extension. Clients can use the powerful oVirt Engine user management in their applications by using the OAuth2 or OpenId Connect end points provided by oVirt Engine SSO to authenticate users in their applications.
+
+Below is step-by-step instructions on how to integrate Kibana/Elasticsearch on top of OpenShift with oVirt Engine SSO. The instructions should work for any client application that can be configured to use a OAuth2 or OpenID Connect server to authenticate its users.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>05</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Integrating Kibana/Elasticsearch on Top of OpenShift with oVirt Engine SSO
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/rnori.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/rnori/">Ravi Nori</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-05-16T12:35:00Z'>
+Tuesday 16 May 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>oVirt Engine provides a powerful way to manage users and domains using the oVirt Engine AAA extensions. oVirt Engine supports many different LDAP server types for authentication using the <code>ovirt-engine-extension-aaa-ldap</code> extension and supports managing internal users using the <code>ovirt-engine-extension-aaa-jdbc</code> extension. Clients can use the powerful oVirt Engine user management in their applications by using the OAuth2 or OpenId Connect end points provided by oVirt Engine SSO to authenticate users in their applications.</p>
+
+<p>Below is step-by-step instructions on how to integrate Kibana/Elasticsearch on top of OpenShift with oVirt Engine SSO. The instructions should work for any client application that can be configured to use a OAuth2 or OpenID Connect server to authenticate its users.</p>
+
+<p></p>
+
+<p>The goal is to integrate Kibana/Elasticsearch on top of OpenShift with oVirt Engine SSO, so existing engine users can access Kibana/Elasticsearch without reauthentication (we don't need to maintain authentication configuration separately for oVirt Engine and Kibana/Elasticsearch).</p>
+
+<p>The integration requires a fully working and configured oVirt Engine instance on oVirt Engine host and a fully working and configured instance of Kibana/Elasticsearch on top of OpenShift on the OpenShift host.</p>
+
+<h2 id="installing-kibanaelasticsearch-and-openshift-backend">Installing Kibana/Elasticsearch and OpenShift Backend</h2>
+
+<p>Install Kibana/Elasticsearch/OpenShift on CentOS7 or RHEL 7.3 as described in https://www.ovirt.org/develop/release-management/features/metrics/setting-up-viaq-logging/</p>
+
+<h2 id="installing-ovirt-engine">Installing oVirt Engine</h2>
+
+<p>Setup oVirt Engine on a separate host ovirt-engine.example.com as described in https://www.ovirt.org/download/</p>
+
+<h2 id="setting-up-ovirt-engine-certificate-on-openshift-machine">Setting up oVirt Engine certificate on OpenShift machine</h2>
+
+<p>Get the oVirt Engine CA as described here https://www.ovirt.org/documentation/how-to/guest-console/connect-to-spice-console-without-portal/</p>
+
+<div class="highlight"><pre class="highlight shell"><code>scp root@<span class="k">${</span><span class="nv">OVIRT</span><span class="k">}</span>:/etc/pki/ovirt-engine/ca.pem <span class="k">${</span><span class="nv">CA_FILE</span><span class="k">}</span>&#x000A;</code></pre></div>
+<p>Add the certificate to system-wide trusted certificates. Copy the certificate to /etc/pki/ca-trust/source/anchors/ and run update-ca-trust</p>
+
+<h2 id="register-a-new-sso-client-on-ovirt-engine-host">Register a New sso Client on ovirt-engine Host</h2>
+
+<p>Run the client registration tool ovirt-register-sso-client to register a new sso client. The tool will prompt the user to enter the client id, location of the client certificate (downloaded to oVirt Engine host) and the callback url prefix. Make note of the client id and client secret generated by the tool. The client id and client secret need to be entered in the master configuration file on the OpenShift host to configure authentication with oVirt Engine. The client registration tool is only available in oVirt Engine 4.2 and later.</p>
+
+<h2 id="setup-oauthconfig-on-kibanaelasticsearchopenshift-host">Setup oauthconfig on Kibana/Elasticsearch/OpenShift Host</h2>
+
+<p>On Kibana/Elasticsearch/OpenShift host edit /etc/origin/master/master-config.yaml to setup oauthconfig as below. For oVirt Engine 4.1, see note below.</p>
+
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">oauthConfig</span><span class="pi">:</span>&#x000A;  <span class="na">assetPublicURL</span><span class="pi">:</span> <span class="s">https://openshift.example.com:8443/console/</span>&#x000A;  <span class="na">grantConfig</span><span class="pi">:</span>&#x000A;    <span class="na">method</span><span class="pi">:</span> <span class="s">auto</span>&#x000A;  <span class="na">identityProviders</span><span class="pi">:</span>&#x000A;  <span class="pi">-</span> <span class="na">challenge</span><span class="pi">:</span> <span class="no">true</span>&#x000A;    <span class="na">login</span><span class="pi">:</span> <span class="no">true</span>&#x000A;    <span class="na">mappingMethod</span><span class="pi">:</span> <span class="s">claim</span>&#x000A;    <span class="na">name</span><span class="pi">:</span> <span class="s">my_openid_connect</span>&#x000A;    <span class="na">provider</span><span class="pi">:</span>&#x000A;      <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>&#x000A;      <span class="na">kind</span><span class="pi">:</span> <span class="s">OpenIDIdentityProvider</span>&#x000A;      <span class="na">clientID</span><span class="pi">:</span> <span class="s">&lt;client id specified in previous step&gt;</span>&#x000A;      <span class="na">clientSecret</span><span class="pi">:</span> <span class="s">&lt;client id generated in previous step&gt;</span>&#x000A;      <span class="na">extraScopes</span><span class="pi">:</span>&#x000A;      <span class="pi">-</span> <span class="s">ovirt-app-api</span>&#x000A;      <span class="pi">-</span> <span class="s">ovirt-ext=auth:sequence-priority=~</span>&#x000A;      <span class="na">extraAuthorizeParameters</span><span class="pi">:</span>&#x000A;        <span class="na">include_granted_scopes</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>&#x000A;<span class="na">claims</span><span class="pi">:</span>&#x000A;        <span class="na">id</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="s">custom_id_claim</span>&#x000A;        <span class="pi">-</span> <span class="s">sub</span>&#x000A;        <span class="na">preferredUsername</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="s">preferred_username</span>&#x000A;        <span class="pi">-</span> <span class="s">email</span>&#x000A;        <span class="na">name</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="s">nickname</span>&#x000A;        <span class="pi">-</span> <span class="s">given_name</span>&#x000A;        <span class="pi">-</span> <span class="s">name</span>&#x000A;        <span class="na">email</span><span class="pi">:</span>&#x000A;        <span class="pi">-</span> <span class="s">custom_email_claim</span>&#x000A;        <span class="pi">-</span> <span class="s">email</span>&#x000A;      <span class="na">urls</span><span class="pi">:</span>&#x000A;        <span class="na">authorize</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/sso/openid/authorize</span>&#x000A;        <span class="na">token</span><span class="pi">:</span> <span class="s">https://ovirt-engine.example.com/ovirt-engine/sso/openid/token</span>&#x000A;  <span class="na">masterCA</span><span class="pi">:</span> <span class="s">ca-bundle.crt</span>&#x000A;  <span class="na">masterPublicURL</span><span class="pi">:</span> <span class="s">https://openshift.example.com:8443</span>&#x000A;  <span class="na">masterURL</span><span class="pi">:</span> <span class="s">https://openshift.example.com:8443</span>&#x000A;  <span class="na">sessionConfig</span><span class="pi">:</span>&#x000A;    <span class="na">sessionMaxAgeSeconds</span><span class="pi">:</span> <span class="s">3600</span>&#x000A;    <span class="na">sessionName</span><span class="pi">:</span> <span class="s">ssn</span>&#x000A;    <span class="na">sessionSecretsFile</span><span class="pi">:</span> <span class="s">/etc/origin/master/session-secrets.yaml</span>&#x000A;  <span class="na">tokenConfig</span><span class="pi">:</span>&#x000A;    <span class="na">accessTokenMaxAgeSeconds</span><span class="pi">:</span> <span class="s">86400</span>&#x000A;    <span class="na">authorizeTokenMaxAgeSeconds</span><span class="pi">:</span> <span class="s">500</span>&#x000A;</code></pre></div>
+<p>In oVirt engine 4.1 the authorize and token endpoints point to oauth endpoints.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>      urls:&#x000A;        authorize: https://ovirt-engine.example.com/ovirt-engine/sso/oauth/authorize&#x000A;        token: https://ovirt-engine.example.com/ovirt-engine/sso/oauth/token&#x000A;</code></pre></div>
+<h2 id="restart-ovirt-engine">Restart oVirt Engine</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl restart ovirt-engine&#x000A;</code></pre></div>
+<h2 id="restart-origin-master-and-origin-node-on-openshift-host">Restart origin-master and origin-node on OpenShift Host</h2>
+
+<div class="highlight"><pre class="highlight plaintext"><code>systemctl restart origin-master&#x000A;systemctl restart origin-node&#x000A;</code></pre></div>
+<h2 id="configure-hostnames">Configure hostnames</h2>
+
+<p>Make sure the hosts are reachable by their hostnames if required add host aliases in /etc/hosts</p>
+
+<div class="highlight"><pre class="highlight conf"><code><span class="m">10</span>.<span class="m">16</span>.<span class="m">19</span>.<span class="m">48</span> <span class="n">openshift</span>.<span class="n">example</span>.<span class="n">com</span> <span class="n">kibana</span>.<span class="n">example</span>.<span class="n">com</span> <span class="n">mux</span>.<span class="n">example</span>.<span class="n">com</span>&#x000A;&#x000A;<span class="m">10</span>.<span class="m">10</span>.<span class="m">116</span>.<span class="m">110</span> <span class="n">ovirtengine</span>.<span class="n">example</span>.<span class="n">com</span>&#x000A;</code></pre></div>
+<h2 id="grant-permissions">Grant Permissions</h2>
+
+<p>The user needs to be granted permissions manually in OpenShift, using the console UI or the command line, so that the user can view the data in Kibana. Accessing https://kibana.example.com should redirect to the engine login page. Enter credentials and login will redirect user back to Kibana.</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/community.html">community</a></li>
+<li><a href="../../tag/documentation.html">documentation</a></li>
+<li><a href="../../tag/howto.html">howto</a></li>
+<li><a href="../../tag/openshift.html">OpenShift</a></li>
+<li><a href="../../tag/ovirt.html">oVirt</a></li>
+<li><a href="../../tag/sso.html">sso</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-05-16-openshift-openId-integration-with-engine-sso.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-05-16-openshift-openId-integration-with-engine-sso.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 21 Jun 2018 13:58 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

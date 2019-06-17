@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Remove Snapshot &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="remove-snapshot">Remove Snapshot</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Use <code>qemu-img commit</code> instead of 'qemu-img rebase' when deleting snapshots while the VM is down.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Ala Hino</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#104;&#105;&#110;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#104;&#105;&#110;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="terminology">Terminology</h2>
+
+<p>This feature page is about removing snapshots when the VM is down. Today, the term 'Live Merge' is used to describe removing snapshots while the VM is running. I will use 'Cold Merge' when referring to removing snapshots while the VM is down.</p>
+
+<h2 id="background">Background</h2>
+
+<p>Initially, when Cold Merge feature was implemented, qemu-img didn't support <code>commit</code> operations hence, qemu-img <code>rebase</code> performed. When running <code>qemu-img rebase</code>, a temporary volume is created, and data is copied from base volume to the temporary volume. In certain, is not in most, use cases, <code>qemu-img rebase</code> could take long time, because the base volume is significantly larger than the top volume.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Removing snapshots will work faster when the VM is not running.</p>
+
+<h2 id="design">Design</h2>
+
+<h3 id="design-considerations">Design considerations:</h3>
+
+<ul>
+  <li>SPM is a bottleneck and we want to reduce SPM tasks as much as possible</li>
+  <li>Live and Cold merge flows are equivalent so it is a good chance to have a single implementation for both flows.</li>
+</ul>
+
+<h3 id="flow">Flow:</h3>
+
+<ul>
+  <li>
+    <p>Prepare</p>
+
+    <p>Prepare step updates Vdsm metadata and must be run as SPM task.</p>
+
+    <ul>
+      <li>
+        <p>Mark base volume as ILLEGAL</p>
+
+        <p>Mark base volume as ILLEGAL in order to prevent running the VM while cold merge is running.</p>
+      </li>
+      <li>
+        <p>Update base capacity</p>
+
+        <p>If top volume is larger than base volume size, update base volume capacity:
+  If base volume is block and RAW, extend LV. Otherwise, update Vdsm volume metadata.</p>
+      </li>
+      <li>
+        <p>Update base allocation</p>
+
+        <p>For now, base volume allocation is updated to worse case, i.e. to minimum of top-size + size and to maximum allocation:</p>
+
+        <p>potential-alloc = base-size + top-size
+  max-alloc = base-capacity * 1.1 (QCOW-OVERHEAD)
+  new-alloc = min(potential-alloc, max-alloc)</p>
+
+        <p>In the future the plan is to use <code>qemu-img map</code> to calculate the accurate allocation size.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Merge</p>
+
+    <p>Merge step is another data operation command and is implements as an SDM job.
+  In this step, <code>qemu-img commit</code> is used to perform the merge.</p>
+  </li>
+  <li>
+    <p>Finalize</p>
+
+    <p>Finalize step updates Vdsm and qemu metadata and must be run as SPM task.</p>
+
+    <ul>
+      <li>
+        <p>Update qemu metadata</p>
+
+        <p>Update qemu metadata to reflect the chain after the merge. If the top volume is not the leaf, update its child parent to be the base volume. This is done by performing qemu-img rebase -u.</p>
+      </li>
+      <li>
+        <p>Update Vdsm metadata</p>
+
+        <p>Update Vdsm chain to reflect the cgain after mergre. This is done by execute Image.syncVolumeChain, providing a list without the removed volume.</p>
+      </li>
+      <li>
+        <p>Mark base volume as LEGAL</p>
+
+        <p>At this point, merge successfully completed, Vdsm and qemu chains updated, hence it is safe now to mark the base volume as LEGAL.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Destroy image
+  Remove the top volume that was merged.</p>
+  </li>
+</ul>
+
+<h3 id="recovery">Recovery</h3>
+
+<p>Today, no recovery special handling is required because data is copied from base volume to top. This copy cannot end with data corruption hence, on failures, the admin simply needs to retry. However, when using <code>qemu-img commit</code>, data is copied from top to base, similar to Live Merge. In this case, recovery isn't as trivial and recovery is performed based on the failure step:</p>
+
+<ul>
+  <li>
+    <p>Engine reboot during Cold Merge</p>
+
+    <p>If engine goes down during Cold Merge, there are two options when it comes up again:</p>
+
+    <ul>
+      <li>
+        <p>The job still exists at the storage. In this case, we continue monitoring the job</p>
+      </li>
+      <li>
+        <p>The job doesn't exist at the storage. In this case, as done in Live Merge, we continue to Merge Status and check whether the volume exists in the chain. If not, flow continues; oOtherwise, the opeartion fails</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>No connectivity to host during Cold Merge</p>
+
+    <p>Once connectivity reestablished, the engine tries to continue monitoring the job on the host. There are two options:</p>
+
+    <ul>
+      <li>
+        <p>The job exists on the host. In this case, the engine continues to monitor it</p>
+      </li>
+      <li>
+        <p>The job wasn't found on the host. In this case, the engine checks the base value state, if it is LEGAL, the merge didn't start and the engine has to send merge command again; if the state is ILLEGAL, the engine fails the merge operation and the admin has to retry</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Vdsm fails to get Engine command</p>
+
+    <p>Operation fails and the admin needs to try again</p>
+  </li>
+  <li>
+    <p>Vdsm fails to return response to Engine</p>
+
+    <p>Usually engine gets timeout when failing to get Vdsm response. In this case, as done in Live Merge, the operation fails and the admin needs to try merge again. However, where in Live Merge reporting errors to engine was naive, in this case Vdsm will report the exact errors to the engine: a job is running, base/top doesn't exist, etc.</p>
+  </li>
+</ul>
+
+<h2 id="security">Security</h2>
+
+<p>No new consequences here; what run before this feature will behave the same wrt security and according to TLM</p>
+
+<h2 id="upgrade">Upgrade</h2>
+
+<p>Following table describes the behavior of the available deployments:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Old Engine</th>
+      <th>New Engine</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Old Vdsm</td>
+      <td>qemu-img rebase</td>
+      <td>qemu-img rebase</td>
+    </tr>
+    <tr>
+      <td>New Vdsm</td>
+      <td>qemu-img rebase</td>
+      <td>qemu-img commit</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="hosted-engine">Hosted Engine</h2>
+
+<p>No effects is expected on hosted engine deployments</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/remove-snapshot.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/remove-snapshot.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 8 Jan 2017 08:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

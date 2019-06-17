@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Vdsm Standalone &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="vdsm-standalone">Vdsm Standalone</h1>
+
+<p>Vdsm was designed to be driven by oVirt-engine and be its humble server. However, it can be used on its own right. Here there is a crude example on how Vdsm can be used to create and run a virtual machine backed on local storage. In order to use it, you should first have to install vdsm and vdsm-cli, and create a directoy to be used by it for storing VM images and metadata.</p>
+
+<div class="highlight"><pre class="highlight python"><code>  <span class="c">#!/usr/bin/python</span>&#x000A;  <span class="c"># GPLv2+</span>&#x000A;  <span class="k">import</span><span class="err"> </span><span class="n">sys</span>&#x000A;  <span class="k">import</span><span class="err"> </span><span class="n">uuid</span>&#x000A;  <span class="k">import</span><span class="err"> </span><span class="n">time</span>&#x000A;  <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'/usr/share/vdsm'</span><span class="p">)</span>&#x000A;  <span class="k">import</span><span class="err"> </span><span class="n">vdscli</span>&#x000A;  <span class="k">from</span><span class="err"> </span><span class="n">storage</span><span class="o">.</span><span class="n">sd</span><span class="err"> </span><span class="k">import</span><span class="err"> </span><span class="n">LOCALFS_DOMAIN</span><span class="p">,</span><span class="err"> </span><span class="n">DATA_DOMAIN</span>&#x000A;  <span class="k">from</span><span class="err"> </span><span class="n">storage</span><span class="o">.</span><span class="n">volume</span><span class="err"> </span><span class="k">import</span><span class="err"> </span><span class="n">COW_FORMAT</span><span class="p">,</span><span class="err"> </span><span class="n">SPARSE_VOL</span><span class="p">,</span><span class="err"> </span><span class="n">LEAF_VOL</span><span class="p">,</span><span class="err"> </span><span class="n">BLANK_UUID</span>&#x000A;  <span class="n">spUUID</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>&#x000A;  <span class="n">sdUUID</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>&#x000A;  <span class="n">imgUUID</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>&#x000A;  <span class="n">volUUID</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>&#x000A;  <span class="c"># you should manually create the following directory and</span>&#x000A;  <span class="c"># chown vdsm:kvm /tmp/localstoragedomain</span>&#x000A;  <span class="n">path</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="s">"/tmp/localstoragedomain"</span>&#x000A;  <span class="n">s</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">vdscli</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>&#x000A;  <span class="n">masterVersion</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="mi">1</span>&#x000A;  <span class="n">hostID</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="mi">1</span>&#x000A;  <span class="n">def</span><span class="err"> </span><span class="n">vdsOK</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>&#x000A;  <span class="err">    </span><span class="k">print</span><span class="err"> </span><span class="n">d</span>&#x000A;  <span class="err">    </span><span class="k">if</span><span class="err"> </span><span class="n">d</span><span class="p">[</span><span class="s">'status'</span><span class="p">][</span><span class="s">'code'</span><span class="p">]:</span>&#x000A;  <span class="err">   </span><span class="k">raise</span><span class="err"> </span><span class="nb">Exception</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>&#x000A;  <span class="err">    </span><span class="k">return</span><span class="err"> </span><span class="n">d</span>&#x000A;  <span class="n">def</span><span class="err"> </span><span class="n">waitTask</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="err"> </span><span class="n">taskid</span><span class="p">):</span>&#x000A;  <span class="err">    </span><span class="k">while</span><span class="err"> </span><span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">getTaskStatus</span><span class="p">(</span><span class="n">taskid</span><span class="p">))[</span><span class="s">'taskStatus'</span><span class="p">][</span><span class="s">'taskState'</span><span class="p">]</span><span class="err"> </span><span class="o">!=</span><span class="err"> </span><span class="s">'finished'</span><span class="p">:</span>&#x000A;  <span class="err">        </span><span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>&#x000A;  <span class="err">    </span><span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">clearTask</span><span class="p">(</span><span class="n">taskid</span><span class="p">))</span>&#x000A;  <span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">connectStorageServer</span><span class="p">(</span><span class="n">LOCALFS_DOMAIN</span><span class="p">,</span><span class="err"> </span><span class="s">"my favorite pet"</span><span class="p">,</span><span class="err"> </span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="err"> </span><span class="n">connection</span><span class="o">=</span><span class="n">path</span><span class="p">)]))</span>&#x000A;  <span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">createStorageDomain</span><span class="p">(</span><span class="n">LOCALFS_DOMAIN</span><span class="p">,</span><span class="err"> </span><span class="n">sdUUID</span><span class="p">,</span><span class="err"> </span><span class="s">"my local domain"</span><span class="p">,</span><span class="err"> </span><span class="n">path</span><span class="p">,</span><span class="err"> </span><span class="n">DATA_DOMAIN</span><span class="p">,</span><span class="err"> </span><span class="mi">0</span><span class="p">))</span>&#x000A;  <span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">createStoragePool</span><span class="p">(</span><span class="n">LOCALFS_DOMAIN</span><span class="p">,</span><span class="err"> </span><span class="n">spUUID</span><span class="p">,</span><span class="err"> </span><span class="s">"pool name"</span><span class="p">,</span><span class="err"> </span><span class="n">sdUUID</span><span class="p">,</span><span class="err"> </span><span class="p">[</span><span class="n">sdUUID</span><span class="p">],</span><span class="err"> </span><span class="n">masterVersion</span><span class="p">))</span>&#x000A;  <span class="c"># connect to an existing pool, and become pool manager.</span>&#x000A;  <span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">connectStoragePool</span><span class="p">(</span><span class="n">spUUID</span><span class="p">,</span><span class="err"> </span><span class="n">hostID</span><span class="p">,</span><span class="err"> </span><span class="s">"scsikey"</span><span class="p">,</span><span class="err"> </span><span class="n">sdUUID</span><span class="p">,</span><span class="err"> </span><span class="n">masterVersion</span><span class="p">))</span>&#x000A;  <span class="n">tid</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">spmStart</span><span class="p">(</span><span class="n">spUUID</span><span class="p">,</span><span class="err"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="err"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="err"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="err"> </span><span class="mi">0</span><span class="p">))[</span><span class="s">'uuid'</span><span class="p">]</span>&#x000A;  <span class="n">waitTask</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="err"> </span><span class="n">tid</span><span class="p">)</span>&#x000A;  <span class="n">sizeGiB</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="mi">100</span>&#x000A;  <span class="n">tid</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="n">vdsOK</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">createVolume</span><span class="p">(</span><span class="n">sdUUID</span><span class="p">,</span><span class="err"> </span><span class="n">spUUID</span><span class="p">,</span><span class="err"> </span><span class="n">imgUUID</span><span class="p">,</span><span class="err"> </span><span class="n">sizeGiB</span><span class="p">,</span>&#x000A;  <span class="err">                           </span><span class="n">COW_FORMAT</span><span class="p">,</span><span class="err"> </span><span class="n">SPARSE_VOL</span><span class="p">,</span><span class="err"> </span><span class="n">LEAF_VOL</span><span class="p">,</span>&#x000A;  <span class="err">                           </span><span class="n">volUUID</span><span class="p">,</span><span class="err"> </span><span class="s">"volly"</span><span class="p">,</span>&#x000A;  <span class="err">                           </span><span class="n">BLANK_UUID</span><span class="p">,</span><span class="err"> </span><span class="n">BLANK_UUID</span><span class="p">))[</span><span class="s">'uuid'</span><span class="p">]</span>&#x000A;  <span class="n">waitTask</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="err"> </span><span class="n">tid</span><span class="p">)</span>&#x000A;  <span class="n">vmId</span><span class="err"> </span><span class="o">=</span><span class="err"> </span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>&#x000A;  <span class="n">vdsOK</span><span class="p">(</span>&#x000A;  <span class="err">    </span><span class="n">s</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">vmId</span><span class="o">=</span><span class="n">vmId</span><span class="p">,</span>&#x000A;  <span class="err">                  </span><span class="n">drives</span><span class="o">=</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">poolID</span><span class="o">=</span><span class="n">spUUID</span><span class="p">,</span><span class="err"> </span><span class="n">domainID</span><span class="o">=</span><span class="n">sdUUID</span><span class="p">,</span><span class="err"> </span><span class="n">imageID</span><span class="o">=</span><span class="n">imgUUID</span><span class="p">,</span><span class="err"> </span><span class="n">volumeID</span><span class="o">=</span><span class="n">volUUID</span><span class="p">)],</span>&#x000A;  <span class="err">                  </span><span class="n">memSize</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>&#x000A;  <span class="err">         </span><span class="n">display</span><span class="o">=</span><span class="s">"vnc"</span><span class="p">,</span>&#x000A;  <span class="err">                  </span><span class="n">vmName</span><span class="o">=</span><span class="s">"vm1"</span><span class="p">,</span>&#x000A;  <span class="err">                 </span><span class="p">)</span>&#x000A;  <span class="err">            </span><span class="p">)</span>&#x000A;  <span class="p">)</span>&#x000A;</code></pre></div>
+<p>The below example shows how glusterfs can be used as a DATA_DOMAIN by exploiting the SHAREDFS interface in Vdsm.</p>
+
+<ul>
+  <li>Pre-req:
+    <ol>
+      <li>latest kernel having O_DIRECT support for fuse is needed to be running on the host.</li>
+      <li>gluster volume must be pre-setup. In the below example assuming hostname as server.example.com, myvol is the name of the gluster volume that must be pre-created and started using gluster commands.</li>
+    </ol>
+  </li>
+</ul>
+
+<p>`</p>
+
+<p>#!/usr/bin/python
+ # GPLv2+</p>
+
+<p>import sys
+ import uuid
+ import time</p>
+
+<p>sys.path.append('/usr/share/vdsm')</p>
+
+<p>import vdscli
+ from storage.sd import SHAREDFS_DOMAIN, DATA_DOMAIN, ISO_DOMAIN
+ from storage.volume import COW_FORMAT, SPARSE_VOL, LEAF_VOL, BLANK_UUID</p>
+
+<p>spUUID = str(uuid.uuid4())
+ sdUUID = str(uuid.uuid4())
+ imgUUID = str(uuid.uuid4())
+ volUUID = str(uuid.uuid4())</p>
+
+<p>gluster_conn = "server.example.com:myvol"</p>
+
+<p>s = vdscli.connect()</p>
+
+<p>masterVersion = 1
+ hostID = 1</p>
+
+<p>def vdsOK(d):
+     print d
+     if d['status']['code']:
+         raise Exception(str(d))
+     return d</p>
+
+<p>def waitTask(s, taskid):
+     while vdsOK(s.getTaskStatus(taskid))['taskStatus']['taskState'] != 'finished':
+         time.sleep(3)
+     vdsOK(s.clearTask(taskid))</p>
+
+<p>vdsOK(s.connectStorageServer(SHAREDFS_DOMAIN, "my gluster mount", [dict(id=1, spec=gluster_conn, vfs_type="glusterfs", mnt_options="")]))</p>
+
+<p>vdsOK(s.createStorageDomain(SHAREDFS_DOMAIN, sdUUID, "my gluster domain", gluster_conn, DATA_DOMAIN, 0))</p>
+
+<p>vdsOK(s.createStoragePool(SHAREDFS_DOMAIN, spUUID, "my gluster pool", sdUUID, [sdUUID], masterVersion))</p>
+
+<p># connect to an existing pool, and become pool manager.
+ vdsOK(s.connectStoragePool(spUUID, hostID, "scsikey", sdUUID, masterVersion))
+ tid = vdsOK(s.spmStart(spUUID, -1, -1, -1, 0))['uuid']
+ waitTask(s, tid)</p>
+
+<p>sizeGiB = 100</p>
+
+<p>tid = vdsOK(s.createVolume(sdUUID, spUUID, imgUUID, sizeGiB,
+                            COW_FORMAT, SPARSE_VOL, LEAF_VOL,
+                            volUUID, "glustervol",
+                            BLANK_UUID, BLANK_UUID))['uuid']
+ waitTask(s, tid)</p>
+
+<p>vmId = str(uuid.uuid4())</p>
+
+<p>vdsOK(
+     s.create(dict(vmId=vmId,
+                   drives=[dict(poolID=spUUID, domainID=sdUUID, imageID=imgUUID, volumeID=volUUID)],
+                   memSize=256,
+                   display="vnc",
+                   vmName="vm-backed-by-gluster",
+                  )
+             )
+ )</p>
+
+<p>`</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/standalone.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/standalone.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

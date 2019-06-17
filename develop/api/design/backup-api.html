@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Backup API &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/api/">Api</a></li>
+<li><a href="/develop/api/design/">Design</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<!-- TODO: Content review -->
+
+<h1 id="backup-api">Backup API</h1>
+
+<p>This document describes the design for the Backup API feature.</p>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>The motivation that stands behind this idea is to provide the user an API which can be used to backup different VM disks in the system. The user will be able to use externalized backup applications which will provide the ability to backup the data of any image disk into a predefined container disk which will be used as part of a backup container (VM).</p>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Target Release: 3.4</li>
+  <li>Status: Released</li>
+  <li>Last updated date: Fri Apr 21 2016</li>
+</ul>
+
+<h2 id="functionality">Functionality</h2>
+
+<h3 id="general-functionality">General Functionality</h3>
+
+<p>When attaching a disk to a vm only the active volume was used, if the user wanted to see the disk content at some snapshot he had to preview that snapshot.
+As part of the backup API feature, a snapshot of a disk can be attached to another vm, regardless of the disk not being marked as shareable - when doing so, VDSM should create a temp snapshot allowing read/write access above the selected snapshot, the above should happend when hotplugging a disk/ running a vm.
+In case of hot unplug of the disk snapshot vdsm should delete the temp snapshot.</p>
+
+<h3 id="backup-disk-functionality">Backup Disk Functionality</h3>
+
+<p>The new backup disk is not a regular disk and will be blocked from being exported/ use in a template/ or be part of the backup VM snapshot.</p>
+
+<p>If the user will try to remove the backup disk snapshot it will remove the disk from the entire setup (also from the original VM)</p>
+
+<p>The disk can be definied as bootable for the VM if it's attached as bootable and the VM does not contain another bootable disk yet this mostly doesn't make much sense.</p>
+
+<h2 id="example-using-ovirt-4x-api">Example (using oVirt 4.x API)</h2>
+
+<ol>
+  <li>
+    <p>Navigate to the wanted disk snapshot from REST by accessing:
+SERVER:PORT:/api/vms/GUID/snapshots/GUID/disks</p>
+  </li>
+  <li>
+    <p>POST a disk attachment with the disk id and the snapshot id and choose "false" for bootable and the desired disk interface
+ <a href="http://SERVER:PORT/api/vms/GUID/diskattachments/">http://SERVER:PORT/api/vms/GUID/diskattachments/</a></p>
+  </li>
+</ol>
+
+<p>When attaching the disk you will have to pass the the disk id and the snapshot id and the disk interface as in the following example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;disk_attachment&gt;&#x000A;    &lt;disk id="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"&gt;&#x000A;       &lt;snapshot id="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/&gt;&#x000A;    &lt;/disk&gt;&#x000A;    &lt;bootable&gt;false&lt;/bootable&gt;&#x000A;    &lt;interface&gt;virtio&lt;/interface&gt;&#x000A;&lt;/disk_attachment&gt;&#x000A;</code></pre></div>
+<p>After copying the data from the disk detach the disk snapshot from the VM using the REST with the following parameters:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Method = DELETE&#x000A;  URL indicates to the specific disk in the VM: http://SERVER:PORT/api/vms/GUID/diskattachments/GUID&#x000A;</code></pre></div>
+<h2 id="example-legacy-ovirt-3x-api">Example (Legacy oVirt 3.X API)</h2>
+<p>Note: Since prior to version 4.0 the disks themselves are defined as bootable, if the new backup disk will be a boot disk and will have an OS installed on it then there can be one of the other use cases:
+* If the backup VM will already contain a boot disk with OS installed on it, then the original boot disk will be remained.</p>
+
+<ul>
+  <li>If the backup VM will not contain a boot disk with OS installed on it, then the original boot disk will act as a boot disk which the VM will start the boot from.</li>
+</ul>
+
+<ol>
+  <li>
+    <p>Navigate to the wanted disk snapshot from REST by accessing:
+SERVER:PORT:/api/vms/GUID/snapshots/GUID/disks</p>
+  </li>
+  <li>
+    <p>POST the copied disk with the disk id and the snapshot id:
+ <a href="http://SERVER:PORT/api/vms/GUID/disks/">http://SERVER:PORT/api/vms/GUID/disks/</a></p>
+  </li>
+</ol>
+
+<p>When creating a disk you will have to pass the the disk id and the snapshot id such as the following example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;disk id="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"&gt;&#x000A;    &lt;snapshot id="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"/&gt;&#x000A;&lt;/disk&gt;&#x000A;</code></pre></div>
+<p>After copying the data from the disk detach the disk snapshot from the VM using the REST with the following parameters:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Method = DELETE&#x000A;  URL indicates to the specific disk in the VM: http://SERVER:PORT/api/vms/GUID/disks/GUID&#x000A;  Body=&lt;action&gt;&lt;detach&gt;true&lt;/detach&gt;&lt;/action&gt;&#x000A;</code></pre></div>
+<h2 id="the-backup-process">The Backup Process</h2>
+
+<p>User can back up a virtual machine by an externalized application by the following steps:</p>
+
+<ul>
+  <li>Choose the disk snapshot which you want to use for back up.</li>
+  <li>Attach this disk snapshot to the target virtual machine for back up</li>
+  <li>Capture the virtual disk data and virtual machine configuration information (vim.vm.ConfigInfo).</li>
+  <li>Open and read the virtual disk and snapshot files. Copy them to backup media, along with configuration information.</li>
+  <li>Detach the disk</li>
+</ul>
+
+<h2 id="future-work">Future Work</h2>
+
+<ul>
+  <li>UI - would be handled in a following patch (the information is accessible through REST)</li>
+  <li>possibly further inspection of permissions</li>
+</ul>
+
+<h2 id="future-work--limitations">Future work / Limitations</h2>
+
+<ul>
+  <li>The created temp snapshots is stored on the host local storage (the host that the vm is running on) and not on the shared storage (domains) therefore the vm can't be migrated.</li>
+  <li>A disk snapshot can be attached to a different VM than the one of which the snapshot (VM snapshot) was taken of.</li>
+</ul>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/api/design/backup-api.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/api/design/backup-api.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

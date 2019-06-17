@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Vdsm python3 compatibility &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vdsm-python3-compatibility">Vdsm python3 compatibility</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Python 3 is already 5 years old and the pioneering distributions such as Arch Linux have been running with it as default Python interpreter for quite some time. <a href="https://fedoraproject.org/wiki/Changes/Python_3_as_Default">Soon</a> the turn will come for Fedora, which is one of the community supported distributions of oVirt.</p>
+
+<p>The goal of this page is to drive VDSM and it's components to become a single codebase that supports:</p>
+
+<ul>
+  <li>Python-2.6 (Could probably be eventually dropped when we make the next major version).</li>
+  <li>Python-2.7</li>
+  <li>Python-3.3+</li>
+</ul>
+
+<h2 id="instigator">Instigator</h2>
+
+<ul>
+  <li>Name: Antoni Segura Puimedon (APuimedo)</li>
+  <li>Email: apuimedo aT redhat.com</li>
+</ul>
+
+<p>To help us achieve that, this page will keep links to some useful resources and a list of things ported and to port.</p>
+
+<h2 id="useful-resources">Useful resources</h2>
+
+<ul>
+  <li><a href="http://docs.python.org/3/howto/cporting.html">Making C Python modules 2.x and 3.x compatible with a bit of ifdefing.</a></li>
+  <li><a href="http://python3porting.com/cextensions.html">Book on Python3 porting (opened at the C Python modules section).</a></li>
+  <li><a href="http://pythonhosted.org/six/">Six: Python 2 and 3 helper library.</a></li>
+  <li><a href="http://lucumr.pocoo.org/2013/5/21/porting-to-python-3-redux/">Great blog post about single codebase for the versions we want to support (MUST READ).</a></li>
+</ul>
+
+<h2 id="status-feel-free-to-add-componentsdependencies-that-should-be-ported">Status (Feel free to add components/dependencies that should be ported)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Dependency</th>
+      <th>Component</th>
+      <th>Description</th>
+      <th>Completion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>lib/vdsm</td>
+      <td>0</td>
+      <td>1</td>
+      <td>vdsm's own library</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>vdsm/netconf</td>
+      <td>0</td>
+      <td>1</td>
+      <td>vdsm's network configurator package</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>vdsm/storage</td>
+      <td>0</td>
+      <td>1</td>
+      <td>vdsm's storage package</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>vdsm</td>
+      <td>0</td>
+      <td>1</td>
+      <td>vdsm's main code</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>lib/vdsm/tool</td>
+      <td>0</td>
+      <td>1</td>
+      <td>vdsm's utilities (mainly for command line)</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>vdsClient</td>
+      <td>0</td>
+      <td>1</td>
+      <td>vdsm's command line client</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>python-ethtool</td>
+      <td>1</td>
+      <td>0</td>
+      <td>vdsm's network dependency for setting/retrieving netlink and ioctl information.</td>
+      <td>Patch submitted upstream (apuimedo)</td>
+    </tr>
+    <tr>
+      <td>python-nose</td>
+      <td>1</td>
+      <td>0</td>
+      <td>vdsm's testing dependency.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>python-pep8</td>
+      <td>1</td>
+      <td>0</td>
+      <td>vdsm's formatting checks build-dependency.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>python-pthreading</td>
+      <td>1</td>
+      <td>0</td>
+      <td>vdsm's better threading.</td>
+      <td>Yes (not necessary in Python3)</td>
+    </tr>
+    <tr>
+      <td>python-cpopen</td>
+      <td>1</td>
+      <td>0</td>
+      <td>vdsm's better popen.</td>
+      <td>Yes (not necessary in Python3)</td>
+    </tr>
+    <tr>
+      <td>python-inotify</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-</td>
+      <td>Has to be investigated</td>
+    </tr>
+    <tr>
+      <td>python-netaddr</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-</td>
+      <td>Has to be investigated</td>
+    </tr>
+    <tr>
+      <td>python-dmidecode</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-</td>
+      <td>Has to be investigated</td>
+    </tr>
+    <tr>
+      <td>python-argparse</td>
+      <td>1</td>
+      <td>0</td>
+      <td> </td>
+      <td>Part of Python standard library since 3.2</td>
+    </tr>
+    <tr>
+      <td>libvirt bindings</td>
+      <td>1</td>
+      <td>0</td>
+      <td>vdsm's libvirt wrapper dependency.</td>
+      <td>Latest libvirt-python GIT version builds wrappers for both.</td>
+    </tr>
+    <tr>
+      <td>python-inotify</td>
+      <td>1</td>
+      <td>0</td>
+      <td>-</td>
+      <td>Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/python3-compatibility.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/python3-compatibility.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 13 Aug 2017 13:43 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

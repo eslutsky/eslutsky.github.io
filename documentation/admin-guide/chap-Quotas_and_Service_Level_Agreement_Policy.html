@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Quotas and Service Level Agreement Policy &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-16-quotas-and-service-level-agreement-policy">Chapter 16: Quotas and Service Level Agreement Policy</h1>
+
+<h2 id="introduction-to-quota">Introduction to Quota</h2>
+
+<p>Quota is a resource limitation tool provided with oVirt. Quota may be thought of as a layer of limitations on top of the layer of limitations set by User Permissions.</p>
+
+<p>Quota is a data center object.</p>
+
+<p>Quota allows administrators of oVirt environments to limit user access to memory, CPU, and storage. Quota defines the memory resources and storage resources an administrator can assign users. As a result users may draw on only the resources assigned to them. When the quota resources are exhausted, oVirt does not permit further user actions.</p>
+
+<p>There are two different kinds of Quota:</p>
+
+<p><strong>The Two Different Kinds of Quota</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Quota type</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Run-time Quota</td>
+      <td>This quota limits the consumption of runtime resources, like CPU and memory.</td>
+    </tr>
+    <tr>
+      <td>Storage Quota</td>
+      <td>This quota limits the amount of storage available.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Quota, like SELinux, has three modes:</p>
+
+<p><strong>Quota Modes</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Quota Mode</th>
+      <th>Function</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Enforced</td>
+      <td>This mode puts into effect the Quota that you have set in audit mode, limiting resources to the group or user affected by the quota.</td>
+    </tr>
+    <tr>
+      <td>Audit</td>
+      <td>This mode allows you to change Quota settings. Choose this mode to increase or decrease the amount of runtime quota and the amount of storage quota available to users affected by it.</td>
+    </tr>
+    <tr>
+      <td>Disabled</td>
+      <td>This mode turns off the runtime and storage limitations defined by the quota.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When a user attempts to run a virtual machine, the specifications of the virtual machine are compared to the storage allowance and the runtime allowance set in the applicable quota.</p>
+
+<p>If starting a virtual machine causes the aggregated resources of all running virtual machines covered by a quota to exceed the allowance defined in the quota, then the Engine refuses to run the virtual machine.</p>
+
+<p>When a user creates a new disk, the requested disk size is added to the aggregated disk usage of all the other disks covered by the applicable quota. If the new disk takes the total aggregated disk usage above the amount allowed by the quota, disk creation fails.</p>
+
+<p>Quota allows for resource sharing of the same hardware. It supports hard and soft thresholds. Administrators can use a quota to set thresholds on resources. These thresholds appear, from the user's point of view, as 100% usage of that resource. To prevent failures when the customer unexpectedly exceeds this threshold, the interface supports a "grace" amount by which the threshold can be briefly exceeded. Exceeding the threshold results in a warning sent to the customer.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Quota imposes limitations upon the running of virtual machines. Ignoring these limitations is likely to result in a situation in which you cannot use your virtual machines and virtual disks.&#x000A;&#x000A;When quota is running in enforced mode, virtual machines and disks that do not have quotas assigned cannot be used.&#x000A;&#x000A;To power on a virtual machine, a quota must be assigned to that virtual machine.&#x000A;&#x000A;To create a snapshot of a virtual machine, the disk associated with the virtual machine must have a quota assigned.&#x000A;&#x000A;When creating a template from a virtual machine, you are prompted to select the quota that you want the template to consume. This allows you to set the template (and all future machines created from the template) to consume a different quota than the virtual machine and disk from which the template is generated.&#x000A;</code></pre></div>
+<h2 id="shared-quota-and-individually-defined-quota">Shared Quota and Individually Defined Quota</h2>
+
+<p>Users with SuperUser permissions can create quotas for individual users or quotas for groups.</p>
+
+<p>Group quotas can be set for Active Directory users. If a group of ten users are given a quota of 1 TB of storage and one of the ten users fills the entire terabyte, then the entire group will be in excess of the quota and none of the ten users will be able to use any of the storage associated with their group.</p>
+
+<p>An individual user's quota is set for only the individual. Once the individual user has used up all of his or her storage or runtime quota, the user will be in excess of the quota and the user will no longer be able to use the storage associated with his or her quota.</p>
+
+<h2 id="quota-accounting">Quota Accounting</h2>
+
+<p>When a quota is assigned to a consumer or a resource, each action by that consumer or on the resource involving storage, vCPU, or memory results in quota consumption or quota release.</p>
+
+<p>Since the quota acts as an upper bound that limits the user's access to resources, the quota calculations may differ from the actual current use of the user. The quota is calculated for the max growth potential and not the current usage.</p>
+
+<p><strong>Accounting example</strong></p>
+
+<p>A user runs a virtual machine with 1 vCPU and 1024 MB memory. The action consumes 1 vCPU and 1024 MB of the quota assigned to that user. When the virtual machine is stopped 1 vCPU and 1024 MB of RAM are released back to the quota assigned to that user. Run-time quota consumption is accounted for only during the actual run-time of the consumer.</p>
+
+<p>A user creates a virtual thin provision disk of 10 GB. The actual disk usage may indicate only 3 GB of that disk are actually in use. The quota consumption, however, would be 10 GB, the max growth potential of that disk.</p>
+
+<h2 id="enabling-and-changing-a-quota-mode-in-a-data-center">Enabling and Changing a Quota Mode in a Data Center</h2>
+
+<p>This procedure enables or changes the quota mode in a data center. You must select a quota mode before you can define quotas. You must be logged in to the Administration Portal to follow the steps of this procedure.</p>
+
+<p>Use <strong>Audit</strong> mode to test your quota to make sure it works as you expect it to. You do not need to have your quota in <strong>Audit</strong> mode to create or change a quota.</p>
+
+<p><strong>Enabling and Changing Quota in a Data Center</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Data Centers</strong> and select a data center.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Quota Mode</strong> drop-down list, change the quota mode to <strong>Enforced</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>If you set the quota mode to <strong>Audit</strong> during testing, then you must change it to <strong>Enforced</strong> in order for the quota settings to take effect.</p>
+
+<h2 id="creating-a-new-quota-policy">Creating a New Quota Policy</h2>
+
+<p>You have enabled quota mode, either in Audit or Enforcing mode. You want to define a quota policy to manage resource usage in your data center.</p>
+
+<p><strong>Creating a New Quota Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Quota</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Fill in the <strong>Name</strong> and <strong>Description</strong> fields.</p>
+  </li>
+  <li>
+    <p>Select a <strong>Data Center</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Memory &amp; CPU</strong> section, use the green slider to set <strong>Cluster Threshold</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Memory &amp; CPU</strong> section, use the blue slider to set <strong>Cluster Grace</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>All Clusters</strong> or the <strong>Specific Clusters</strong> radio button. If you select <strong>Specific Clusters</strong>, select the check box of the clusters that you want to add a quota policy to.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong> to open the <strong>Edit Quota</strong> window.</p>
+
+    <p>i. Under the <strong>Memory</strong> field, select either the <strong>Unlimited</strong> radio button (to allow limitless use of Memory resources in the cluster), or select the <strong>limit to</strong> radio button to set the amount of memory set by this quota. If you select the <strong>limit to</strong> radio button, input a memory quota in megabytes (MB) in the <strong>MB</strong> field.</p>
+
+    <p>ii. Under the <strong>CPU</strong> field, select either the <strong>Unlimited</strong> radio button or the <strong>limit to</strong> radio button to set the amount of CPU set by this quota. If you select the <strong>limit to</strong> radio button, input a number of vCPUs in the <strong>vCpus</strong> field.</p>
+
+    <p>iii. Click <strong>OK</strong> in the <strong>Edit Quota</strong> window.</p>
+  </li>
+  <li>
+    <p>In the <strong>Storage</strong> section, use the green slider to set <strong>Storage Threshold</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Storage</strong> section, use the blue slider to set <strong>Storage Grace</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>All Storage Domains</strong> or the <strong>Specific Storage Domains</strong> radio button. If you select <strong>Specific Storage Domains</strong>, select the check box of the storage domains that you want to add a quota policy to.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong> to open the <strong>Edit Quota</strong> window.</p>
+
+    <p>i. Under the <strong>Storage Quota</strong> field, select either the <strong>Unlimited</strong> radio button (to allow limitless use of Storage) or the <strong>limit to</strong> radio button to set the amount of storage to which quota will limit users. If you select the <strong>limit to</strong> radio button, input a storage quota size in gigabytes (GB) in the <strong>GB</strong> field.</p>
+
+    <p>ii. Click <strong>OK</strong> in the <strong>Edit Quota</strong> window.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> in the <strong>New Quota</strong> window.</p>
+  </li>
+</ol>
+
+<h2 id="explanation-of-quota-threshold-settings">Explanation of Quota Threshold Settings</h2>
+
+<p><strong>Quota thresholds and grace</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Definition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cluster Threshold</td>
+      <td>The amount of cluster resources available per data center.</td>
+    </tr>
+    <tr>
+      <td>Cluster Grace</td>
+      <td>The amount of the cluster available for the data center after exhausting the data center's Cluster Threshold.</td>
+    </tr>
+    <tr>
+      <td>Storage Threshold</td>
+      <td>The amount of storage resources available per data center.</td>
+    </tr>
+    <tr>
+      <td>Storage Grace</td>
+      <td>The amount of storage available for the data center after exhausting the data center's Storage Threshold.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If a quota is set to 100 GB with 20% Grace, then consumers are blocked from using storage after they use 120 GB of storage. If the same quota has a Threshold set at 70%, then consumers receive a warning when they exceed 70 GB of storage consumption (but they remain able to consume storage until they reach 120 GB of storage consumption.) Both "Threshold" and "Grace" are set relative to the quota. "Threshold" may be thought of as the "soft limit", and exceeding it generates a warning. "Grace" may be thought of as the "hard limit", and exceeding it makes it impossible to consume any more storage resources.</p>
+
+<h2 id="assigning-a-quota-to-an-object">Assigning a Quota to an Object</h2>
+
+<p><strong>Assigning a Quota to a Virtual Machine</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong> and select a virtual machine.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Select the quota you want the virtual machine to consume from the <strong>Quota</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Assigning a Quota to a Virtual Disk</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong>.</p>
+  </li>
+  <li>
+    <p>Click a virtual machine’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Disks</strong> tab and select the disk you plan to associate with a quota.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Select the quota you want the virtual disk to consume from the <strong>Quota</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+
+    <p><strong>Important:</strong> Quota must be selected for all objects associated with a virtual machine, in order for that virtual machine to work. If you fail to select a quota for the objects associated with a virtual machine, the virtual machine will not work. The error that the Engine throws in this situation is generic, which makes it difficult to know if the error was thrown because you did not associate a quota with all of the objects associated with the virtual machine. It is not possible to take snapshots of virtual machines that do not have an assigned quota. It is not possible to create templates of virtual machines whose virtual disks do not have assigned quotas.</p>
+  </li>
+</ol>
+
+<h2 id="using-quota-to-limit-resources-by-user">Using Quota to Limit Resources by User</h2>
+
+<p>This procedure describes how to use quotas to limit the resources a user has access to.</p>
+
+<p><strong>Assigning a User to a Quota</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Quota</strong>.</p>
+  </li>
+  <li>
+    <p>Click the name of the target quota to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Consumers</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>In the <strong>Search</strong> field, type the name of the user you want to associate with the quota.</p>
+  </li>
+  <li>
+    <p>Click <strong>GO</strong>.</p>
+  </li>
+  <li>
+    <p>Select the check box next to the user’s name.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>After a short time, the user will appear in the <strong>Consumers</strong> tab in the details view.</p>
+
+<h2 id="editing-quotas">Editing Quotas</h2>
+
+<p>This procedure describes how to change existing quotas.</p>
+
+<p><strong>Editing Quotas</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Quota</strong> and select a quota.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Edit the fields as required.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="removing-quotas">Removing Quotas</h2>
+
+<p>This procedure describes how to remove quotas.</p>
+
+<p><strong>Removing Quotas</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Quota</strong> and select a quota.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h2 id="service-level-agreement-policy-enforcement">Service Level Agreement Policy Enforcement</h2>
+
+<p>This procedure describes how to set service level agreement CPU features.</p>
+
+<p><strong>Setting a Service Level Agreement CPU Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Virtual Machines</strong></p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>, or select a virtual machine and click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Resource Allocation</strong> tab.</p>
+  </li>
+  <li>
+    <p>Specify <strong>CPU Shares</strong>. Possible options are <strong>Low</strong>, <strong>Medium</strong>, <strong>High</strong>, <strong>Custom</strong>, and <strong>Disabled</strong>. Virtual machines set to <strong>High</strong> receive twice as many shares as <strong>Medium</strong>, and virtual machines set to <strong>Medium</strong> receive twice as many shares as virtual machines set to <strong>Low</strong>. <strong>Disabled</strong> instructs VDSM to use an older algorithm for determining share dispensation; usually the number of shares dispensed under these conditions is 1020.</p>
+  </li>
+</ol>
+
+<p>The CPU consumption of users is now governed by the policy you have set.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Users_and_Roles">Chapter 15: Users and Roles</a><br />
+<strong>Next:</strong> <a href="chap-Event_Notifications">Chapter 17: Event Notifications</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-quotas_and_service_level_agreement_policy">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Quotas_and_Service_Level_Agreement_Policy.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Quotas_and_Service_Level_Agreement_Policy.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Profiling Vdsm &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="profiling-vdsm">Profiling Vdsm</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This page collects informations and hints about how to profile VDSM. To profile VDSM, you need to do some small and self-contained modifications. Make sure you have the cProfile package available.</p>
+
+<p><strong>WORK IN PROGRESS</strong></p>
+
+<h2 id="general-recommendations">General recommendations</h2>
+
+<ul>
+  <li>use standard python tools wherever/whenever feasible and as first choice: they are the most common, widely available, well understood and easily interoperable</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>bear in mind VDSM is a multi-thread and multi-process system daemon. It has both short-running and long-running threads.</li>
+</ul>
+
+<h2 id="collecting-and-inspecting-statistics">collecting and inspecting statistics</h2>
+
+<p>The advantage of using the standard python tools is that statistics are in the Pstats format, so the <a href="http://docs.python.org/2/library/profile.html">standard way of inspecting them applies</a>.</p>
+
+<p>To explore statistics or to quickly change the presentation of the statistics, the pstats interactive mode can be handy</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     python -m pstats /path/to/main/profile/data&#x000A;</code></pre></div>
+<p><a href="http://stefaanlippens.net/python_profiling_with_pstats_interactive_mode">quick description of the interactive mode</a></p>
+
+<p>TODO: add helper snippets/scripts</p>
+
+<h2 id="profiling-functions">profiling functions</h2>
+
+<p>If you want to profile single funcions, this decorator is a simple yet effective solution. Credit for this code goes to Antoni Segura Puimedon for the original implementation; the version presented here was edited with the sole purpose to be self-contained:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     def profile(func):&#x000A;         from cProfile import Profile&#x000A;         from functools import wraps&#x000A;         from tempfile import NamedTemporaryFile&#x000A;         @wraps(func)&#x000A;         def profiled_execution(*args, **kwargs):&#x000A;             logging.info('profiling method %s' % func.__name__)&#x000A;             profiler = Profile()&#x000A;             ret = profiler.runcall(func, *args, **kwargs)&#x000A;             prof_file = NamedTemporaryFile(mode='w',&#x000A;                                            prefix=func.__name__,&#x000A;                                            delete=False)&#x000A;             profiler.dump_stats(prof_file.name)&#x000A;             logging.info('profiled method %s and dumped results to %s' % (&#x000A;                          func.__name__, prof_file.name))&#x000A;             return ret&#x000A;         return profiled_execution&#x000A;</code></pre></div>
+<p>The "logging" module is already used extensively inside VDSM so it is assumed to be available. You can embed this snippet in the file containing the function you want to profile, or in the vdsm library code. In this case, a good place is lib/vdsm/utils.py in the VDSM source tree.</p>
+
+<h2 id="profile-the-entire-vdsm">profile the entire VDSM</h2>
+
+<p>To profile the entire VDSM, you may use <a href="http://code.google.com/p/yappi/">yappi</a>. Despite being a third-party solution, yappi fits nicely with VDSM because it is not intrusive and it is designed to work with long-running multi-threaded applications.</p>
+
+<p>yappi is eaily installable from pip. It is a C extension, so make sure you have the C compiler and the python development packages installed.</p>
+
+<p><strong>FIXME</strong> explain how to integrate yappi in VDSM</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/profiling-vdsm.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/profiling-vdsm.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

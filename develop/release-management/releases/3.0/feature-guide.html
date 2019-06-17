@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 3.0 Feature Guide &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/releases/">Releases</a></li>
+<li><a href="/develop/release-management/releases/3.0/">oVirt 3.0 release notes</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-30-feature-guide">oVirt 3.0 Feature Guide</h1>
+
+<p>(adapted from <a href="http://www.redhat.com/resourcelibrary/datasheets/RHEV-3.0-FeatureGuide">RHEV 3.0 feature guide</a>)</p>
+
+<p>oVirt is a complete virtualization management platform, licensed and developed as open source software. oVirt builds on the powerful Kernel-based Virtual Machine (KVM) hypervisor, and on the RHEV-M management server released by Red Hat to the open source community.</p>
+
+<ol id="markdown-toc">
+  <li><a id="markdown-toc-ovirt-30-feature-guide" href="#ovirt-30-feature-guide">oVirt 3.0 Feature Guide</a>    <ol>
+      <li><a id="markdown-toc-ovirt-node" href="#ovirt-node">oVirt Node:</a>        <ol>
+          <li><a id="markdown-toc-scalability" href="#scalability">Scalability</a></li>
+          <li><a id="markdown-toc-performance" href="#performance">Performance</a></li>
+          <li><a id="markdown-toc-selinux-and-svirt-security" href="#selinux-and-svirt-security">SELinux and sVirt security</a></li>
+          <li><a id="markdown-toc-troubleshooting" href="#troubleshooting">Troubleshooting</a></li>
+        </ol>
+      </li>
+      <li><a id="markdown-toc-ovirt-engine" href="#ovirt-engine">oVirt Engine</a>        <ol>
+          <li><a id="markdown-toc-platform" href="#platform">Platform</a></li>
+          <li><a id="markdown-toc-ovirt-api" href="#ovirt-api">oVirt API</a></li>
+          <li><a id="markdown-toc-software-development-kit" href="#software-development-kit">Software Development Kit</a></li>
+          <li><a id="markdown-toc-admin-portal" href="#admin-portal">Admin Portal</a></li>
+          <li><a id="markdown-toc-user-portal" href="#user-portal">User Portal</a></li>
+          <li><a id="markdown-toc-live-migration" href="#live-migration">Live migration</a></li>
+          <li><a id="markdown-toc-high-availability" href="#high-availability">High availability</a></li>
+          <li><a id="markdown-toc-maintenance-mode" href="#maintenance-mode">Maintenance mode</a></li>
+          <li><a id="markdown-toc-system-scheduler" href="#system-scheduler">System scheduler</a></li>
+        </ol>
+      </li>
+      <li><a id="markdown-toc-desktop-management-features" href="#desktop-management-features">Desktop Management Features</a></li>
+      <li><a id="markdown-toc-storage-management" href="#storage-management">Storage management</a></li>
+      <li><a id="markdown-toc-user-and-group-based-security" href="#user-and-group-based-security">User and group-based security</a></li>
+      <li><a id="markdown-toc-migration-tools" href="#migration-tools">Migration tools</a></li>
+      <li><a id="markdown-toc-extensibility" href="#extensibility">Extensibility</a></li>
+      <li><a id="markdown-toc-system-requirements" href="#system-requirements">System Requirements</a></li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="ovirt-node">oVirt Node:</h2>
+
+<ul>
+  <li>Image-based, small-footprint (&lt;200MB) hypervisor with minimized security footprint</li>
+  <li>Text-based GUI for enhanced manageability and easy installation</li>
+</ul>
+
+<h3 id="scalability">Scalability</h3>
+
+<ul>
+  <li>Host scalability: Supported limit of up to 160 Logical CPUs and 2TB per host (platform capable of up to 4,096 logical CPUs/64TB per host)</li>
+  <li>Guest scalability: Supports up to 64 vCPU and 2TB vRAM per guest</li>
+</ul>
+
+<h3 id="performance">Performance</h3>
+
+<ul>
+  <li>vhost-net: The KVM networking stack resides within the Linux kernel, which greatly improves performance and reduces latency compared to userspace networking.</li>
+  <li>Transparent huge pages (THP): The Linux kernel dynamically creates large memory pages (2MB vs. 4KB) for virtual machines, improving performance by reducing the number of times that memory is accessed, typically improving performance for most workloads.</li>
+  <li>x2paic: Paravirtualized interrupt controller in the VM, which reduces guest overhead and can improve guest performance in interrupt-heavy workloads.</li>
+  <li>Async-IO: For block I/O operations, in many cases yielding notable improvement in block I/O.</li>
+  <li>KSM memory overcommitment: allows administrators to define more RAM in their VMs than is present in a physical host.</li>
+</ul>
+
+<h3 id="selinux-and-svirt-security">SELinux and sVirt security</h3>
+
+<p>Security model supports SELinux and new sVirt capabilities, including Mandatory Access Control (MAC) for enhanced virtual machine and hypervisor security.</p>
+
+<h3 id="troubleshooting">Troubleshooting</h3>
+
+<p>Supports remote logging (rsyslog) and remote crash analysis (remote kdump)</p>
+
+<h2 id="ovirt-engine">oVirt Engine</h2>
+
+<p>Centralized enterprise-grade virtualization management engine with graphical administration console and programming interfaces.</p>
+
+<h3 id="platform">Platform</h3>
+
+<p>The engine is now running on Jboss AS7 as the application server.</p>
+
+<h3 id="ovirt-api">oVirt API</h3>
+
+<p>oVirt API all platform commands via an open source, community-driven RESTful API</p>
+
+<h3 id="software-development-kit">Software Development Kit</h3>
+
+<p>The oVirt Engine Software Development Kit provides an enhanced Python environment to support the development of custom software utilizing the APIs exposed by the engine.</p>
+
+<h3 id="admin-portal">Admin Portal</h3>
+
+<p>The oVirt administrator portal provides a graphical management system for administrators to manage virtual machines, templates, desktops, storage, clusters, and datacenters.</p>
+
+<p>User interface features include:</p>
+
+<ul>
+  <li>Tree-view for hierarchical management of the oVirt environment</li>
+  <li>Tag and bookmark capabilities</li>
+  <li>Query engine for searching for oVirt objects</li>
+  <li>Extensive event monitoring</li>
+  <li>Rich dialog boxes, including a network bonding dialog box to ease configuration of multiple virtual networks</li>
+</ul>
+
+<h3 id="user-portal">User Portal</h3>
+
+<p>The oVirt user portal provides standard and power user access to the oVirt environment</p>
+
+<h3 id="live-migration">Live migration</h3>
+
+<ul>
+  <li>Allows for running virtual machines to be moved seamlessly from one host to another within an oVirt cluster.</li>
+  <li>Now supports VM-level “Do Not Migrate” option and VM-host pinning.</li>
+</ul>
+
+<h3 id="high-availability">High availability</h3>
+
+<p>Allows critical VMs to be restarted on another host in the event of hardware failure with three levels of priority, taking into account resiliency policy.</p>
+
+<ul>
+  <li>Resiliency policy to control high availability VMs at the cluster level.</li>
+  <li>Supports application-level high availability with supported fencing agents.</li>
+</ul>
+
+<h3 id="maintenance-mode">Maintenance mode</h3>
+
+<p>Allows for one-click VM migration to put an oVirt hypervisor host in maintenance mode for upgrade or hardware updates.</p>
+
+<h3 id="system-scheduler">System scheduler</h3>
+
+<p>System Scheduler policies for load balancing (automatically balances the VM load among hosts in a cluster) and Power Saver mode (consolidates VM loads onto fewer hosts during non-peak hours).</p>
+
+<h2 id="desktop-management-features">Desktop Management Features</h2>
+
+<ul>
+  <li>User Portal for connecting oVirt users to their virtual machines.</li>
+  <li>SPICE open source remote rendering protocol for presentation of desktop environment to supported thin clients and PCs.</li>
+  <li>Enhanced network performance for desktop virtualization, including new dynamic and variable compression algorithms for higher latency, lower bandwidth WAN environments.</li>
+  <li>Enhanced Linux desktop support for auto-resizing, guest agent reporting, and single sign-on (on supported guests)</li>
+  <li>Enhancements to user experience, including higher supported screen resolutions and dynamic copy-and-paste</li>
+  <li>Desktop pooling for deployment of multiple desktop VMs from templates</li>
+</ul>
+
+<h2 id="storage-management">Storage management</h2>
+
+<ul>
+  <li>Supports iSCSI, FC, and NFS shared storage infrastructures</li>
+  <li>Support for transparent block alignment for better performance of virtual disk files on shared and local storage</li>
+  <li>Supports local physical disks and locally attached SAN or other storage supported by standard mpio drivers</li>
+  <li>Supports preallocated (thick-provisioned) disks for optimal performance and thin-provisioned disks for optimal storage usage</li>
+</ul>
+
+<h2 id="user-and-group-based-security">User and group-based security</h2>
+
+<ul>
+  <li>Supports Red Hat Directory Server, FreeIPA or Microsoft Active Directory for user and administrator authentication to oVirt Engine</li>
+  <li>Granular, inheritable, multi-level administration security roles to all actions and objects in the platform</li>
+</ul>
+
+<h2 id="migration-tools">Migration tools</h2>
+
+<p>Use <a href="http://libguestfs.org/virt-v2v/">virt-v2v</a> tools for automating the conversion of physical servers or unsupported virtual machine formats for use with oVirt.</p>
+
+<h2 id="extensibility">Extensibility</h2>
+
+<p>Hooks allow for advanced KVM technology to be supported from the oVirt interface. Sample hooks available in this <a href="http://gerrit.ovirt.org/gitweb?p=vdsm.git;a=tree;f=vdsm_hooks">git repository</a>.</p>
+
+<h2 id="system-requirements">System Requirements</h2>
+
+<p>TK</p>
+
+<category:collateral>
+</category:collateral>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/releases/3.0/feature-guide.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/releases/3.0/feature-guide.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

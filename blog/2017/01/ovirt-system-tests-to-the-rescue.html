@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt System Tests to the Rescue!&mdash;How to Run End-to-End oVirt Tests on Your Patch &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Eyal Edri' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='oVirt System Tests to the Rescue!&amp;mdash;How to Run End-to-End oVirt Tests on Your Patch' property='og:title'>
+<meta content='Today, when an oVirt developer pushes a patch to review on oVirt Gerrit, various validations are triggered in CI via the &#39;check-patch&#39; job, as defined by the project maintainers. Usually these jobs includes &#39;unit-tests&#39;, &#39;db tests&#39;, static analysis checks, and even an occasional &#39;functional test&#39;. While it might seem that it covers alot and gives a good indication that the patch is good to be merged, unfortunately it is not always the case.
+
+The reason it&#39;s not enough lies in oVirt&#39;s complexity and the fact it&#39;s a Virtualization project, which means the only real way to know if your patch didn&#39;t break things is to install oVirt and try running a few basic commands, like &#39;adding host&#39;, &#39;adding vm&#39;, &#39;creating snapshots&#39;, and other tasks you can only do if you have a full oVirt system up and running. Here is where OST comes in!' property='og:description'>
+<meta content='http://ovirt.org/blog/2017/01/ovirt-system-tests-to-the-rescue.html' property='og:url'>
+<meta content='2017-01-03T10:00:00Z' property='article:published_time'>
+<meta content='eedri' property='article:author:username'>
+<meta content='ci' property='article:tag'>
+<link href='/blog/tag/ci.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='developers' property='article:tag'>
+<link href='/blog/tag/developers.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<meta content='infrastructure' property='article:tag'>
+<link href='/blog/tag/infrastructure.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='oVirt System Tests to the Rescue!&amp;mdash;How to Run End-to-End oVirt Tests on Your Patch' name='twitter:title'>
+<meta content='Today, when an oVirt developer pushes a patch to review on oVirt Gerrit, various validations are triggered in CI via the &#39;check-patch&#39; job, as defined by the project maintainers. Usually these jobs includes &#39;unit-tests&#39;, &#39;db tests&#39;, static analysis checks, and even an occasional &#39;functional test&#39;. While it might seem that it covers alot and gives a good indication that the patch is good to be merged, unfortunately it is not always the case.
+
+The reason it&#39;s not enough lies in oVirt&#39;s complexity and the fact it&#39;s a Virtualization project, which means the only real way to know if your patch didn&#39;t break things is to install oVirt and try running a few basic commands, like &#39;adding host&#39;, &#39;adding vm&#39;, &#39;creating snapshots&#39;, and other tasks you can only do if you have a full oVirt system up and running. Here is where OST comes in!' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2017</li>
+<li class='active'>01</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+oVirt System Tests to the Rescue!&mdash;How to Run End-to-End oVirt Tests on Your Patch
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/eedri.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/eedri/">Eyal Edri</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2017-01-03T10:00:00Z'>
+Tuesday  3 January 2017
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>Today, when an oVirt developer pushes a patch to review on oVirt Gerrit, various validations are triggered in CI via the <a href="http://ovirt-infra-docs.readthedocs.io/en/latest/CI/Build_and_test_standards.html">'check-patch'</a> job, as defined by the project maintainers. Usually these jobs includes 'unit-tests', 'db tests', static analysis checks, and even an occasional 'functional test'. While it might seem that it covers alot and gives a good indication that the patch is good to be merged, unfortunately it is not always the case.</p>
+
+<p>The reason it's not enough lies in oVirt's complexity and the fact it's a Virtualization project, which means the only real way to know if your patch didn't break things is to install oVirt and try running a few basic commands, like 'adding host', 'adding vm', 'creating snapshots', and other tasks you can only do if you have a full oVirt system up and running. Here is where OST comes in!</p>
+
+<p></p>
+
+<h2 id="ovirt-system-tests">oVirt System Tests</h2>
+
+<p><a href="http://ovirt-system-tests.readthedocs.io">oVirt system tests</a> is a testing framework written in Python, using 'python-nose' and oVirt Python SDK and runs on auto-generated VMs created by <a href="http://lago.readthedocs.io">Lago</a>. It is used by the oVirt CI to run post merge end-to-end testing that runs on a fully deployed oVirt environment and has been proven to detect multiple
+regressions so far on merged commits from oVirt projects.</p>
+
+<h2 id="the-current-status-and-why-it-is-never-enough">The Current Status (And Why it is Never Enough)</h2>
+
+<p>So you may ask yourself: if we have OST running after (almost) every merged commit, where is the problem? You might have guessed the answer which is already in the question–it's only 'AFTER', which means it's detected too late in the development cycle. The result of such breakage in CI means that any other developer using the same branch will now be blocked from working/verifying his patch because existing HEAD is broken, and usually it takes some time to either revert the offending patch or send a fix (and that's after the relevant people were found and started debugging the issue). On some occasions in the past, it even took a few days to see a fix merged. During that time, developers and testers were blocked, not an ideal status.</p>
+
+<p>Luckily, we now have a super easy way to avoid this!</p>
+
+<h2 id="running-ost-on-open-patches-pre-merge">Running OST on Open Patches (Pre Merge)</h2>
+
+<p>I know you can't wait to hear about how to run OST on your patch, so I'll just jump into the TL;DR version, here is how you do it:</p>
+
+<ul>
+  <li>
+    <p><em>Build RPMs from your open patch(es)</em></p>
+
+    <p>Building RPMs today from any open oVirt patch is simple as just
+  asking for it.. :)<br />
+  The new 'build-on-demand' option from oVirt Standard CI allows
+  you to just type <strong>ci please build</strong> in a comment on your patch
+  and a new build will be triggered on the project 'build-on-demand' jobs.<br />
+  Once the 'build-on-demand' job finished building, write down the job URL,
+  for e.g: <a href="http://jenkins.ovirt.org/job/vdsm_master_build-artifacts-on-demand-el7-x86_64/9/">vdsm-master-build-on-demand</a>.
+  (btw, you can do this for as many oVirt projects you want and have a list of URLs).</p>
+  </li>
+  <li>
+    <p><em>Run the manual OST job with your custom RPMs</em></p>
+
+    <p>Now that you have your custom RPMs ready, your JUST a click away from running OST
+  on them.<br /></p>
+    <ul>
+      <li>Login to <a href="http://jenkins.ovirt.org">Jenkins</a> (make sure you have 'dev role' permissions, if not open a ticket to infra)<br /></li>
+      <li>Go to the <a href="http://jenkins.ovirt.org/job/ovirt-system-tests_manual/">OST Manual job</a> for your relevant version (usually master).<br /></li>
+      <li>Click on 'build with parameters' menu ( on the left side )</li>
+      <li>Now add all the URLs you have with the custom RPMs ( one per line ),for e.g <a href="http://jenkins.ovirt.org/job/vdsm_master_build-artifacts-on-demand-el7-x86_64/9/">vdsm-build</a><br /></li>
+      <li>Click 'Build'<br /></li>
+      <li>Go get some coffee; Don't worry the job will send you an email once it is done ( on any status )</li>
+    </ul>
+  </li>
+</ul>
+
+<p>This info can also be found on the <a href="http://ovirt-system-tests.readthedocs.io/en/latest/CI/developers_info/">official OST documentation page</a>.</p>
+
+<p>For more info or questions, please send email to infra@ovirt.org or lago-devel@ovirt.org if it is a lago-related question.</p>
+
+<p>Happy testing!</p>
+
+</section>
+<footer class='post-meta'>
+<div class='tags'>
+Tags:
+<ul class='taglist'></ul>
+<li><a href="../../tag/ci.html">ci</a></li>
+<li><a href="../../tag/developers.html">developers</a></li>
+<li><a href="../../tag/infrastructure.html">infrastructure</a></li>
+</div>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2017-01-03-ovirt-system-tests-to-the-rescue.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2017-01-03-ovirt-system-tests-to-the-rescue.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 17 Oct 2017 11:08 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

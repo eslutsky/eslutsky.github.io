@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Multiple Gateways &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="multiple-gateways">Multiple Gateways</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Currently it is assumed that the host-wide default gateway is the gateway defined on the ovirtmgmt logical network. This feature will enable the user to define a gateway per logical network.</p>
+
+<p>The feature is only relevant for deployments with hosts with more than one network device. Without the feature, any traffic going in the device that needs to be returned to a network not directly on the host will be routed out through the default gateway regardless of the device which the traffic came in. With the feature, any traffic going in that needs to be returned to a network outside of the host's own subnets will be routed back via the device that the traffic came in through.</p>
+
+<p>The motivation is to ensure that if outside traffic was routed through a firewall to the host, then it will be returned the way it came in through the same firewall. Additionally, if a special administrative network (Mainly display network) was placed on a device then this feature ensures that return traffic will remain on the same display network and not router back from the host's default gateway, which may be a different network.</p>
+
+<p>Previously users solved the issue with source routing manually, this feature simply automates the process.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Assaf Muller (amuller)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#109;&#117;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#109;&#117;&#108;&#108;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>IRC: amuller at #ovirt (irc.oftc.net)</li>
+</ul>
+
+<h2 id="current-status">Current Status</h2>
+
+<ul>
+  <li>oVirt-3.3</li>
+  <li>Merged, bug fix stage</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h2 id="why-do-we-need-multiple-gateways">Why do we need multiple gateways?</h2>
+
+<p>The need for a gateway per network has emerged from the need to support other host networks (not VM networks) beside the management one.</p>
+
+<p>As an example, migration and storage networks can be defined, each passing dedicated traffic (one for storage communication and another for VM migration traffic), they may need to pass through different gateways.  So the management network can be accessed using gateway A, storage using B and migration using C. A will usually be set on a host level as the host default gateway, and the others will be set for the individual networks.  Otherwise, there would be no way for your storage to use a different router (than the management one) in the network.</p>
+
+<p>oVirt assumes that the host's default gateway is the gateway defined on the ovirtmgmt network. With that in mind: Multiple oVirt users use this network topology:</p>
+
+<p><img alt="" width="570" height="246" src="/images/wiki/Multiple_Gateways_Topology.png?1560777613" /></p>
+
+<p>The administrator created a new network and set it as the display network. The oVirt host is connected to two networks: ovirtmgmt (10.0.0.0) via eth0, and the display network (20.0.0.0) via eth1. A user on a different subnet than the host then connected to the engine, selected a VM on the host and then opened a new Spice console. Network data can reach the host, but all return traffic will route to the host's default gateway, which is the gateway defined on ovirtmgmt, reached via eth0. The return traffic will reach R1, but R1 doesn't have a route to the user's laptop and thus the packets will be dropped at R1. In other words, Spice won't work.</p>
+
+<p>More simply put, pings won't work from the user's laptop to the oVirt host, assuming they are not located on the same network. The traffic will reach the host successfully, but all return traffic will be routed through the host's default gateway via eth0. The packets will reach R1 and will then be dropped as R1 cannot route to the user's laptop.</p>
+
+<p>Currently, clients manually edit the host's init scripts and set a different gateway for the display network. This can become problematic to maintain with a large amount of hosts. The multiple gateways feature will automate this process.</p>
+
+<h2 id="user-experience">User Experience</h2>
+
+<p>The only change needed in the GUI is in the setup networks dialog. When editing an IP configuration, we need to enable the gateway field for all networks, not only ovirtmgmt. If the user chose static IP, then the gateway field should be added and be editable. If DHCP was chosen then the gateway field should be visible and display the gateway configured via DHCP.</p>
+
+<h2 id="proposed-solution">Proposed Solution</h2>
+
+<h3 id="the-manual-solution">The Manual Solution</h3>
+
+<p>The manual solution, or how Linux system admins setup multiple gateways on a host is to create a routing table for each IP subnet configured on the host, and source routing rules to use each table as appropriate. Meaning, if a packet is destined towards the IP configured on the host's eth0 (For example: 10.0.0.1), then when creating a return packet, the source IP will be 10.0.0.1. The host will then go over his configured rules and see that when routing <strong>from</strong> 10.0.0.1, he must use a specific routing table, which holds the gateway for the 10.0.0.0 network. In other words, all traffic to 10.0.0.1 will return via 10.0.0.1's NIC, and all traffic to another IP of the host, will return via that IP's NIC instead. That way, traffic goes out the same way it came in.</p>
+
+<p>More information about iproute2 source routing may be found at: <a href="http://www.policyrouting.org/iproute2-toc.html">http://www.policyrouting.org/iproute2-toc.html</a></p>
+
+<h3 id="manual-configuration-example">Manual Configuration Example</h3>
+
+<p>The zeus02 host is connected via eth0 to one router, and via eth1 (bridged over ovirtmgmt) to another router. We configured the display network on the eth0 NIC.</p>
+
+<p><strong>The ip address on eth0:</strong></p>
+
+<p><img alt="" width="803" height="68" src="/images/wiki/Eth0_ip.png?1560777613" /></p>
+
+<p><strong>The ip address on ovirtmgmt:</strong></p>
+
+<p><img alt="" width="789" height="68" src="/images/wiki/Ovirtmgmt_ip.png?1560777613" /></p>
+
+<p><strong>A list of the host's routing tables:</strong></p>
+
+<p><img alt="" width="492" height="292" src="/images/wiki/Rt_tables.png?1560777612" /></p>
+
+<p><strong>The routing table setup for eth0:</strong></p>
+
+<p><img alt="" width="455" height="66" src="/images/wiki/Eth0_table.png?1560777613" /></p>
+
+<p><strong>The routing table setup for ovirtmgmt:</strong></p>
+
+<p><img alt="" width="512" height="63" src="/images/wiki/Ovirtmgmt_table.png?1560777613" /></p>
+
+<p><strong>The rules which tell the host when to use each routing table:</strong></p>
+
+<p><img alt="" width="559" height="172" src="/images/wiki/Ip_rule.png?1560777613" /></p>
+
+<p>And finally, here's the host's main routing table. Any traffic coming <strong>in</strong> to the host will use the ip rules and an interface's routing table. The main routing table is only used for traffic originating <strong>from</strong> the host.</p>
+
+<p><img alt="" width="775" height="219" src="/images/wiki/Ip_route.png?1560777613" /></p>
+
+<h3 id="automatic-solution">Automatic Solution</h3>
+
+<p>The proposed solution is to create a python script that expects an interface's new IP address, subnet mask, network name and gateway. The script will then use the appropriate commands to generate a new routing table, populate it with two rows: One to link the network ip range with the NIC, and another that defines the gateway. Finally, the script will add two new rules that define when to use the new routing table. Of course, the rules define to use the new routing table whenever traffic is destined to or from the new ip network range. For an example, see the previous section. Another script will be created that reverses the aforementioned effects.</p>
+
+<p><strong>DHCP:</strong> During VDSM installation, an additional script will be created under /etc/dhcp/dhclient.d/, called sourceRouting.sh. We will use DHCP hooks to call our new scripts whenever a DHCP interface is brought up or down.</p>
+
+<p><strong>Static IP:</strong> We'll call the aforementioned script for statically configured interfaces during addNetwork and delNetwork. Two files will be created during addNetwork. delNetwork will delete the same files. The files are route-<interface> and rule-<interface>, placed in /etc/sysconfig/network-scripts. New routing rules will be placed in the route file, and new rules in the rule file. Both of these files are called during the ifup init script.</interface></interface></p>
+
+<p><strong>Summary:</strong> Multiple gateways code will be called whenever a DHCP interface goes up or down (Via our DHCP hook), and will create and delete the needed rules every time it is called. For statically configured interfaces, it will be called once during addNetwork, and once during delNetwork. These runs will place init scripts, that in turn will be called during ifup and ifdown.</p>
+
+<h3 id="upgrading">Upgrading</h3>
+
+<p>When a host upgrades to a VDSM that supports multiple gateways all of its interfaces will have no source routing configured. Any new setup networks will configure source routing on the affected networks / interfaces. Since the current implementation keeps the management network as the host's default gateway, connectivity should never be lost and no actual upgrade script is offered.</p>
+
+<h3 id="api">API</h3>
+
+<h4 id="vdsm">Vdsm</h4>
+
+<p>A significant advantage of the currently proposed implementation is that no API change between the Engine and VDSM is needed. VDSM is capable of distilling the gateways from the current setupNetworks verb.</p>
+
+<h4 id="rest-and-engine">REST and Engine</h4>
+
+<p>Currently, only when setting the management network, a gateway may be specified. With this feature, each network with static address may have a gateway, that would control source routing for that address.</p>
+
+<h2 id="testing">Testing</h2>
+
+<ul>
+  <li>Set up networking as described <a href="#Why_do_we_need_multiple_gateways.3F"> above</a>. Most importantly, place your spice client outside of the hosts' own subnet.</li>
+  <li>Verify that spice traffic travels through the designated host.</li>
+  <li>Test the above both with static addresses and with DHCP.</li>
+</ul>
+
+<h2 id="external-references">External References</h2>
+
+<ul>
+  <li>On the arch@ovirt.org mailing list.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/multiple-gateways.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/multiple-gateways.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 20 Jul 2018 23:29 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

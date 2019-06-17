@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Builder</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/builder.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Application-Scoped Tests for oVirt with Arquillian</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2016/07/application-scoped-tests-for-ovirt-with-arquillian.html"/>
+    <id>http://ovirt.org/blog/2016/07/application-scoped-tests-for-ovirt-with-arquillian.html</id>
+    <published>2016-07-06T16:30:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>Roman Mohr</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="/"&gt;oVirt's&lt;/a&gt; heart, &lt;code&gt;ovirt-engine&lt;/code&gt;, is a monolith with more
+than one million lines of codes based on Wildfly. One of the problems faced
+when working on such big projects is that sometimes writing tests is extremely
+complex. You spend a tremendous amount of time mocking database access and
+irrelevant services for the unit under test.&lt;/p&gt;
+
+&lt;p&gt;One way to deal with that complexity is to treat the
+database as part of the application. While we will see the advantages of this
+for writing tests it does also make a lot of sense for other reasons.&lt;/p&gt;
+
+&lt;p&gt;In the past the database was not part of the application, it was the opposite.
+The database was &lt;em&gt;the&lt;/em&gt; integration point of different applications and
+services. A database was full of different views for BI, Finance, Shops, and
+many more. This has changed over time. Nowadays the integration mostly happens
+through REST or similar APIs, giving applications the freedom to choose the one
+(or even more than one) database technology suiting their domain.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Back to the topic of this post; to integrate the database into the tests, some
+requirements need to be met:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Database rollback after every test&lt;/li&gt;
+  &lt;li&gt;An easy way to create, update, and delete test relevant data on the database layer must be provided&lt;/li&gt;
+  &lt;li&gt;The main application infrastructure should be up and things like CDI injections should work&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Since &lt;code&gt;ovirt-engine&lt;/code&gt; is based on &lt;a href="http://wildfly.org/"&gt;Wildfly&lt;/a&gt;,
+&lt;a href="http://arquillian.org/"&gt;Arquillian&lt;/a&gt; is the perfect choice for meeting these
+requirements.&lt;/p&gt;
+
+&lt;p&gt;Getting started with Arquillian is pretty easy. Add the right dependencies to your Maven &lt;code&gt;pom.xml&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight xml"&gt;&lt;code&gt;  &lt;span class="nt"&gt;&amp;lt;dependencies&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;javax.enterprise&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;cdi-api&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;provided&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jboss.spec&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;jboss-javaee-6.0&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span class="nt"&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;provided&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jboss.arquillian.junit&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;arquillian-junit-container&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jboss.shrinkwrap.resolver&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;shrinkwrap-resolver-depchain&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;type&amp;gt;&lt;/span&gt;pom&lt;span class="nt"&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jboss.arquillian.container&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;arquillian-weld-ee-embedded-1.1&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.0.0.CR8&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.jboss.weld&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;weld-core&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.1.5.Final&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.slf4j&lt;span class="nt"&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;slf4j-simple&lt;span class="nt"&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.6.4&lt;span class="nt"&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+      &lt;span class="nt"&gt;&amp;lt;scope&amp;gt;&lt;/span&gt;test&lt;span class="nt"&gt;&amp;lt;/scope&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create a simple Arquillian test:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;&lt;span class="nd"&gt;@RunWith&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Arquillian&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;SimpleTest&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Inject&lt;/span&gt;
+    &lt;span class="n"&gt;TestBean&lt;/span&gt; &lt;span class="n"&gt;testBean&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Deployment&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="n"&gt;JavaArchive&lt;/span&gt; &lt;span class="nf"&gt;deploy&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;ShrinkWrap&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;create&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;JavaArchive&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;addClass&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+                        &lt;span class="n"&gt;TestBean&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;
+                &lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;addAsManifestResource&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;
+                        &lt;span class="n"&gt;EmptyAsset&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;INSTANCE&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt;
+                        &lt;span class="n"&gt;ArchivePaths&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;create&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"beans.xml"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                &lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Test&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shouldPrintHello&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;testBean&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;printHello&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;TestBean&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;printHello&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;System&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;out&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;println&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Hi I am injected"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="o"&gt;}&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;and your first test with real injections is running. A good
+starting point for understanding Arquillian better is the &lt;a href="http://arquillian.org/guides/getting_started/"&gt;Getting
+Started&lt;/a&gt; article on the
+Arquillian homepage.&lt;/p&gt;
+
+&lt;p&gt;Arquillian can also do automatic rollback for you with its &lt;a href="http://arquillian.org/modules/transaction-extension/"&gt;Transaction
+Extension&lt;/a&gt;.  Since this
+requires the download of a full JavaEE Application Server it is not an option
+for oVirt right now. To still get automatic rollback, I only had to create a
+custom Arquillian Extension, which can be found
+&lt;a href="https://github.com/oVirt/ovirt-engine/tree/aa000f27c7bcb17cf82fbd2579059664838cfea7/backend/manager/modules/bll/src/test/java/org/ovirt/engine/arquillian/database"&gt;here&lt;/a&gt;.
+Look at
+&lt;a href="https://github.com/oVirt/ovirt-engine/blob/aa000f27c7bcb17cf82fbd2579059664838cfea7/backend/manager/modules/bll/src/test/java/org/ovirt/engine/arquillian/database/RollbackRule.java"&gt;RollbackRule.java&lt;/a&gt;
+in the extension to see how the Spring transaction manager is hooked into
+Arquillian without the need of a real JTA transaction manager. Almost everyting
+in Arquillian is extensible, that is really where this project shines.&lt;/p&gt;
+
+&lt;p&gt;All of this is already part of oVirt, so when writing tests, you don't have to
+care about this anymore. Inherit from the right base class and start
+writing your test.&lt;/p&gt;
+
+&lt;h2 id="writing-an-ovirt-application-scoped-test-step-by-step"&gt;Writing an oVirt Application-Scoped Test Step by Step&lt;/h2&gt;
+
+&lt;p&gt;Creating an application scoped test for oVirt is pretty simple:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;&lt;span class="nd"&gt;@Category&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;IntegrationTest&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AddVmCommandTest&lt;/span&gt; &lt;span class="kd"&gt;extends&lt;/span&gt; &lt;span class="n"&gt;TransactionalCommandTestBase&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+    &lt;span class="nd"&gt;@Deployment&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="n"&gt;JavaArchive&lt;/span&gt; &lt;span class="nf"&gt;createDeployment&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;TransactionalCommandTestBase&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;createDeployment&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;@Category&lt;/code&gt; annotation on the class tells Maven that it should launch the
+test in the integration test phase. The advantage of running them not as
+regular unit tests is that we can update the database schema before we run the
+first integration test with the standard Maven life-cycle. Regular unit tests
+can still run in the normal test phase and are independent from any resource
+needs of the integration tests.&lt;/p&gt;
+
+&lt;p&gt;Arquillian-based tests need a static method with the &lt;code&gt;@Deployment&lt;/code&gt; annotation
+on it. There we return a &lt;code&gt;JavaArchive&lt;/code&gt;. Arquillian supports different
+application types (EAR, WAR, JAR). For our scenario the advantage of the
+&lt;code&gt;JavaArchive&lt;/code&gt; is that in contrast to WAR and EAR deployments everything on the
+classpath will also be accessible in the tests, whereas the other application
+types are far better isolated. However, to make classes injectable they need to
+be part of the generated JAR itself. The &lt;code&gt;JavaArchive&lt;/code&gt; follows a nice builder
+pattern and adding your own services is just a matter of calling
+&lt;code&gt;JavaArchive#addClasses(...)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;All DAOs and the basic &lt;code&gt;ovirt-engine&lt;/code&gt; services are already added to the archive by the base class &lt;code&gt;TransactionalCommandTestBase&lt;/code&gt;, so just calling
+&lt;code&gt;#createDeployment()&lt;/code&gt; of the base class should be enough for many cases.&lt;/p&gt;
+
+&lt;p&gt;That is not the only thing the base class does for us. It does:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Transaction handling. After every test, the database is rolled back&lt;/li&gt;
+  &lt;li&gt;Creating a default datacenter with a default host and a default VM in the database.&lt;/li&gt;
+  &lt;li&gt;Loading the default config values of ovirt-engine&lt;/li&gt;
+  &lt;li&gt;Loading the default OS configuration for different OS types&lt;/li&gt;
+  &lt;li&gt;Loading and setting up the ovirt-engine lock manager for the application&lt;/li&gt;
+  &lt;li&gt;Packing all DAOs and the most common services in the Arquillian JAR.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The next step is to set up your test:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="nd"&gt;@Inject&lt;/span&gt;
+    &lt;span class="n"&gt;BackendInternal&lt;/span&gt; &lt;span class="n"&gt;backend&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Inject&lt;/span&gt;
+    &lt;span class="n"&gt;StoragePoolDao&lt;/span&gt; &lt;span class="n"&gt;storagePoolDao&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+
+    &lt;span class="kd"&gt;private&lt;/span&gt; &lt;span class="n"&gt;AddVmParameters&lt;/span&gt; &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Before&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setUp&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;parameters&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;AddVmParameters&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;vmBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;reset&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;&lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultCluster&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;os&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;OS_RHEL7_X86_64&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"my_vm"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Arquillian gives us the possibility to use injections in the test class itself.
+Here the &lt;code&gt;StoragePoolDao&lt;/code&gt; is injected. Further in the &lt;code&gt;@Before&lt;/code&gt; method a
+default scenario for the tests is defined. In this case testing the
+&lt;code&gt;AddVmCommand&lt;/code&gt; is the goal. Therefore a VM which will make the &lt;code&gt;AddVmCommand&lt;/code&gt;
+operation pass is defined (not created yet) with the &lt;code&gt;VmBuilder&lt;/code&gt; (The builders
+are an important part of reducing redundant code, see below for more details).&lt;/p&gt;
+
+&lt;p&gt;Defining a scenario which will be valid for the code under test is one of
+the key elements for writing tests. Not only for this kind of application
+scoped tests, also for writing unit tests in general. This scenaro is
+enough to make the common use case for the code under test succeed:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="nd"&gt;@Test&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shouldAddVm&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setVm&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vmBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;build&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+        &lt;span class="n"&gt;VdcReturnValueBase&lt;/span&gt; &lt;span class="n"&gt;returnValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;backend&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;runInternalAction&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;VdcActionType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;AddVm&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;assertThat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returnValue&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getSucceeded&lt;/span&gt;&lt;span class="o"&gt;()).&lt;/span&gt;&lt;span class="na"&gt;isTrue&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Recreating the same valid scenario before every test makes it now extremely
+easy to test specific scenarios. The following test tests if the
+&lt;code&gt;AddVmCommand&lt;/code&gt; will detect a VM entity without a name by just tweaking the
+default scenario in a minimal way:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="nd"&gt;@Test&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shouldDetectMissingName&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setVm&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vmBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;build&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+        &lt;span class="n"&gt;VdcReturnValueBase&lt;/span&gt; &lt;span class="n"&gt;returnValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;backend&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;runInternalAction&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;VdcActionType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;AddVm&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;assertThat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returnValue&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getSucceeded&lt;/span&gt;&lt;span class="o"&gt;()).&lt;/span&gt;&lt;span class="na"&gt;isFalse&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;assertThat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returnValue&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getValidationMessages&lt;/span&gt;&lt;span class="o"&gt;()).&lt;/span&gt;&lt;span class="na"&gt;contains&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;EngineMessage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;ACTION_TYPE_FAILED_NAME_MAY_NOT_BE_EMPTY&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Since a key feature of these kind of tests is that all changes in the database
+are rolled back after every test, we can also tweak persisted entities in the database to create our scenarios. Here, the default storage pool in the database
+is loaded, set to &lt;code&gt;NotOperational&lt;/code&gt; and persisted again. As a result the
+&lt;code&gt;AddVmCommand&lt;/code&gt; should fail:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;    &lt;span class="nd"&gt;@Test&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;shouldDetectNonOperationalStoragePool&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;defaultStoragePool&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setStatus&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;StoragePoolStatus&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;NotOperational&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;storagePoolDao&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;update&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultStoragePool&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+        &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setVm&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vmBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;build&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+        &lt;span class="n"&gt;VdcReturnValueBase&lt;/span&gt; &lt;span class="n"&gt;returnValue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;backend&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;runInternalAction&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;VdcActionType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;AddVm&lt;/span&gt;&lt;span class="o"&gt;,&lt;/span&gt; &lt;span class="n"&gt;parameters&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;assertThat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returnValue&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getSucceeded&lt;/span&gt;&lt;span class="o"&gt;()).&lt;/span&gt;&lt;span class="na"&gt;isFalse&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;assertThat&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;returnValue&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;getValidationMessages&lt;/span&gt;&lt;span class="o"&gt;()).&lt;/span&gt;&lt;span class="na"&gt;contains&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;EngineMessage&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;ACTION_TYPE_FAILED_IMAGE_REPOSITORY_NOT_FOUND&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="o"&gt;());&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="populating-the-database"&gt;Populating the Database&lt;/h2&gt;
+
+&lt;p&gt;While Arquillian and some custom extensions are preparing the environment to
+reduce the amount of repetitive set-up code for the tests, this does still not
+give us a nice way to populate the database with the data needed for a specific
+test. Currently ovirt-engine uses a fixture file for DAO testing. All entities
+are described there in an XML format and before every test the database is
+populated with that data. While this works it has some drawbacks. Mainly:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It is hard to add new entities in XML.&lt;/li&gt;
+  &lt;li&gt;It is hard to update the entities in the XML file when the entity class changes.&lt;/li&gt;
+  &lt;li&gt;All tests need to take into account that there might be unrelated data in the database for other tests.&lt;/li&gt;
+  &lt;li&gt;It is hard to see which tests use which parts of the persisted data&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A nice trick I have learned some time ago from the excellent engineers behind
+&lt;a href="http://www.friendseek.com/"&gt;Frendseek&lt;/a&gt; is to use &lt;code&gt;builders&lt;/code&gt; for the entities.
+With these builders the basic set-up of a full datacenter in the engine looks
+like this:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight java"&gt;&lt;code&gt;&lt;span class="nd"&gt;@RunWith&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Arquillian&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;class&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kd"&gt;abstract&lt;/span&gt; &lt;span class="kd"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;TransactionalTestBase&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+
+    &lt;span class="o"&gt;[...]&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@Before&lt;/span&gt;
+    &lt;span class="kd"&gt;public&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;setUpDefaultEnvironment&lt;/span&gt;&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+        &lt;span class="o"&gt;[...]&lt;/span&gt;
+
+        &lt;span class="n"&gt;MacRange&lt;/span&gt; &lt;span class="n"&gt;macRange&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;MacRange&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;macRange&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setMacFrom&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"00:2A:4A:16:01:51"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+        &lt;span class="n"&gt;macRange&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;setMacTo&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"00:2A:4A:16:01:e6"&lt;/span&gt;&lt;span class="o"&gt;);&lt;/span&gt;
+
+
+        &lt;span class="n"&gt;defaultStoragePool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;storagePoolBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;up&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;&lt;span class="na"&gt;persist&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;defaultMacPool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;macPoolBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;macRanges&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;macRange&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;persist&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;defaultCluster&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clusterBuilder&lt;/span&gt;
+                &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;macPool&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultMacPool&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;storagePool&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultStoragePool&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;architecture&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ArchitectureType&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;x86_64&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;cpuName&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="s"&gt;"Intel Conroe Family"&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+                &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;persist&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;defaultCpuProfile&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cpuProfileBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultCluster&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;persist&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;defaultHost&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;vdsBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultCluster&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;persist&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+        &lt;span class="n"&gt;defaultVM&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;vmBuilder&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;host&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;defaultHost&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;os&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;OS_RHEL7_X86_64&lt;/span&gt;&lt;span class="o"&gt;).&lt;/span&gt;&lt;span class="na"&gt;up&lt;/span&gt;&lt;span class="o"&gt;().&lt;/span&gt;&lt;span class="na"&gt;persist&lt;/span&gt;&lt;span class="o"&gt;();&lt;/span&gt;
+    &lt;span class="o"&gt;}&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When calling &lt;code&gt;#persist()&lt;/code&gt; on the builder the entity is persisted to the
+database and a fresh loaded copy of the entity is returned. There exists also
+the &lt;code&gt;#build()&lt;/code&gt; counterpart on every builder which can also be used in normal
+unit tests without database access.&lt;/p&gt;
+
+&lt;p&gt;There are two very important rules when writing builders for new entities:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Calling &lt;code&gt;builder.reset().persist()&lt;/code&gt; should always work. In other words, if values which are required to meet database constraints are missing, fill them with random values to make a call to &lt;code&gt;#persist()&lt;/code&gt; always succeed. Don't pre-fill any other values to keep the tests as predictable as possible.&lt;/li&gt;
+  &lt;li&gt;Instantiating a builder and calling &lt;code&gt;#build()&lt;/code&gt; should work without the need to have CDI or a database present. It basically allows you to reuse the builders for standard unit tests.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The final step to make the usage of the builders and the default environment even more convenient, is to declare them in the base class as protected fields. This allows inherited test cases to easily access the pre-persisted default entities and the builders, like demonstrated on the &lt;code&gt;AddVmCommandTest&lt;/code&gt; example above.&lt;/p&gt;
+
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;Comparing the classic &lt;a href="https://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=backend/manager/modules/bll/src/test/java/org/ovirt/engine/core/bll/AddVmCommandTest.java;h=5cacad4b8058ac10aa45f7e0cfd00c4f38fbbd88;hb=80274308dcadddea46cde895f7418b022cb6224e"&gt;AddVmCommandTest&lt;/a&gt; with the new &lt;a href="https://gerrit.ovirt.org/gitweb?p=ovirt-engine.git;a=blob;f=backend/manager/modules/bll/src/test/java/org/ovirt/engine/core/bll/integration/AddVmCommandTest.java;h=a7da66974beaf3694d26aa0f3507c5b146d67c59;hb=80274308dcadddea46cde895f7418b022cb6224e"&gt;integration/AddVmCommandTest&lt;/a&gt; immediately shows how much simpler it is to quickly write new tests. Further we can stop imitating application internal DAO and service logic with Mockito, making it easier to refactor the application and the tests. Since we are also not mocking any of the DAOs or core services there is a higher chance of immediately detecting changes of behaviour (intendet or unintended) which would break dependent services.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;This post was originally published at &lt;a href="http://rmohr.github.io/continuous%20integration/2016/07/04/application-scoped-tests-for-ovirt-with-arquillian"&gt;rmohr.github.io&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
+</feed>

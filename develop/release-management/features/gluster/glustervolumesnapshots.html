@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+GlusterVolumeSnapshots &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-volume-snapshot">Gluster Volume Snapshot</h1>
+
+<h1 id="summary">Summary</h1>
+
+<p>This document describes the design for the volume snapshot feature under Gluster. GlusterFS provides crash recoverability for the volumes through snapshot feature and console needs to provide a web based mechanism to achieve the same feature.</p>
+
+<p>This feature allows the administrators to create, schedule, list, delete, start, stop and restore to a given snapshot. With this administrators can view all the available snapshots taken for a volume and in case of crash can opt to restore to a point in time view using the existing snapshots.</p>
+
+<h1 id="owner">Owner</h1>
+
+<ul>
+  <li>Feature owner: Shubhendu Tripathi <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a>
+    <ul>
+      <li>GUI Component owner:</li>
+      <li>Engine Component owner: Shubhendu Tripathi <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#104;&#116;&#114;&#105;&#112;&#097;&#116;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+      <li>VDSM Component owner:</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="current-status">Current Status</h1>
+
+<ul>
+  <li>Status: Inception</li>
+  <li>Last updated date: Mon Oct 24 2014</li>
+</ul>
+
+<h1 id="design">Design</h1>
+
+<p>The snapshot feature is being designed to enable administrators to create and maintain individual volumes snapshots. It also provides mechanism to restore a volume to a point in time snapshot in a crash situation.</p>
+
+<h2 id="new-entities">New Entities</h2>
+
+<h3 id="glustervolumesnapshots">GlusterVolumeSnapshots</h3>
+
+<p>This entity stores the snapshots created for gluster volumes. Different volumes can have snapshots with same names.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>snapshot_id</td>
+      <td>UUID</td>
+      <td>Id of the new snapshot</td>
+    </tr>
+    <tr>
+      <td>volume_id</td>
+      <td>UUID</td>
+      <td>Id of the reference volume for which the snapshot is taken</td>
+    </tr>
+    <tr>
+      <td>snapshot_name</td>
+      <td>String</td>
+      <td>Name of the snapshot</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>String</td>
+      <td>Description</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>String</td>
+      <td>Current status of the snapshot</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>GlusterVolumeSnapshotStatus
+    <ul>
+      <li>STARTED</li>
+      <li>STOPPED</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="glustervolumesnapshotconfig">GlusterVolumeSnapshotConfig</h3>
+
+<p>This entity stores the details of a configuration parameter for volume related to snapshot feature. Volume specific values for the parameters would be maintained as part of this entity.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>cluster_id</td>
+      <td>UUID</td>
+      <td>Id of the reference cluster to which volume belongs to</td>
+    </tr>
+    <tr>
+      <td>volume_id</td>
+      <td>UUID</td>
+      <td>Id of the reference volume</td>
+    </tr>
+    <tr>
+      <td>param_name</td>
+      <td>String</td>
+      <td>Name of the configuration parameter</td>
+    </tr>
+    <tr>
+      <td>param_value</td>
+      <td>String</td>
+      <td>Value of the configuration parameter</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="entities-changes">Entities changes</h2>
+
+<p>None</p>
+
+<h2 id="sync-jobs">Sync Jobs</h2>
+
+<p>The Gluster volume snapshot details would be periodically fetched (frequency 5 minutes) and updated into engine using a sync job.</p>
+
+<h2 id="bll-commands">BLL commands</h2>
+
+<ul>
+  <li><big>CreateGlusterVolumeSnapshot</big> - creates a volume snapshot</li>
+  <li><big>RestoreGlusterVolumeSnapshot</big> - restore a given volume to a snapshot</li>
+  <li><big>RemoveGlusterVolumeSnapshot</big> - removes the given snapshot</li>
+  <li><big>UpdateGlusterVolumeSnapshotConfig</big> - sets the configuration values for a given volume</li>
+  <li><big>ActivateGlusterVolumeSnapshot</big> - activates the snapshot for further activities</li>
+  <li><big>DeactivateGlusterVolumeSnapshot</big> - deactivates an already activated snapshot</li>
+</ul>
+
+<h2 id="engine-queries">Engine Queries</h2>
+
+<ul>
+  <li><big>GetGlusterVolumeSnapshotsByVolumeId</big> - lists all the snapshot for a given volume</li>
+  <li><big>GetGlusterVolumeSnapshotsCountByVolumeId</big> - gets the no of snapshots for a given volume</li>
+  <li><big>GetGlusterVolumeSnapshotConfig</big> - gets the volume snapshot configurations for a given volume</li>
+  <li><big>GetGlusterVolumeSnapshotByVolumeIdAndSnapshotId</big> - lists snapshot for the given snapshot id and volume id</li>
+  <li><big>GetGlusterVolumeSnapshotConfigDetailsByVolumeId</big> - lists all the snapshot configuration details for the given volume id</li>
+  <li><big>GetAllGlusterVolumeSnapshotStatus</big> - lists all the snapshots with their status</li>
+  <li><big>GetGlusterVolumeSnapshotStatusByVolumeId</big> - gets the status of a snapshot for a specific volume</li>
+  <li><big>GetGlusterVolumeSnapshotStatusBySnapshotId</big> - gets the status of a specific snapshot</li>
+</ul>
+
+<h2 id="vdsm-verbs">VDSM Verbs</h2>
+
+<h3 id="vdsm-verbs-for-snapshot-creation">VDSM verbs for Snapshot creation</h3>
+
+<ul>
+  <li><big>glusterSnapshotCreate</big> - creates a volume snapshot
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>snapName</li>
+          <li>[description]</li>
+          <li>[force]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>UUID of the created snapshot</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vdsm-verbs-for-restoring-snaps">VDSM verbs for restoring snaps</h3>
+
+<ul>
+  <li><big>glusterSnapshotRestore</big> - restores the given volume to the given snapshot
+    <ul>
+      <li>Input
+        <ul>
+          <li>snapshotName</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success/Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vdsm-verbs-for-deleting-snaps">VDSM verbs for deleting snaps</h3>
+
+<ul>
+  <li><big>glusterSnapshotDelete</big> - deletes the given snapshot
+    <ul>
+      <li>Input
+        <ul>
+          <li>snapName</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success/Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vdsm-verbs-for-listing-snaps">VDSM verbs for listing snaps</h3>
+
+<ul>
+  <li><big>glusterSanpshotList</big> - gets the list of snapshots for a volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>[volumeName]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>snapsList</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note: If volumeName is not passed, all the snaps are listed</p>
+
+<h3 id="vdsm-verbs-for-snapshot-configuration">VDSM verbs for snapshot configuration</h3>
+
+<ul>
+  <li><big>glusterSnapshotConfigSet</big> - sets the snapshot configuration parameters for the given volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>configList(name=value pair)</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success/Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterSnapshotConfigGet</big> - gets the value of the snapshot configuration parameter for the given volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>[volumeName]</li>
+        </ul>
+      </li>
+      <li>Ouptut
+        <ul>
+          <li>Name=Value pair list</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note: If volumeName is not passed, configuration values for all the volumes are listed</p>
+
+<h3 id="vdsm-verbs-for-the-snapshots-status">VDSM verbs for the snapshots status</h3>
+
+<ul>
+  <li><big>glusterSnapshotStatus</big> - gets the snapshot status details for a volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>[volumeName]</li>
+          <li>[snapName]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>snapshot status details</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vdsm-verbs-for-activating-a-snapshot">VDSM verbs for activating a snapshot</h3>
+
+<ul>
+  <li><big>glusterSnapshotActivate</big> - activates the given snapshot
+    <ul>
+      <li>Input
+        <ul>
+          <li>snapName</li>
+          <li>[force]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success/Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note: If force is passed as true, even if some the bricks are down, they are brought up and snapshot is activated.</p>
+
+<h3 id="vdsm-verbs-for-deactivating-the-snapshots">VDSM verbs for deactivating the snapshots</h3>
+
+<ul>
+  <li><big>glusterSnapshotDeactivate</big> - deactivates the given snapshot
+    <ul>
+      <li>Input
+        <ul>
+          <li>snapName</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success/Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="vdsm-verbs-for-getting-the-snapshot-info">VDSM verbs for getting the snapshot info</h3>
+
+<ul>
+  <li><big>glusterSnapshotInfo</big> - gets the snapshot info
+    <ul>
+      <li>Input
+        <ul>
+          <li>[snapName]</li>
+          <li>[volumeName]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>snapshot info details</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="rest-apis">REST APIs</h2>
+
+<p>The details of the REST for Gluster Volume Snapshot feature are as below -</p>
+
+<h3 id="listing-apis">Listing APIs</h3>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots</td>
+          <td>rel=get - lists all the snapshots for a given volume</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;volume_snapshots&gt;&#x000A;    &lt;volume_snapshot href="" id=""&gt;&#x000A;        &lt;actions&gt;&#x000A;        &lt;/actions&gt;&#x000A;        &lt;name&gt;{name}&lt;/name&gt;&#x000A;        &lt;link&gt;{link}&lt;/link&gt;&#x000A;        &lt;volume href="" id=""/&gt;&#x000A;        &lt;description&gt;{description}&lt;/description&gt;&#x000A;        &lt;status&gt;{status}&lt;/status&gt;&#x000A;                &lt;createdAt&gt;{timestamp}&lt;/createdAt&gt;&#x000A;    &lt;/volume_snapshot&gt;&#x000A;&lt;/volume_snapshots&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots/{volume-snapshot-id}</td>
+          <td>rel=get - lists the details of a specific snapshot of a volume</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;volume_snapshot href="" id=""&gt;&#x000A;    &lt;actions&gt;&#x000A;    &lt;/actions&gt;&#x000A;    &lt;name&gt;{name}&lt;/name&gt;&#x000A;    &lt;link&gt;{link}&lt;/link&gt;&#x000A;    &lt;volume href="" id=""/&gt;&#x000A;    &lt;description&gt;{description}&lt;/description&gt;&#x000A;    &lt;status&gt;{status}&lt;/status&gt;&#x000A;        &lt;createAt&gt;{timestamp}&lt;/createAt&gt;&#x000A;&lt;/volume_snapshot&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}</td>
+          <td>rel=get - Gluster volume listing would be updated to list the snapshot configuration parameters and scheduling details of snapshots (if any) as well</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;glustervolume&gt;&#x000A;........&#x000A;&lt;volume_snapshot_configuration_parameters&gt;&#x000A;    &lt;volume_snapshot_configuration_parameter&gt;&#x000A;    &lt;name&gt;snap-max-hard-limit&lt;/name&gt;&#x000A;        &lt;value&gt;{value}&lt;/value&gt;&#x000A;    &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;&lt;/volume_snapshot_configuration_parameters&gt;&#x000A;&lt;volume_snapshot_schedule&gt;&#x000A;    &lt;cron_expression&gt;{cron expression of the schedule}&lt;/cron_expression&gt;&#x000A;&lt;/volume_snapshot_schedule&gt;&#x000A;&lt;/glustervolume&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}</td>
+          <td>rel=get - Cluster listing would be updated to list the snapshot configuration parameters as well</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;cluster&gt;&#x000A;........&#x000A;&lt;volume_snapshot_configuration_parameters&gt;&#x000A;    &lt;volume_snapshot_configuration_parameter&gt;&#x000A;    &lt;name&gt;snap-max-hard-limit&lt;/name&gt;&#x000A;        &lt;value&gt;{value}&lt;/value&gt;&#x000A;    &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;    &lt;volume_snapshot_configuration_parameter&gt;&#x000A;    &lt;name&gt;snap-max-soft-limit&lt;/name&gt;&#x000A;        &lt;value&gt;{value}&lt;/value&gt;&#x000A;    &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;    &lt;volume_snapshot_configuration_parameter&gt;&#x000A;    &lt;name&gt;auto-delete&lt;/name&gt;&#x000A;        &lt;value&gt;{value}&lt;/value&gt;&#x000A;    &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;&lt;/volume_snapshot_configuration_parameters&gt;&#x000A;&lt;/cluster&gt;&#x000A;</code></pre></div>
+<h3 id="actions-supported">Actions Supported</h3>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/ap/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots</td>
+          <td>rel=add - creates and adds a new snapshot for the given volume</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>name - String</li>
+          <li>[description] - string</li>
+          <li>[force] - boolean</li>
+          <li>[scheduling_det] - details of scheduling if snapshots to be scheduled</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;    &lt;volume_snapshot&gt;&#x000A;        &lt;name&gt;{name}&lt;/name&gt;&#x000A;        &lt;description&gt;{description}&lt;/description&gt;&#x000A;                &lt;force&gt;{true/false}&lt;/force&gt;&#x000A;    &lt;/volume_snapshot&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots/{volume-snapshot-id}</td>
+          <td>rel=delete - deletes snapshot</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots/{volume-snapshot-id}/restore</td>
+          <td>rel=restore - restores the given volume to the given snapshot</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots/{volume-snapshot-id}/activate</td>
+          <td>rel=activate - activates the given volume snapshot</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/volumesnapshots/{volume-snapshot-id}/deactivate</td>
+          <td>rel=deactivate - deactivates the given volume snapshot</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/rel=post - to schedule snapshot creation for a volume use the below POST request on volume</li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;    &lt;gluster_volume&gt;&#x000A;        .&#x000A;        .&#x000A;        &lt;volume_snapshot_schedule&gt;&#x000A;            &lt;cron_expression&gt;{cron expression of the schedule}&lt;/cron_expression&gt;&#x000A;        &lt;/volume_snapshot_schedule&gt;&#x000A;    &lt;gluster_volume&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>/api/clusters/{cluster-id}/rel=post - to set snapshot configuration parameters value for the given cluster use the below POST request on cluster
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>name-value pair of configuration parameters</li>
+          <li>[force]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;    &lt;cluster&gt;&#x000A;        .&#x000A;        .&#x000A;        &lt;volume_snapshot_configuration_parameters&gt;&#x000A;            &lt;volume_snapshot_configuration_parameter&gt;&#x000A;            &lt;name&gt;{name-1}&lt;/name&gt;&#x000A;            &lt;value&gt;{value-1}&lt;/value&gt;&#x000A;            &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;            &lt;volume_snapshot_configuration_parameter&gt;&#x000A;               &lt;name&gt;{name-2}&lt;/name&gt;&#x000A;           &lt;value&gt;{value-2}&lt;/value&gt;&#x000A;            &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;        &lt;/volume_snapshot_configuration_parameters&gt;&#x000A;    &lt;/cluster&gt;&#x000A;    &lt;force&gt;true/false&lt;/force&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/rel=post - to set snapshot configuration parameters for the given volume use the below POST request on volume
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>name-value pair of configuration parameters</li>
+          <li>[force]</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;    &lt;gluster_volume&gt;&#x000A;        .&#x000A;        .&#x000A;        &lt;volume_snapshot_configuration_parameters&gt;&#x000A;            &lt;volume_snapshot_configuration_parameter&gt;&#x000A;                &lt;name&gt;{name-1}&lt;/name&gt;&#x000A;                &lt;value&gt;{value-1}&lt;/value&gt;&#x000A;            &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;            &lt;volume_snapshot_configuration_parameter&gt;&#x000A;            &lt;name&gt;{name-2}&lt;/name&gt;&#x000A;            &lt;value&gt;{value-2}&lt;/value&gt;&#x000A;            &lt;/volume_snapshot_configuration_parameter&gt;&#x000A;        &lt;/volume_snapshot_configuration_parameters&gt;&#x000A;    &lt;/gluster_volume&gt;&#x000A;    &lt;force&gt;true/false&lt;/force&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<p><a href="Category: Feature">Category: Feature</a> <a href="Category:oVirt 4.0 Proposed Feature">GlusterVolumeSnapshots</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/glustervolumesnapshots.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/glustervolumesnapshots.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 10 Aug 2017 15:46 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

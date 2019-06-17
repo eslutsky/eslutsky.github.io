@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Saml</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/saml.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>oVirt SAML with keyloak using 389ds user federation</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html"/>
+    <id>http://ovirt.org/blog/2018/08/sso-keycloak-ovirt-saml-389ds.html</id>
+    <published>2018-08-03T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce how simple it is to integrate SAML with oVirt using &lt;a href="https://www.keycloak.org/"&gt;Keycloak&lt;/a&gt; and LDAP user federation.&lt;/p&gt;
+
+&lt;p&gt;Prerequisites: I assume you have already setup the &lt;code&gt;389ds&lt;/code&gt; directory server, but the solution is very similar for any other LDAP provider.
+As SAML is not integrated into oVirt directly, we use Apache to do the SAML authentication for us. The &lt;a href="https://github.com/Uninett/mod_auth_mellon"&gt;mod_auth_mellon&lt;/a&gt; module nicely covers all needed functionality.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="mod_auth_mellon-configuration"&gt;mod_auth_mellon configuration&lt;/h2&gt;
+&lt;p&gt;First we need to configure oVirt's apache. SSH to the oVirt engine and create a directory where we'll store all SAML related certificates.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engine
+yum install &lt;span class="nt"&gt;-y&lt;/span&gt; mod_auth_mellon
+mkdir &lt;span class="nt"&gt;-p&lt;/span&gt; /etc/httpd/saml2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When we install the &lt;code&gt;mod_auth_mellon&lt;/code&gt; package, it will create &lt;code&gt;/etc/httpd/conf.d/auth_mellon.conf&lt;/code&gt;.
+We need to modify this file to our needs, as follows:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight html"&gt;&lt;code&gt;&lt;span class="nt"&gt;&amp;lt;Location&lt;/span&gt; &lt;span class="nt"&gt;/&amp;gt;&lt;/span&gt;
+    MellonEnable "info"
+    MellonDecoder "none"
+    MellonVariable "cookie"
+    MellonSecureCookie On
+    MellonSessionDump On
+    MellonSamlResponseDump On
+    MellonSessionLength 86400
+
+    MellonUser "NAME_ID"
+    MellonEndpointPath /saml2
+
+    MellonSPCertFile /etc/httpd/saml2/ovirtsp-cert.cert
+    MellonSPPrivateKeyFile /etc/httpd/saml2/ovirtsp-key.key
+    MellonSPMetadataFile /etc/httpd/saml2/ovirtsp-metadata.xml
+    MellonIdPMetadataFile /etc/httpd/saml2/idp-metadata.xml
+
+    RewriteEngine On
+    RewriteCond %{LA-U:REMOTE_USER} ^(.*)$
+    RewriteRule ^(.*)$ - [L,NS,P,E=REMOTE_USER:%1]
+    RequestHeader set X-Remote-User %{REMOTE_USER}s
+&lt;span class="nt"&gt;&amp;lt;/Location&amp;gt;&lt;/span&gt;
+
+&lt;span class="nt"&gt;&amp;lt;LocationMatch&lt;/span&gt; &lt;span class="err"&gt;^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;sso&lt;/span&gt;&lt;span class="err"&gt;/(&lt;/span&gt;&lt;span class="na"&gt;interactive-login-negotiate&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;oauth&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;token-http-auth&lt;/span&gt;&lt;span class="err"&gt;)|^/&lt;/span&gt;&lt;span class="na"&gt;ovirt-engine&lt;/span&gt;&lt;span class="err"&gt;/&lt;/span&gt;&lt;span class="na"&gt;api&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class="nt"&gt;&amp;lt;If&lt;/span&gt; &lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="na"&gt;req&lt;/span&gt;&lt;span class="err"&gt;('&lt;/span&gt;&lt;span class="na"&gt;Authorization&lt;/span&gt;&lt;span class="err"&gt;')&lt;/span&gt; &lt;span class="err"&gt;!~&lt;/span&gt; &lt;span class="err"&gt;/^(&lt;/span&gt;&lt;span class="na"&gt;Bearer&lt;/span&gt;&lt;span class="err"&gt;|&lt;/span&gt;&lt;span class="na"&gt;Basic&lt;/span&gt;&lt;span class="err"&gt;)/&lt;/span&gt;&lt;span class="na"&gt;i&lt;/span&gt;&lt;span class="err"&gt;"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;
+
+    Require valid-user
+    AuthType "Mellon"
+    AuthName "SAML Login"
+    MellonEnable "auth"
+
+    ErrorDocument 401 "&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&amp;lt;meta&lt;/span&gt; &lt;span class="na"&gt;http-equiv=&lt;/span&gt;&lt;span class="s"&gt;\"refresh\"&lt;/span&gt; &lt;span class="na"&gt;content=&lt;/span&gt;&lt;span class="s"&gt;\"0;&lt;/span&gt; &lt;span class="na"&gt;url=&lt;/span&gt;&lt;span class="s"&gt;/ovirt-engine/sso/login-unauthorized\"/&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;body&amp;gt;&amp;lt;a&lt;/span&gt; &lt;span class="na"&gt;href=&lt;/span&gt;&lt;span class="s"&gt;\"/ovirt-engine/sso/login-unauthorized\"&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&lt;/span&gt;Here&lt;span class="nt"&gt;&amp;lt;/a&amp;gt;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&lt;/span&gt;"
+  &lt;span class="nt"&gt;&amp;lt;/If&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/LocationMatch&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You'll notice in the configuration file that we are using the following four files:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Certificate file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-cert.cert&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Private key file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-key.key&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Sp metadata file - &lt;code&gt;/etc/httpd/saml2/ovirtsp-metadata.xml&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Idp metadata file - &lt;code&gt;/etc/httpd/saml2/idp-metadata.xml&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We need to create those files using the provided script from the &lt;code&gt;mod_auth_mellon&lt;/code&gt; package:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /etc/httpd/saml2
+/usr/libexec/mod_auth_mellon/mellon_create_metadata.sh https://&amp;lt;ovirt-fqdn&amp;gt; https://&amp;lt;ovirt-fqdn&amp;gt;/saml2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now we rename the created files to match the file names that we defined in &lt;code&gt;/etc/httpd/conf.d/auth_mellon.conf&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;mv https_&amp;lt;ovirt-fqdn&amp;gt;.key  ovirtsp-key.key
+mv https_&amp;lt;ovirt-fqdn&amp;gt;.cert ovirtsp-cert.cert
+mv https_&amp;lt;ovirt-fqdn&amp;gt;.xml  ovirtsp-metadata.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now that we have generated the Service provider &lt;code&gt;ovirtsp-metadata.xml&lt;/code&gt; we can configure Identity provider using &lt;code&gt;Keycloak&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id="keycloak"&gt;Keycloak&lt;/h2&gt;
+&lt;p&gt;Keycloak is an open source Identity and Access Management solution aimed at modern applications and services. It makes it easy to secure applications and services with little to no code.
+Users authenticate with Keycloak rather than individual applications. This means that your applications don't have to deal with login forms to authenticate users. Once logged in to Keycloak, users don't have to login again to access a different application.
+For our single sign on purpose we will use Keycloak as the SAML provider.&lt;/p&gt;
+
+&lt;h2 id="keycloak-configuration"&gt;Keycloak configuration&lt;/h2&gt;
+&lt;p&gt;For our example, we'll use default master realm. First let's create user federation with our &lt;code&gt;389ds&lt;/code&gt; directory server.
+Fill the values of your 389ds server as show in the image below.
+&lt;img alt="" width="1569" height="897" src="/images/../images/blog/2018-08-03/user_federation.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;After testing the connection and authentication, click the &lt;code&gt;save&lt;/code&gt; button and check if your users are searchable, as shown in image below.
+&lt;img alt="" width="1578" height="889" src="/images/../images/blog/2018-08-03/user_search.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that user federation is working and is integrated, let's configure the SAML client. For this we need to upload &lt;code&gt;ovirtsp-metadata.xml&lt;/code&gt; created in the previous step to &lt;code&gt;Keycloak&lt;/code&gt;:
+&lt;img alt="" width="1573" height="621" src="/images/../images/blog/2018-08-03/add_client.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;IMPORTANT&lt;/strong&gt; After the client is created, we must change &lt;code&gt;Name ID Format&lt;/code&gt; format from the default value &lt;code&gt;transient&lt;/code&gt; to &lt;code&gt;username&lt;/code&gt;,
+and we must enable the &lt;code&gt;Force Name ID Format&lt;/code&gt; option. This is required because oVirt is using username to search in LDAP providers.
+&lt;img alt="" width="900" height="80" src="/images/../images/blog/2018-08-03/name_id.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Our identity provider is configured, so now we add it to our engine configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;ssh root@engine
+&lt;span class="nb"&gt;cd&lt;/span&gt; /etc/httpd/saml2
+curl &lt;span class="nt"&gt;-s&lt;/span&gt; &lt;span class="nt"&gt;-o&lt;/span&gt; idp-metadata.xml http://&amp;lt;keycloak-server&amp;gt;:8080/auth/realms/master/protocol/saml/descriptor
+systemctl restart httpd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="ovirt-aaa-configuration"&gt;oVirt AAA configuration&lt;/h2&gt;
+&lt;p&gt;oVirt AAA is the last piece of configuration needed.&lt;/p&gt;
+
+&lt;h3 id="installation"&gt;Installation&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# yum install -y ovirt-engine-extension-aaa-ldap ovirt-engine-extension-aaa-misc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-authnproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-authn.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-authn
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.http.AuthnExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authn
+ovirt.engine.aaa.authn.profile.name = saml-http
+ovirt.engine.aaa.authn.authz.plugin = saml-authz
+ovirt.engine.aaa.authn.mapping.plugin = saml-http-mapping
+config.artifact.name = HEADER
+config.artifact.arg = X-Remote-User
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-http-mappingproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-http-mapping.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-http-mapping
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.misc
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.misc.mapping.MappingExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Mapping
+config.mapAuthRecord.type = regex
+config.mapAuthRecord.regex.mustMatch = false
+config.mapAuthRecord.regex.pattern = ^(?&amp;lt;user&amp;gt;.*?)((\\\\(?&amp;lt;at&amp;gt;@)(?&amp;lt;suffix&amp;gt;.*?)@.*)|(?&amp;lt;realm&amp;gt;@.*))$
+config.mapAuthRecord.regex.replacement = ${user}${at}${suffix}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineextensionsdsaml-authzproperties"&gt;Create /etc/ovirt-engine/extensions.d/saml-authz.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;ovirt.engine.extension.name = saml-authz
+ovirt.engine.extension.bindings.method = jbossmodule
+ovirt.engine.extension.binding.jbossmodule.module = org.ovirt.engine-extensions.aaa.ldap
+ovirt.engine.extension.binding.jbossmodule.class = org.ovirt.engineextensions.aaa.ldap.AuthzExtension
+ovirt.engine.extension.provides = org.ovirt.engine.api.extensions.aaa.Authz
+config.profile.file.1 = ../aaa/saml-ldap.properties
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="create-etcovirt-engineaaasaml-ldapproperties"&gt;Create /etc/ovirt-engine/aaa/saml-ldap.properties&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;include = &amp;lt;389ds.properties&amp;gt;
+
+vars.server = 389ds.example.com
+vars.user = uid=user1,ou=users,dc=389ds,dc=example,dc=com
+vars.password = password
+
+pool.default.auth.simple.bindDN = ${global:vars.user}
+pool.default.auth.simple.password = ${global:vars.password}
+pool.default.serverset.type = single
+pool.default.serverset.single.server = ${global:vars.server}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now restart ovirt-engine:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;systemctl restart ovirt-engine.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now when you login to webadmin, you will be redirected to &lt;code&gt;Keycloak&lt;/code&gt; (if you're not already logged in). Enter credentials from your 389ds ldap setup and login should succeed. Note that by default your users won't have permissions to login, so you must first assign permissions to them in webadmin.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

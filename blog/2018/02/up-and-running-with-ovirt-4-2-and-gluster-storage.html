@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Up and Running with oVirt 4.2 and Gluster Storage &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='Jason Brooks' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+<link href='/blog/feed.xml' rel='alternate' title='Atom feed' type='application/atom+xml'>
+<!-- Open Graph (FB / G+) -->
+<meta content='article' property='og:type'>
+<meta content='Up and Running with oVirt 4.2 and Gluster Storage' property='og:title'>
+<meta content='In December, the oVirt Project shipped version 4.2 of its open source virtualization management system. With a new release comes an update to this howto for running oVirt together with Gluster storage using a trio of servers to provide for the system&#39;s virtualization and storage needs, in a configuration that allows you to take one of the three hosts down at a time without disrupting your running VMs.
+
+If you&#39;re looking instead for a simpler, single-machine option for trying out oVirt, your best bet is the oVirt Live ISO page. This is a LiveCD image that you can burn onto a blank CD or copy onto a USB stick to boot from and run oVirt. This is probably the fastest way to get up and running, but once you&#39;re up, this is definitely a low-performance option, and not suitable for extended use or expansion.
+
+Read on to learn about my favorite way of running oVirt.' property='og:description'>
+<meta content='http://ovirt.org/blog/2018/02/up-and-running-with-ovirt-4-2-and-gluster-storage.html' property='og:url'>
+<meta content='2018-02-02T20:45:55Z' property='article:published_time'>
+<meta content='jbrooks' property='article:author:username'>
+<!-- Twitter card -->
+<meta content='summary' name='twitter:card'>
+<meta content='Up and Running with oVirt 4.2 and Gluster Storage' name='twitter:title'>
+<meta content='In December, the oVirt Project shipped version 4.2 of its open source virtualization management system. With a new release comes an update to this howto for running oVirt together with Gluster storage using a trio of servers to provide for the system&#39;s virtualization and storage needs, in a configuration that allows you to take one of the three hosts down at a time without disrupting your running VMs.
+
+If you&#39;re looking instead for a simpler, single-machine option for trying out oVirt, your best bet is the oVirt Live ISO page. This is a LiveCD image that you can burn onto a blank CD or copy onto a USB stick to boot from and run oVirt. This is probably the fastest way to get up and running, but once you&#39;re up, this is definitely a low-performance option, and not suitable for extended use or expansion.
+
+Read on to learn about my favorite way of running oVirt.' name='twitter:description'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li class='active'>Blog</li>
+<li class='active'>2018</li>
+<li class='active'>02</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<section class='blog-post-page row'>
+<div class='col-md-10 col-md-offset-1'>
+<article class='post hentry'>
+<header class='post-header'>
+<h2 class='post-title entry-title'>
+Up and Running with oVirt 4.2 and Gluster Storage
+</h2>
+<header class='post-meta'>
+<div class='blogger_avatar'>
+<img src='/blogger_avatars/jbrooks.png'>
+</div>
+<span class='byline'>
+by
+<span class='author vcard'>
+<a href="/blog/author/jbrooks/">Jason Brooks</a>
+</span>
+&ndash;
+</span>
+<time class='published' datetime='2018-02-02T20:45:55Z'>
+Friday  2 February 2018
+</time>
+</header>
+</header>
+<section class='post-content entry-content'>
+<p>In December, the oVirt Project <a href="https://ovirt.org/blog/2017/12/ovirt-4.2.0-now-ga/">shipped version 4.2</a> of its open source virtualization management system. With a new release comes an update to this howto for running oVirt together with Gluster storage using a trio of servers to provide for the system's virtualization and storage needs, in a configuration that allows you to take one of the three hosts down at a time without disrupting your running VMs.</p>
+
+<p>If you're looking instead for a simpler, single-machine option for trying out oVirt, your best bet is the <a href="/download/ovirt-live">oVirt Live ISO</a> page. This is a LiveCD image that you can burn onto a blank CD or copy onto a USB stick to boot from and run oVirt. This is probably the fastest way to get up and running, but once you're up, this is definitely a low-performance option, and not suitable for extended use or expansion.</p>
+
+<p>Read on to learn about my favorite way of running oVirt.</p>
+
+<p></p>
+
+<h2 id="ovirt-glusterized">oVirt, Glusterized</h2>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<p><strong>Hardware:</strong> You’ll need three machines with 16GB or more of RAM and processors with <a href="http://en.wikipedia.org/wiki/X86_virtualization#Hardware-assisted_virtualization">hardware virtualization extensions</a>. Physical machines are best, but you can test oVirt using <a href="http://community.redhat.com/blog/2013/08/testing-ovirt-3-3-with-nested-kvm/">nested KVM</a> as well. I've written this howto using VMs running on my "real" oVirt+Gluster install.</p>
+
+<p><strong>Software:</strong> For this howto, I'm using <a href="https://www.ovirt.org/node/">oVirt Node 4.2</a>, a streamlined operating system image based on CentOS 7, for my three hosts, and a CentOS-based appliance image for the Engine VM. oVirt does support other OS options. For more info see the project's <a href="http://www.ovirt.org/download/">download page</a>.</p>
+
+<p><strong>Network:</strong> Your test machine’s host name must resolve properly, either through your network’s DNS, or through the <code>/etc/hosts</code> file on your virt host(s), on the VM that will host the oVirt engine, and on any clients from which you plan on administering oVirt. It's not strictly necessary, but it's a good idea to set aside a separate storage network for Gluster traffic and for VM migration. In my lab, I use a separate 10G nic on each of the hosts for my storage network.</p>
+
+<p><strong>Storage:</strong> The hosted engine feature requires NFS, iSCSI, FibreChannel or Gluster storage to house the VM that will host the engine. For this walkthrough, I'm using a Gluster arbiter volume, which involves creating a replica 3 Gluster volume with two standard data bricks and a third arbiter brick that stores only file names and metadata, thereby providing an oVirt hosted engine setup with the data consistency it requires, while cutting down significantly on duplicated data and network traffic.</p>
+
+<h3 id="installing-ovirt-with-hosted-engine">Installing oVirt with hosted engine</h3>
+
+<p>I'm starting out with three test machines with 16 GB of RAM and 4 processor cores, running oVirt Node 4.2. I actually do the testing for this howto in VMs hosted on my "real" oVirt setup, but that "real" setup resembles what I describe below.</p>
+
+<p>I've identified a quartet of static IP address on my network to use for this test (three for my virt hosts, and one for the hosted engine). I've set up the DNS server in my lab to make these IPs resolve properly, but you can also edit the /etc/hosts files on your test machines for this purpose.</p>
+
+<p>Our host1 will need to be able to access itself and the other two nodes via passwordless ssh:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[host1]# ssh-keygen&#x000A;&#x000A;[host1]# ssh-copy-id root@$HOST1&#x000A;&#x000A;[host1]# ssh-copy-id root@$HOST2&#x000A;&#x000A;[host1]# ssh-copy-id root@$HOST3&#x000A;</code></pre></div>
+<p>Next, open up a web browser and visit your first host at port 9090 to access the cockpit web interface. Log in with the machine's root account, click the "Virtualization" tab at the left of the screen, and then click the "Hosted Engine" link in the left sidebar. Select the radio button next to "Hosted Engine with Gluster" and hit the "Start" button.</p>
+
+<p><img alt="" width="1166" height="561" src="/images/uarwo42-cockpit-1.png?1560777613" /></p>
+
+<p>oVirt Node ships with an Ansible-based Gluster deployment tool called <a href="http://gdeploy.readthedocs.io/en/latest/">gdeploy</a>. The dialog window that appears contains a series of steps through which you provide gdeploy with the information it needs to configure your three nodes for running ovirt with gluster storage, starting with the hosts you want to configure.</p>
+
+<p><img alt="" width="1089" height="690" src="/images/uarwo42-gdeploy-1.png?1560777613" /></p>
+
+<p>Click next to accept the defaults in step two, and then in step three, specify the gluster volumes you want to create. The cockpit gdeploy plugin autofills some values here, including a volume for the engine, a data volume, and a second data volume called vmstore. At this point, you can choose whether to make some or your volumes <a href="http://docs.gluster.org/en/latest/Administrator%20Guide/arbiter-volumes-and-quorum/">arbiter volumes</a>, in which the first two nodes contain a full replica of your data, and the third node contains just enough information to arbitrate between the two other nodes when they disagree with each other.</p>
+
+<p><img alt="" width="1187" height="537" src="/images/uarwo42-gdeploy-2.png?1560777613" /></p>
+
+<p>Click "Next" to hit step four, where we'll specify the brick locations for our volumes. Again, the plugin prefills some values here, which aren't likely to be correct for your environment, so pay close attention here. In my test environment, I'm using one additional disk for my gluster data, <code>/dev/sdb</code>, and I'm specifying one brick per host per volume:</p>
+
+<p><img alt="" width="1173" height="768" src="/images/uarwo42-gdeploy-3.png?1560777613" /></p>
+
+<p>Finally, hit "Deploy" to kick off the deployment process. In some of my tests, I received a "deployment failed" error, and had to click the "redeploy" button before the deployment would proceed. Once underway, the process will take some time to complete, as gdeploy configures your gluster volumes and their underlying storage.</p>
+
+<p><img alt="" width="1132" height="870" src="/images/uarwo42-gdeploy-4.png?1560777613" /></p>
+
+<p>At the end of the process, you'll see a green check mark, and the message "Successfully deployed Gluster."</p>
+
+<p><img alt="" width="921" height="672" src="/images/uarwo41-gdeploy-6.png?1560777613" /></p>
+
+<h3 id="hosted-engine-setup">Hosted engine setup</h3>
+
+<p>Once gdeploy is finished, click the "Continue to Hosted Engine Deployment" button to begin configuring your hosted engine. Provide hostname, domain, network configuration, password, and, if desired, ssh key information for your hosted engine virtual machine.</p>
+
+<p>Then, we'll answer a set of questions related to the virtual machine that will serve the oVirt engine application. First, we tell the installer to use the oVirt Engine Appliance image that gdeploy installed for us. Then, we configure cloud-init to customize the appliance on its initial boot, providing various VM configuration details covering networking, VM RAM and storage amounts, and authentication. Enter the details appropriate to your environment, and when the installer asks whether to automatically execute engine-setup on the engine appliance on first boot, answer yes. Here's what the configuration on my test instance looked like:</p>
+
+<p><img alt="" width="928" height="819" src="/images/uarwo42-he-1.png?1560777613" /></p>
+
+<p>Nest, supply an admin password for the engine instance, and customize your notification server details.</p>
+
+<p><img alt="" width="914" height="816" src="/images/uarwo42-he-2.png?1560777613" /></p>
+
+<p>The correct details for the storage portion of the setup process should auto-populate.CK The engine VM will be stored on one of the gluster volumes we configured via gdeploy, with backup volfile servers specified for failover when our first node is unavailable.</p>
+
+<p><img alt="" width="912" height="812" src="/images/uarwo42-he-3.png?1560777613" /></p>
+
+<p>You should be able to accept the default values in the networking step, which configures the management bridge used by oVirt.</p>
+
+<p><img alt="" width="907" height="846" src="/images/uarwo42-he-4.png?1560777613" /></p>
+
+<p>In step five, you can review your engine VM configuration and click backward to make any changes you require.</p>
+
+<p><img alt="" width="920" height="810" src="/images/uarwo42-he-5.png?1560777613" /></p>
+
+<p>In the next four steps, the installer will offer to download the engine appliance, prompt you to accept the GPG key with which the appliance is signed, ask whether you wish to configure your engine to manage gluster volumes, and give you the opportunity to specify an alternate appliance image.</p>
+
+<p>You can accept the default values in all four steps, but I prefer to answer "Yes" when asked whether to configure the host and cluster for gluster:</p>
+
+<p><img alt="" width="909" height="816" src="/images/uarwo42-he-5c.png?1560777613" /></p>
+
+<p>Once you've finished clicking through the hosted engine installer, you'll have a configured VM running on your first host, with storage supplied by gluster, and an instance of the oVirt engine up and running on the VM.</p>
+
+<p><img alt="" width="921" height="855" src="/images/uarwo42-he-5e.png?1560777613" /></p>
+
+<h2 id="access-the-engine">Access the engine</h2>
+
+<p>When the installation process completes, open a web browser and visit your oVirt engine administration portal at the address of your hosted engine VM. Log in with the user name <code>admin</code> and the password you chose during setup.</p>
+
+<p><img alt="" width="770" height="480" src="/images/uarwo42-engine-1.png?1560777613" /></p>
+
+<p>Next, check out the navigation bar on the left of the screen, and click Compute –&gt; Clusters –&gt; Default. Under the heading "Action Items," you should see text that reads "Some new hosts are detected in the cluster. You can Import them to engine or Detach them from the cluster." Click "Import," and in the dialog window that appears, provide passwords for your two hosts, and hit OK.</p>
+
+<h2 id="configuring-storage">Configuring storage</h2>
+
+<p>Once that completes, head to the left navigation bar again and click Storage –&gt; Domains –&gt; New Domain. Give your new domain a name, and choose "Data" and "GlusterFS" from the "Domain Function" and "Storage Type" drop down menus. Check the box marked "Use managed gluster," and from the drop down box that appears, choose your "data" volume, and hit the OK button to proceed.</p>
+
+<p><img alt="" width="953" height="501" src="/images/uarwo42-data-domain.png?1560777613" /></p>
+
+<h2 id="configuring-hosts-two-and-three-for-hosted-engine">Configuring hosts two and three for Hosted Engine</h2>
+
+<p>From the left navigation bar, click Compute –&gt; Hosts, select host two, and in the toolbar toward the right of the screen, click Management, and then Maintenance, and hit OK in the dialog box that appears next. Once the host is in maintenance mode, click Installation, and then Reinstall in the toolbar. In the dialog that appears next, click "Hosted Engine," and then, in the drop down box, choose DEPLOY, and hit OK. After that process completes, repeat the process on host three.</p>
+
+<p><img alt="" width="774" height="474" src="/images/uarwo42-deploy-hosted.png?1560777613" /></p>
+
+<p>Once all three hosts are back up, you should be able to put any one of them into maintenance mode and then upgrade or restart that host without losing access to the management engine, other VMs, or your VM storage.</p>
+
+<h2 id="running-your-first-vm">Running your first VM</h2>
+
+<p>oVirt engine comes pre-configured with a public Glance instance managed by the oVirt project. We'll tap this resource to launch our first VM.</p>
+
+<p>From the left navigation bar, click Storage –&gt; Domains, and you should see an "ovirt-image-repository" entry next to a little OpenStack logo. Clicking on this domain will bring up a menu of images available in this repository. Click on the "CirrOS" image (which is very small and perfect for testing) in the list and then click "Import," before hitting the OK button in the pop-up dialog to continue.</p>
+
+<p><img alt="" width="573" height="438" src="/images/uarwo42-import-image.png?1560777613" /></p>
+
+<p>The image will be copied from the oVirt project's public Glance repository to the storage domain you just configured, where it will be available as a disk to attach to a new VM. In the import image dialog, you have the option of clicking the "Import as Template" check box to give yourself the option of basing multiple future VMs on this image using oVirt's templates functionality.</p>
+
+<p>Next, head to Compute –&gt; Virtual Machines, click "New," choose "Linux" from the "Operating System" drop down menu, supply a name for your VM, and choose the "ovirtmgmt/ovirtmgmt" network in the drop down menu next to "nic1." Then, click the "Attach" button under the "Instance Images" heading and check the radio button next to the CirrOS disk image you just imported before hitting the "OK" button to close the "Attach Virtual Disks" dialog, and hitting "OK" again to exit the "New Virtual Machine" dialog.</p>
+
+<p>For additional configuration, such as setting RAM and CPU values and using cloud-init, there's a "Show Advanced Options" button in the dialog, but you can revisit that later.</p>
+
+<p>Now, back at the Virtual Machines list, right-click your new VM, and choose "Run" from the menu. After a few moments, the status of your new VM will switch from red to green, and you'll be able to click on the green monitor icon next to “Migrate” to open a console window and access your VM.</p>
+
+<h2 id="storage-network">Storage network</h2>
+
+<p>I mentioned above that it's a good idea to set aside a separate storage network for Gluster traffic and for VM migration. If you've set up a separate network for Gluster traffic, you can bring it under oVirt's management by visiting Network –&gt; Networks, clicking "New," and giving your network a name before hitting "OK" to close the dialog.</p>
+
+<p><img alt="" width="859" height="579" src="/images/uarwo42-storage-net.png?1560777613" /></p>
+
+<p>Next, click on the new network, choose the "Hosts" toolbar item, and then click the "Unattached" button. One at a time, highlight each of your hosts, click on "Setup Host Networks," and drag the new network you created from the list of "Unassigned Logical Networks" to the interface you're already using for your Gluster traffic, before clicking OK. Clicking the pencil icon in the network brings up an "Edit Network storage" dialog where you can configure the boot protocol and other configuration details.</p>
+
+<p><img alt="" width="999" height="794" src="/images/uarwo42-storage-net-a.png?1560777613" /></p>
+
+<p>Then, choose the "Clusters" toolbar item, right-click the "Default" cluster, and choose "Manage Network" from the context menu. Then check the "Migration Network" and "Gluster Network" boxes and hit the "OK" button to close the dialog. This will instruct oVirt to send gluster and migration traffic over your storage network.</p>
+
+<p><img alt="" width="793" height="535" src="/images/uarwo42-storage-net-b.png?1560777613" /></p>
+
+<h2 id="maintenance-failover-and-storage">Maintenance, failover, and storage</h2>
+
+<p>The key thing to keep in mind regarding host maintenance and downtime is that this converged three node system relies on having at least two of the nodes up at all times. If you bring down two machines at once, you'll run afoul of the Gluster quorum rules that guard us from split-brain states in our storage, the volumes served by your remaining host will go read-only, and the VMs stored on those volumes will pause and require a shutdown and restart in order to run again.</p>
+
+<p>The oVirt engine pays attention to the state of its configured gluster volumes, and will warn you if certain actions will run afoul of quorum rules or if your volumes have pending healing operations.</p>
+
+<p>You can bring a single machine down for maintenance by first putting the system into maintenance mode from the oVirt console by clicking on the host entry in the Hosts tab, and then clicking Management, and then Maintenance, before updating, rebooting, shutting down, etc. as desired.</p>
+
+<p>Putting a host into maintenance mode will also put that host's hosted engine HA services into local maintenance mode, rendering that host ineligible to take over engine-hosting duties.</p>
+
+<p>If you want to bring down the engine service itself, you can put your whole trio of hosts into global maintenance mode, preventing them from attempting to restart the engine on their own, by left-clicking on the Hosted Engine VM in the web admin console and enabling global maintenance mode.</p>
+
+<h2 id="till-next-time">Till next time</h2>
+
+<p>If you run into trouble following this walkthrough, I’ll be happy to help you get up and running or get pointed in the right direction. On IRC, I’m jbrooks, ping me in the #ovirt room on OFTC or give me a shout on Twitter <a href="https://twitter.com/jasonbrooks">@jasonbrooks</a>.</p>
+
+<p>If you’re interested in getting involved with the oVirt Project, you can find all the mailing list, issue tracker, source repository, and wiki information you need <a href="http://www.ovirt.org/community">here</a>.</p>
+
+</section>
+<footer class='post-meta'>
+</footer>
+</article>
+
+<section id='blog-comments'></section>
+</div>
+</section>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/blog/2018-02-02-up-and-running-with-ovirt-4-2-and-gluster-storage.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/blog/2018-02-02-up-and-running-with-ovirt-4-2-and-gluster-storage.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 8 Feb 2018 23:02 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

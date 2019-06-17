@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Ansible</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/ansible.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>Security group support in OVN external networks</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2019/05/ovn-security-groups.html"/>
+    <id>http://ovirt.org/blog/2019/05/ovn-security-groups.html</id>
+    <published>2019-05-27T15:35:00+00:00</published>
+    <updated>2019-06-16T09:11:54+00:00</updated>
+    <author>
+      <name>mdbarroso</name>
+    </author>
+    <content type="html">&lt;p&gt;In this post I will introduce and showcase how security groups can be used to
+enable certain scenarios.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="https://developer.openstack.org/api-ref/network/v2/#security-groups-security-groups"&gt;Security groups&lt;/a&gt;
+allow fine-grained access control to - and from - the oVirt VMs attached to
+external OVN networks.&lt;/p&gt;
+
+&lt;p&gt;The Networking API v2 defines security groups as a white list of rules - the
+user specifies in it which traffic is allowed. That means, that when the rule
+list is empty, neither incoming nor outgoing traffic is allowed (from the VMs
+perspective).&lt;/p&gt;
+
+&lt;p&gt;A demo recording of the security group feature can be found below.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://www.youtube.com/watch?v=RCdV6W_tFWw"&gt;&lt;img alt="here" src="http://img.youtube.com/vi/RCdV6W_tFWw/0.jpg" /&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="provided-tools"&gt;Provided tools&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo"&gt;This repo&lt;/a&gt;
+adds tools, and information on how to use them, to help manage the security
+groups in oVirt, since currently there is no supported mechanism to provision
+security groups, other than the REST API, and ManageIQ. ManageIQ also doesn't
+fully support security groups, since it lacks a way to attach security groups
+to logical ports.&lt;/p&gt;
+
+&lt;h2 id="demo-scenarios"&gt;Demo scenarios&lt;/h2&gt;
+&lt;p&gt;In the following links you can also find playbooks that can be built upon to
+reach different types of scenarios.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#icmp-configuration"&gt;Allow ICMP traffic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#web-server-configuration"&gt;Allow web traffic&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/maiqueb/ovirt-security-groups-demo#group-membership-based-access-scenario"&gt;Configure access based on group membership&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Upgraded DPDK support in oVirt</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2018/07/ovn-dpdk.html"/>
+    <id>http://ovirt.org/blog/2018/07/ovn-dpdk.html</id>
+    <published>2018-07-29T10:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>lgoldber</name>
+    </author>
+    <content type="html">&lt;p&gt;&lt;a href="http://dpdk.org/"&gt;DPDK (Data Plane Development Kit)&lt;/a&gt; is a set of open-source high-performance packet processing libraries and user space drivers.&lt;/p&gt;
+
+&lt;p&gt;oVirt &lt;a href="https://www.ovirt.org/blog/2017/09/ovs-dpdk/"&gt;support for DPDK&lt;/a&gt; was introduced in 2017, and is now enhanced in terms of deployment via &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;Ansible&lt;/a&gt; and usage via &lt;a href="http://www.ovn.org/"&gt;Open Virtual Network&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;While still experimental, OVN-DPDK in oVirt is now available in version 4.2.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1 id="whats-new"&gt;What's new?&lt;/h1&gt;
+
+&lt;h3 id="ansible-dpdk-host-setup"&gt;Ansible DPDK host setup&lt;/h3&gt;
+
+&lt;p&gt;Host configuration for DPDK usage is now automated using Ansible. This primarly includes:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Hugepages configuration – hugepage size and quantity in the kernel.&lt;/li&gt;
+  &lt;li&gt;CPU partitioning.&lt;/li&gt;
+  &lt;li&gt;Binding NICs to userspace drivers.&lt;/li&gt;
+  &lt;li&gt;OVS-DPDK related configuration (initialization, socket memory, pmd thread core binding, etc).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The role is installed via Ansible galaxy:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;# ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;An example playbook:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;- hosts: dpdk_host_0
+  vars:
+    pci_drivers:
+      "0000:02:00.1": "vfio-pci"
+      "0000:02:00.2": "igb"
+      "0000:02:00.3": ""
+    configure_kernel: true
+    bind_drivers: true
+    set_ovs_dpdk: false
+  roles:
+    - ovirt-ansible-dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The role is controlled by 3 boolean variables (all set to &lt;code&gt;true&lt;/code&gt; by default) and a dictionary of devices and their drivers:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;configure_kernel&lt;/code&gt; – determines whether the kernel should be configured for DPDK usage (hugepages, CPU partitioning). &lt;strong&gt;WARNING&lt;/strong&gt;: When set to &lt;code&gt;true&lt;/code&gt; it is very likely to trigger a reboot of the host, unless all required configuration is already pre-set.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;bind_drivers&lt;/code&gt; – determines whether the role should bind devices to their specified drivers.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;set_ovs_dpdk&lt;/code&gt; – determines whether the role should initialize and configure OVS for DPDK usage.&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pci_drivers&lt;/code&gt; – a dictionary of the PCI addresses of network interface cards as keys and drivers as values. An empty string represents the default Linux driver for the specified device. Non-DPDK compatible drivers may be set; However, NICs with such drivers will not be configured for OVS-DPDK usage and will not have their CPU isolated in multiple NUMA environments. PCI addresses can be retrieved via &lt;code&gt;lshw -class network -businfo&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Additionally, there are several optional performance related variables:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;pmd_threads_count&lt;/code&gt; – determines the number of PMD threads per NIC (default: &lt;code&gt;1&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_2mb_hugepages&lt;/code&gt; – determines the number of 2MB hugepages, if 2MB hugepages are to be used (default: &lt;code&gt;1024&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nr_1gb_hugepages&lt;/code&gt; – determines the number of 1GB hugepages, if 1GB hugepages are to be used (default: &lt;code&gt;4&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;use_1gb_hugepages&lt;/code&gt; – determines whether 1GB hugepages should be used, where 1GB hugepages are supported (default: &lt;code&gt;true&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For additional information, refer to the role's &lt;a href="https://github.com/ovirt/ovirt-ansible-dpdk-setup/"&gt;repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id="ovn-integration"&gt;OVN Integration&lt;/h3&gt;
+&lt;p&gt;DPDK in oVirt now leverages the capabilities of OVN in the form of an OVN localnet. This allows seamless connectivity across OVN networks, benefiting from OVN's software defined routers, switches, security groups, and ACL's.&lt;/p&gt;
+
+&lt;p&gt;For more information about OVN localnet integration in oVirt, refer to oVirt's &lt;a href="https://ovirt.org/develop/release-management/features/network/provider-physical-network/"&gt;Provider Physical Network RFE&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id="usage-in-ovirt"&gt;Usage in oVirt&lt;/h1&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install &lt;code&gt;oVirt.dpdk-setup&lt;/code&gt; Ansible role via ansible-galaxy:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt; # ansible-galaxy install oVirt.dpdk-setup
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Execute the role as described above.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Unless the host was already configured, the host will restart for kernel changes to be applied. After reboot, the following values are changed (if they are not, you may have incompatible hardware):&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;IOMMU: &lt;code&gt;/sys/devices/virtual/iommu/&amp;lt;DMAR device&amp;gt;/devices/&amp;lt;PCI address&amp;gt;&lt;/code&gt; should exist. DMAR devices are typically annotated by &lt;code&gt;dmar0&lt;/code&gt;, &lt;code&gt;dmar1&lt;/code&gt;, and so forth.&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;hugepages: &lt;code&gt;grep Huge /proc/meminfo&lt;/code&gt; should reflect the desired state as defined in the Ansible playbook (i.e. &lt;code&gt;Hugepagesize&lt;/code&gt; and &lt;code&gt;HugePages_Total&lt;/code&gt;)&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;CPU partitioning: based on the devices that are to be used with a DPDK compatible driver, CPUs should be partitioned separately between each NUMA node. Refer to &lt;code&gt;lscpu&lt;/code&gt; to see live CPU NUMA separation information, e.g.: &lt;code&gt;NUMA node1 CPU(s): 8-15&lt;/code&gt;&lt;/p&gt;
+
+        &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: NICs using userspace drivers do not appear in the kernel; &lt;code&gt;ip&lt;/code&gt; commands won't list devices using userspace drivers. in oVirt, such devices appear as &lt;code&gt;dpdk0&lt;/code&gt;, &lt;code&gt;dpdk1&lt;/code&gt;, and so forth.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an oVirt network &lt;code&gt;phys-net-demo&lt;/code&gt; on your data center and attach it to your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Attach &lt;code&gt;phys-net-demo&lt;/code&gt; to DPDK NICs accross your cluster.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/set-phys-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create an external OVN network &lt;code&gt;ext-net-demo&lt;/code&gt;, setting &lt;code&gt;phys-net-demo&lt;/code&gt; as its physical network. This configuration between &lt;code&gt;ext-net-demo&lt;/code&gt; and &lt;code&gt;phys-net-demo&lt;/code&gt; will enable traffic between &lt;code&gt;phys-net-demo&lt;/code&gt; (which DPDK's physical port is part of) and the rest of the ports present in OVN's &lt;code&gt;ext-net-demo&lt;/code&gt; network.&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/create-ext-net.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code&gt;ext-net-demo&lt;/code&gt; vNic's may now be added to virtual machines. These vNics now share L2 connectivity with other remote ports in &lt;code&gt;ext-net-demo&lt;/code&gt; via DPDK's NIC (and other local ports internally).&lt;/p&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/ext-net-demo.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Temporarily, SElinux needs to be set to permissive. This is due to an &lt;a href="https://bugzilla.redhat.com/1598435"&gt;open bug&lt;/a&gt; where SElinux blocks the creation of a QEMU socket. Once the bug is resolved, this step should be skipped.&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Host to VM packets are transmitted and received on buffers allocated on shared hugepages memory. As such, virtual machines using DPDK based NIC's need to enable hugepage sharing; this is done by running VM's with custom properties:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Review engine custom properties:&lt;br /&gt;
+&lt;code&gt;engine-config -g UserDefinedVMProperties&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Add engine custom properties for hugepages support:&lt;br /&gt;
+&lt;code&gt;engine-config -s "UserDefinedVMProperties=hugepages=^.*$;hugepages_shared=(true|false)&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;Restart engine for changes to take effect:&lt;br /&gt;
+&lt;code&gt;systemctl restart ovirt-engine&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;In the VM run once menu dialog, add the following custom properties:&lt;br /&gt;
+&lt;code&gt;hugepages_shared&lt;/code&gt; – &lt;code&gt;true&lt;/code&gt;.&lt;br /&gt;
+&lt;code&gt;hugepages&lt;/code&gt; – the number of hugepages to share.&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;p&gt;&lt;img alt="" width="1920" height="1080" src="/images/ovn-dpdk/hugepages.png?1560777613" /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</content>
+  </entry>
+  <entry>
+    <title>oVirt roles Ansible Galaxy integration</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/12/ovirt-ansible-roles-split.html"/>
+    <id>http://ovirt.org/blog/2017/12/ovirt-ansible-roles-split.html</id>
+    <published>2017-12-08T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;In 4.2 release we have splitted our oVirt Ansible roles into separate RPM packages and also separate git repositories, so it is possible for user to install specific role either from Ansible Galaxy or as RPM package.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="the-reason"&gt;The reason&lt;/h2&gt;
+&lt;p&gt;The reason to split the roles into separate packages and git repositories was mainly the usage from the AWX/Ansible Tower. Since Ansible Galaxy is only integrated with github you need to store your Ansible role in single git repostiory in order to have separate Ansible role in Galaxy. Previously we used one single repository where we have stored all the roles, but because of that manual configuration was required to make those roles usable in AWX/Ansible Tower. So as you can see on image below we now have many roles in Ansible Galaxy under oVirt user:&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="oVirt roles in Ansible Galaxy" width="1920" height="1080" src="/images/galaxy_roles.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="how-to-install-the-roles"&gt;How to install the roles&lt;/h2&gt;
+&lt;p&gt;There are still two ways how to install the roles: either using Ansible Galaxy or using RPM package available from oVirt repositories.&lt;/p&gt;
+
+&lt;h3 id="ansible-galaxy"&gt;Ansible Galaxy&lt;/h3&gt;
+&lt;p&gt;You are now able to install just a single role and not necessarily all of them at once like in previous versions
+For example to install just oVirt cluster upgrade role, you have to run following command:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-galaxy install oVirt.cluster-upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that we still support the posibility to download and install all roles at once,
+you can do it by executing following command:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-galaxy install oVirt.ovirt-ansible-roles
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="from-ovirt-repository"&gt;From oVirt repository&lt;/h3&gt;
+&lt;p&gt;Also using RPM you are now able to install just a single role and not necessarily all of them at once like in previous versions.
+For example to install just oVirt cluster upgrade role, you have to run following command:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;yum install ovirt-ansible-cluster-upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note that we haven't obsoleted the &lt;code&gt;ovirt-ansible-roles&lt;/code&gt; package, it still exists and you can install all available oVirt roles using:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;yum install ovirt-ansible-roles
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The only difference is that this package now requires all the separate packages, so the packages itself
+only provides documentation and examples.&lt;/p&gt;
+
+&lt;h2 id="compatibility-changes"&gt;Compatibility changes&lt;/h2&gt;
+&lt;p&gt;Unfortunatelly the split has its price.&lt;/p&gt;
+
+&lt;h3 id="the-names"&gt;The names&lt;/h3&gt;
+
+&lt;h4 id="roles-from-ansible-galaxy"&gt;Roles from Ansible Galaxy&lt;/h4&gt;
+&lt;p&gt;Unfortunatelly split has also broken the names of the roles in Ansible Galaxy.
+So before user could used the following names:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ovirt-cluster-upgrade&lt;/li&gt;
+  &lt;li&gt;ovirt-image-template&lt;/li&gt;
+  &lt;li&gt;ovirt-infra&lt;/li&gt;
+  &lt;li&gt;ovirt-manageiq&lt;/li&gt;
+  &lt;li&gt;ovirt-vm-infra&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;But since the naming in Ansible Galaxy is done as {owner}.{role-name}, we had to rename
+the roles to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;oVirt.cluster-upgrade&lt;/li&gt;
+  &lt;li&gt;oVirt.image-template&lt;/li&gt;
+  &lt;li&gt;oVirt.infra&lt;/li&gt;
+  &lt;li&gt;oVirt.manageiq&lt;/li&gt;
+  &lt;li&gt;oVirt.vm-infra&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Notice that we have changed the first dash by the dot and renamed &lt;code&gt;ovirt&lt;/code&gt; to &lt;code&gt;oVirt&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id="roles-from-rpm"&gt;Roles from RPM&lt;/h4&gt;
+&lt;p&gt;For the users who installed roles from RPM. The names with dash will still work,
+as we are creating a symlink to new names. But please be aware that we will remove
+this legacy name one day in the future.&lt;/p&gt;
+
+&lt;h3 id="removal-of-component-roles"&gt;Removal of component roles&lt;/h3&gt;
+&lt;p&gt;Previously the ovirt-ansible-roles package shipped the following component roles:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ovirt-aaa-jdbc&lt;/li&gt;
+  &lt;li&gt;ovirt-affinity-groups&lt;/li&gt;
+  &lt;li&gt;ovirt-clusters&lt;/li&gt;
+  &lt;li&gt;ovirt-datacenter-cleanup&lt;/li&gt;
+  &lt;li&gt;ovirt-datacenters&lt;/li&gt;
+  &lt;li&gt;ovirt-external-providers&lt;/li&gt;
+  &lt;li&gt;ovirt-hosts&lt;/li&gt;
+  &lt;li&gt;ovirt-mac-pools&lt;/li&gt;
+  &lt;li&gt;ovirt-networks&lt;/li&gt;
+  &lt;li&gt;ovirt-permissions&lt;/li&gt;
+  &lt;li&gt;ovirt-storages&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Those roles are not provided as separately installable roles, but those are just internal
+roles of &lt;code&gt;ovirt-infra&lt;/code&gt; and &lt;code&gt;ovirt-vm-infra&lt;/code&gt; roles. But the good thing is that user didn't
+loose the ability execute the specific component role, we have tagged all the tasks in the
+component roles with specific tags, so if you want to execute just single &lt;code&gt;oVirt-infra&lt;/code&gt;
+role inside &lt;code&gt;oVirt.infra&lt;/code&gt; role, you can execute playbook with &lt;code&gt;oVirt.infra&lt;/code&gt; role with tag
+&lt;code&gt;hosts&lt;/code&gt; and only &lt;code&gt;ovirt-hosts&lt;/code&gt; role will be executed, for example:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-playbook &lt;span class="nt"&gt;--tags&lt;/span&gt; hosts ovirt_infra.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To list all possible tags please execute following command, on playbook, where you execute
+&lt;code&gt;oVirt.infra&lt;/code&gt; role:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-playbook &lt;span class="nt"&gt;--list-tags&lt;/span&gt; ovirt_infra.yml 
+
+playbook: ovirt_infra.yml
+
+  play &lt;span class="c"&gt;#1 (localhost): oVirt infra	TAGS: []&lt;/span&gt;
+      TASK TAGS: &lt;span class="o"&gt;[&lt;/span&gt;always, clusters, datacenters, external_providers, host_networks, hosts, logical_networks, mac_pools, networks, ovirt-aaa-jdbc, permissions, reinstall, storage_connections, storages, user_groups, users]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Please note that any of those role can be created as separate role in future, if there will be need for it.&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>Customizing the host deploy process</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/12/host-deploy-customization.html"/>
+    <id>http://ovirt.org/blog/2017/12/host-deploy-customization.html</id>
+    <published>2017-12-08T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;In 4.2 release we have introduced a possibility to customize the host-deploy process by running the Ansible post-tasks after the host-deploy process successfully finishes.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="the-reason"&gt;The reason&lt;/h2&gt;
+&lt;p&gt;Prior to oVirt 4.2 release administrators could customize host's firewall rules using &lt;code&gt;engine-config&lt;/code&gt; option &lt;code&gt;IPTablesConfigSiteCustom&lt;/code&gt;.
+Unfortunately writing custom &lt;code&gt;iptables&lt;/code&gt; rules into string value to be used in &lt;code&gt;engine-config&lt;/code&gt; was very user unfriendly and using &lt;code&gt;engine-config&lt;/code&gt; to provide custom
+&lt;code&gt;firewalld&lt;/code&gt; rules would be even much worse. Because of above we have introduced Ansible integration as a part of host deploy flow, which allows administrators to
+add any custom actions executed on the host during host deploy flow.&lt;/p&gt;
+
+&lt;h2 id="special-tasks-file"&gt;Special tasks file&lt;/h2&gt;
+
+&lt;p&gt;As part of this role we also include additional tasks, which could be written by the user, to modify the host-deploy
+process for example to open some more FirewallD ports.&lt;/p&gt;
+
+&lt;p&gt;Those additional tasks can be added to following file:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;/etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This post-task file is executed as part of host-deploy process just before setup network invocation.&lt;/p&gt;
+
+&lt;h2 id="example"&gt;Example&lt;/h2&gt;
+&lt;p&gt;An example post-tasks file is provided by ovirt-engine installation, at following location:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;/etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml.example
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is just an example file, to add some task into host deploy flow, you need to create below mentioned file and add some proper Ansible custom tasks:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight plaintext"&gt;&lt;code&gt;$ touch /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now let's add some tasks which should be executed on the host.
+Note that you can call any Ansible task, not only firewalld task.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cat&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="no"&gt;EOF&lt;/span&gt;&lt;span class="sh"&gt; &amp;gt;&amp;gt; /etc/ovirt-engine/ansible/ovirt-host-deploy-post-tasks.yml
+&amp;gt; ---
+&amp;gt; - name: Enable custom firewall port
+&amp;gt;   firewalld:
+&amp;gt;     port: "12345/tcp"
+&amp;gt;     permanent: yes
+&amp;gt;     immediate: yes
+&amp;gt;     state: enabled
+&amp;gt;
+&amp;gt; - name: Print debug information
+&amp;gt;   debug:
+&amp;gt;     msg: "My custom tasks was successfully executed!"
+&amp;gt; EOF
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;When you add new host or reinstall an existing host, you may see the installation logs in &lt;code&gt;/var/log/ovirt-engine/host-deploy/&lt;/code&gt; directory.
+Ansible specific log files has &lt;code&gt;-ansible&lt;/code&gt; suffix. In events view you can see relevant log file path for the specific host installation or
+reinstallation.&lt;/p&gt;
+
+&lt;p&gt;Note that host's firewall type &lt;code&gt;iptables&lt;/code&gt; is deprecated in version 4.2 and will be removed in version 4.3&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>How to use oVirt Ansible roles</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/08/ovirt-ansible-roles-how-to-use.html"/>
+    <id>http://ovirt.org/blog/2017/08/ovirt-ansible-roles-how-to-use.html</id>
+    <published>2017-08-16T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name/>
+    </author>
+    <content type="html">&lt;p&gt;The recent post, &lt;a href="/blog/2017/07/ovirt-ansible-roles-an-introduction/"&gt;An Introduction to Ansible Roles&lt;/a&gt;, discussed the new roles that were introduced in the oVirt 4.1.6 release. This follow-up post will explain how to set up and use Ansible roles, using either Ansible Galaxy or oVirt Ansible Roles RPM.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="ansible-galaxy"&gt;Ansible Galaxy&lt;/h2&gt;
+
+&lt;p&gt;To make life easier, &lt;a href="https://galaxy.ansible.com/"&gt;Ansible Galaxy&lt;/a&gt; stores multiple Ansible roles, including oVirt Ansible roles. To install the roles, perform the next steps:&lt;/p&gt;
+
+&lt;p&gt;To install roles on your local machine, run the following command:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-galaxy install ovirt.ovirt-ansible-roles
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will install your roles into directory &lt;code&gt;/etc/ansible/roles/ovirt.ovirt-ansible-roles/&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;By default, Ansible only searches for roles in &lt;code&gt;/etc/ansible/roles/&lt;/code&gt; directory and your current working directory.&lt;/p&gt;
+
+&lt;p&gt;To change the directories where Ansible looks for roles, modify the &lt;code&gt;roles_path&lt;/code&gt; option of &lt;code&gt;[defaults]&lt;/code&gt; section in &lt;code&gt;ansible.cfg&lt;/code&gt; configuration file.&lt;/p&gt;
+
+&lt;p&gt;The default location of this file is in &lt;code&gt;/etc/ansible/ansible.cfg&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sed &lt;span class="nt"&gt;-i&lt;/span&gt; &lt;span class="s1"&gt;'s|#roles_path    = /etc/ansible/roles|roles_path = /etc/ansible/roles:/etc/ansible/roles/ovirt.ovirt-ansible-roles/roles|'&lt;/span&gt;  /etc/ansible/ansible.cfg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For more information on changing the directories where Ansible searches for roles, see the Ansible documentation pages.&lt;/p&gt;
+
+&lt;p&gt;Copy one of the examples from the directory &lt;code&gt;/etc/ansible/roles/ovirt.ovirt-ansible-roles/examples/&lt;/code&gt; into your working directory, then modify the needed variables and run the playbook.&lt;/p&gt;
+
+&lt;h2 id="ovirt-ansible-roles-rpm"&gt;oVirt Ansible Roles RPM&lt;/h2&gt;
+
+&lt;p&gt;In the latest oVirt repositories you can find the &lt;code&gt;ovirt-ansible-roles&lt;/code&gt; package. To make the oVirt repositories available, install &lt;code&gt;ovirt-release&lt;/code&gt; RPM:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;yum install &lt;span class="nt"&gt;-y&lt;/span&gt; http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;oVirt release repository now provides &lt;code&gt;ovirt-ansible-roles&lt;/code&gt; package:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;yum install &lt;span class="nt"&gt;-y&lt;/span&gt; ovirt-ansible-roles
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The structure of the &lt;code&gt;ovirt-ansible-roles&lt;/code&gt; package is as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;/usr/share/ansible/roles&lt;/strong&gt; - stores the roles&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/usr/share/doc/ovirt-ansible-roles/&lt;/strong&gt; - stores the examples, a basic overview and the licence&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;/usr/share/doc/ansible/roles/{role_name}&lt;/strong&gt; - stores the documentation specific to the role&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Copy one of the examples from the directory &lt;code&gt;/usr/share/doc/ovirt-ansible-roles/examples&lt;/code&gt; into your working directory, then modify the needed variables and run the playbook.&lt;/p&gt;
+
+&lt;h2 id="an-example-of-tweaking-and-running-the-playbook"&gt;An Example of Tweaking and Running the Playbook&lt;/h2&gt;
+
+&lt;h3 id="create-example-playbook"&gt;Create Example Playbook&lt;/h3&gt;
+
+&lt;p&gt;Running the example from Galaxy or RPM is bit different. Therefore, please follow the relevant instructions.&lt;/p&gt;
+
+&lt;h4 id="ansible-galaxy-1"&gt;Ansible Galaxy&lt;/h4&gt;
+
+&lt;p&gt;The following steps assume that: you followed the steps on how to install the roles from Galaxy, your roles are installed in &lt;code&gt;/etc/ansible/roles/ovirt.ovirt-ansible-roles/roles/&lt;/code&gt;, and you have tweaked &lt;code&gt;ansible.cfg&lt;/code&gt; to look for those roles.&lt;/p&gt;
+
+&lt;p&gt;Run a role called &lt;code&gt;ovirt-image-template&lt;/code&gt; to download the qcow2 image and create a template from it.&lt;/p&gt;
+
+&lt;p&gt;Copy the &lt;code&gt;ovirt-image-template&lt;/code&gt; role example. In this example we will use &lt;code&gt;/tmp&lt;/code&gt; as the working directory:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /tmp
+&lt;span class="nv"&gt;$ &lt;/span&gt;cp /etc/ansible/roles/ovirt.ovirt-ansible-roles/examples/ovirt_image_template.yml &lt;span class="nb"&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id="ovirt-ansible-roles-rpm-1"&gt;oVirt Ansible Roles RPM&lt;/h4&gt;
+&lt;p&gt;The following steps assume that: you followed the instructions on how to install the roles from RPM, and your roles are already installed in &lt;code&gt;/usr/share/ansible/roles&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Run a role called &lt;code&gt;ovirt-image-template&lt;/code&gt; to download the qcow2 image and create a template from it.&lt;/p&gt;
+
+&lt;p&gt;Copy the &lt;code&gt;ovirt-image-template&lt;/code&gt; role example. In this example I will use &lt;code&gt;/tmp&lt;/code&gt; as the working directory:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /tmp
+&lt;span class="nv"&gt;$ &lt;/span&gt;cp /usr/share/doc/ovirt-ansible-roles/examples/ovirt_image_template.yml &lt;span class="nb"&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id="tweaking-and-running-the-playbook"&gt;Tweaking and Running the Playbook&lt;/h3&gt;
+
+&lt;p&gt;Modify the variables to reflect your needs:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;&lt;span class="nn"&gt;---&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;oVirt image template&lt;/span&gt;
+  &lt;span class="na"&gt;hosts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt;
+  &lt;span class="na"&gt;connection&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;local&lt;/span&gt;
+  &lt;span class="na"&gt;gather_facts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+
+  &lt;span class="na"&gt;vars_files&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;# Contains encrypted `engine_password` varibale using ansible-vault&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;passwords.yml&lt;/span&gt;
+
+  &lt;span class="na"&gt;vars&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/api&lt;/span&gt;
+    &lt;span class="na"&gt;engine_user&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;admin@internal&lt;/span&gt;
+    &lt;span class="na"&gt;engine_cafile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/etc/pki/ovirt-engine/ca.pem&lt;/span&gt;
+
+    &lt;span class="na"&gt;qcow_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2&lt;/span&gt;
+    &lt;span class="na"&gt;template_cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;testcluster&lt;/span&gt;
+    &lt;span class="na"&gt;template_name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;centos7_template&lt;/span&gt;
+    &lt;span class="na"&gt;template_memory&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2GiB&lt;/span&gt;
+    &lt;span class="na"&gt;template_cpu&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2&lt;/span&gt;
+    &lt;span class="na"&gt;template_disk_size&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;10GiB&lt;/span&gt;
+    &lt;span class="na"&gt;template_disk_storage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;nfs&lt;/span&gt;
+
+  &lt;span class="na"&gt;roles&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ovirt-image-template&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Create a file with an oVirt engine user password:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cat &lt;/span&gt;passwords.yml
+engine_password: youruserpassword
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Encrypt the file with an oVirt user password. You will be asked for a vault password:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-vault encrypt passwords.yml
+New Vault password:
+Confirm New Vault password:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;Encryption successful&lt;/code&gt; will confirm that you have encrypted the file.&lt;/p&gt;
+
+&lt;p&gt;Ensure you have installed Python SDK on your machine because you will run your playbook on localhost:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;yum install &lt;span class="nt"&gt;-y&lt;/span&gt; python-ovirt-engine-sdk4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you use Galaxy and don't have oVirt repositories you can install Python SDK from pip:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install ovirt-engine-sdk-python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Run the playbook:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight shell"&gt;&lt;code&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ansible-playbook &lt;span class="nt"&gt;--ask-vault-pass&lt;/span&gt; ovirt_image_template.yml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That's it. After the &lt;code&gt;ansible-playbook&lt;/code&gt; command completes successfully, you will have deployed a template using the qcow2 image."&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <title>An Introduction to oVirt Ansible Roles</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/07/ovirt-ansible-roles-an-introduction.html"/>
+    <id>http://ovirt.org/blog/2017/07/ovirt-ansible-roles-an-introduction.html</id>
+    <published>2017-07-19T15:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>mgoldboim</name>
+    </author>
+    <content type="html">&lt;p&gt;Today I would like to share with you some of the integration work with Ansible 2.3 that was done in the latest oVirt 4.1 release.
+The Ansible integration work was quite extensive and included &lt;a href="http://docs.ansible.com/ansible/list_of_cloud_modules.html#ovirt"&gt;Ansible modules&lt;/a&gt; that can be utilized for automating a wide range of
+oVirt tasks, including tiered application deployment and virtualization infrastructure management.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;While Ansible has multiple levels of integrations, I would like to focus this article on oVirt Ansible roles. As stated in the Ansible documentation: “Roles in Ansible build on the idea of include files and combine them to form clean, reusable abstractions – they allow you to focus more on the big picture and only dive into the details when needed.”&lt;/p&gt;
+
+&lt;p&gt;We used the above logic as a guideline for developing the oVirt Ansible roles.
+We will cover three of the many Ansible roles available for oVirt:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href="https://github.com/oVirt/ovirt-ansible/blob/master/roles/ovirt-infra/README.md"&gt;oVirt infra&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/oVirt/ovirt-ansible/tree/master/roles/ovirt-image-template"&gt;oVirt-image-template&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href="https://github.com/oVirt/ovirt-ansible/tree/master/roles/ovirt-vm-infra"&gt;oVirt-vm-infra&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For each example, I will describe the role's purpose and how it is used.&lt;/p&gt;
+
+&lt;h2 id="ovirt-infra"&gt;oVirt Infra&lt;/h2&gt;
+
+&lt;p&gt;The purpose of this role is to automatically configure and manage an oVirt  datacenter. It will take a newly deployed- but not yet configured- oVirt engine (RHV-M for RHV users), hosts, and storage and configure them to your requirements and specifications. The oVirt engine should already be installed (post engine-setup). Hosts and storage should be deployed but not configured.&lt;/p&gt;
+
+&lt;p&gt;This role will take a &lt;a href="https://github.com/oVirt/ovirt-ansible/blob/master/examples/ovirt_infra_vars.yml"&gt;yml-based variable file&lt;/a&gt; such as the following (/path/to/file):&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# REST API variables&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/api&lt;/span&gt;
+&lt;span class="na"&gt;engine_user&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;admin@internal&lt;/span&gt;
+&lt;span class="na"&gt;engine_cafile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/etc/pki/ovirt-engine/ca.pem&lt;/span&gt;
+
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Common&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;compatibility_version&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;4.1&lt;/span&gt;
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Data center&lt;/span&gt;
+&lt;span class="na"&gt;data_center_name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mydatacenter&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Clusters&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;clusters&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+  &lt;span class="na"&gt;cpu_type&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;Intel Conroe Family&lt;/span&gt;
+  &lt;span class="na"&gt;profile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Hosts&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;hosts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;myhost&lt;/span&gt;
+  &lt;span class="na"&gt;address&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1.2.3.5&lt;/span&gt;
+  &lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+  &lt;span class="na"&gt;password&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;123456&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;myhost1&lt;/span&gt;
+  &lt;span class="na"&gt;address&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1.2.3.6&lt;/span&gt;
+  &lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+  &lt;span class="na"&gt;password&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;123456&lt;/span&gt;
+
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Storage&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;storages&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+&lt;span class="na"&gt;mynfsstorage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+ &lt;span class="na"&gt;master&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+ &lt;span class="na"&gt;state&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;present&lt;/span&gt;
+ &lt;span class="na"&gt;nfs&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;address&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1.2.3.4&lt;/span&gt;
+  &lt;span class="na"&gt;path&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/om02&lt;/span&gt;
+&lt;span class="na"&gt;myiscsistorage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+ &lt;span class="na"&gt;iscsi&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;target&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;iqn.2014-07.org.ovirt:storage&lt;/span&gt;
+  &lt;span class="na"&gt;port&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;3260&lt;/span&gt;
+  &lt;span class="na"&gt;address&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;192.168.200.3&lt;/span&gt;
+  &lt;span class="na"&gt;username&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;username&lt;/span&gt;
+  &lt;span class="na"&gt;password&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;password&lt;/span&gt;
+  &lt;span class="na"&gt;lun_id&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;3600140551fcc8348ea74a99b6760fbb4&lt;/span&gt;
+&lt;span class="na"&gt;mytemplates&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+ &lt;span class="na"&gt;domain_function&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;export&lt;/span&gt;
+ &lt;span class="na"&gt;nfs&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;address&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;192.168.200.3&lt;/span&gt;
+  &lt;span class="na"&gt;path&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/exports/nfs/exported&lt;/span&gt;
+&lt;span class="na"&gt;myisostorage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+ &lt;span class="na"&gt;domain_function&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;iso&lt;/span&gt;
+ &lt;span class="na"&gt;nfs&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="na"&gt;address&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;192.168.200.3&lt;/span&gt;
+  &lt;span class="na"&gt;path&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/exports/nfs/iso&lt;/span&gt;
+
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Networks&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;logical_networks&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt;  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mynetwork&lt;/span&gt;
+  &lt;span class="na"&gt;clusters&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;development&lt;/span&gt;
+     &lt;span class="na"&gt;assigned&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+     &lt;span class="na"&gt;required&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+     &lt;span class="na"&gt;display&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+     &lt;span class="na"&gt;migration&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+     &lt;span class="na"&gt;gluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+
+
+
+&lt;span class="na"&gt;host_networks&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;myhost1&lt;/span&gt;
+  &lt;span class="na"&gt;check&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+  &lt;span class="na"&gt;save&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;true&lt;/span&gt;
+  &lt;span class="na"&gt;bond&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;bond0&lt;/span&gt;
+   &lt;span class="na"&gt;mode&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2&lt;/span&gt;
+   &lt;span class="na"&gt;interfaces&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;eth2&lt;/span&gt;
+    &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;eth3&lt;/span&gt;
+  &lt;span class="na"&gt;networks&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+  &lt;span class="pi"&gt;-&lt;/span&gt;  &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mynetwork&lt;/span&gt;
+     &lt;span class="na"&gt;boot_protocol&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;dhcp&lt;/span&gt;
+
+
+
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="c1"&gt;# Users &amp;amp; Groups&lt;/span&gt;
+&lt;span class="c1"&gt;###########################&lt;/span&gt;
+&lt;span class="na"&gt;users&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;user1&lt;/span&gt;
+  &lt;span class="na"&gt;authz_name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;internal-authz&lt;/span&gt;
+  &lt;span class="na"&gt;password&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1234568&lt;/span&gt;
+  &lt;span class="na"&gt;valid_to&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;2018-01-01&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;00:00:00Z"&lt;/span&gt;
+&lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;user2&lt;/span&gt;
+  &lt;span class="na"&gt;authz_name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;internal-authz&lt;/span&gt;
+  &lt;span class="na"&gt;password&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1234568&lt;/span&gt;
+  &lt;span class="na"&gt;valid_to&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;2018-01-01&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;00:00:00Z"&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The yml variable file describes the environment configuration and translates it to API calls that will configure the datacenter in minimal time. It will utilize the oVirt Ansible component roles to configure the datacenters, clusters, hosts, storage domains, networks, and optionally add users.&lt;/p&gt;
+
+&lt;p&gt;Not only can the role configure a new environment but it can also manage and reconfigure an existing one, giving the capabilities to add and remove entities from the system.
+In addition, it also includes some special tweaks like cluster profiles. We defined two cluster profiles which designate the cluster as either “production” (with specific SLA and management level characteristics) or “development” (to squeeze more compute power out of the physical hardware).&lt;/p&gt;
+
+&lt;h2 id="ovirt-image-template"&gt;ovirt-image-template&lt;/h2&gt;
+
+&lt;p&gt;How many times have you performed the routine task of creating a VM for the sole purpose of converting it to a template? If you find this task tedious, this role comes to the rescue. It’s a very simple and straightforward role. Specify the disk image URL and template properties, and the role automates the process of downloading the qcow2, creating an image, and then converting it into a template for you.&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;
+
+ &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;oVirt image template&lt;/span&gt;
+ &lt;span class="na"&gt;hosts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt;
+ &lt;span class="na"&gt;connection&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;local&lt;/span&gt;
+ &lt;span class="na"&gt;gather_facts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+
+
+
+ &lt;span class="na"&gt;vars_files&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="c1"&gt;# Contains encrypted `engine_password` varibale using ansible-vault&lt;/span&gt;
+   &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;passwords.yml&lt;/span&gt;
+
+
+
+ &lt;span class="na"&gt;vars&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/api&lt;/span&gt;
+   &lt;span class="na"&gt;engine_user&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;admin@internal&lt;/span&gt;
+   &lt;span class="na"&gt;engine_cafile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/etc/pki/ovirt-engine/ca.pem&lt;/span&gt;
+
+
+
+   &lt;span class="na"&gt;qcow_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2&lt;/span&gt;
+   &lt;span class="na"&gt;template_cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+   &lt;span class="na"&gt;template_name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;centos7_template&lt;/span&gt;
+   &lt;span class="na"&gt;template_memory&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2GiB&lt;/span&gt;
+   &lt;span class="na"&gt;template_cpu&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2&lt;/span&gt;
+   &lt;span class="na"&gt;template_disk_size&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;10GiB&lt;/span&gt;
+   &lt;span class="na"&gt;template_disk_storage&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;nfs&lt;/span&gt;
+
+
+
+ &lt;span class="na"&gt;roles&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ovirt-image-template&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="ovirt-vm-infra"&gt;Ovirt-vm-infra&lt;/h2&gt;
+
+&lt;p&gt;This role is for laying down the application infrastructure. Let’s take a simple example, say you would like to deploy a LAMP application, one VM for the database and one VM for the web-server. This role can help you to create a consistent configuration for this deployment type and redeployment, with one command line (This is the base for a N-tier application deployment using Ansible dynamic inventory, a topic for another article).
+To use this role, edit a simple yml file which describes the virtual application infrastructure you would like to create. Here is one such example:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;
+ &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;oVirt infra&lt;/span&gt;
+ &lt;span class="na"&gt;hosts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt;
+ &lt;span class="na"&gt;connection&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;local&lt;/span&gt;
+ &lt;span class="na"&gt;gather_facts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+
+
+
+ &lt;span class="na"&gt;vars_files&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="c1"&gt;# Contains encrypted `engine_password` varibale using ansible-vault&lt;/span&gt;
+   &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;passwords.yml&lt;/span&gt;
+
+
+
+ &lt;span class="na"&gt;vars&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/api&lt;/span&gt;
+   &lt;span class="na"&gt;engine_user&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;admin@internal&lt;/span&gt;
+   &lt;span class="na"&gt;engine_cafile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/etc/pki/ovirt-engine/ca.pem&lt;/span&gt;
+
+
+
+   &lt;span class="na"&gt;httpd_vm&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+     &lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+     &lt;span class="na"&gt;domain&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;example.com&lt;/span&gt;
+     &lt;span class="na"&gt;template&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;rhel7&lt;/span&gt;
+     &lt;span class="na"&gt;memory&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2GiB&lt;/span&gt;
+     &lt;span class="na"&gt;cores&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;2&lt;/span&gt;
+     &lt;span class="na"&gt;ssh_key&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ssh-rsa AAA...LGx user@fqdn&lt;/span&gt;
+     &lt;span class="na"&gt;disks&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+       &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;size&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;10GiB&lt;/span&gt;
+         &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;data&lt;/span&gt;
+         &lt;span class="na"&gt;storage_domain&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mynfsstorage&lt;/span&gt;
+         &lt;span class="na"&gt;interface&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;virtio&lt;/span&gt;
+
+
+
+   &lt;span class="na"&gt;db_vm&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+     &lt;span class="na"&gt;cluster&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;production&lt;/span&gt;
+     &lt;span class="na"&gt;domain&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;example.com&lt;/span&gt;
+     &lt;span class="na"&gt;template&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;rhel7&lt;/span&gt;
+     &lt;span class="na"&gt;memory&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;4GiB&lt;/span&gt;
+     &lt;span class="na"&gt;cores&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;1&lt;/span&gt;
+     &lt;span class="na"&gt;ssh_key&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;ssh-rsa AAA...LGx user@fqdn&lt;/span&gt;
+     &lt;span class="na"&gt;disks&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+       &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;size&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;50GiB&lt;/span&gt;
+         &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;data&lt;/span&gt;
+         &lt;span class="na"&gt;storage_domain&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;mynfsstorage&lt;/span&gt;
+         &lt;span class="na"&gt;interface&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;virtio&lt;/span&gt;
+
+
+
+   &lt;span class="na"&gt;vms&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+     &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;postgresql-vm-0&lt;/span&gt;
+       &lt;span class="na"&gt;tag&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;postgresql_vm&lt;/span&gt;
+       &lt;span class="na"&gt;profile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;db_vm&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;}}"&lt;/span&gt;
+     &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;postgresql-vm-1&lt;/span&gt;
+       &lt;span class="na"&gt;tag&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;postgresql_vm&lt;/span&gt;
+       &lt;span class="na"&gt;profile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;db_vm&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;}}"&lt;/span&gt;
+     &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;apache-vm&lt;/span&gt;
+       &lt;span class="na"&gt;tag&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;httpd_vm&lt;/span&gt;
+       &lt;span class="na"&gt;profile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="s"&gt;{{&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;httpd_vm&lt;/span&gt;&lt;span class="nv"&gt; &lt;/span&gt;&lt;span class="s"&gt;}}"&lt;/span&gt;
+
+
+
+ &lt;span class="na"&gt;roles&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+   &lt;span class="pi"&gt;-&lt;/span&gt; &lt;span class="s"&gt;ovirt-vm-infra&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note the profiles concept. Each VM type is specified with a profile from which many instances can be created later on.&lt;/p&gt;
+
+&lt;p&gt;Additional information and recommendations:&lt;/p&gt;
+
+&lt;p&gt;Get all the Ansible roles and modules for oVirt from &lt;a href="https://galaxy.ansible.com/ovirt/ovirt-ansible-roles/"&gt;Ansible Galaxy&lt;/a&gt;, straight from &lt;a href="https://github.com/oVirt/ovirt-ansible"&gt;oVirt GitHub&lt;/a&gt;. This is where you will also find documentation and demos for each role. In the future, we plan to package all of the roles into a single RPM.&lt;/p&gt;
+
+&lt;p&gt;The preferred means of running playbooks is to use a bastion machine on which the oVirt python SDK and Ansible 2.3 would be installed. This way, the Ansible playbook will be translated into REST API calls which will be executed against the engine. You can also run it from the local engine or in other topologies, but using the bastion host would be more secure and performant.
+If you decide to go with this option, make sure that the connection parameters are set correctly in the playbook:&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre class="highlight yaml"&gt;&lt;code&gt;
+ &lt;span class="na"&gt;name&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;oVirt infra&lt;/span&gt;
+
+ &lt;span class="na"&gt;hosts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;localhost&lt;/span&gt;
+
+ &lt;span class="na"&gt;connection&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;local&lt;/span&gt;
+
+ &lt;span class="na"&gt;gather_facts&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="no"&gt;false&lt;/span&gt;
+
+ &lt;span class="na"&gt;vars&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt;
+
+   &lt;span class="na"&gt;engine_url&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;https://ovirt-engine.example.com/ovirt-engine/api&lt;/span&gt;
+
+   &lt;span class="na"&gt;engine_user&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;admin@internal&lt;/span&gt;
+
+   &lt;span class="na"&gt;engine_cafile&lt;/span&gt;&lt;span class="pi"&gt;:&lt;/span&gt; &lt;span class="s"&gt;/etc/pki/ovirt-engine/ca.pem&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To avoid sending passwords in cleartext, use Ansible vault and encrypt them in an &lt;a href="https://github.com/oVirt/ovirt-ansible/blob/master/examples/passwords.yml"&gt;extra-vars file&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Wrapping up, I just wanted to give kudos to Ondra Machacek the lead developer of this integration, and the whole oVirt infra team which helped to push this integration forward.&lt;/p&gt;
+
+&lt;p&gt;We would love to get your feedback and patches in order to improve those roles and others which are in development.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

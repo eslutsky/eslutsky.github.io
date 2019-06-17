@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Nicless Network &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="nic-less-network">Nic-less Network</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Create an in-host-only network, with no external communication</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Yevgeny Zaspitsky (yevgenyz)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#121;&#122;&#097;&#115;&#112;&#105;&#116;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#121;&#122;&#097;&#115;&#112;&#105;&#116;&#115;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>In oVirt, after a VM network is defined in the Data Center level and added to a cluster, it needs to be implemented on each host. All VM networks are (currently) based on a Linux software bridge. The specific implementation controls how traffic from that bridge reaches the outer world. For example, the bridge may be connected externally via <code>eth3</code>, or <code>bond3</code> over <code>eth2</code> and <code>p1p2</code>. This feature is about implementing a network with no network interfaces (NICs) at all.</p>
+
+<p>Having a disconnected network may first seem to add complexity to VM placement. Until now, we assumed that if a network (say, <em>blue</em>) is defined on two hosts, the two hosts lie in the same broadcast domain. If a couple of VMs are connected to <em>blue</em> it does not matter where they a run - they would always hear each other. This is of course no longer true if one of the hosts implements <em>blue</em> as nicless. However, this is nothing new. oVirt never validates the single broadcast domain assumption, which can be easily broken by an admin: on one host, an admin can implement <em>blue</em> using a nic that has completely unrelated physical connectivity.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li><a href="/develop/release-management/features/integration/allinone/">All-in-One</a> use case: we'd like to have a complete oVirt deployment that does not rely on external resources, such as layer-2 connectivity or DNS.</li>
+  <li>Collaborative computing: an oVirt user may wish to have a group of VMs with heavy in-group secret communication, where only one of the VMs exposes an external web service. The in-group secret communication could be limited to a nic-less network, no need to let it spill outside.</li>
+  <li>Nic-less networks can be tunneled to remote network segments over IP, a layer 2 NIC may not be part of its definition.</li>
+</ul>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<h2 id="vdsm">Vdsm</h2>
+
+<p>Vdsm already supports defining a network with no nics attached.</p>
+
+<h2 id="engine">Engine</h2>
+
+<p>Implementing this in Engine is quite a pain, as network external interfaces are currently used as keys of the NetworkAttachment entity. Currently 20 different places in the engine code refer to NetworkAttachement.getNicId method. All those should be amended in order to support that it might return null and/or alternatively use <em>getHostId</em> instead. Also we might think of declaring NetworkAttachmentKey class that will be used as the attachment identifier. Initially the class will hold networkId and nicId and then change that to hold hostId instead of the nicId.</p>
+
+<h3 id="db-changes">DB changes</h3>
+
+<ul>
+  <li>Network table
+    <ul>
+      <li>new field: <em>is_isolated</em> boolean (not nullable with default value 'false'). True value indicates an isolated (nicless) network whereas is for a regular network.</li>
+    </ul>
+  </li>
+  <li>Network_attachements table
+    <ul>
+      <li>new field: <em>host_id</em> UUID (not nullable). The new field references vds_static.vds_id field.</li>
+      <li>modified field: <em>nic_id</em> - becomes nullable and isn't a part of the unique key.</li>
+      <li><em>network_attachments_network_id_nic_id_key</em> - the unique constraint will be changed to include host_id instead of nic_id.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="java-domain-objects">Java Domain Objects</h3>
+
+<ul>
+  <li>Network class
+    <ul>
+      <li>New property: <em>isolated</em> - correspondent to network.is_isolated DB field.</li>
+    </ul>
+  </li>
+  <li>NetworkAttachment
+    <ul>
+      <li>New propertty: <em>hostId</em> - correspondent to network_attachments.host_id DB field.</li>
+    </ul>
+
+    <p>The main high-level logic that would be impacted by the change is <code>*</code>HostSetupNetworksCommand<code>*</code> but other flows should be evaluated too.</p>
+  </li>
+</ul>
+
+<h3 id="usage">Usage</h3>
+
+<ul>
+  <li>Defining an isolated (nic-less) network will be possible by checking <em>isolated</em> checkbox during creating the network on the DC level.</li>
+  <li>An isolated network that is attached to a cluster will be set as a required network permanently (DK: please explain why this makes sense).</li>
+  <li>An isolated network is inherently a VM network. It could not bear any other role.</li>
+</ul>
+
+<p>Any oVirt-managed host is able to support an isolated network unconditionally and does not require any additional info to that was supplied at the network creating. Thus defining such network on the hosts could be automated. That removes from a user the need of defining an isolated network manually on each host prior to be able running a VM that uses the network.</p>
+
+<ul>
+  <li>Upon attaching an isolated network to a cluster, the engine will deploy the network on all active hosts in the cluster.</li>
+  <li>The existence of the network would be re-validated upon a host becoming active and the network would be created if that is missing on the host.</li>
+</ul>
+
+<h4 id="alternative-approaches">Alternative approaches</h4>
+
+<ul>
+  <li>Similar to the described above, but creating the network on a host would be done just before running a VM that uses the network.</li>
+  <li><a href="/develop/release-management/features/network/isolatednetworks/">Features/IsolatedNetworks</a> - this approach is about to treat an isolated network like any other network and let it be attached to a host rather than a NIC. The network would not be defined as isolated in advance and being such or not would be determined by the usage. This approach leads another sub-feature "host label" in order to automate an isolated network creating.</li>
+</ul>
+
+<h3 id="ui">UI</h3>
+
+<ul>
+  <li>mock-up (or a simple-but-clear) description of required UI changes - TBD</li>
+  <li><strong>TBD</strong> should we present isolated networks on the the Setup Networks dialog?</li>
+</ul>
+
+<h3 id="rest">REST</h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>No changes will be done to the REST API, but the implementation will allow specifying a network attachment to a host without specifying which NIC the network [is</td>
+      <td>to be] connected to.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="testing">Testing</h2>
+
+<p><strong>TBD</strong></p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li><a href="/develop/release-management/features/integration/allinone/">All-in-One</a> - an oVirt deployment that needs to fire up VMs with no external network connectivity.</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>NAT-based host-only network requested by DHC <a href="https://lists.ovirt.org/pipermail/users/2012-April/001751.html">https://lists.ovirt.org/pipermail/users/2012-April/001751.html</a></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/nicless-network.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/nicless-network.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 22 May 2018 09:18 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

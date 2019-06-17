@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Phoenix Lab Storage Hosts &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="phoenix-lab-storage-hosts">Phoenix Lab Storage Hosts</h1>
+
+<p><strong>NOTE</strong>: for the latest version of this doc, see <a href="http://ovirt-infra-docs.readthedocs.org/en/latest/">http://ovirt-infra-docs.readthedocs.org/en/latest/</a></p>
+
+<p>Currently we have two storage servers, both of them have a CentOS 6.5 installation on them.</p>
+
+<h2 id="disk-configuration">Disk configuration</h2>
+
+<p>The storage servers have a set of 6 disks in a RAID5</p>
+
+<h2 id="storage-replication">Storage replication</h2>
+
+<p>For the storage replication we are using <a href="http://www.drbd.org/users-guide/">DRBD</a>, it was required to install drbd84, and to do that on centos we had to use some special repos as it's been discontinued on the official repos. Here are the specific ones:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[root@ovirt-storage01 ~]# cat /etc/yum.repos.d/hacluster.repo&#x000A;[haclustering]&#x000A;name=HA Clustering&#x000A;baseurl=http://download.opensuse.org/repositories/network:/ha-clustering:/Stable/CentOS_CentOS-6/&#x000A;enabled=1&#x000A;gpgcheck=0&#x000A;</code></pre></div>
+<p>You can check specifically the current status using the command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[root@ovirt-storage01 ~]# drbd-overview&#x000A;0:ovirt_storage/0  Connected Primary/Secondary UpToDate/UpToDate C r----- /srv/ovirt_storage ext4 11T 563G 9.7T 6% &#x000A;</code></pre></div>
+<p>The DRBD cluster is started/stopped by the pacemaker cluster, so no need to handle it, but sometimes when the cluster degenerates is required to manually choose which node has to be master and start the replication between the nodes. You can check the cdocumentation on how to fix that type of issues <a href="http://www.drbd.org/users-guide/ch-troubleshooting.html">here</a>.</p>
+
+<h2 id="clustering">Clustering</h2>
+
+<p>The clustering has been configured using crm and pacemaker. Here are a few tips on managing it:</p>
+
+<p>To enter the management shell you can just type:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>crm&#x000A;</code></pre></div>
+<p>From there you can see a list of available commands using <em>tab</em> completion.</p>
+
+<p>To see the current status of the cluster you can use:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[root@ovirt-storage01 ~]# crm status&#x000A;Last updated: Sat Nov  8 03:59:18 2014&#x000A;Last change: Thu Jul 31 02:41:35 2014 via cibadmin on ovirt-storage01&#x000A;Stack: cman&#x000A;Current DC: ovirt-storage02 - partition with quorum&#x000A;Version: 1.1.10-14.el6_5.3-368c726&#x000A;2 Nodes configured&#x000A;7 Resources configured&#x000A;&#x000A;Online: [ ovirt-storage01 ovirt-storage02 ]&#x000A;&#x000A;Master/Slave Set: ms_drbd_ovirt_storage [p_drbd_ovirt_storage]&#x000A;    Masters: [ ovirt-storage01 ]&#x000A;    Slaves: [ ovirt-storage02 ]&#x000A;Resource Group: g_ovirt_storage&#x000A;    p_fs_ovirt_storage  (ocf::heartbeat:Filesystem):    Started ovirt-storage01 &#x000A;    p_ip_ovirt_storage  (ocf::heartbeat:IPaddr2):   Started ovirt-storage01 &#x000A;    p_nfs_ovirt_storage (lsb:nfs):  Started ovirt-storage01&#x000A;Clone Set: cl_exportfs_ovirt_storage [p_exportfs_ovirt_storage]&#x000A;    Started: [ ovirt-storage01 ovirt-storage02 ]&#x000A;</code></pre></div>
+<h3 id="showingediting-the-config">Showing/editing the config</h3>
+
+<p>To see and edit the configuration you have to enter the configuration space from the crm shell, for future reference here's the output form the current config:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>crm(live)# cd configure&#x000A;crm(lise)configure# show&#x000A;&#x000A;node ovirt-storage01&#x000A;node ovirt-storage02&#x000A;primitive p_drbd_ovirt_storage ocf:linbit:drbd \&#x000A;    params drbd_resource=ovirt_storage \&#x000A;    op monitor interval=15 role=Master \&#x000A;    op monitor interval=30 role=Slave&#x000A;primitive p_exportfs_ovirt_storage exportfs \&#x000A;    params fsid=0 directory="/srv/ovirt_storage" options="rw,mountpoint,no_root_squash" clientspec="66.187.230.0/255.255.255.192" \&#x000A;    op monitor interval=30s \&#x000A;    meta target-role=Started&#x000A;primitive p_fs_ovirt_storage Filesystem \&#x000A;    params device="/dev/drbd0" directory="/srv/ovirt_storage" fstype=ext4 \&#x000A;    op monitor interval=10s \&#x000A;    meta target-role=Started&#x000A;primitive p_ip_ovirt_storage IPaddr2 \&#x000A;    params ip=66.187.230.61 cidr_netmask=26 \&#x000A;    op monitor interval=30s \&#x000A;    meta target-role=Started&#x000A;primitive p_nfs_ovirt_storage lsb:nfs \&#x000A;    op monitor interval=30s \&#x000A;    meta target-role=Started&#x000A;group g_ovirt_storage p_fs_ovirt_storage p_ip_ovirt_storage \&#x000A;    meta target-role=Started&#x000A;ms ms_drbd_ovirt_storage p_drbd_ovirt_storage \&#x000A;    meta master-max=1 master-node-max=1 clone-max=2 clone-node-max=1 notify=true target-role=Started&#x000A;clone cl_exportfs_ovirt_storage p_exportfs_ovirt_storage&#x000A;location cli-prefer-ms_drbd_ovirt_storage ms_drbd_ovirt_storage role=Started inf: ovirt-storage01&#x000A;colocation c_all_on_drbd inf: g_ovirt_storage ms_drbd_ovirt_storage:Master&#x000A;colocation c_nfs_on_drbd inf: p_nfs_ovirt_storage ms_drbd_ovirt_storage:Master&#x000A;colocation c_nfs_on_exportfs inf: g_ovirt_storage cl_exportfs_ovirt_storage&#x000A;order o_drbd_first inf: ms_drbd_ovirt_storage:promote g_ovirt_storage:start&#x000A;order o_exportfs_before_nfs inf: cl_exportfs_ovirt_storage g_ovirt_storage:start&#x000A;property cib-bootstrap-options: \&#x000A;    dc-version=1.1.10-14.el6_5.3-368c726 \&#x000A;    cluster-infrastructure=cman \&#x000A;    expected-quorum-votes=2 \&#x000A;    stonith-enabled=false \&#x000A;    no-quorum-policy=ignore \&#x000A;    last-lrm-refresh=1404978312&#x000A;</code></pre></div>
+<h3 id="networkconfiguration">NetworkConfiguration</h3>
+
+<p>The network is configured to use bonding on all interfaces using 802.3ad bonding protocol (requires special configuration on the switches).</p>
+
+<p>Here's the current configuration files:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>[root@ovirt-storage01 ~]# cat /etc/modprobe.d/bonding.conf&#x000A;alias bond0 bonding&#x000A;##mode=4 - 802.3ad   mode=6 - alb&#x000A;options bond0 mode=4 miimon=100 lacp_rate=1&#x000A;&#x000A;[root@ovirt-storage01 ~]# cat /etc/sysconfig/network-scripts/ifcfg-em1&#x000A;DEVICE="em1"&#x000A;BOOTPROTO=none&#x000A;HWADDR="F8:BC:12:3B:22:40"&#x000A;NM_CONTROLLED="no"&#x000A;ONBOOT="yes"&#x000A;TYPE="Ethernet"&#x000A;UUID="c0407968-795b-4fdb-9a43-3c70e4803c09"&#x000A;SLAVE=yes&#x000A;MASTER=bond0&#x000A;USERCTL=no&#x000A;&#x000A;[root@ovirt-storage01 ~]# cat /etc/sysconfig/network-scripts/ifcfg-bond0&#x000A;DEVICE=bond0&#x000A;IPADDR=66.187.230.1&#x000A;NETWORK=66.187.230.0&#x000A;NETMASK=255.255.255.192&#x000A;BROADCAST=66.187.230.63&#x000A;GATEWAY=66.187.230.62&#x000A;USERCTL=no&#x000A;BOOTPROTO=none&#x000A;ONBOOT=yes&#x000A;</code></pre></div>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/infra/phoenix-lab-storage-hosts.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/infra/phoenix-lab-storage-hosts.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

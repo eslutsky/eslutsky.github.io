@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Live storage migration between mixed domains &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/storage/">Storage</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="live-storage-migration-between-mixed-domains">Live storage migration between mixed domains</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>In oVirt 3.5, a VM's disk can be moved to another storage domain while the VM is running (live storage migration). However, the system only allows moving between same domain subtypes. If the disk is located on a block-based storage domain (e.g, iSCSI, FCP), it can only be moved to another block-based storage domain. If the disk is on a file-based storage domain (e.g, NFS, POSIX, GlusterFS), it can only be moved to another file-based storage domain. Moving disks between different storage domain subtypes was only supported for shut down VMs. This feature removes this limitation, allowing live storage migration between file-based storage domains and block-based storage domains and vice versa.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Nir Soffer</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#110;&#115;&#111;&#102;&#102;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#110;&#115;&#111;&#102;&#102;&#101;&#114;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>On the vdsm side, a live migration live migration starts with creation of a live snapshot on the source disk. Then the disk's structure is copied to the destination domain and the contents of the non-active volumes are mirrored.</p>
+
+<p>The hard part of live storage migration is moving the active layer volumes from one domain to another, while the VM is writing to those volumes. Libvirt supports this using the virDomainBlockRebase API. This API starts a replication operation, so data written to the source volume is written also to the destination volume. When both volumes contain the same data, the block job operation can be aborted, pivoting to the new disk.</p>
+
+<p>The virDomainBlockRebase API assumes that the source and the destination volumes are of the same type - <code>&lt;disk type="file"&gt;</code> or <code>&lt;disk type="block"&gt;</code>, so this API cannot be used to migrate a block-based disk to a file-based one, as the result will be a disk with the wrong type. Libvirt 1.2.8 introduced a new virDomainBlockCopy API, allowing the specification of the destination volume. This new API will be utilized in this oVirt feature.</p>
+
+<p>Another issue on the VDSM side is extending a snapshot volume on block storage. Vdsm is monitoring the allocated space on the snapshot volume via libvirt, and when the free space on the volume reaches the high write watermark (default 512MiB), the volume is extended by one chunk (default 1GiB). When replicating block-based volumes on two block-based storage domains, the source volume is monitored, and both the destination and source volumes are extended together. The destination volume is extended first, since we cannot monitor its write allocation, and when the extension is finished, the source volume is extended. Since this slows down the extend operation, a bigger chunk size is used when doing replication (default 2GiB).</p>
+
+<p>When replicating a block-based volume to a file-based domain, the source volume is monitored and extended as usual, and extending the destination volume is skipped (as file-based volumes are extended automatically by the file system).</p>
+
+<p>When replicating a file-based volume to a block-based domain, the allocation of the source volume is monitored but only the destination volume is extended. Allocation of the source volume is computed using both libvirt and the getVolumeSize API.</p>
+
+<p>Except for these changes, the live storage migration flow is exactly the same as is when using block to block or file to file migrations.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/storage/live-storage-migration-between-mixed-domains.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/storage/live-storage-migration-between-mixed-domains.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

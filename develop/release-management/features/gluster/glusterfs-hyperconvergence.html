@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+GlusterFS-Hyperconvergence &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="glusterfs-hyperconvergence">GlusterFS Hyperconvergence</h1>
+
+<blockquote>
+  <p>Hyperconvergence is a type of infrastructure system with a software-centric architecture that tightly integrates compute, storage, networking and virtualization resources and other technologies from scratch in a commodity hardware box supported by a single vendor[1].</p>
+</blockquote>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Federico Simoncelli (Fsimonce)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#102;&#115;&#105;&#109;&#111;&#110;&#099;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#102;&#115;&#105;&#109;&#111;&#110;&#099;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Name: Sahina Bose (sabose)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#097;&#098;&#111;&#115;&#101;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Version: 3.6.7 &amp; above - support for HC with known caveats</li>
+  <li>Target Release: 4.1</li>
+  <li>Status: In Progress</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>This feature page tracks the effort of integrating oVirt virtualization and GlusterFS storage resources in single commodity boxes that can scale horizontally.</p>
+
+<h3 id="architecture">Architecture</h3>
+
+<p>Gluster and compute resources run on the same node as shown below. This setup requires a minimum of 3 hosts. The 3 host requirement is because all gluster volumes <strong>MUST</strong> be 3-way replica to avoid issues with storage (mainly files split-brain). Hosted engine and data storage domains are on gluster volumes created on these 3 hosts.</p>
+
+<p><img alt="HC arch" width="960" height="540" src="/images/wiki/hc-arch.png?1560777612" /></p>
+
+<h3 id="whats-available-now">What's available now</h3>
+
+<p>Since 3.6.7, users can set up a hyperconverged deployment using Gluster and oVirt. The steps to do this are covered in a separate <a href="http://blogs-ramesh.blogspot.in/2016/01/ovirt-and-gluster-hyperconvergence.html">blog post</a></p>
+
+<ul>
+  <li>Gluster sharding available from glusterfs 3.7.11. Sharding eliminates the issues seen while healing large files as files are now split into shards. Users need to enable sharding on gluster volumes in hyperconverged enviroments. For further information on sharding, refer <a href="http://blog.gluster.org/2015/12/introducing-shard-translator/">Glusterfs Sharding</a></li>
+  <li>Hosted engine deployment supports using glusterfs for storage domain <a href="../engine/self-hosted-engine-gluster-support">Feature Page</a></li>
+  <li>Separate storage network for glusterfs traffic <a href="/develop/release-management/features/network/select-network-for-gluster/">Feature Page</a> - <a href="https://bugzilla.redhat.com/1049994">Bugzilla</a></li>
+  <li>Host disks management and device provisioning <a href="/develop/release-management/features/gluster/glusterhostdiskmanagement/">Feature Page</a></li>
+  <li>Simplified provisioning of the 3 hosts using gdeploy. See <a href="http://gdeploy.readthedocs.io/">gdeploy</a> and a <a href="https://github.com/gluster/gdeploy/blob/2.0/examples/hc.conf">Sample hc.conf</a></li>
+  <li>Disaster recovery solution using gluster geo-replication (TBD: Feature page). Refer <a href="https://github.com/sabose/ovirt-georep-backup">DR script</a></li>
+  <li>Monitoring gluster storage and cluster using nagios</li>
+</ul>
+
+<p>Since 4.0, following features are available in oVirt</p>
+
+<ul>
+  <li>Self-heal monitoring of gluster volumes <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1205641">Bugzilla</a></li>
+  <li>Replacing bricks from UI when a host or disk has failed <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1213309">Bugzilla</a></li>
+  <li>ovirt-node includes vdsm-gluster and gluster-server</li>
+</ul>
+
+<h3 id="planned-features-for-41">Planned features for 4.1</h3>
+
+<ul>
+  <li>QEMU libfapi support <a href="https://bugzilla.redhat.com/1177776">Bugzilla</a></li>
+  <li>Data-center power policies should be aware of hyperconverged nodes to avoid automatic shutdown for power saving</li>
+</ul>
+
+<h3 id="future-plans">Future plans</h3>
+
+<ul>
+  <li>Improve UX when creating a Gluster Volume to be used as Storage Domain <a href="/develop/release-management/features/storage/glusterfs-storage-domain/#usability-enhancements-in-ovirt-3.6">Feature Page</a></li>
+  <li>Data locality <a href="https://bugzilla.redhat.com/1177790">Buzilla-1</a> <a href="https://bugzilla.redhat.com/1177791">Bugzilla-2</a>
+    <ul>
+      <li>Scheduling of disk creation: disks of the same VM on the same replica set</li>
+      <li>Scheduling of the VM based on disk locality: start VM on the hosts of disks replica set</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Feature pages TBD:</p>
+
+<ul>
+  <li>Brick scaling and balancing when adding storage <a href="https://bugzilla.redhat.com/1177773">Bugzilla</a>
+    <ul>
+      <li>Best practices on how to scale by adding new hosts</li>
+    </ul>
+  </li>
+  <li>Best practices to handle an entire host failure and replacement</li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<references />
+
+<p>[1] <a href="http://searchvirtualstorage.techtarget.com/definition/hyper-convergence">http://searchvirtualstorage.techtarget.com/definition/hyper-convergence</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/glusterfs-hyperconvergence.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/glusterfs-hyperconvergence.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

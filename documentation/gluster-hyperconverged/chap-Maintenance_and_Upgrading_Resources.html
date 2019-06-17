@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Maintenance and Upgrading Resources &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/gluster-hyperconverged/">Gluster-hyperconverged</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-maintenance-and-upgrading-resources">Chapter: Maintenance and Upgrading Resources</h1>
+
+<h2 id="maintaining-the-self-hosted-engine">Maintaining the Self-Hosted Engine</h2>
+
+<p>Refer <a href="self-hosted/chap-Maintenance_and_Upgrading_Resources">Maintaing the Self-hosted Engine</a></p>
+
+<h2 id="maintaining-gluster-storage">Maintaining Gluster storage</h2>
+
+<ul>
+  <li>
+    <p>Hosts can be moved to maintenance in the oVirt Engine UI to perform maintenance tasks. Ensure that gluster services are stopped while moving host to maintenance by enabling this option in UI</p>
+  </li>
+  <li>
+    <p>If upgrading gluster version on the hosts, rolling upgrades are supported. Refer to <a href="https://gluster.readthedocs.io/en/latest/Upgrade-Guide/README/">gluster documentation</a> for rolling upgrades for version specific information</p>
+    <ul>
+      <li>Move host to maintenance with glusterd service stopped</li>
+      <li>Upgrade the gluster packages</li>
+      <li>Activate the host</li>
+      <li>Ensure heal is complete. This can be monitored from UI or from cli using <code>gluster volume heal info</code></li>
+      <li>Repeat this for other hosts in cluster</li>
+    </ul>
+  </li>
+</ul>
+
+<p>NOTE: If geo-replication is setup on the gluster volumes, the geo-replication needs to be stopped on volume before performing the upgrade.</p>
+
+<h2 id="removing-a-host-from-hyperconverged-setup">Removing a host from hyperconverged setup</h2>
+
+<ul>
+  <li>Hosts that have a brick cannot be removed - can only be replaced. You will need to first replace the bricks on host with another brick.
+    <ul>
+      <li>Add a new host to the cluster</li>
+      <li>Create bricks on the newly added host - the <code>Create Brick</code> UI option from the Storage Devices sub-tab can be used to prepare and mount bricks.</li>
+      <li>Replace bricks from the host to be removed using the <code>Replace Brick</code> option</li>
+      <li>Once all bricks are replaces, the host can be moved to maintenance and removed.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="expanding-a-hyperconverged-setup">Expanding a hyperconverged setup</h2>
+
+<ul>
+  <li>You can add new hosts to your hyperconverged setup from the oVirt Engine UI.</li>
+  <li>To use storage from the newly added hosts, you need to ensure that storage is added either in increments of 1 bricks (for non-HA usecase) or 3 bricks (either replica 3 or replica 2 + arbiter)</li>
+  <li>The bricks can be provisioned from the oVirt Engine UI using the <code>Storage Devices</code> sub-tab under <code>Hosts</code> or using the <code>Create Volume</code> from the Cockpit Gluster dashboard.</li>
+</ul>
+
+<p><strong>Prev:</strong> <a href="chap-Troubleshooting">Chapter: Troubleshooting</a> <br />
+<strong>Next:</strong> <a href="chap-Single_node_hyperconverged">Chapter: Single Node Hyperconverged</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/gluster-hyperconverged/chap-Maintenance_and_Upgrading_Resources.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/gluster-hyperconverged/chap-Maintenance_and_Upgrading_Resources.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 14 Aug 2018 10:21 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

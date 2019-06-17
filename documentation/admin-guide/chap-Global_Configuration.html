@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Global Configuration &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/admin-guide/">Admin-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-1-global-configuration">Chapter 1: Global Configuration</h1>
+
+<p>Accessed by clicking <strong>Administration</strong> → <strong>Configure</strong>, the <strong>Configure</strong> window allows you to configure a number of global resources for your oVirt environment, such as users, roles, system permissions, scheduling policies, instance types, and MAC address pools. This window allows you to customize the way in which users interact with resources in the environment, and provides a central location for configuring options that can be applied to multiple clusters.</p>
+
+<h2 id="roles">Roles</h2>
+
+<p>Roles are predefined sets of privileges that can be configured from oVirt Engine. Roles provide access and management permissions to different levels of resources in the data center, and to specific physical and virtual resources.</p>
+
+<p>With multilevel administration, any permissions which apply to a container object also apply to all individual objects within that container. For example, when a host administrator role is assigned to a user on a specific host, the user gains permissions to perform any of the available host operations, but only on the assigned host. However, if the host administrator role is assigned to a user on a data center, the user gains permissions to perform host operations on all hosts within the cluster of the data center.</p>
+
+<h3 id="creating-a-new-role">Creating a New Role</h3>
+
+<p>If the role you require is not on oVirt's default list of roles, you can create a new role and customize it to suit your purposes.</p>
+
+<p><strong>Creating a New Role</strong></p>
+
+<ol>
+  <li>
+    <p>Click the <strong>Administration</strong> → <strong>Configure</strong> to open the <strong>Configure</strong> window. The <strong>Roles</strong> tab is selected by default, showing a list of default User and Administrator roles, and any custom roles.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> and <strong>Description</strong> of the new role.</p>
+  </li>
+  <li>
+    <p>Select either <strong>Admin</strong> or <strong>User</strong> as the <strong>Account Type</strong>.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Expand All</strong> or <strong>Collapse All</strong> buttons to view more or fewer of the permissions for the listed objects in the <strong>Check Boxes to Allow Action</strong> list. You can also expand or collapse the options for each object.</p>
+  </li>
+  <li>
+    <p>For each of the objects, select or clear the actions you wish to permit or deny for the role you are setting up.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to apply the changes you have made. The new role displays on the list of roles.</p>
+  </li>
+</ol>
+
+<h3 id="editing-or-copying-a-role">Editing or Copying a Role</h3>
+
+<p>You can change the settings for roles you have created, but you cannot change default roles. To change default roles, clone and modify them to suit your requirements.</p>
+
+<p><strong>Editing or Copying a Role</strong></p>
+
+<ol>
+  <li>
+    <p>Click the <strong>Administration</strong> → <strong>Configure</strong> to open the <strong>Configure</strong> window. The window shows a list of default User and Administrator roles, and any custom roles.</p>
+  </li>
+  <li>
+    <p>Select the role you wish to change. Click <strong>Edit</strong> to open the <strong>Edit Role</strong> window, or click <strong>Copy</strong> to open the <strong>Copy Role</strong> window.</p>
+  </li>
+  <li>
+    <p>If necessary, edit the <strong>Name</strong> and <strong>Description</strong> of the role.</p>
+  </li>
+  <li>
+    <p>Use the <strong>Expand All</strong> or <strong>Collapse All</strong> buttons to view more or fewer of the permissions for the listed objects. You can also expand or collapse the options for each object.</p>
+  </li>
+  <li>
+    <p>For each of the objects, select or clear the actions you wish to permit or deny for the role you are editing.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to apply the changes you have made.</p>
+  </li>
+</ol>
+
+<h3 id="user-role-and-authorization-examples">User Role and Authorization Examples</h3>
+
+<p>The following examples illustrate how to apply authorization controls for various scenarios, using the different features of the authorization system described in this chapter.</p>
+
+<p><strong>Cluster Permissions</strong></p>
+
+<p>Sarah is the system administrator for the accounts department of a company. All the virtual resources for her department are organized under an oVirt <strong>cluster</strong> called <code>Accounts</code>. She is assigned the <strong>ClusterAdmin</strong> role on the accounts cluster. This enables her to manage all virtual machines in the cluster, since the virtual machines are child objects of the cluster. Managing the virtual machines includes editing, adding, or removing virtual resources such as disks, and taking snapshots. It does not allow her to manage any resources outside this cluster. Because <strong>ClusterAdmin</strong> is an administrator role, it allows her to use the Administration Portal to manage these resources, but does not give her any access via the VM Portal.</p>
+
+<p><strong>VM PowerUser Permissions</strong></p>
+
+<p>John is a software developer in the accounts department. He uses virtual machines to build and test his software. Sarah has created a virtual desktop called <code>johndesktop</code> for him. John is assigned the <strong>UserVmManager</strong> role on the <code>johndesktop</code> virtual machine. This allows him to access this single virtual machine using the VM Portal. Because he has <strong>UserVmManager</strong> permissions, he can modify the virtual machine and add resources to it, such as new virtual disks. Because <strong>UserVmManager</strong> is a user role, it does not allow him to use the Administration Portal.</p>
+
+<p><strong>Data Center Power User Role Permissions</strong></p>
+
+<p>Penelope is an office manager. In addition to her own responsibilities, she occasionally helps the HR manager with recruitment tasks, such as scheduling interviews and following up on reference checks. As per corporate policy, Penelope needs to use a particular application for recruitment tasks.</p>
+
+<p>While Penelope has her own machine for office management tasks, she wants to create a separate virtual machine to run the recruitment application. She is assigned <strong>PowerUserRole</strong> permissions for the data center in which her new virtual machine will reside. This is because to create a new virtual machine, she needs to make changes to several components within the data center, including creating the virtual disk in the storage domain.</p>
+
+<p>Note that this is not the same as assigning <strong>DataCenterAdmin</strong> privileges to Penelope. As a PowerUser for a data center, Penelope can log in to the VM Portal and perform virtual machine-specific actions on virtual machines within the data center. She cannot perform data center-level operations such as attaching hosts or storage to a data center.</p>
+
+<p><strong>Network Administrator Permissions</strong></p>
+
+<p>Chris works as the network administrator in the IT department. Her day-to-day responsibilities include creating, manipulating, and removing networks in the department’s oVirt environment. For her role, she requires administrative privileges on the resources and on the networks of each resource. For example, if Chris has <strong>NetworkAdmin</strong> privileges on the IT department’s data center, she can add and remove networks in the data center, and attach and detach networks for all virtual machines belonging to the data center.</p>
+
+<p><strong>Custom Role Permissions</strong></p>
+
+<p>Rachel works in the IT department, and is responsible for managing user accounts in oVirt. She needs permission to add user accounts and assign them the appropriate roles and permissions. She does not use any virtual machines herself, and should not have access to administration of hosts, virtual machines, clusters or data centers. There is no built-in role which provides her with this specific set of permissions. A custom role must be created to define the set of permissions appropriate to Rachel's position.</p>
+
+<p><strong>UserManager Custom Role</strong></p>
+
+<p><img alt="" width="650" height="500" src="/images/admin-guide/6568.png?1560777613" /></p>
+
+<p>The <strong>UserManager</strong> custom role shown above allows manipulation of users, permissions and roles. These actions are organized under <code>System</code> - the top level object of the hierarchy shown in <a href="rhev-object-hierarchy">rhev-object-hierarchy</a>. This means they apply to all other objects in the system. The role is set to have an <strong>Account Type</strong> of <strong>Admin</strong>. This means that when she is assigned this role, Rachel can only use the Administration Portal, not the VM Portal.</p>
+
+<h2 id="system-permissions">System Permissions</h2>
+
+<p>Permissions enable users to perform actions on objects, where objects are either individual objects or container objects.</p>
+
+<p><strong>Permissions &amp; Roles</strong></p>
+
+<p><img alt="" width="444" height="240" src="/images/admin-guide/496.png?1560777613" /></p>
+
+<p>Any permissions that apply to a container object also apply to all members of that container. The following diagram depicts the hierarchy of objects in the system.</p>
+
+<p><strong>oVirt Object Hierarchy</strong></p>
+
+<p><img alt="" width="444" height="352" src="/images/admin-guide/492.png?1560777613" /></p>
+
+<h3 id="user-properties">User Properties</h3>
+
+<p>Roles and permissions are the properties of the user. Roles are predefined sets of privileges that permit access to different levels of physical and virtual resources. Multilevel administration provides a finely grained hierarchy of permissions. For example, a data center administrator has permissions to manage all objects in the data center, while a host administrator has system administrator permissions to a single physical host. A user can have permissions to use a single virtual machine but not make any changes to the virtual machine configurations, while another user can be assigned system permissions to a virtual machine.</p>
+
+<h3 id="user-and-administrator-roles">User and Administrator Roles</h3>
+
+<p>oVirt provides a range of pre-configured roles, from an administrator with system-wide permissions to an end user with access to a single virtual machine. While you cannot change or remove the default roles, you can clone and customize them, or create new roles according to your requirements. There are two types of roles:</p>
+
+<ul>
+  <li>
+    <p>Administrator Role: Allows access to the <strong>Administration Portal</strong> for managing physical and virtual resources. An administrator role confers permissions for actions to be performed in the VM Portal; however, it has no bearing on what a user can see in the VM Portal.</p>
+  </li>
+  <li>
+    <p>User Role: Allows access to the <strong>VM Portal</strong> for managing and accessing virtual machines and templates. A user role determines what a user can see in the VM Portal. Permissions granted to a user with an administrator role are reflected in the actions available to that user in the VM Portal.</p>
+  </li>
+</ul>
+
+<h3 id="user-roles-explained">User Roles Explained</h3>
+
+<p>The table below describes basic user roles which confer permissions to access and configure virtual machines in the VM Portal.</p>
+
+<p><strong>oVirt User Roles - Basic</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>UserRole</td>
+      <td>Can access and use virtual machines and pools.</td>
+      <td>Can log in to the VM Portal, use assigned virtual machines and pools, view virtual machine state and details.</td>
+    </tr>
+    <tr>
+      <td>PowerUserRole</td>
+      <td>Can create and manage virtual machines and templates.</td>
+      <td>Apply this role to a user for the whole environment with the <strong>Configure</strong> window, or for specific data centers or clusters. For example, if a PowerUserRole is applied on a data center level, the PowerUser can create virtual machines and templates in the data center.</td>
+    </tr>
+    <tr>
+      <td>UserVmManager</td>
+      <td>System administrator of a virtual machine.</td>
+      <td>Can manage virtual machines and create and use snapshots. A user who creates a virtual machine in the VM Portal is automatically assigned the UserVmManager role on the machine.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The table below describes advanced user roles which allow you to do more fine tuning of permissions for resources in the VM Portal.</p>
+
+<p><strong>oVirt User Roles - Advanced</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>UserTemplateBasedVm</td>
+      <td>Limited privileges to only use Templates.</td>
+      <td>Can use templates to create virtual machines.</td>
+    </tr>
+    <tr>
+      <td>DiskOperator</td>
+      <td>Virtual disk user.</td>
+      <td>Can use, view and edit virtual disks. Inherits permissions to use the virtual machine to which the virtual disk is attached.</td>
+    </tr>
+    <tr>
+      <td>VmCreator</td>
+      <td>Can create virtual machines in the VM Portal.</td>
+      <td>This role is not applied to a specific virtual machine; apply this role to a user for the whole environment with the <strong>Configure</strong> window. Alternatively apply this role for specific data centers or clusters. When applying this role to a cluster, you must also apply the DiskCreator role on an entire data center, or on specific storage domains.</td>
+    </tr>
+    <tr>
+      <td>TemplateCreator</td>
+      <td>Can create, edit, manage and remove virtual machine templates within assigned resources.</td>
+      <td>This role is not applied to a specific template; apply this role to a user for the whole environment with the <strong>Configure</strong> window. Alternatively apply this role for specific data centers, clusters, or storage domains.</td>
+    </tr>
+    <tr>
+      <td>DiskCreator</td>
+      <td>Can create, edit, manage and remove virtual machine disks within assigned clusters or data centers.</td>
+      <td>This role is not applied to a specific virtual disk; apply this role to a user for the whole environment with the <strong>Configure</strong> window. Alternatively apply this role for specific data centers or storage domains.</td>
+    </tr>
+    <tr>
+      <td>TemplateOwner</td>
+      <td>Can edit and delete the template, assign and manage user permissions for the template.</td>
+      <td>This role is automatically assigned to the user who creates a template. Other users who do not have <strong>TemplateOwner</strong> permissions on a template cannot view or use the template.</td>
+    </tr>
+    <tr>
+      <td>VnicProfileUser</td>
+      <td>Logical network and network interface user for virtual machine and template.</td>
+      <td>Can attach or detach network interfaces from specific logical networks.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="administrator-roles-explained">Administrator Roles Explained</h3>
+
+<p>The table below describes basic administrator roles which confer permissions to access and configure resources in the Administration Portal.</p>
+
+<p><strong>oVirt System Administrator Roles - Basic</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SuperUser</td>
+      <td>System Administrator of the oVirt environment.</td>
+      <td>Has full permissions across all objects and levels, can manage all objects across all data centers.</td>
+    </tr>
+    <tr>
+      <td>ClusterAdmin</td>
+      <td>Cluster Administrator.</td>
+      <td>Possesses administrative permissions for all objects underneath a specific cluster.</td>
+    </tr>
+    <tr>
+      <td>DataCenterAdmin</td>
+      <td>Data Center Administrator.</td>
+      <td>Possesses administrative permissions for all objects underneath a specific data center except for storage.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Important:</strong> Do not use the administrative user for the directory server as the oVirt administrative user. Create a user in the directory server specifically for use as the oVirt administrative user.</p>
+
+<p>The table below describes advanced administrator roles which allow you to do more fine tuning of permissions for resources in the Administration Portal.</p>
+
+<p><strong>oVirt System Administrator Roles - Advanced</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TemplateAdmin</td>
+      <td>Administrator of a virtual machine template.</td>
+      <td>Can create, delete, and configure the storage domains and network details of templates, and move templates between domains.</td>
+    </tr>
+    <tr>
+      <td>StorageAdmin</td>
+      <td>Storage Administrator.</td>
+      <td>Can create, delete, configure, and manage an assigned storage domain.</td>
+    </tr>
+    <tr>
+      <td>HostAdmin</td>
+      <td>Host Administrator.</td>
+      <td>Can attach, remove, configure, and manage a specific host.</td>
+    </tr>
+    <tr>
+      <td>NetworkAdmin</td>
+      <td>Network Administrator.</td>
+      <td>Can configure and manage the network of a particular data center or cluster. A network administrator of a data center or cluster inherits network permissions for virtual pools within the cluster.</td>
+    </tr>
+    <tr>
+      <td>VmPoolAdmin</td>
+      <td>System Administrator of a virtual pool.</td>
+      <td>Can create, delete, and configure a virtual pool; assign and remove virtual pool users; and perform basic operations on a virtual machine in the pool.</td>
+    </tr>
+    <tr>
+      <td>GlusterAdmin</td>
+      <td>Gluster Storage Administrator.</td>
+      <td>Can create, delete, configure, and manage Gluster storage volumes.</td>
+    </tr>
+    <tr>
+      <td>VmImporterExporter</td>
+      <td>Import and export Administrator of a virtual machine.</td>
+      <td>Can import and export virtual machines. Able to view all virtual machines and templates exported by other users.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="assigning-an-administrator-or-user-role-to-a-resource">Assigning an Administrator or User Role to a Resource</h3>
+
+<p>Assign administrator or user roles to resources to allow users to access or manage that resource.</p>
+
+<p><strong>Assigning a Role to a Resource</strong></p>
+
+<ol>
+  <li>
+    <p>Find and click the resource’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Permissions</strong> tab to list the assigned users, the user’s role, and the inherited permissions for the selected resource.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the name or user name of an existing user into the <strong>Search</strong> text box and click <strong>Go</strong>. Select a user from the resulting list of possible matches.</p>
+  </li>
+  <li>
+    <p>Select a role from the <strong>Role to Assign</strong> drop-down list.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The user now has the inherited permissions of that role enabled for that resource.</p>
+
+<h3 id="removing-an-administrator-or-user-role-from-a-resource">Removing an Administrator or User Role from a Resource</h3>
+
+<p>Remove an administrator or user role from a resource; the user loses the inherited permissions associated with the role for that resource.</p>
+
+<p><strong>Removing a Role from a Resource</strong></p>
+
+<ol>
+  <li>
+    <p>Find and click the resource’s name to open the details view.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Permissions</strong> tab to list the assigned users, the user’s role, and the inherited permissions for the selected resource.</p>
+  </li>
+  <li>
+    <p>Select the user to remove from the resource.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="managing-system-permissions-for-a-data-center">Managing System Permissions for a Data Center</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A data center administrator is a system administration role for a specific data center only. This is useful in virtualization environments with multiple data centers where each data center requires an administrator. The <strong>DataCenterAdmin</strong> role is a hierarchical model; a user assigned the data center administrator role for a data center can manage all objects in the data center with the exception of storage for that data center. Use the <strong>Configure</strong> button in the header bar to assign a data center administrator for all data centers in the environment.</p>
+
+<p>The data center administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Create and remove clusters associated with the data center.</p>
+  </li>
+  <li>
+    <p>Add and remove hosts, virtual machines, and pools associated with the data center.</p>
+  </li>
+  <li>
+    <p>Edit user permissions for virtual machines associated with the data center.</p>
+
+    <p><strong>Note:</strong> You can only assign roles and permissions to existing users.</p>
+  </li>
+</ul>
+
+<p>You can change the system administrator of a data center by removing the existing system administrator and adding the new system administrator.</p>
+
+<h3 id="data-center-administrator-roles-explained">Data Center Administrator Roles Explained</h3>
+
+<p>The table below describes the administrator roles and privileges applicable to data center administration.</p>
+
+<p><strong>oVirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DataCenterAdmin</td>
+      <td>Data Center Administrator</td>
+      <td>Can use, create, delete, manage all physical and virtual resources within a specific data center except for storage, including clusters, hosts, templates, and virtual machines.</td>
+    </tr>
+    <tr>
+      <td>NetworkAdmin</td>
+      <td>Network Administrator</td>
+      <td>Can configure and manage the network of a particular data center. A network administrator of a data center inherits network permissions for virtual machines within the data center as well.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="managing-system-permissions-for-a-cluster">Managing System Permissions for a Cluster</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A cluster administrator is a system administration role for a specific cluster only. This is useful in data centers with multiple clusters, where each cluster requires a system administrator. The <strong>ClusterAdmin</strong> role is a hierarchical model: a user assigned the cluster administrator role for a cluster can manage all objects in the cluster. Use the <strong>Configure</strong> button in the header bar to assign a cluster administrator for all clusters in the environment.</p>
+
+<p>The cluster administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Create and remove associated clusters.</p>
+  </li>
+  <li>
+    <p>Add and remove hosts, virtual machines, and pools associated with the cluster.</p>
+  </li>
+  <li>
+    <p>Edit user permissions for virtual machines associated with the cluster.</p>
+
+    <p><strong>Note:</strong> You can only assign roles and permissions to existing users.</p>
+  </li>
+</ul>
+
+<p>You can also change the system administrator of a cluster by removing the existing system administrator and adding the new system administrator.</p>
+
+<h3 id="cluster-administrator-roles-explained">Cluster Administrator Roles Explained</h3>
+
+<p>The table below describes the administrator roles and privileges applicable to cluster administration.</p>
+
+<p><strong>oVirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ClusterAdmin</td>
+      <td>Cluster Administrator</td>
+      <td>Can use, create, delete, manage all physical and virtual resources in a specific cluster, including hosts, templates and virtual machines. Can configure network properties within the cluster such as designating display networks, or marking a network as required or non-required. However, a <strong>ClusterAdmin</strong> does not have permissions to attach or detach networks from a cluster, to do so <strong>NetworkAdmin</strong> permissions are required.</td>
+    </tr>
+    <tr>
+      <td>NetworkAdmin</td>
+      <td>Network Administrator</td>
+      <td>Can configure and manage the network of a particular cluster. A network administrator of a cluster inherits network permissions for virtual machines within the cluster as well.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="managing-system-permissions-for-a-network">Managing System Permissions for a Network</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A network administrator is a system administration role that can be applied for a specific network, or for all networks on a data center, cluster, host, virtual machine, or template. A network user can perform limited administration roles, such as viewing and attaching networks on a specific virtual machine or template. You can use the <strong>Configure</strong> button in the header bar to assign a network administrator for all networks in the environment.</p>
+
+<p>The network administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Create, edit and remove networks.</p>
+  </li>
+  <li>
+    <p>Edit the configuration of the network, including configuring port mirroring.</p>
+  </li>
+  <li>
+    <p>Attach and detach networks from resources including clusters and virtual machines.</p>
+  </li>
+</ul>
+
+<p>The user who creates a network is automatically assigned <strong>NetworkAdmin</strong> permissions on the created network. You can also change the administrator of a network by removing the existing administrator and adding the new administrator.</p>
+
+<h3 id="network-administrator-and-user-roles-explained">Network Administrator and User Roles Explained</h3>
+
+<p>The table below describes the administrator and user roles and privileges applicable to network administration.</p>
+
+<p><strong>oVirt Network Administrator and User Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NetworkAdmin</td>
+      <td>Network Administrator for data center, cluster, host, virtual machine, or template. The user who creates a network is automatically assigned <strong>NetworkAdmin</strong> permissions on the created network.</td>
+      <td>Can configure and manage the network of a particular data center, cluster, host, virtual machine, or template. A network administrator of a data center or cluster inherits network permissions for virtual pools within the cluster. To configure port mirroring on a virtual machine network, apply the <strong>NetworkAdmin</strong> role on the network and the <strong>UserVmManager</strong> role on the virtual machine.</td>
+    </tr>
+    <tr>
+      <td>VnicProfileUser</td>
+      <td>Logical network and network interface user for virtual machine and template.</td>
+      <td>Can attach or detach network interfaces from specific logical networks.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="managing-system-permissions-for-a-host">Managing System Permissions for a Host</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A host administrator is a system administration role for a specific host only. This is useful in clusters with multiple hosts, where each host requires a system administrator. You can use the <strong>Configure</strong> button in the header bar to assign a host administrator for all hosts in the environment.</p>
+
+<p>The host administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Edit the configuration of the host.</p>
+  </li>
+  <li>
+    <p>Set up the logical networks.</p>
+  </li>
+  <li>
+    <p>Remove the host.</p>
+  </li>
+</ul>
+
+<p>You can also change the system administrator of a host by removing the existing system administrator and adding the new system administrator.</p>
+
+<h3 id="host-administrator-roles-explained">Host Administrator Roles Explained</h3>
+
+<p>The table below describes the administrator roles and privileges applicable to host administration.</p>
+
+<p><strong>oVirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HostAdmin</td>
+      <td>Host Administrator</td>
+      <td>Can configure, manage, and remove a specific host. Can also perform network-related operations on a specific host.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="managing-system-permissions-for-a-storage-domain">Managing System Permissions for a Storage Domain</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A storage administrator is a system administration role for a specific storage domain only. This is useful in data centers with multiple storage domains, where each storage domain requires a system administrator. Use the Configure button in the header bar to assign a storage administrator for all storage domains in the environment.</p>
+
+<p>The storage domain administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Edit the configuration of the storage domain.</p>
+  </li>
+  <li>
+    <p>Move the storage domain into maintenance mode.</p>
+  </li>
+  <li>
+    <p>Remove the storage domain.</p>
+
+    <p><strong>Note:</strong> You can only assign roles and permissions to existing users.</p>
+  </li>
+</ul>
+
+<p>You can also change the system administrator of a storage domain by removing the existing system administrator and adding the new system administrator.</p>
+
+<h3 id="storage-administrator-roles-explained">Storage Administrator Roles Explained</h3>
+
+<p>The table below describes the administrator roles and privileges applicable to storage domain administration.</p>
+
+<p><strong>oVirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>StorageAdmin</td>
+      <td>Storage Administrator</td>
+      <td>Can create, delete, configure and manage a specific storage domain.</td>
+    </tr>
+    <tr>
+      <td>GlusterAdmin</td>
+      <td>Gluster Storage Administrator</td>
+      <td>Can create, delete, configure and manage Gluster storage volumes.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="managing-system-permissions-for-a-virtual-machine-pool">Managing System Permissions for a Virtual Machine Pool</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>A virtual machine pool administrator is a system administration role for virtual machine pools in a data center. This role can be applied to specific virtual machine pools, to a data center, or to the whole virtualized environment; this is useful to allow different users to manage certain virtual machine pool resources.</p>
+
+<p>The virtual machine pool administrator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Create, edit, and remove pools.</p>
+  </li>
+  <li>
+    <p>Add and detach virtual machines from the pool.</p>
+
+    <p><strong>Note:</strong> You can only assign roles and permissions to existing users.</p>
+  </li>
+</ul>
+
+<h3 id="virtual-machine-pool-administrator-roles-explained">Virtual Machine Pool Administrator Roles Explained</h3>
+
+<p>The table below describes the administrator roles and privileges applicable to pool administration.</p>
+
+<p><strong>oVirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VmPoolAdmin</td>
+      <td>System Administrator role of a virtual pool.</td>
+      <td>Can create, delete, and configure a virtual pool, assign and remove virtual pool users, and perform basic operations on a virtual machine.</td>
+    </tr>
+    <tr>
+      <td>ClusterAdmin</td>
+      <td>Cluster Administrator</td>
+      <td>Can use, create, delete, manage all virtual machine pools in a specific cluster.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="managing-system-permissions-for-a-virtual-disk">Managing System Permissions for a Virtual Disk</h3>
+
+<p>As the <strong>SuperUser</strong>, the system administrator manages all aspects of the Administration Portal. More specific administrative roles can be assigned to other users. These restricted administrator roles are useful for granting a user administrative privileges that limit them to a specific resource. For example, a <strong>DataCenterAdmin</strong> role has administrator privileges only for the assigned data center with the exception of the storage for that data center, and a <strong>ClusterAdmin</strong> has administrator privileges only for the assigned cluster.</p>
+
+<p>oVirt Engine provides two default virtual disk user roles, but no default virtual disk administrator roles. One of these user roles, the <strong>DiskCreator</strong> role, enables the administration of virtual disks from the VM Portal. This role can be applied to specific virtual machines, to a data center, to a specific storage domain, or to the whole virtualized environment; this is useful to allow different users to manage different virtual resources.</p>
+
+<p>The virtual disk creator role permits the following actions:</p>
+
+<ul>
+  <li>
+    <p>Create, edit, and remove virtual disks associated with a virtual machine or other resources.</p>
+  </li>
+  <li>
+    <p>Edit user permissions for virtual disks.</p>
+
+    <p><strong>Note:</strong> You can only assign roles and permissions to existing users.</p>
+  </li>
+</ul>
+
+<h3 id="virtual-disk-user-roles-explained">Virtual Disk User Roles Explained</h3>
+
+<p>The table below describes the user roles and privileges applicable to using and administrating virtual disks in the VM Portal.</p>
+
+<p><strong>oVirt System Administrator Roles</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Privileges</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DiskOperator</td>
+      <td>Virtual disk user.</td>
+      <td>Can use, view and edit virtual disks. Inherits permissions to use the virtual machine to which the virtual disk is attached.</td>
+    </tr>
+    <tr>
+      <td>DiskCreator</td>
+      <td>Can create, edit, manage and remove virtual disks within assigned clusters or data centers.</td>
+      <td>This role is not applied to a specific virtual disk; apply this role to a user for the whole environment with the <strong>Configure</strong> window. Alternatively apply this role for specific data centers, clusters, or storage domains.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="scheduling-policies">Scheduling Policies</h2>
+
+<p>A scheduling policy is a set of rules that defines the logic by which virtual machines are distributed amongst hosts in the cluster that scheduling policy is applied to. Scheduling policies determine this logic via a combination of filters, weightings, and a load balancing policy. The filter modules apply hard enforcement and filter out hosts that do not meet the conditions specified by that filter. The weights modules apply soft enforcement, and are used to control the relative priority of factors considered when determining the hosts in a cluster on which a virtual machine can run.</p>
+
+<p>The oVirt Engine provides five default scheduling policies: <strong>Evenly_Distributed</strong>, <strong>Cluster_Maintenance</strong>, <strong>None</strong>, <strong>Power_Saving</strong>, and <strong>VM_Evenly_Distributed</strong>. You can also define new scheduling policies that provide fine-grained control over the distribution of virtual machines. Regardless of the scheduling policy, a virtual machine will not start on a host with an overloaded CPU. By default, a host’s CPU is considered overloaded if it has a load of more than 80% for 5 minutes, but these values can be changed using scheduling policies. See the “Scheduling Policy Settings Explained” section for more information about the properties of each scheduling policy.</p>
+
+<p><strong>Evenly Distributed Scheduling Policy</strong></p>
+
+<p><img alt="Evenly Distributed Scheduling Policy" width="1520" height="574" src="/images/admin-guide/EvenlyDistributed.png?1560777613" /></p>
+
+<p>The <strong>Evenly_Distributed</strong> scheduling policy distributes the memory and CPU processing load evenly across all hosts in the cluster. Additional virtual machines attached to a host will not start if that host has reached the defined <strong>CpuOverCommitDurationMinutes</strong>, <strong>HighUtilization</strong>, or <strong>MaxFreeMemoryForOverUtilized</strong>.</p>
+
+<p>The <strong>VM_Evenly_Distributed</strong> scheduling policy virtual machines evenly between hosts based on a count of the virtual machines. The cluster is considered unbalanced if any host is running more virtual machines than the <strong>HighVmCount</strong> and there is at least one host with a virtual machine count that falls outside of the <strong>MigrationThreshold</strong>.</p>
+
+<p><img alt="Power Saving Scheduling Policy" width="1520" height="573" src="/images/admin-guide/PowerSaving.png?1560777613" /></p>
+
+<p>The <strong>Power_Saving</strong> scheduling policy distributes the memory and CPU processing load across a subset of available hosts to reduce power consumption on underutilized hosts. Hosts with a CPU load below the low utilization value for longer than the defined time interval will migrate all virtual machines to other hosts so that it can be powered down. Additional virtual machines attached to a host will not start if that host has reached the defined high utilization value.</p>
+
+<p>Set the <strong>None</strong> policy to have no load or power sharing between hosts for running virtual machines. This is the default mode. When a virtual machine is started, the memory and CPU processing load is spread evenly across all hosts in the cluster. Additional virtual machines attached to a host will not start if that host has reached the defined <strong>CpuOverCommitDurationMinutes</strong>, <strong>HighUtilization</strong>, or <strong>MaxFreeMemoryForOverUtilized</strong>.</p>
+
+<p>The <strong>Cluster_Maintenance</strong> scheduling policy limits activity in a cluster during maintenance tasks. When the <strong>Cluster_Maintenance</strong> policy is set, no new virtual machines may be started, except highly available virtual machines. If host failure occurs, highly available virtual machines will restart properly and any virtual machine can migrate.</p>
+
+<h3 id="creating-a-scheduling-policy">Creating a Scheduling Policy</h3>
+
+<p>You can create new scheduling policies to control the logic by which virtual machines are distributed amongst a given cluster in your oVirt environment.</p>
+
+<p><strong>Creating a Scheduling Policy</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Scheduling Policies</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong> for the scheduling policy.</p>
+  </li>
+  <li>
+    <p>Configure filter modules:</p>
+
+    <p>i. In the <strong>Filter Modules</strong> section, drag and drop the preferred filter modules to apply to the scheduling policy from the <strong>Disabled Filters</strong> section into the <strong>Enabled Filters</strong> section.</p>
+
+    <p>ii. Specific filter modules can also be set as the <strong>First</strong>, to be given highest priority, or <strong>Last</strong>, to be given lowest priority, for basic optimization. To set the priority, right-click any filter module, hover the cursor over <strong>Position</strong> and select <strong>First</strong> or <strong>Last</strong>.</p>
+  </li>
+  <li>
+    <p>Configure weight modules:</p>
+
+    <p>i. In the <strong>Weights Modules</strong> section, drag and drop the preferred weights modules to apply to the scheduling policy from the <strong>Disabled Weights</strong> section into the <strong>Enabled Weights &amp; Factors</strong> section.</p>
+
+    <p>ii. Use the <strong>+</strong> and <strong>-</strong> buttons to the left of the enabled weight modules to increase or decrease the weight of those modules.</p>
+  </li>
+  <li>
+    <p>Specify a load balancing policy:</p>
+
+    <p>i. From the drop-down menu in the <strong>Load Balancer</strong> section, select the load balancing policy to apply to the scheduling policy.</p>
+
+    <p>ii. From the drop-down menu in the <strong>Properties</strong> section, select a load balancing property to apply to the scheduling policy and use the text field to the right of that property to specify a value.</p>
+
+    <p>ii. Use the <strong>+</strong> and <strong>-</strong> buttons to add or remove additional properties.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="explanation-of-settings-in-the-new-scheduling-policy-and-edit-scheduling-policy-window">Explanation of Settings in the New Scheduling Policy and Edit Scheduling Policy Window</h3>
+
+<p>The following table details the options available in the <strong>New Scheduling Policy</strong> and <strong>Edit Scheduling Policy</strong> windows.</p>
+
+<p><strong>New Scheduling Policy and Edit Scheduling Policy Settings</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Field Name</td>
+   <td>Description</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td><b>Name</b></td>
+   <td>The name of the scheduling policy. This is the name used to refer to the scheduling policy in the oVirt Engine.</td>
+  </tr>
+  <tr>
+   <td><b>Description</b></td>
+   <td>A description of the scheduling policy. This field is recommended but not mandatory.</td>
+  </tr>
+  <tr>
+   <td><b>Filter Modules</b></td>
+   <td>
+    <p>A set of filters for controlling the hosts on which a virtual machine in a cluster can run. Enabling a filter will filter out hosts that do not meet the conditions specified by that filter, as outlined below:</p>
+    <ul>
+     <li><tt>CpuPinning</tt>: Hosts which do not satisfy the CPU pinning definition.</li>
+     <li><tt>Migration</tt>: Prevent migration to the same host.</li>
+     <li><tt>PinToHost</tt>: Hosts other than the host to which the virtual machine is pinned.</li>
+     <li><tt>CPU-Level</tt>: Hosts that do not meet the CPU topology of the virtual machine.</li>
+     <li><tt>CPU</tt>: Hosts with fewer CPUs than the number assigned to the virtual machine.</li>
+     <li><tt>Memory</tt>: Hosts that do not have sufficient memory to run the virtual machine.</li>
+     <li><tt>VmAffinityGroups</tt>: Hosts that do not meet the conditions specified for a virtual machine that is a member of an affinity group. For example, that virtual machines in an affinity group must run on the same host or on separate hosts.</li>
+     <li><tt>InClusterUpgrade</tt>: Hosts which run an older operating system than the virtual machine currently runs on.</li>
+     <li><tt>HostDevice</tt>: Hosts that do not support host devices required by the virtual machine.</li>
+     <li><tt>HA</tt>: Forces the hosted engine virtual machine to only run on hosts with a positive high availability score.</li>
+     <li><tt>Emulated-Machine</tt>: Hosts which do not have proper emulated machine support.</li>
+     <li><tt>Network</tt>: Hosts on which networks required by the network interface controller of a virtual machine are not installed, or on which the cluster's display network is not installed.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Weights Modules</b></td>
+   <td>
+    <p>A set of weightings for controlling the relative priority of factors considered when determining the hosts in a cluster on which a virtual machine can run.</p>
+    <ul>
+     <li><tt>InClusterUpgrade</tt>: Weight hosts in accordance with their operating system version. The weight penalizes hosts with older operating systems more than hosts with the same operating system, giving priority to hosts with newer operating systems. </li>
+     <li><tt>OptimalForHaReservation</tt>: Weights hosts in accordance with their high availability score.</li>
+     <li><tt>None</tt>: Weights hosts in accordance with the even distribution module.</li>
+     <li><tt>OptimalForEvenGuestDistribution</tt>: Weights hosts in accordance with the number of virtual machines running on those hosts.</li>
+     <li><tt>VmAffinityGroups</tt>: Weights hosts in accordance with the affinity groups defined for virtual machines. This weight module determines how likely virtual machines in an affinity group are to run on the same host or on separate hosts in accordance with the parameters of that affinity group.</li>
+     <li><tt>OptimalForPowerSaving</tt>: Weights hosts in accordance with their CPU usage, giving priority to hosts with higher CPU usage.</li>
+     <li><tt>OptimalForEvenDistribution</tt>: Weights hosts in accordance with their CPU usage, giving priority to hosts with lower CPU usage.</li>
+     <li><tt>HA</tt>: Weights hosts in accordance with their high availability score.</li>
+    </ul>
+   </td>
+  </tr>
+  <tr>
+   <td><b>Load Balancer</b></td>
+   <td>This drop-down menu allows you to select a load balancing module to apply. Load balancing modules determine the logic used to migrate virtual machines from hosts experiencing high usage to hosts experiencing lower usage.</td>
+  </tr>
+  <tr>
+   <td><b>Properties</b></td>
+   <td>This drop-down menu allows you to add or remove properties for load balancing modules, and is only available when you have selected a load balancing module for the scheduling policy. No properties are defined by default, and the properties that are available are specific to the load balancing module that is selected. Use the <b>+</b> and <b>-</b> buttons to add or remove additional properties to or from the load balancing module.</td>
+  </tr>
+ </tbody>
+</table>
+
+<h2 id="instance-types">Instance Types</h2>
+
+<p>Instance types can be used to define the hardware configuration of a virtual machine. Selecting an instance type when creating or editing a virtual machine will automatically fill in the hardware configuration fields. This allows users to create multiple virtual machines with the same hardware configuration without having to manually fill in every field.</p>
+
+<p>A set of predefined instance types are available by default, as outlined in the following table:</p>
+
+<p><strong>Predefined Instance Types</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Memory</th>
+      <th>vCPUs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tiny</td>
+      <td>512 MB</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Small</td>
+      <td>2 GB</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Medium</td>
+      <td>4 GB</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Large</td>
+      <td>8 GB</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>XLarge</td>
+      <td>16 GB</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Administrators can also create, edit, and remove instance types from the <strong>Instance Types</strong> tab of the <strong>Configure</strong> window.</p>
+
+<p>Fields in the <strong>New Virtual Machine</strong> and <strong>Edit Virtual Machine</strong> windows that are bound to an instance type will have a chain link image next to them (<img alt="" width="21" height="14" src="/images/admin-guide/6121.png?1560777613" />). If the value of one of these fields is changed, the virtual machine will be detached from the instance type, changing to <strong>Custom</strong>, and the chain will appear broken (<img alt="" width="20" height="12" src="/images/admin-guide/6122.png?1560777613" />). However, if the value is changed back, the chain will relink and the instance type will move back to the selected one.</p>
+
+<h3 id="creating-instance-types">Creating Instance Types</h3>
+
+<p>Administrators can create new instance types, which can then be selected by users when creating or editing virtual machines.</p>
+
+<p><strong>Creating an Instance Type</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Instance Types</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>New</strong>.</p>
+  </li>
+  <li>
+    <p>Enter a <strong>Name</strong> and <strong>Description</strong> for the instance type.</p>
+  </li>
+  <li>
+    <p>Click <strong>Show Advanced Options</strong> and configure the instance type's settings as required. The settings that appear in the <strong>New Instance Type</strong> window are identical to those in the <strong>New Virtual Machine</strong> window, but with the relevant fields only. See "Explanation of Settings in the New Virtual Machine and Edit Virtual Machine Windows" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The new instance type will appear in the <strong>Instance Types</strong> tab in the <strong>Configure</strong> window, and can be selected from the <strong>Instance Type</strong> drop-down list when creating or editing a virtual machine.</p>
+
+<h3 id="editing-instance-types">Editing Instance Types</h3>
+
+<p>Administrators can edit existing instance types from the <strong>Configure</strong> window.</p>
+
+<p><strong>Editing Instance Type Properties</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Instance Types</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the instance type to be edited.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the settings as required.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The configuration of the instance type is updated. When a new virtual machine based on this instance type is created, or when an existing virtual machine based on this instance type is updated, the new configuration is applied.</p>
+
+<p>Existing virtual machines based on this instance type will display fields, marked with a chain icon, that will be updated. If the existing virtual machines were running when the instance type was changed, the orange Pending Changes icon will appear beside them and the fields with the chain icon will be updated at the next restart.</p>
+
+<h3 id="removing-instance-types">Removing Instance Types</h3>
+
+<p><strong>Removing an Instance Type</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Instance Types</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the instance type to be removed.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>If any virtual machines are based on the instance type to be removed, a warning window listing the attached virtual machines will appear. To continue removing the instance type, select the <strong>Approve Operation</strong> check box. Otherwise click <strong>Cancel</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p>The instance type is removed from the <strong>Instance Types</strong> list and can no longer be used when creating a new virtual machine. Any virtual machines that were attached to the removed instance type will now be attached to <strong>Custom</strong> (no instance type).</p>
+
+<h2 id="mac-address-pools">MAC Address Pools</h2>
+
+<p>MAC address pools define the range(s) of MAC addresses allocated for each cluster. A MAC address pool is specified for each cluster. By using MAC address pools, oVirt can automatically generate and assign MAC addresses to new virtual network devices, which helps to prevent MAC address duplication. MAC address pools are more memory efficient when all MAC addresses related to a cluster are within the range for the assigned MAC address pool.</p>
+
+<p>The same MAC address pool can be shared by multiple clusters, but each cluster has a single MAC address pool assigned. A default MAC address pool is created by oVirt and is used if another MAC address pool is not assigned. For more information about assigning MAC address pools to clusters see “Creating a New Cluster” section in Chapter 5.</p>
+
+<p><strong>Note:</strong> If more than one oVirt cluster shares a network, do not rely solely on the default MAC address pool because the virtual machines of each cluster will try to use the same range of MAC addresses, leading to conflicts. To avoid MAC address conflicts, check the MAC address pool ranges to ensure that each cluster is assigned a unique MAC address range.</p>
+
+<p>The MAC address pool assigns the next available MAC address following the last address that was returned to the pool. If there are no further addresses left in the range, the search starts again from the beginning of the range. If there are multiple MAC address ranges with available MAC addresses defined in a single MAC address pool, the ranges take turns in serving incoming requests in the same way available MAC addresses are selected.</p>
+
+<h3 id="creating-mac-address-pools">Creating MAC Address Pools</h3>
+
+<p>You can create new MAC address pools.</p>
+
+<p><strong>Creating a MAC Address Pool</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>MAC Address Pools</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Add</strong>.</p>
+  </li>
+  <li>
+    <p>Enter the <strong>Name</strong> and <strong>Description</strong> of the new MAC address pool.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Allow Duplicates</strong> check box to allow a MAC address to be used multiple times in a pool. The MAC address pool will not automatically use a duplicate MAC address, but enabling the duplicates option means a user can manually use a duplicate MAC address.</p>
+
+    <p><strong>Note:</strong> If one MAC address pool has duplicates disabled, and another has duplicates enabled, each MAC address can be used once in the pool with duplicates disabled but can be used multiple times in the pool with duplicates enabled.</p>
+  </li>
+  <li>
+    <p>Enter the required <strong>MAC Address Ranges</strong>. To enter multiple ranges click the plus button next to the <strong>From</strong> and <strong>To</strong> fields.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="editing-mac-address-pools">Editing MAC Address Pools</h3>
+
+<p>You can edit MAC address pools to change the details, including the range of MAC addresses available in the pool and whether duplicates are allowed.</p>
+
+<p><strong>Editing MAC Address Pool Properties</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>MAC Address Pools</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the MAC address pool to be edited.</p>
+  </li>
+  <li>
+    <p>Click <strong>Edit</strong>.</p>
+  </li>
+  <li>
+    <p>Change the <strong>Name</strong>, <strong>Description</strong>, <strong>Allow Duplicates</strong>, and <strong>MAC Address Ranges</strong> fields as required.</p>
+
+    <p><strong>Note:</strong> When a MAC address range is updated, the MAC addresses of existing NICs are not reassigned. MAC addresses that were already assigned, but are outside of the new MAC address range, are added as user-specified MAC addresses and are still tracked by that MAC address pool.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<h3 id="editing-mac-address-pool-permissions">Editing MAC Address Pool Permissions</h3>
+
+<p>After a MAC address pool has been created, you can edit its user permissions. The user permissions control which data centers can use the MAC address pool. See the "<a href="sect-Roles">Roles</a>" section for more information on adding new user permissions.</p>
+
+<p><strong>Editing MAC Address Pool Permissions</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>MAC Address Pools</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the required MAC address pool.</p>
+  </li>
+  <li>
+    <p>Edit the user permissions for the MAC address pool:</p>
+
+    <ul>
+      <li>
+        <p>To add user permissions to a MAC address pool:</p>
+
+        <p>i. Click <strong>Add</strong> in the user permissions pane at the bottom of the <strong>Configure</strong> window.</p>
+
+        <p>ii. Search for and select the required users.</p>
+
+        <p>iii. Select the required role from the <strong>Role to Assign</strong> drop-down list.</p>
+
+        <p>iv. Click <strong>OK</strong> to add the user permissions.</p>
+      </li>
+      <li>
+        <p>To remove user permissions from a MAC address pool:</p>
+
+        <p>i. Select the user permission to be removed in the user permissions pane at the bottom of the <strong>Configure</strong> window.</p>
+
+        <p>ii. Click <strong>Remove</strong> to remove the user permissions.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="removing-mac-address-pools">Removing MAC Address Pools</h3>
+
+<p>You can remove created MAC address pools, but the default MAC address pool cannot be removed.</p>
+
+<p><strong>Removing a MAC Address Pool</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Administration</strong> → <strong>Configure</strong>.</p>
+  </li>
+  <li>
+    <p>Click the <strong>MAC Address Pools</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the MAC address pool to be removed.</p>
+  </li>
+  <li>
+    <p>Click <strong>Remove</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong>.</p>
+  </li>
+</ol>
+
+<p><strong>Next:</strong> <a href="chap-System_Dashboard">Chapter 2: Dashboard</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/administration_guide/chap-global_configuration">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/admin-guide/chap-Global_Configuration.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/admin-guide/chap-Global_Configuration.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 22 Feb 2019 11:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

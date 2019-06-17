@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+GlusterVolumeQuota &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/gluster/">Gluster</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="gluster-volume-quota">Gluster Volume Quota</h1>
+
+<h1 id="summary">Summary</h1>
+
+<p>This feature allows the administrators to enable and disable disk utlization limits for the gluster volumes and disrectories. This way adminitrators can control the disk space utlization at the directory or volume level. This is particluarly useful in cloud deployments to facilitate utility billing model. Administrators can also configure the quota related parameters like soft timeout, hard timeout and alert time for the gluster volumes using this feature.</p>
+
+<p>Gluster volume quota feature provides users a mechanism to control the disk utlization at volume level or directory level or both. System administrators can also monitor the resource utilization to limit the storage for the users depending on their role in the organization.</p>
+
+<p>To read more about Gluster volume quota feature, see <a href="http://gluster.org/community/documentation/index.php/Gluster_3.2:_Managing_Directory_Quota">http://gluster.org/community/documentation/index.php/Gluster_3.2:_Managing_Directory_Quota</a>.</p>
+
+<h1 id="owner">Owner</h1>
+
+<ul>
+  <li>Feature owner:
+    <ul>
+      <li>GUI Component owner:</li>
+      <li>Engine Component owner:</li>
+      <li>VDSM Component owner:</li>
+      <li>QA Owner:</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="current-status">Current Status</h1>
+
+<ul>
+  <li>Status: Inception</li>
+  <li>Last updated date: Thu Aug 28 2014</li>
+</ul>
+
+<h1 id="detailed-description">Detailed Description</h1>
+
+<p>Gluster volume quota is feature using which administrators can restrict the disk space utilization at volume level, at directories level or at both levels.</p>
+
+<p>With this feature the user will be able to</p>
+
+<ul>
+  <li>Enable volume quota feature</li>
+  <li>Disable volume quota feature</li>
+  <li>Set the disk usage limits for the volume / directories</li>
+  <li>Set the different time-outs (soft time-out, hard time-out, alert time)</li>
+  <li>Remove disk limits</li>
+</ul>
+
+<h1 id="design">Design</h1>
+
+<h2 id="user-experience-and-control-flows">User Experience and control flows</h2>
+
+<h3 id="main-tab-volumes">Main tab "Volumes"</h3>
+
+<p>Two new action namely "Enable Quota" and "Disable Quota" would be introduced under actions for Gluster volumes. These actions can be performed on a selected volume from the list. The actions would be enabled based on the current status of quota feature enabled/disabled for the given volume. If quota is not already enabled for the volume, only the action "Enable Quota" would be enabled. If quota is already enabled for a given volume, the action "Enable Quota" would be disabled and "Disable Quota" would get enabled for the same.</p>
+
+<p>«Insert image»</p>
+
+<h4 id="enabling-quota">Enabling Quota</h4>
+
+<p>If user selects a volume from the list and click the action "Enable Quota", a dialog pops up which provides option for setting disk usage limits for the volume / directories. It also provides options for setting time-outs (soft time-out, hard-timeout, alert time, default time-out). The sections for setting the timeouts would be collapsed by default with default values already set for them. If user wants, he can change the values in this dialog. Setting of disk usage limits would be provided through an action buttion "Set Disk Usage".</p>
+
+<p>«Insert image»</p>
+
+<p>On click of the action button "Set Disk Usage" another dialog opens where user can provide the volume root level as well directory level hard limits. User can also mention the soft quota percentage values for the volume / directories.</p>
+
+<p>«Insert imgage»</p>
+
+<p>On clicking Ok, the required volume options would be set and also the required disk limits would be enabled for the volume / directories.</p>
+
+<h4 id="disabling-quota">Disabling Quota</h4>
+
+<p>To disable quota on a volume, user needs to select the action "Disable Quota" under volumes main tab. This action would unset all the required volumes option and remove the quota set for the volume / directories.</p>
+
+<h3 id="sub-tab-volumes--quota">Sub-tab Volumes –&gt; Quota</h3>
+
+<p>There would an additional sub-tab namely Quota introduced under main tab "Volumes". This sub tab would list the quota already set for the given volumes at volume level as well as directories level. This list details the hard limit, soft limit and flags like whether soft limit and hard limit has been reached for the volume / directroies.</p>
+
+<p>«Insert image»</p>
+
+<p>This sub-tab also provides options for setting and removing the disk usage limits for specific directroies of the volumes using the actions "Set Disk Usage Limit" and "Remove Disk Usage Limit".</p>
+
+<h4 id="setting-disk-usage-limit">Setting Disk Usage Limit</h4>
+
+<p>If user selects the action "Set Disk Usage Limit", the dialog for setting the disk usage limit mentioned above, opens. User can set disk usage limit for additional directories for the volume using this option.</p>
+
+<h4 id="removing-disk-usage-limit">Removing Disk Usage Limit</h4>
+
+<p>If user selects an already set disk usage limit detail from the list and clicks the option "Remove Disk Usage Limit", a confirmation dialog pops for asking if user really wants to remove the disk usage limit and on confirmation the selected disk usage limit is removed. Also all the required volumes options are reset accordingly.</p>
+
+<h2 id="new-entities">New Entities</h2>
+
+<h3 id="glustervolumequotas">GlusterVolumeQuotas</h3>
+
+<p>This entity stores the disk usage limits set for volume and its sub directroies.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Column name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LimitId</td>
+      <td>UUID</td>
+      <td>Id of the new disk usage limit</td>
+    </tr>
+    <tr>
+      <td>VolumeId</td>
+      <td>UUID</td>
+      <td>Reference volume id</td>
+    </tr>
+    <tr>
+      <td>DirName</td>
+      <td>String</td>
+      <td>Directory name for which the disk usage limit is set</td>
+    </tr>
+    <tr>
+      <td>HardLimit</td>
+      <td>String</td>
+      <td>Hard limit of disk usage set for the directory</td>
+    </tr>
+    <tr>
+      <td>SoftLimit</td>
+      <td>String</td>
+      <td>Soft limit percentage set for the directory</td>
+    </tr>
+    <tr>
+      <td>Used</td>
+      <td>Number</td>
+      <td>No of bytes used</td>
+    </tr>
+    <tr>
+      <td>Available</td>
+      <td>String</td>
+      <td>Disk availability for the directory</td>
+    </tr>
+    <tr>
+      <td>SoftLimitExceededFlag</td>
+      <td>char</td>
+      <td>Flag which mentions if the soft limit has exceeded (Y/N)</td>
+    </tr>
+    <tr>
+      <td>HardLimitExceededFlag</td>
+      <td>char</td>
+      <td>Flag which mentions if the hard limit has exceeded (Y/N)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note: LimitId and VolumeId together uniquely identify disk usage limit details for a specific directory</p>
+
+<h2 id="entities-changes">Entities Changes</h2>
+
+<p>None</p>
+
+<h2 id="sync-jobs">Sync Jobs</h2>
+
+<p>The Gluster volume quota details would be periodically fetched and updated into engine using the GlusterSyncJOb's heavy weight sync mechanism.</p>
+
+<h2 id="bll-commands">BLL Commands</h2>
+
+<ul>
+  <li><big>EnableGlusterVolumeQuota</big> - enables the quota feature for said volume</li>
+  <li><big>DisableGlusterVolumeQuota</big> - disables the quota feature for said volume</li>
+  <li><big>SetGlusterVolumeDiskUsageLimit</big> - sets the disk usage hard limit for the said volume and directory (optionally soft limit %tage)</li>
+  <li><big>SetGlusterVolumeQuotaTimeout</big> - sets the quota related soft and hard timeout values for a volume</li>
+  <li><big>SetGlusterVolumeQuotaAlertTime</big> - sets the quota related alert time value for a volume</li>
+  <li><big>SetGlusterVolumeQuotaDefaultSoftLimit</big> - sets the default soft limit for a volume (default is 80% which could be changed using this)</li>
+  <li><big>RemoveGlusterVolumeDiskUsageLimit</big> - removes the already set disk usage limit for the given volume and directory</li>
+</ul>
+
+<h2 id="engine-queries">Engine Queries</h2>
+
+<ul>
+  <li><big>GetGlusterVolumeQuotaDetails</big> - returns the list of disk usage limits set for a volume and directory. If no directory name passed, it returns details for all the directories.</li>
+</ul>
+
+<h2 id="vdsm-verbs">VDSM Verbs</h2>
+
+<ul>
+  <li><big>glusterVolumeQuotaEnable</big> - enables quota feature for the said volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaDisable</big> - disables quota feature for the said volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaSetLimit</big> - sets disk usage limit for the said volume and directory
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>directoryName</li>
+          <li>hardLimit</li>
+          <li>[softLimitPcnt]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note: softLimitPcnt is an optional argument and would be set only if passed</p>
+
+<ul>
+  <li><big>glusterVolumeQuotaSetHardTimeout</big> - sets quota related hard timeout for the said volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>timeout</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaSetSoftTimeout</big> - sets quota related soft timeout for the said volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>timeout</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaSetAlertTime</big> - sets quota related alert time for the said volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>time</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaSetDefaultSoftLimit</big> - sets quota related default soft limit for the said volume
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>limitPcnt</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaRemoveUsageLimit</big> - removes the disk usage limit for the said volume and directory
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>dirName</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>Success / Failure</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li><big>glusterVolumeQuotaDetailsList</big> - gets the disk usage details list for the said volume (and directory optionally)
+    <ul>
+      <li>Input
+        <ul>
+          <li>volumeName</li>
+          <li>[dirName]</li>
+        </ul>
+      </li>
+      <li>Output
+        <ul>
+          <li>List Disk Usage Details</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note: dirName is an optional argument and details of the specific directory are returned if passed, else details for all the directories are returned.</p>
+
+<h2 id="restful-apis">RESTful APIs</h2>
+
+<p>Details of the RESTful APIs for the Gluster volume quota feature are as below</p>
+
+<h3 id="listing-apis">Listing APIs</h3>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/quota</td>
+          <td>rel=get - lists all the disk usage limits for the volume directory-wise</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Output:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;diskUsageLimits&gt;&#x000A;  &lt;diskUsageLimit href="" id=""&gt;&#x000A;    &lt;actions&gt;&#x000A;    &lt;/actions&gt;&#x000A;    &lt;dir&gt;{dir-name}&lt;/dir&gt;&#x000A;    &lt;hardLimit&gt;{hard-limit-value}&lt;/hardLimit&gt;&#x000A;    &lt;softLimit&gt;{soft-limit-percentage}&lt;/softLimit&gt;&#x000A;    &lt;used&gt;{used-bytes}&lt;/used&gt;&#x000A;    &lt;available&gt;{available-limit}&lt;/available&gt;&#x000A;    &lt;softLimitExceeded&gt;{Y/N}&lt;/softLimitExceeded&gt;&#x000A;    &lt;hardLimitExceeded&gt;{Y/N}&lt;/hardLimitExceeded&gt;&#x000A;  &lt;/diskUsageLimit&gt;&#x000A;&lt;/diskUsageLimits&gt;&#x000A;</code></pre></div>
+<h3 id="actions-supported">Actions Supported</h3>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/enable-quota</td>
+          <td>rel=enable-quota - enables quota feature for the volume</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action/&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/enable-quota</td>
+          <td>rel=disable-quota - disables quota feature for the volume</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action/&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/quota</td>
+          <td>rel=add - adds disk usage limit for said volume and directory</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>dirName - String</li>
+          <li>hardLimit - String</li>
+          <li>softLimitPcnt - String</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;  &lt;diskUsageLimit&gt;&#x000A;    &lt;dirName&gt;{dir-name}&lt;/dirName&gt;&#x000A;    &lt;hardLimit&gt;{hard-limit-value}&lt;/hardLimit&gt;&#x000A;    &lt;softLimitPcnt&gt;{soft-limit-percentage}&lt;/softLimitPcnt&gt;&#x000A;  &lt;/diskUsageLimit&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/quota</td>
+          <td>rel=delete - removes a disk usage limit for said volume and directory</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>dirName - String</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;  &lt;diskUsageLimit&gt;&#x000A;    &lt;dirName&gt;{dir-name}&lt;/dirName&gt;&#x000A;  &lt;/diskUsageLimit&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<p>or</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;diskUsageLimit id="{limit-id}" /&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/set-quota-soft-timeout</td>
+          <td>rel=set-quota-soft-timeout - sets the quota related soft timeout value</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>timeout - String</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;  &lt;softTimeout&gt;{soft-timeout-value}&lt;/softTimeout&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/set-quota-hard-timeout</td>
+          <td>rel=set-quota-hard-timeout - sets the quota related hard timeout value</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>timeout - String</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;  &lt;hardTimeout&gt;{hard-timeout-value}&lt;/hardTimeout&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/set-quota-alert-time</td>
+          <td>rel=set-quota-alert-time - sets the quota related alert time value</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>time - String</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;  &lt;alertTime&gt;{alert-time-value}&lt;/alertTime&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>/api/clusters/{cluster-id}/glustervolumes/{volume-id}/set-deafult-soft-limit</td>
+          <td>rel=set-deafult-soft-limit - sets the quota related default soft limit percentage</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Parameters
+        <ul>
+          <li>limit - String</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Input:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>&lt;action&gt;&#x000A;  &lt;limit&gt;{limit-percentage-value}&lt;/limit&gt;&#x000A;&lt;/action&gt;&#x000A;</code></pre></div>
+<h2 id="limitations">Limitations</h2>
+
+<p>NA</p>
+
+<h1 id="dependencies--related-features-and-projects">Dependencies / Related Features and Projects</h1>
+
+<p>None</p>
+
+<h1 id="test-cases">Test Cases</h1>
+
+<h1 id="documentation--external-references">Documentation / External references</h1>
+
+<p><a href="http://gluster.org/community/documentation/index.php/Gluster_3.2:_Managing_Directory_Quota">http://gluster.org/community/documentation/index.php/Gluster_3.2:_Managing_Directory_Quota</a></p>
+
+<h1 id="open-issues">Open Issues</h1>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/gluster/glustervolumequota.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/gluster/glustervolumequota.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

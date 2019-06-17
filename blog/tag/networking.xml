@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>oVirt</title>
+  <subtitle>Tag: Networking</subtitle>
+  <id>http://ovirt.org/blog/</id>
+  <link href="http://ovirt.org/blog/"/>
+  <link href="http://ovirt.org/blog/tag/networking.xml" rel="self"/>
+  <updated>2019-05-27T15:35:00+00:00</updated>
+  <author>
+    <name/>
+  </author>
+  <entry>
+    <title>LLDP Information Now Available via the Administration Portal</title>
+    <link rel="alternate" href="http://ovirt.org/blog/2017/11/webadmin-lldp.html"/>
+    <id>http://ovirt.org/blog/2017/11/webadmin-lldp.html</id>
+    <published>2017-11-22T09:00:00+00:00</published>
+    <updated>2019-06-16T09:04:04+00:00</updated>
+    <author>
+      <name>amusil</name>
+    </author>
+    <content type="html">&lt;p&gt;In oVirt 4.2 we have introduced support for the Link Layer Discovery Protocol (LLDP).
+It is used by network devices for advertising the identity and capabilities to
+neighbors on a LAN. The information gathered by the protocol can be used for better
+network configuration. &lt;a href="https://learningnetwork.cisco.com/docs/DOC-26851"&gt;Learn more about LLDP&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id="why-do-you-need-lldp"&gt;Why do you need LLDP?&lt;/h2&gt;
+
+&lt;p&gt;When adding a host into oVirt cluster, the network administrator usually needs to attach
+various networks to it. However, a modern host can have multiple interfaces, each
+with its non-descriptive name.&lt;/p&gt;
+
+&lt;h2 id="examples"&gt;Examples&lt;/h2&gt;
+
+&lt;p&gt;In the screenshot below, taken from the Administration Portal, a network administrator has to know
+to which interface to attach the network named &lt;code&gt;m2&lt;/code&gt; with VLAN_ID 162. Should it be interface
+&lt;code&gt;enp4s0&lt;/code&gt;, &lt;code&gt;ens2f0&lt;/code&gt; or even &lt;code&gt;ens2f1&lt;/code&gt;? With oVirt 4.2, the administrator can hover over &lt;code&gt;enp4s0&lt;/code&gt;
+and see that this interface is connected to peer switch &lt;code&gt;rack01-sw03-lab4&lt;/code&gt;, and learn that this
+peer switch does not support VLAN 162 on this interface. By looking at every interface, the
+administrator can choose which interface is the right option for network&lt;code&gt;m2&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="screen" width="892" height="674" src="/images/../images/blog/2017-10-27/regular.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;A similar situation arises with the configuration of mode 4 bonding (LACP). Configurating LACP
+usually starts with network administrator defining a port group on their switch. These ports are
+are physically connected to interfaces in a hypervisor. But to which of the many interfaces that
+this hypervisor may have?&lt;/p&gt;
+
+&lt;p&gt;For example, when creating&lt;code&gt;bond0&lt;/code&gt; (See screenshot below), it is important to pick interfaces that
+are connected to the same switch, and that these ports belong to the same &lt;code&gt;port group&lt;/code&gt;. Often, an
+oVirt administrator might choose the wrong interfaces, and end up with badly configured bonds.&lt;/p&gt;
+
+&lt;p&gt;With LLDP information, this can easily be avoided. The administrator can tell which is the peer of
+each interface, and to which port group it is connected. For example, &lt;code&gt;enp4s0&lt;/code&gt; is
+connected to port &lt;code&gt;GigabitEthernet0/9&lt;/code&gt; and &lt;code&gt;enp6s0&lt;/code&gt; is connected to port
+&lt;code&gt;GigabitEthernet0/10&lt;/code&gt; on the same peer switch named &lt;code&gt;rack03-sw02-lab4&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="screen" width="890" height="668" src="/images/../images/blog/2017-10-27/bond0_0.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="screen" width="887" height="662" src="/images/../images/blog/2017-10-27/bond0_1.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;p&gt;The final screenshot (below) shows the information available to the administrator via
+the Administration Portal. This includes System name, Port description, Aggregation information, MTU, VLAN IDs and names.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt="screen" width="897" height="659" src="/images/../images/blog/2017-10-27/every_info.png?1560777613" /&gt;&lt;/p&gt;
+
+&lt;h2 id="where-to-find-the-lldp-information"&gt;Where to find the LLDP information?&lt;/h2&gt;
+
+&lt;p&gt;Log in the &lt;strong&gt;Administration Portal&lt;/strong&gt;. From the vertical menu select &lt;strong&gt;Compute&lt;/strong&gt; &amp;gt;
+&lt;strong&gt;Hosts&lt;/strong&gt; and choose a host by clicking on its Name link.
+Select &lt;strong&gt;Network Interfaces&lt;/strong&gt; &amp;gt; &lt;strong&gt;Setup Host Networks&lt;/strong&gt;. Hover over each interface to reveal a tooltip
+with the relevant information.&lt;/p&gt;
+
+&lt;h3 id="non-ui-approach"&gt;Non-UI approach&lt;/h3&gt;
+
+&lt;p&gt;The LLDP information is also exposed via REST API.
+More information is available in &lt;a href="http://ovirt.github.io/ovirt-engine-api-model/4.2/#services/link_layer_discovery_protocol"&gt;REST API documentation&lt;/a&gt;.&lt;/p&gt;
+</content>
+  </entry>
+</feed>

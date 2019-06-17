@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Self Hosted Engine &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="self-hosted-engine">Self Hosted Engine</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>The ability to run the Engine as a VM on the hosts that are managed by this Engine, in an HA configuration, when the Engine VM can start on any of the hosts.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Featue Owner: Sean Cohen: scohen (scohen)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#099;&#111;&#104;&#101;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#099;&#111;&#104;&#101;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Engine Component owner: Sandro Bonazzola</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#115;&#098;&#111;&#110;&#097;&#122;&#122;&#111;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>VSDM Component owner:</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Initial POC devel</li>
+  <li>Last updated: – by (WIKI)</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>This feature will deal with two main issues:</p>
+
+<ul>
+  <li>The deployment of an Engine as a VM into a fresh setup.</li>
+  <li>HA for the Engine VM needs to be managed by the hosts and not the Engine.</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>This will allow us to deploy less hardware (with the Engine not requiring a separate machine)</li>
+  <li>We will be capable of providing HA for the Engine out of the box, instead of using a separate cluster in order to make the Engine HA.</li>
+  <li>This operational mode will attract users already familiar with it from other virt platforms.</li>
+</ul>
+
+<h1 id="requirements"><strong>Requirements</strong></h1>
+
+<ul>
+  <li>New installation should be simple and guided.</li>
+  <li>A user will start with a single hypervisor host (full host OS or <a href="/develop/release-management/features/engine/hosted-engine/">ovirt-node support is planned for 3.5</a>), that can access shared storage, and after the setup, will be able to access the Engine webadmin UI in order to add mode hosts, clusters, SDs etc.</li>
+  <li>The engine should be able to start on any of the hosts it manages, provided the hosts have the hosted engine addons installed.</li>
+  <li>The engine should be highly available, and be able to tolerate host, network and storage failures.</li>
+  <li>An ability to define priorities for hosting the engine is a "nice to have".</li>
+  <li>The host currently running the engine should report additional resources used, just like we reserve an extra CPU for the SPM, and compensate for that.</li>
+  <li>Some resources (especially RAM) should be reserved on one or two nodes in the cluster, in case the engine VM has to migrate over</li>
+  <li>ovirt-node should have a TUI for the initial deployment and configuration of the Engine VM</li>
+  <li>Should support importing an existing installed engine ovf as installation media</li>
+</ul>
+
+<h1 id="detailed-description-1">Detailed Description</h1>
+
+<h2 id="rpm-level">RPM level</h2>
+
+<ul>
+  <li>package should require vdsm enabling the host to be an hypervisor</li>
+  <li>package should require cli/sdk to comunicate with engine</li>
+</ul>
+
+<h2 id="ui---first-host-deployment">UI - first host deployment</h2>
+
+<p>Here is an example of a first host deployment:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # yum install ovirt-hosted-engine-setup&#x000A;     # hosted-engine --deploy&#x000A;     [ INFO  ] Stage: Initializing&#x000A;             Continuing will configure this host for serving as hypervisor and create a VM where oVirt Engine will be installed afterwards.&#x000A;             Are you sure you want to continue? (Yes, No)[Yes]: yes&#x000A;             It has been detected that this program is executed through an SSH connection without using screen.&#x000A;             Continuing with the installation may lead to broken installation if the network connection fails.&#x000A;             It is highly recommended to abort the installation and run it inside a screen session.&#x000A;             Do you want to continue anyway? (Yes, No)[No]: yes&#x000A;     [ INFO  ] Generating a temporary VNC password.&#x000A;     [ INFO  ] Stage: Environment setup&#x000A;             Configuration files: []&#x000A;             Log file: /var/log/ovirt-hosted-engine-setup/ovirt-hosted-engine-setup-20131121151103.log&#x000A;             Version: otopi-1.1.1 (otopi-1.1.1-1.el6ev)&#x000A;     [ INFO  ] Hardware supports virtualization&#x000A;     [ INFO  ] Bridge rhevm already created&#x000A;     [ INFO  ] Stage: Environment packages setup&#x000A;     [ INFO  ] Stage: Programs detection&#x000A;     [ INFO  ] Stage: Environment setup&#x000A;     [ INFO  ] Stage: Environment customization&#x000A;             --== STORAGE CONFIGURATION ==--&#x000A;             During customization use CTRL-D to abort.&#x000A;             Please specify the full shared storage connection path to use (example: host:/path): myhost.home:/export&#x000A;     [ INFO  ] Installing on first host&#x000A;             Please provide storage domain name [hosted_storage]:&#x000A;             Local storage datacenter name [hosted_datacenter]:&#x000A;             --== SYSTEM CONFIGURATION ==--&#x000A;             --== NETWORK CONFIGURATION ==--&#x000A;             iptables was detected on your computer, do you wish setup to configure it? (Yes, No)[Yes]:&#x000A;             Please indicate a pingable gateway IP address: 10.1.1.1&#x000A;             --== VM CONFIGURATION ==--&#x000A;             Please specify the device to boot the VM from (cdrom, disk, pxe) [cdrom]: pxe&#x000A;             The following CPU types are supported by this host:&#x000A;                 - model_Conroe: Intel Conroe Family&#x000A;             Please specify the CPU type to be used by the VM [model_Conroe]:&#x000A;             Please specify the number of virtual CPUs for the VM [Defaults to minimum requirement: 2]:&#x000A;             Please specify the disk size of the VM in GB [Defaults to minimum requirement: 25]:&#x000A;             Please specify the memory size of the VM in MB [Defaults to minimum requirement: 4096]:&#x000A;             Please specify the console type you would like to use to connect to the VM (vnc, spice) [vnc]:&#x000A;             --== HOSTED ENGINE CONFIGURATION ==--&#x000A;             Enter the name which will be used to identify this host inside the Administrator Portal [hosted_engine_1]:&#x000A;             Enter 'admin@internal' user password that will be used for accessing the Administrator Portal:&#x000A;             Confirm 'admin@internal' user password:&#x000A;             Please provide the FQDN for the engine you would like to use. This needs to match the FQDN that you will use for the engine installation within the VM: hosted-engine.home&#x000A;     [WARNING] Failed to resolve hosted-engine.home using DNS, it can be resolved only locally&#x000A;             Please provide the name of the SMTP server through which we will send notifications [localhost]:&#x000A;             Please provide the TCP port number of the SMTP server [25]:&#x000A;             Please provide the email address from which notifications will be sent [root@localhost]:&#x000A;             Please provide a comma-separated list of email addresses which will get notifications [root@localhost]:&#x000A;     [ INFO  ] Stage: Setup validation&#x000A;             --== CONFIGURATION PREVIEW ==--&#x000A;             Engine FQDN                        : hosted-engine.home&#x000A;             Bridge name                        : rhevm&#x000A;             SSH daemon port                    : 22&#x000A;             Firewall manager                   : iptables&#x000A;             Gateway address                    : 10.1.1.1&#x000A;             Host name for web application      : hosted_engine_1&#x000A;             Host ID                            : 1&#x000A;             Image size GB                      : 25&#x000A;             Storage connection                 : myhost.home:/export&#x000A;             Console type                       : vnc&#x000A;             Memory size MB                     : 4096&#x000A;             Boot type                          : pxe&#x000A;             Number of CPUs                     : 2&#x000A;             CPU Type                           : model_Conroe&#x000A;             Please confirm installation settings (Yes, No)[No]: yes&#x000A;     [ INFO  ] Generating answer file '/etc/ovirt-hosted-engine/answers.conf'&#x000A;     [ INFO  ] Stage: Transaction setup&#x000A;     [ INFO  ] Stage: Misc configuration&#x000A;     [ INFO  ] Stage: Package installation&#x000A;     [ INFO  ] Stage: Misc configuration&#x000A;     [ INFO  ] Configuring libvirt&#x000A;     [ INFO  ] Generating VDSM certificates&#x000A;     [ INFO  ] Configuring VDSM&#x000A;     [ INFO  ] Starting vdsmd&#x000A;     [ INFO  ] Waiting for VDSM hardware info&#x000A;     [ INFO  ] Waiting for VDSM hardware info&#x000A;     [ INFO  ] Creating Storage Domain&#x000A;     [ INFO  ] Creating Storage Pool&#x000A;     [ INFO  ] Connecting Storage Pool&#x000A;     [ INFO  ] Verifying sanlock lockspace initialization&#x000A;     [ INFO  ] Initializing sanlock lockspace&#x000A;     [ INFO  ] Initializing sanlock metadata&#x000A;     [ INFO  ] Creating VM Image&#x000A;     [ INFO  ] Disconnecting Storage Pool&#x000A;     [ INFO  ] Start monitoring domain&#x000A;     [ INFO  ] Configuring VM&#x000A;     [ INFO  ] Updating hosted-engine configuration&#x000A;     [ INFO  ] Stage: Transaction commit&#x000A;     [ INFO  ] Stage: Closing up&#x000A;     [ INFO  ] Creating VM&#x000A;             You can now connect to the VM with the following command:&#x000A;                 /usr/bin/remote-viewer vnc://localhost:5900&#x000A;             Use temporary password "1015iuUQ" to connect to vnc console.&#x000A;             Please note that in order to use remote-viewer you need to be able to run graphical applications.&#x000A;             This means that if you are using ssh you have to supply the -Y flag (enables trusted X11 forwarding).&#x000A;             Otherwise you can run the command from a terminal in your preferred desktop environment.&#x000A;             If you cannot run graphical applications you can connect to the graphic console from another host or connect to the console using the following command:&#x000A;             virsh -c qemu+tls://10.1.1.10/system console HostedEngine&#x000A;             If you need to reboot the VM you will need to start it manually using the command:&#x000A;             hosted-engine --vm-start&#x000A;             You can then set a temporary password using the command: `           hosted-engine --add-console-password=`&lt;password&gt;&#x000A;             Please install the OS on the VM.&#x000A;             When the installation is completed reboot or shutdown the VM: the system will wait until then&#x000A;             Has the OS installation been completed successfully?&#x000A;             Answering no will allow you to reboot from the previously selected boot media. (Yes, No)[Yes]: yes&#x000A;     [ INFO  ] Creating VM&#x000A;             You can now connect to the VM with the following command:&#x000A;                 /usr/bin/remote-viewer vnc://localhost:5900&#x000A;             Use temporary password "1015iuUQ" to connect to vnc console.&#x000A;             Please note that in order to use remote-viewer you need to be able to run graphical applications.&#x000A;             This means that if you are using ssh you have to supply the -Y flag (enables trusted X11 forwarding).&#x000A;             Otherwise you can run the command from a terminal in your preferred desktop environment.&#x000A;             If you cannot run graphical applications you can connect to the graphic console from another host or connect to the console using the following command:&#x000A;             virsh -c qemu+tls://10.1.1.10/system console HostedEngine&#x000A;             If you need to reboot the VM you will need to start it manually using the command:&#x000A;             hosted-engine --vm-start&#x000A;             You can then set a temporary password using the command: `           hosted-engine --add-console-password=`&lt;password&gt;&#x000A;             Please install the engine in the VM, hit enter when finished.&#x000A;     [ INFO  ] Engine replied: DB Up!Welcome to Health Status!&#x000A;     [ INFO  ] Waiting for the host to become operational in the engine. This may take several minutes...&#x000A;     [ INFO  ] Still waiting for VDSM host to become operational...&#x000A;     [ INFO  ] Still waiting for VDSM host to become operational...&#x000A;     [ INFO  ] The VDSM Host is now operational&#x000A;             Please shutdown the VM allowing the system to launch it as a monitored service.&#x000A;             The system will wait until the VM is down.&#x000A;     [ INFO  ] Enabling and starting HA services&#x000A;             Hosted Engine successfully set up&#x000A;     [ INFO  ] Stage: Clean up&#x000A;     [ INFO  ] Stage: Pre-termination&#x000A;     [ INFO  ] Stage: Termination&#x000A;</code></pre></div>
+<p><strong>Notes:</strong></p>
+
+<ul>
+  <li>Remember to setup the same hostname you specified as FQDN while you're installing the OS on the VM.</li>
+  <li>
+    <p>If you want to install ovirt-engine-dwh and ovirt-engine-reports or update the engine after the deployment is completed , remember that you need to set the system in global maintenance using
+    # hosted-engine –set-maintenance=global</p>
+
+    <p>because the engine service must be stopped during setup / upgrade operations.</p>
+  </li>
+</ul>
+
+<h2 id="ui---additional-host-deployment">UI - additional host deployment</h2>
+
+<p>Here is an example of deployment on an additional host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>     # yum install ovirt-hosted-engine-setup&#x000A;     # hosted-engine --deploy&#x000A;     [ INFO  ] Stage: Initializing&#x000A;             Continuing will configure this host for serving as hypervisor and create a VM where oVirt Engine will be installed afterwards.&#x000A;             Are you sure you want to continue? (Yes, No)[Yes]: yes&#x000A;             It has been detected that this program is executed through an SSH connection without using screen.&#x000A;             Continuing with the installation may lead to broken installation if the network connection fails.&#x000A;             It is highly recommended to abort the installation and run it inside a screen session.&#x000A;             Do you want to continue anyway? (Yes, No)[No]: yes&#x000A;     [ INFO  ] Generating a temporary VNC password.&#x000A;     [ INFO  ] Stage: Environment setup&#x000A;             Configuration files: []&#x000A;             Log file: /var/log/ovirt-hosted-engine-setup/ovirt-hosted-engine-setup-20131121170637.log&#x000A;             Version: otopi-1.1.1 (otopi-1.1.1-1.el6ev)&#x000A;     [ INFO  ] Hardware supports virtualization&#x000A;     [ INFO  ] Bridge rhevm already created&#x000A;     [ INFO  ] Stage: Environment packages setup&#x000A;     [ INFO  ] Stage: Programs detection&#x000A;     [ INFO  ] Stage: Environment setup&#x000A;     [ INFO  ] Stage: Environment customization&#x000A;             --== STORAGE CONFIGURATION ==--&#x000A;             During customization use CTRL-D to abort.&#x000A;             Please specify the full shared storage connection path to use (example: host:/path): myhost.home:/export&#x000A;             The specified storage location already contains a data domain. Is this an additional host setup (Yes, No)[Yes]? yes&#x000A;     [ INFO  ] Installing on additional host&#x000A;             Please specify the Host ID [Must be integer, default: 2]:&#x000A;             --== SYSTEM CONFIGURATION ==--&#x000A;     [WARNING] A configuration file must be supplied to deploy Hosted Engine on an additional host.&#x000A;             The answer file may be fetched from the first host using scp.&#x000A;             If you do not want to download it automatically you can abort the setup answering no to the following question.&#x000A;             Do you want to scp the answer file from the first host? (Yes, No)[Yes]:&#x000A;             Please provide the FQDN or IP of the first host: 10.1.1.10&#x000A;             Enter 'root' user password for host 10.1.1.10:&#x000A;     [ INFO  ] Answer file successfully downloaded&#x000A;             --== NETWORK CONFIGURATION ==--&#x000A;             The following CPU types are supported by this host:&#x000A;                 - model_Nehalem: Intel Nehalem Family&#x000A;                 - model_Penryn: Intel Penryn Family&#x000A;                 - model_Conroe: Intel Conroe Family&#x000A;             --== HOSTED ENGINE CONFIGURATION ==--&#x000A;             Enter the name which will be used to identify this host inside the Administrator Portal [hosted_engine_2]:&#x000A;             Enter 'admin@internal' user password that will be used for accessing the Administrator Portal:&#x000A;             Confirm 'admin@internal' user password:&#x000A;     [WARNING] Failed to resolve hosted-engine.home using DNS, it can be resolved only locally&#x000A;     [ INFO  ] Stage: Setup validation&#x000A;             --== CONFIGURATION PREVIEW ==--&#x000A;             Engine FQDN                        : hosted-engine.home&#x000A;             Bridge name                        : rhevm&#x000A;             SSH daemon port                    : 22&#x000A;             Firewall manager                   : iptables&#x000A;             Gateway address                    : 10.1.1.1&#x000A;             Host name for web application      : hosted_engine_2&#x000A;             Host ID                            : 2&#x000A;             Image size GB                      : 25&#x000A;             Storage connection                 : myhost.home:/export&#x000A;             Console type                       : vnc&#x000A;             Memory size MB                     : 4096&#x000A;             Boot type                          : disk&#x000A;             Number of CPUs                     : 2&#x000A;             CPU Type                           : model_Conroe&#x000A;             Please confirm installation settings (Yes, No)[No]: yes&#x000A;     [ INFO  ] Generating answer file '/etc/ovirt-hosted-engine/answers.conf'&#x000A;     [ INFO  ] Stage: Transaction setup&#x000A;     [ INFO  ] Stage: Misc configuration&#x000A;     [ INFO  ] Stage: Package installation&#x000A;     [ INFO  ] Stage: Misc configuration&#x000A;     [ INFO  ] Configuring libvirt&#x000A;     [ INFO  ] Generating VDSM certificates&#x000A;     [ INFO  ] Configuring VDSM&#x000A;     [ INFO  ] Starting vdsmd&#x000A;     [ INFO  ] Waiting for VDSM hardware info&#x000A;     [ INFO  ] Waiting for VDSM hardware info&#x000A;     [ INFO  ] Connecting Storage Domain&#x000A;     [ INFO  ] Configuring VM&#x000A;     [ INFO  ] Updating hosted-engine configuration&#x000A;     [ INFO  ] Stage: Transaction commit&#x000A;     [ INFO  ] Stage: Closing up&#x000A;     [ INFO  ] Engine replied: DB Up!Welcome to Health Status!&#x000A;     [ INFO  ] Waiting for the host to become operational in the engine. This may take several minutes...&#x000A;     [ INFO  ] The VDSM Host is now operational&#x000A;     [ INFO  ] Enabling and starting HA services&#x000A;             Hosted Engine successfully set up&#x000A;     [ INFO  ] Stage: Clean up&#x000A;     [ INFO  ] Stage: Pre-termination&#x000A;     [ INFO  ] Stage: Termination&#x000A;</code></pre></div>
+<p><strong>Notes</strong></p>
+
+<ul>
+  <li>remember to use the same storage path you used on first host.</li>
+</ul>
+
+<h2 id="migrating-an-existing-engine">Migrating an existing engine</h2>
+
+<p>See <a href="/develop/developer-guide/engine/migrate-to-hosted-engine/">Migrate to Hosted Engine</a></p>
+
+<h2 id="ui---operations">UI - operations</h2>
+
+<p>The host deployment may be done both using <strong>hosted-engine –deploy</strong> or <strong>ovirt-hosted-engine-setup</strong>.</p>
+
+<p>Both commands are documented with man pages, so please refer to them in order to have the list of supported operations.</p>
+
+<h2 id="configuration-files">Configuration files</h2>
+
+<ul>
+  <li>
+    <p>/etc/ovirt-hosted-engine/hosted-engine.conf</p>
+
+    <p>   FQDN of the engine machine
+     shared storage
+     domainType=nfs
+     conf=/etc/ovirt-hosted-engine/vm.conf - see below
+     service_start_timeout
+     vm_disk_id
+     vmid
+     host_id=1 for first host, more for next ones
+     console=vnc
+     spUUID=uuid
+     sdUUID=uuid
+     connectionUUID=uuid
+     ca_cert=/etc/pki/vdsm/libvirt-spice/ca-cert.pem
+     ca_subject=CA certificate subject
+     vdsm_use_ssl=true
+     gateway=ipaddress should be pingable from the host
+     bridge=ovirtmgmt</p>
+  </li>
+  <li>
+    <p>/etc/ovirt-hosted-engine/vm.conf</p>
+
+    <p>   vmId
+     memSize
+     cpuType
+     display
+     devices
+     vmName=HostedEngine
+     spiceSecureChannels
+     smp= number of virtual cores
+     emulatedMachine=pc
+     image (optional)
+     connect iso (optional)
+     direct lun (optional)</p>
+  </li>
+  <li>
+    <p>/etc/ovirt-hosted-engine-ha/broker.conf</p>
+
+    <p>[email]
+  smtp-server=</p>
+  </li>
+</ul>
+
+<address of="" the="" smtp="" server="" to="" send="" notification="" emails="" with="">
+<div class="highlight"><pre class="highlight plaintext"><code>  smtp-port=25 `destination-emails=`&lt;single email address that will be used as the sender's address&gt; `source-email=`&lt;comma separated list of email addresses to send the notification emails to&gt;&#x000A;&#x000A;  [notify] &lt;- keys configure the list of event types we are interested in&#x000A;  state_transition=maintenance|start|stop|migrate|on&#x000A;  ^- key is event type, value is regular expression,&#x000A;     when it matches part of the internal detail field, the mail will be sent&#x000A;</code></pre></div>
+  <ul>
+    <li>/etc/ovirt-hosted-engine-ha/notifications/<event type="">.txt - Files in this directory are used as templates for the notification emails. The template has to contain proper email message compliant to rfc822. That means both header and body parts. Some strings are replaced by the notification engine:
+</event>      <ul>
+        <li>{source-email} - source email address</li>
+        <li>{destination-emails} - list of destination email addresses</li>
+        <li>{detail} - the detail field of the event</li>
+        <li>{hostname} - the hostname of machine that sent the event</li>
+        <li>{time} - numeric timestamp of the message (0 = 1st of Jan 1970)</li>
+        <li>{type} - type of the message, matches the filename</li>
+      </ul>
+
+      <p>state_transition.txt
+  ——————–
+  From: {source-email}
+  To: {destination-emails}
+  Subject: ovirt-hosted-engine state transition {detail} at {hostname}
+  The state machine changed state.</p>
+    </li>
+  </ul>
+
+  <h2 id="logic">Logic</h2>
+
+  <ul>
+    <li>ovirt-hosted-engine-setup executables relies on vdsClient and vdsm python API for preparing the storage infra and handling the VM.</li>
+    <li>
+      <p>create the bridge if missing</p>
+
+      <p> addNetwork</p>
+    </li>
+    <li>
+      <p>first check for existing pool and abort if any is found.</p>
+
+      <p> getConnectedStoragePoolsList</p>
+    </li>
+    <li>
+      <p>validate the specified path, checking if there's already a domain there</p>
+
+      <p> connectStorageServer
+   getStorageDomainsList
+   getStorageDomainInfo
+   getStoragePoolInfo
+   disconnectStorageServer</p>
+    </li>
+    <li>
+      <p>if a new domain has to be created, create it</p>
+
+      <p> connectStorageServer
+   createStorageDomain
+   createStoragePool
+   connectStoragePool
+   spmStart
+   activateStorageDomain</p>
+    </li>
+    <li>
+      <p>if a new vm image has to be created, create it</p>
+
+      <p> createVolume</p>
+    </li>
+    <li>
+      <p>stop the pool and start the domain monitor</p>
+
+      <p> spmStop
+   disconnectStoragePool
+   startMonitoringDomain</p>
+    </li>
+    <li>
+      <p>run vm with installation media</p>
+
+      <p> create</p>
+    </li>
+    <li>
+      <p>provide spice/terminal console</p>
+
+      <p> setVmTicket</p>
+    </li>
+    <li>wait for os to be installed and then reboot</li>
+    <li>start again the VM as before</li>
+    <li>wait for engine to be installed</li>
+    <li>polling on liveliness till engine is up</li>
+    <li>add host without rebooting it.</li>
+    <li>wait for the host to be operational</li>
+    <li>hand over the VM to the HA daemons (shutdown the VM and start daemons which will take care now of the VM)</li>
+  </ul>
+
+  <h2 id="enhancements">Enhancements</h2>
+
+  <ul>
+    <li>sanlock vm/host id broker</li>
+    <li>shared cluster config</li>
+    <li>shared vm config</li>
+    <li>engine to reflect the host running the engine VM</li>
+    <li>engine to reserve resources for the engine VM</li>
+  </ul>
+
+  <h2 id="open-issues">Open issues</h2>
+
+  <ul>
+    <li>pool connection is needed to run vm (should be solved on vdsm level) - we can't connect two pools to vdsm</li>
+    <li>sanlock on vm image (should be solved on vdsm level) - we can workaround for now</li>
+    <li>vdsm sanity for running a VM from another pool</li>
+    <li>vdsm providing monitoring service for tasks</li>
+    <li>change bridge details</li>
+    <li>host level oprations on engine hypervisor</li>
+  </ul>
+
+  <h2 id="limitations">Limitations</h2>
+
+  <ul>
+    <li>NFS FS only (Gluster and Block to be supported at a later stage)</li>
+    <li>RHEV-H not supported</li>
+    <li>Only one VM is deployed and managed by HA daemons (support for additional VMs to be added at a later stage).</li>
+  </ul>
+
+  <h2 id="operational-routine">Operational Routine</h2>
+
+  <p><strong>Phase 2: engine vm high availability daemon</strong></p>
+
+  <ul>
+    <li>Daemon setup: The HA daemon is deployed as an rpm package (preinstalled on ovirt-node).</li>
+    <li>The daemon maintains two conf files: one is local and contains the NFS mount details, the other is on the NFS mount and it contains the network health check IPs and the engine vm ip (additional configs go here).</li>
+    <li>The daemon starts on all the configured hosts, and there it will start maintaining the engine VM. The Detailed Feature page will have a flow chart of how exactly the daemon operates</li>
+  </ul>
+
+  <p>HA daemon requirements during normal ops:</p>
+
+  <ul>
+    <li>Monitor the state of the Engine VM and restart the VM on other hosts in case of failure</li>
+    <li>Monitor the Engine status in the VM and restart the VM (or just the engine service - probably in the future versions) if it fails</li>
+    <li>Monitor the status of the host that is currently running the Engine VM, live migrate the engine in case of host health degradation (network/storage loss)</li>
+  </ul>
+
+  <p>Issues to address specifically:</p>
+
+  <ul>
+    <li>Engine VM Host losing only the management network - move the engine to another host</li>
+    <li>All the management network is down for all hosts - do nothing, no point taking the engine down if it can't operate anywhere</li>
+    <li>Hypervisor crash - restart the engine on another host</li>
+    <li>Engine VM crashing - restart locally, if fails - on another host</li>
+    <li>Engine service unavailable - restart VM after a timeout, if that fails - alert</li>
+    <li>Engine VM storage down - restart the engine on another host</li>
+    <li>A situation when the host where the Egnine is running is in a problematic state, while the Engine VM is still up should also trigger a failover, or live migration.</li>
+    <li>Avoid race conditions in case of a multiple host start - e.g. many hosts not detecting the engine VM and trying to start it</li>
+    <li>SBA for the engine VM should be provided (is sanlock enough?)</li>
+  </ul>
+
+  <h3 id="additional-functionality-required-at-host-level">Additional functionality required at host level</h3>
+
+  <ul>
+    <li>Heartbeat the Engine VM status</li>
+    <li>Heartbeat the Engine service health</li>
+    <li>Heartbeat the current Engine VM host</li>
+    <li>Host self monitoring (HB to the Engine, designated network entities)</li>
+    <li>Inter-host selection for the next host to pick up the Engine VM, with host priorities in place</li>
+    <li>Host failure counter, that will have effect on the host selection heuristics</li>
+    <li>(optional) Host capabilities (minimal CPU/RAM available) will have effect on the host selection heuristics</li>
+  </ul>
+
+  <h3 id="nice-to-have">Nice to have</h3>
+
+  <ul>
+    <li>Ability to tolerate a file share loss: have a mirrored copy of the Engine VM disk on another share</li>
+  </ul>
+
+  <h3 id="required-modifications">Required modifications</h3>
+
+  <ul>
+    <li>VDSM currently only support volume locking on the global level only - thus it can be currently either globally on or off, with no option to enable it for specific VM only.</li>
+    <li>In VDSM handling of operations like live snapshot (hoplug the new volume lease), live storage migration (hotplug all the new volume leases on the new storage and hotunplug all the old ones), disk hotplug/hotunplug (hotplug/hotunplug the volume lease), etc. must be handled properly (currently these cases are not handled).</li>
+    <li>VDSM is currently limited to only one Storage Pool, thus it's currently impossible to store the Engine VM not in the same Storage Pool as other VMs that will be managed.</li>
+  </ul>
+
+  <h3 id="agent-state-diagram">Agent State Diagram</h3>
+
+  <p>FSM diagram for hosted engine agent states (generated from README.AGENT-FSM.gv in agent source tree): <img alt="" width="1092" height="1032" src="/images/wiki/Hosted-engine-agent-fsm.png?1560777613" /></p>
+
+  <h3 id="maintenance-flows">Maintenance Flows</h3>
+
+  <p>The HA Agent will support 2 types of maintenance:</p>
+
+  <ul>
+    <li>Global maintenance: all HA agents in the cluster will ignore the engine VM state while this mode is enabled, allowing an administrator to start/stop/modify the engine VM without any worry of interference from the HA agents. To accomplish this, a flag will be written to the HA metadata residing on shared storage, and all HA agents will heed this flag and enter a mode where the only actions they take will be to a) remain initialized, b) update their scores, and c) watch for the flag to become unset. Once the flag is unset, the agents will discover the status of the VM as they do upon starting up, and then will resume normal operation.</li>
+    <li>Local maintenance: an individual HA agent will stop the VM and not attempt to restart it while this mode is enabled, in an effort to allow the local host to enter maintenance mode (in vdsm/engine). Another host in the cluster should attempt to start the engine VM, at which time maintenance operations on the first host can proceed. A shortcut to initiate this process is to shut down the engine VM manually, as any unexpected shutdown of the VM on a given host will cause the HA agent on that host to temporarily drop its score to 0. In this event, the administrator should still log into the host and enter maintenance mode to ensure the score does not recover, possibly causing the host to reacquire the engine VM. Once local maintenance mode is disabled, the score on this host will recover and the agent will resume normal operation.</li>
+  </ul>
+
+  <p><a href="/develop/release-management/features/">Self Hosted Engine</a> <a href="/develop/release-management/releases/3.4/feature/">Self Hosted Engine</a> <a href="category:Integration">Self Hosted Engine</a></p>
+</address>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/self-hosted-engine.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/self-hosted-engine.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 31 Aug 2017 12:41 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

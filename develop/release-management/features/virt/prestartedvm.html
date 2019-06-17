@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+PrestartedVm &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="prestarted-vm">Prestarted Vm</h1>
+
+<hr />
+
+<h2 id="summary">Summary</h2>
+
+<p>The Prestarted Vm feature allows holding a predefined number of unassigned ready to use Vms running in a pool.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>
+    <p>Feature owner: Muli Salem (msalem)</p>
+
+    <ul>
+      <li>
+        <p>Backend Component owner: Muli Salem (msalem)</p>
+      </li>
+      <li>
+        <p>GUI Component owner: <a href="user:?"> ?</a></p>
+      </li>
+      <li>
+        <p>REST Component owner: Michael Pasternak (mpasternak)</p>
+      </li>
+      <li>
+        <p>QA Owner: Tomas Dosek (Tdosek)</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Email: msalem@redhat.com</p>
+  </li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Status: Engine-done, API-done, GUI-design, QA-test plans ready and reviewed</li>
+  <li>Last updated date: Tue Dec 27 2011:</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<ol>
+  <li>Today there are 2 types of Vm pools:
+    <ol>
+      <li>Manual - the Vm is supposed to be manually returned to the pool. In practice, this is not really entirely supported.</li>
+      <li>Automatic - once the user shuts down the Vm - it returns to the pool (stateless).</li>
+    </ol>
+  </li>
+</ol>
+
+<p><strong>The prestarted Vm feature will deal with Automatic Vm pools.</strong></p>
+
+<p>In ovirt, a VmPool is created based on a specific template. A Vm in the pool can either be assigned to a specific user or be in shutdown state. Therefore, when an admin assigns a Vm to a user, the Vm needs to boot before the user can begin using it.</p>
+
+<p>The prestarted Vm will maintain a number of Vms that are running and not assigned to a specific user (unassigned). This will be at a "best effort" basis, meaning there may be cases in which the number of prestarted Vms will be smaller than the amount defined by the admin.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to ovirt</h2>
+
+<p>The prestarted Vms will allow instant assignment of a Vm from the pool to a user without the user needing to wait for the Vm to start.</p>
+
+<h2 id="prd">PRD</h2>
+
+<p>The requirements are the following:</p>
+
+<ol>
+  <li>Enable a Vm in a pool to be both running and unassigned to a specific user.</li>
+  <li>Maintain a minimal amount of prestarted Vms, that are running and waiting to be assigned.
+    <ol>
+      <li>The number of prestarted Vms is a new VMpool property. This number can be changed after Vm pool was already created. In case it is changed, the system is not required to shutdown prestarted Vms, but rather this will be done manually by the admin if necessary.</li>
+      <li>The maximum number of prestarted Vms is the size of the VmPool.</li>
+    </ol>
+  </li>
+  <li>When a Vm is shut down its base snapshot is restored and it is returned to the pool (no change in behaviour here).</li>
+  <li>The prestarted Vms creation does not have to begin immediately upon pool creation, but rather can be happen periodically.</li>
+</ol>
+
+<h2 id="design">Design</h2>
+
+<p>Current flow:</p>
+
+<ol>
+  <li>When running Vm from administrator - the RunVm command is called. The changes he makes actually stay on the Vm even after shutdown.</li>
+  <li>When running Vm from user portal - AttachUserToVmFromPoolAndRunCommand executes, which runs the addPermission + CreateAllSnapshotsFromVm. On endSuccessfully the RunVm command runs. When Vm is shut down - VmPoolHandler.ProcessVmPoolOnStopVm(vmId) -&gt; removePermission + RestoreAllSnapshots.</li>
+</ol>
+
+<p>New Design:</p>
+
+<ol>
+  <li>Adding a prestarted_vms field to each VmPool.
+    <ol>
+      <li>This field is configurable upon Vmpool creation by the admin, and has a default value of 0;</li>
+      <li>It can be edited after the pool has been created. In case an admin lowers the minimum number, the "extra" Vms will not be shutdown. He will be supplied with the following message:</li>
+    </ol>
+  </li>
+</ol>
+
+<p><em>The prestarted Vms will not be shut down automatically.</em></p>
+
+<p><span style="color:Teal"><strong>prestarted_vms</strong></span>:
+{|class="wikitable sortable" !border="1"| Column Name ||Column Type ||Null? / Default ||Description |- |prestarted_vms || smallint ||not null / default 0 ||The minimum number of prestarted vms |- |}</p>
+
+<ul>
+  <li>We also need to add this column to vm_pools_view and vm_pools_full_view.</li>
+</ul>
+
+<p><strong>VmPoolMonitor</strong>
+Maintaining the number of prestarted will be done periodically. The periodic approach was chosen since it avoids relying on the different stages in the VmPool's life cycle. There will be a job that runs every x minutes. x is defined in vdc_options in a new row called VmPoolRefreshRate. A new property needs to be added to the engine-config.properties file. The default will be 2 minutes. The job will go over each pool, check whether there are enough prestarted Vms running. If not, it will start the needed amount.</p>
+
+<p>We will the following config values for this job: <span style="color:Teal"><strong>prestarted_vms</strong></span>:
+{|class="wikitable sortable" !border="1"| config key || config type ||Null? / Default ||Description |- |VmPoolMonitorBatchSize || smallint ||5||The maximum amount of vms that will be prestarted in a single run of the VmPoolMonitor |- |VmPoolMonitorIntervalInMinutes || smallint ||5||The size of interval between VmPoolMonitor runs |- |VmPoolMonitorMaxAttempts || smallint ||3||The number of attempts that are made to prestart a Vm |}</p>
+
+<ul>
+  <li>This option can be optimized by triggering the job upon certain events. Events that should trigger: addVmPool, AttachUserToVmFromPoolCommand…?</li>
+</ul>
+
+<p><strong>Algorithm for selecting a Vm for user</strong></p>
+
+<hr />
+
+<ol>
+  <li>A vm will be assigned to a user in the following priority:
+    <ol>
+      <li>
+        <ol>
+          <li>The Vm is up</li>
+          <li>is not running by the admin (Can be deduced from the images status?)</li>
+          <li>is not given to another user</li>
+        </ol>
+      </li>
+      <li>Current assignment:
+        <ol>
+          <li>The Vm is down</li>
+          <li>is not given to a user</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<p><strong>Algorithm for maintaining number of prestarted Vms</strong></p>
+
+<hr />
+
+<ol>
+  <li>The Prestarted Vm Job counts the number of Vms that:
+    <ol>
+      <li>
+        <ol>
+          <li>Are running (*) not by the admin</li>
+          <li>are not assigned to a user</li>
+        </ol>
+      </li>
+      <li>If there are not enough of them, he looks for Vms that are:
+        <ol>
+          <li>down</li>
+          <li>not assigned to a user</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<p>The implementation will be as follows:</p>
+
+<ol>
+  <li>The AttachUserToVmFromPoolAndRunCommand and AttachUserToVmFromPoolCommand will be combined to one command named AllocateVmFromPoolCommand.</li>
+  <li>A new command called PrepareVmForUse will be added. The command will run the CreateAllSnapshotsFromVmCommand, and upon ending successfully will run RunVm. The command will be used both by the command in the previous clause, and by the scheduler that prepares prestarted vms.</li>
+  <li>We will add a flow that checks if there are available prestarted Vms. If so, do only "AddPermission". If no prestarted Vms were found, run AddPermission + PrepareVmForUse.</li>
+</ol>
+
+<h3 id="rest-api">REST API</h3>
+
+<p>A new integer property, "prestarted_vms", was added to the VmPool resource</p>
+
+<h2 id="affected-commands">Affected Commands</h2>
+
+<ol>
+  <li>AttachUserToVmFromPoolCommandAndRun + AttachUserToVmFromPoolCommandAndRun - As explained above.</li>
+  <li>AddVmPoolCommand - no change since the parameter held is of type vm_pools.</li>
+  <li>UpdateVmPoolCommand - no change since the parameter held is of type vm_pools.</li>
+  <li>RemoveVmPoolCommand - no change since the parameter held is of type vm_pools.</li>
+</ol>
+
+<h2 id="open-issues">Open Issues</h2>
+
+<ol>
+  <li>
+    <ul>
+      <li>We need to define what the scheduler counts to be as a prestarted vm (only up, maybe VM.isStatusQualifyToMigrate() which includes Up, PoweringUp, Paused, RebootInProgress)</li>
+    </ul>
+  </li>
+  <li>We need to decide whether we take the periodic approach (with or without optimization), or the event driven one.</li>
+</ol>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<p>Affected rhevm projects:</p>
+
+<ul>
+  <li>API</li>
+  <li>CLI</li>
+  <li>backend</li>
+  <li>Webadmin</li>
+  <li>User Portal</li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<hr />
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/prestartedvm.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/prestartedvm.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

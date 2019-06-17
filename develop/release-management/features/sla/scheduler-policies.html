@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt Scheduler Policies &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="ovirt-scheduler-policies">oVirt Scheduler Policies</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This page describes the scheduler policies currently supported by oVirt.
+This scheduler controls scheduling in the cluster level.
+Last update: 03/30/2015.</p>
+
+<h2 id="owner">Owner</h2>
+
+<p>Name: Tomer Saban (tsaban)
+Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#116;&#115;&#097;&#098;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#116;&#115;&#097;&#098;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></p>
+
+<h2 id="getting-started-with-scheduler-policies">Getting Started with Scheduler Policies</h2>
+
+<p>This is the easiest explanation to active an internal scheduler policy.</p>
+
+<h3 id="create-scheduling-policy">Create scheduling policy</h3>
+
+<ul>
+  <li>Enter the "Administrator portal".</li>
+  <li>Click "configure"(At the top right edge of the screen). A dialog should open.</li>
+  <li>Click the tab "Scheduling policies" at the left side of the dialog.</li>
+  <li>Click "new" and create a new policy(Giving a name is enough in order to create A non-filtering policy).</li>
+  <li>Close the dialog.</li>
+</ul>
+
+<h3 id="attach-scheduling-policy-to-a-cluster">Attach scheduling policy to a cluster</h3>
+
+<ul>
+  <li>Click the "Clusters" tab.</li>
+  <li>Click a cluster to attach the policy to, from the table below("Default" cluster is fine).</li>
+  <li>Click "edit". A dialog should open.</li>
+  <li>Click "Scheduling Policy" on the left tab from the dialog.</li>
+  <li>In the "Select Policy" combo-box choose the name you gave the policy eariler.</li>
+</ul>
+
+<p>Now the scheduling policy is attached to the cluster you choose and it's working.</p>
+
+<h2 id="current-status-of-filter-and-weight-policies">Current status of filter and weight policies</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Policy</th>
+      <th>Kind</th>
+      <th>Status</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PinToHost</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters every host which the vm is not pinned to(Meaning the vm will migrate only to the host it is pinned to).</td>
+    </tr>
+    <tr>
+      <td>Migration</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters the host which the vm is currently resides on. Meaning, This policy encourages migrations.</td>
+    </tr>
+    <tr>
+      <td>CPU-Level</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters hosts by CPU level(manufacturer, model, etc).</td>
+    </tr>
+    <tr>
+      <td>CPU</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters hosts by CPU cores(Number of Virtual CPUs).</td>
+    </tr>
+    <tr>
+      <td>VmAffinityGroups</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters hosts by taking into consideration Affinity groups(positive affinity group means that all VMs should be on the same host and negative means that they should be on separated hosts).</td>
+    </tr>
+    <tr>
+      <td>Emulated-Machine</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters hosts by emulated machine(isapc, pc, etc).</td>
+    </tr>
+    <tr>
+      <td>Network</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters hosts who doesn't have the necessary network interfaces to run the vm.</td>
+    </tr>
+    <tr>
+      <td>None</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>No host is being filtered(The vm will migrate to the first available host).</td>
+    </tr>
+    <tr>
+      <td>None</td>
+      <td>Weight</td>
+      <td>Using even distribution policy instead.</td>
+      <td>Hosts receives score based on even distribution weight policy.</td>
+    </tr>
+    <tr>
+      <td>OptimalForEvenGuestDistribution</td>
+      <td>Weight</td>
+      <td>Working</td>
+      <td>Sets host scores based on the number of VMs on each host.</td>
+    </tr>
+    <tr>
+      <td>OptimalForEvenDistribution</td>
+      <td>Weight</td>
+      <td>Working</td>
+      <td>Sets hosts scores so that there will be even CPU usage distribution.</td>
+    </tr>
+    <tr>
+      <td>VmAffinityGroups</td>
+      <td>Weight</td>
+      <td>Working</td>
+      <td>Sets host scores based on affinity group (Hosts which are at the same affinity group as the vm and their affinity is positive or has different affinity group and their affinity is negative gets a specified score, bigger than 1 and the other gets a score of 1.</td>
+    </tr>
+    <tr>
+      <td>OptimalForHaReservation</td>
+      <td>Weight</td>
+      <td>Working</td>
+      <td>Sets scores for hosts according to the number of highly available vms on them and a scale down parameter.</td>
+    </tr>
+    <tr>
+      <td>OptimalForPowerSaving</td>
+      <td>Weight</td>
+      <td>Working</td>
+      <td>Sets host scores so that minimum number of hosts will need to stay on. Has influence only when used with hosted engine.</td>
+    </tr>
+    <tr>
+      <td>HA</td>
+      <td>Weight</td>
+      <td>Working</td>
+      <td>Weight are being set by the number of HA VMs on the host and a scale down parameter. Has influence only when used with hosted engine.</td>
+    </tr>
+    <tr>
+      <td>HA</td>
+      <td>Filter</td>
+      <td>Working</td>
+      <td>Filters hosts whose high availability score is negative(See ovirt-ha-agent in <a href="https://www.ovirt.org/images/8/88/Hosted_Engine_Deep_Dive.pdf">https://www.ovirt.org/images/8/88/Hosted_Engine_Deep_Dive.pdf</a> for more details on how this score is calculated). Has influence only when used with hosted engine.</td>
+    </tr>
+    <tr>
+      <td>Memory</td>
+      <td>Filter</td>
+      <td>N/A</td>
+      <td>Filters hosts based on memory usage.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="see-also">See Also</h2>
+
+<p>See <a href="/develop/release-management/features/sla/ovirtschedulerapi/">Features/oVirtSchedulerAPI</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/scheduler-policies.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/scheduler-policies.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

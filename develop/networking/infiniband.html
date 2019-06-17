@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Infiniband &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/networking/">Networking</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="infiniband">Infiniband</h1>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Although targeted at high performance computing Infiniband networks may be a quite cheap alternative to 10 Gigabit Ethernet. Nevertheless it is not an out of the box experience. So your expectations should never be to get close to wire speed but to be happy with every MB/s that you can reach beyond Giagbit Ethernet. This page should give a first impression for the interested reader what problems one might encounter.</p>
+
+<h2 id="ipoib">IPoIB</h2>
+
+<p>IP over Infiniband (IPoIB) is an encapsulation of TCP packets inside Infiniband packets. That adds a lot of overhead but combined with an NFS server it is the easiest setup that is fully supported within OVirt.</p>
+
+<h3 id="hypervisor-node-setup">Hypervisor node setup</h3>
+
+<p>On the hypervisor node you have to load the IPoIB required modules. These consist of the driver of your card, the transport and a managing module. For Mellanox ConnectX cards create a /etc/modules-load.d/ib.conf with the following lines</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  mlx4_ib&#x000A;  ib_ipoib&#x000A;  ib_umad&#x000A;</code></pre></div>
+<p>After loading these modules you should see an Infiniband interface ib0 inside Ovirt (additionally ib1 if you have a two port card). Add a new network as usual and assign it with a static IP to the interface.</p>
+
+<h3 id="issue-mellanox-tso-bug">Issue: Mellanox TSO bug</h3>
+
+<p>The kernel advertises TSO for Mellanox ConnectX cards although it is not supported. Therefore the hardware creates corrupt IP fragments on sender side during large requests and the receiving client cannot use LRO. The result of a lengthy discussion is stated <a href="http://www.spinics.net/lists/linux-rdma/msg17787.html">here</a>. So check if your Mellanox card has revision <strong>a0</strong>. Here an example of a non TSO compatible card:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  lspci | grep Mellanox&#x000A;  03:00.0 InfiniBand: Mellanox Technologies MT25418 [ConnectX VPI PCIe 2.0 2.5GT/s - IB DDR / 10GigE] (rev a0)&#x000A;</code></pre></div>
+<p>If you have such an old card disable TSO and make that setting permanent in some startup script.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ` isOldCard=`lspci | grep Mellanox | grep a0 | wc -l` `&#x000A;  if [ $isOldCard -gt 0 ]; then&#x000A;    ethtool -K ib0 tso off&#x000A;    ethtool -K ib1 tso off&#x000A;  fi&#x000A;</code></pre></div>
+<h3 id="issue-old-hardware-and-mtu-2044">Issue: Old hardware and MTU 2044</h3>
+
+<p>If you are running on old switch hardware than your maximum IPoIB MTU will be limited to 2044 bytes. That is no problem at all - at least on switch level. On your NFS server and hypervisor nodes this can result in unneccessary CPU cycles and reduced throughput. Once again a reference to a <a href="http://www.spinics.net/lists/linux-rdma/msg15133.html">discussion thread</a>.</p>
+
+<p>If you are not afraid of compiling kernels yourself and you know what you are doing than you can benefit from a dirty hack that limits the IPoIB MTU inside the kernel to 3072 bytes. With that receive operations will be served within a single 4K page and unneccessary copy operations can be avoided. Add the following modification to ipoib_add_port() in drivers/infiniband/ulp/ipoib/ipoib_main.c:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    ...&#x000A;    if (!ib_query_port(hca, port, &amp;attr))&#x000A;      /* Limit max MTU to 3KB                                 */&#x000A;      /* priv-&gt;max_ib_mtu = ib_mtu_enum_to_int(attr.max_mtu); */&#x000A;      priv-&gt;max_ib_mtu = 3072;&#x000A;    else {&#x000A;    ...&#x000A;</code></pre></div>
+<h2 id="nfs-over-rdma">NFS over RDMA</h2>
+
+<p>In this setup NFS sunrpc layer driectly accesses the basic infiniband mechanisms to exchange data between NFS server and client. The configuration is explained <a href="https://www.kernel.org/doc/Documentation/filesystems/nfs/nfs-rdma.txt">here</a> and might have some bugs:</p>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=1046011">Cannot read more than 812 bytes from NFS server file</a>: The bug can occur between kernels 3.7 and 3.13. It should be fixed with <a href="http://article.gmane.org/gmane.linux.nfs/60953">this commit</a></li>
+  <li><a href="http://www.mail-archive.com/linux-rdma@vger.kernel.org/msg14145.html">NFS crashes</a>: Not yet tested/observed.</li>
+</ul>
+
+<p>At the moment OVirt does not allow to mount NFS shares over RDMA. So the only option is to modify the mount operation in /usr/share/vdsm/storage/storageServer.py yourself.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  ...&#x000A;  class NFSConnection(object):&#x000A;    DEFAULT_OPTIONS = ["soft", "nosharecache", "rdma", "port=20049"]&#x000A;  ...&#x000A;</code></pre></div>
+<p>A reqeust for enhancement of OVirt has been created as Redhat Bug <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1057043">1057043</a></p>
+
+<h2 id="srp">SRP</h2>
+
+<p>SCSI Remote Protocol can be compared to iSCSI and comes close to wire speed. It is not yet implemented in OVirt.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/networking/infiniband.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/networking/infiniband.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sat 15 Dec 2018 19:32 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

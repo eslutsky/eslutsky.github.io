@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Active-Passive Disaster Recovery &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/disaster-recovery-guide/">Disaster-recovery-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-3-active-passive-disaster-recovery">Chapter 3: Active-Passive Disaster Recovery</h1>
+
+<p>This chapter provides instructions to configure oVirt for disaster recovery using the active-passive disaster recovery solution.</p>
+
+<h2 id="active-passive-overview">Active-Passive Overview</h2>
+
+<p>oVirt supports an active-passive disaster recovery solution that can span two sites. If the primary site becomes unavailable, the oVirt environment can be forced to fail over to the secondary (backup) site.</p>
+
+<p>The failover is achieved by configuring an oVirt environment in the secondary site, which requires:</p>
+
+<ul>
+  <li>
+    <p>An active oVirt Engine.</p>
+  </li>
+  <li>
+    <p>A data center and clusters.</p>
+  </li>
+  <li>
+    <p>Networks with the same general connectivity as the primary site.</p>
+  </li>
+  <li>
+    <p>Active hosts capable of running critical virtual machines after failover.</p>
+
+    <p><strong>Important:</strong> You must ensure that the secondary environment has enough resources to run the failed over virtual machines, and that both the primary and secondary environments have identical Engine versions, data center and cluster compatibility levels, and PostgreSQL versions. The minimum supported compatibility level is 4.2.</p>
+  </li>
+</ul>
+
+<p>Storage domains that contain virtual machine disks and templates in the primary site must be replicated. These replicated storage domains must not be attached to the secondary site.</p>
+
+<p>The failover and failback process must be executed manually. To do this you need to create Ansible playbooks to map entities between the sites, and to manage the failover and failback processes. The mapping file instructs the oVirt components where to fail over or fail back to on the target site.</p>
+
+<p>The following diagram describes an active-passive setup where the machine running Ansible Engine is highly available, and has access to the <code>oVirt.disaster-recovery</code> Ansible role, configured playbooks, and mapping file. The storage domains that store the virtual machine disks in Site A is replicated. Site B has no virtual machines or attached storage domains.</p>
+
+<p><strong>Active-Passive Configuration</strong>
+<img alt="" width="1520" height="967" src="/images/disaster-recovery/SiteToSite.png?1560777613" /></p>
+
+<p>When the environment fails over to Site B, the storage domains are first attached and activated in Site B's data center, and then the virtual machines are registered. Highly available virtual machines will fail over first.</p>
+
+<p><strong>Failover to Backup Site</strong>
+<img alt="" width="1520" height="966" src="/images/disaster-recovery/SiteToSiteFailover.png?1560777613" /></p>
+
+<p>You will need to manually fail back to the primary site (Site A) when it is running again.</p>
+
+<h3 id="network-considerations">Network Considerations</h3>
+
+<p>You must ensure that the same general connectivity exists in the primary and secondary sites.</p>
+
+<p>If you have multiple networks or multiple data centers then you must use an empty network mapping in the mapping file to ensure that all entities register on the target during failover. See <a href="mapping_file_attributes">Appendix A: Mapping File Attributes</a> for more information.</p>
+
+<h3 id="storage-considerations">Storage Considerations</h3>
+
+<p>The storage domain for oVirt can be made of either block devices (SAN - iSCSI or FCP) or a file system (NAS - NFS, GlusterFS, or other POSIX compliant file systems).</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** Local storage domains are unsupported for disaster recovery.&#x000A;</code></pre></div>
+<p>A primary and secondary storage replica is required. The primary storage domain’s block devices or shares that contain virtual machine disks or templates must be replicated. The secondary storage must not be attached to any data center, and will be added to the backup site’s data center during failover.</p>
+
+<p>If you are implementing disaster recovery using self-hosted engine, ensure that the  storage domain used by the self-hosted engine Engine virtual machine does not contain virtual machine disks because the storage domain will not be failed over.</p>
+
+<p>All storage solutions that have replication options that are supported by Enterprise Linux 7 and later can be used.</p>
+
+<h2 id="create-the-required-ansible-playbooks">Create the Required Ansible Playbooks</h2>
+
+<p>Ansible is used to initiate and manage the disaster recovery failover and failback. You therefore need to create Ansible playbooks to facilitate this. For more information about creating Ansible playbooks, see the <a href="http://docs.ansible.com/ansible/latest/playbooks.html">Ansible documentation</a>.</p>
+
+<p><strong>Prerequisites</strong>:</p>
+
+<ul>
+  <li>
+    <p>Fully functioning oVirt environment in the primary site.</p>
+  </li>
+  <li>
+    <p>A backup environment in the secondary site with the same data center and cluster compatibility level as the primary environment. The backup environment must have:</p>
+
+    <ul>
+      <li>
+        <p>An oVirt Engine.</p>
+      </li>
+      <li>
+        <p>Active hosts capable of running the virtual machines and connecting to the replicated storage domains.</p>
+      </li>
+      <li>
+        <p>A data center with clusters.</p>
+      </li>
+      <li>
+        <p>Networks with the same general connectivity as the primary site.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Replicated storage. See "Storage Considerations" above for more information.</p>
+
+    <p><strong>Note:</strong> The replicated storage that contains virtual machines and templates must not be attached to the secondary site.</p>
+  </li>
+  <li>
+    <p>The <code>oVirt.disaster-recovery</code> package must be installed on the highly available Ansible Engine machine that will automate the failover and failback.</p>
+  </li>
+  <li>
+    <p>The machine running Ansible Engine must be able to use SSH to connect to the oVirt Engine in the primary and secondary site.</p>
+  </li>
+</ul>
+
+<p>It is also recommended to create environment properties that exist in the primary site, such as affinity groups, affinity labels, users, on the secondary site.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The default behavior of the Ansible playbooks can be configured in the `/usr/share/ansible/roles/oVirt.disaster-recovery/defaults/main.yml` file.&#x000A;</code></pre></div>
+<p>The following playbooks must be created:</p>
+
+<ul>
+  <li>
+    <p>The playbook that creates the file to map entities on the primary and secondary site.</p>
+  </li>
+  <li>
+    <p>The failover playbook.</p>
+  </li>
+  <li>
+    <p>The failback playbook.</p>
+  </li>
+</ul>
+
+<p>You can also create an optional playbook to clean the primary site before failing back.</p>
+
+<p>Create the playbooks and associated files in <code>/usr/share/ansible/roles/oVirt.disaster-recovery/</code> on the Ansible machine that is managing the failover and failback. If you have multiple Ansible machines that can manage it, ensure that you copy the files to all of them.</p>
+
+<p>You can test the configuration using one or more of the testing procedures in <a href="testing_active_passive">Testing the Active-Passive Configuration</a>.</p>
+
+<h3 id="using-the-ovirt-dr-script-for-ansible-tasks">Using the <code>ovirt-dr</code> Script for Ansible Tasks</h3>
+
+<p>The <code>ovirt-dr</code> script is located in <strong>/usr/share/ansible/roles/oVirt.disaster-recovery/files</strong>. This script simplifies the following Ansible tasks:</p>
+
+<ul>
+  <li>
+    <p>Generating a <code>var</code> mapping file of the primary and secondary sites for failover and fallback</p>
+  </li>
+  <li>
+    <p>Validating the <code>var</code> mapping file</p>
+  </li>
+  <li>
+    <p>Executing failover on a target site</p>
+  </li>
+  <li>
+    <p>Executing failback from a target site to a source site</p>
+  </li>
+</ul>
+
+<p><strong>Usage</strong></p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ./ovirt-dr _generate/validate/failover/failback_&#x000A;                  [--conf-file=dr.conf]&#x000A;                  [--log-file=ovirt-dr-_log_number_.log]&#x000A;                  [--log-level=_DEBUG/INFO/WARNING/ERROR_]&#x000A;</code></pre></div>
+<p>You can set the parameters for the script's actions in the configuration file,  <strong>/usr/share/ansible/roles/oVirt.disaster-recovery/files/dr.conf</strong>.</p>
+
+<p>You can change the location of the configuration file with the <code>--conf-file</code> option.</p>
+
+<p>You can set the location and level of logging detail with the <code>--log-file</code> and <code>--log-level</code> options.</p>
+
+<h3 id="create-the-playbook-to-generate-the-mapping-file">Create the Playbook to Generate the Mapping File</h3>
+
+<p>The Ansible playbook used to generate the mapping file will prepopulate the file with the target (primary) site’s entities. You then need to manually add the backup site’s entities, such as IP addresses, cluster, affinity groups, affinity label, external LUN disks, authorization domains, roles, and vNIC profiles, to the file.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** The mapping file generation will fail if you have any virtual machine disks on the self-hosted engine’s storage domain. Also, the mapping file will not contain an attribute for this storage domain because it must not be failed over.&#x000A;</code></pre></div>
+<p>In this example the Ansible playbook is named <code>dr-rhv-setup.yml</code>, and is executed on the Engine machine in the primary site.</p>
+
+<p><strong>Creating the mapping file</strong>:</p>
+
+<ol>
+  <li>
+    <p>Create an Ansible playbook to generate the mapping file. For example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> ---&#x000A; - name: Generate mapping&#x000A;  hosts: localhost&#x000A;  connection: local&#x000A;&#x000A;  vars:&#x000A;    site: https://example.engine.redhat.com/ovirt-engine/api&#x000A;    username: admin@internal&#x000A;    password: my_password&#x000A;    ca: /etc/pki/ovirt-engine/ca.pem&#x000A;    var_file: disaster_recovery_vars.yml&#x000A;&#x000A;  roles:&#x000A;    - oVirt.disaster-recovery&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> For extra security you can encrypt your Engine password in a <code>.yml</code> file.</p>
+  </li>
+  <li>
+    <p>Run the Ansible command to generate the mapping file. The primary site’s configuration will be prepopulated.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # ansible-playbook dr-rhv-setup.yml --tags "generate_mapping"&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Configure the mapping file (<code>disaster_recovery_vars.yml</code> in this case) with the backup site’s configuration. See <a href="mapping_file_attributes">Appendix A: Mapping File Attributes</a> for more information about the mapping file’s attributes.</p>
+  </li>
+</ol>
+
+<p>If you have multiple Ansible machines that can perform the failover and failback, then copy the mapping file to all relevant machines.</p>
+
+<h3 id="create-the-failover-and-failback-playbooks">Create the Failover and Failback Playbooks</h3>
+
+<p>Ensure that you have the mapping file that you created and configured, in this case <code>disaster_recovery_vars.yml</code>, because this must be added to the playbooks.</p>
+
+<p>You can define a password file (for example <code>passwords.yml</code>) to store the Engine passwords of the primary and secondary site. For example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    ---&#x000A;    # This file is in plain text, if you want to&#x000A;    # encrypt this file, please execute following command:&#x000A;    #&#x000A;    # $ ansible-vault encrypt passwords.yml&#x000A;    #&#x000A;    # It will ask you for a password, which you must then pass to&#x000A;    # ansible interactively when executing the playbook.&#x000A;    #&#x000A;    # $ ansible-playbook myplaybook.yml --ask-vault-pass&#x000A;    #&#x000A;    dr_sites_primary_password: primary_password&#x000A;    dr_sites_secondary_password: secondary_password&#x000A;&#x000A;      **Note:** For extra security you can encrypt the password file. However, you will need to use the `--ask-vault-pass` parameter when running the playbook.&#x000A;</code></pre></div>
+<p>In these examples the Ansible playbooks to fail over and fail back are named <code>dr-rhv-failover.yml</code> and  <code>dr-rhv-failback.yml</code>.</p>
+
+<p>Create the following Ansible playbook to failover the environment:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    ---&#x000A;    - name: Failover oVirt&#x000A;      hosts: localhost&#x000A;      connection: local&#x000A;      vars:&#x000A;        dr_target_host: secondary&#x000A;        dr_source_map: primary&#x000A;      vars_files:&#x000A;        - disaster_recovery_vars.yml&#x000A;        - passwords.yml&#x000A;      roles:&#x000A;        - oVirt.disaster-recovery&#x000A;</code></pre></div>
+<p>Create the following Ansible playbook to failback the environment:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    ---&#x000A;    - name: Failback oVirt&#x000A;      hosts: localhost&#x000A;      connection: local&#x000A;      vars:&#x000A;        dr_target_host: primary&#x000A;        dr_source_map: secondary&#x000A;      vars_files:&#x000A;        - disaster_recovery_vars.yml&#x000A;        - passwords.yml&#x000A;      roles:&#x000A;        - oVirt.disaster-recovery&#x000A;</code></pre></div>
+<h3 id="create-the-playbook-to-clean-the-primary-site">Create the Playbook to Clean the Primary Site</h3>
+
+<p>Before you failback to the primary site, you need to ensure that the primary site is cleaned of all storage domains to be imported. This can be performed manually on the Engine, or optionally you can create an Ansible playbook to perform it for you.</p>
+
+<p>The Ansible playbook to clean the primary site is named <code>dr-cleanup.yml</code> in this example, and it uses the mapping file created in the "Create the Playbook to Generate the Mapping File" section above:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    ---&#x000A;    - name: clean RHV&#x000A;      hosts: localhost&#x000A;      connection: local&#x000A;      vars:&#x000A;        dr_source_map: primary&#x000A;      vars_files:&#x000A;        - disaster_recovery_vars.yml&#x000A;      roles:&#x000A;        - oVirt.disaster-recovery&#x000A;</code></pre></div>
+<h2 id="execute-a-failover">Execute a Failover</h2>
+
+<p><strong>Prerequisites</strong>:</p>
+
+<ul>
+  <li>
+    <p>The Engine and hosts in the secondary site are running.</p>
+  </li>
+  <li>
+    <p>Replicated storage domains are in read/write mode.</p>
+  </li>
+  <li>
+    <p>No replicated storage domains are attached to the secondary site.</p>
+  </li>
+  <li>
+    <p>A machine running Ansible Engine that can connect via SSH to the Engine in the primary and secondary site, with the required packages and files:</p>
+
+    <ul>
+      <li>
+        <p>The <code>oVirt.disaster-recovery</code> package.</p>
+      </li>
+      <li>
+        <p>The mapping file and required failover playbook.</p>
+
+        <p><strong>Important:</strong> Sanlock must release all storage locks from the replicated storage domains before the failover process starts. These locks should be released automatically approximately 80 seconds after the disaster occurs.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>This example uses the <code>dr-rhv-failover.yml</code> playbook created earlier.</p>
+
+<p><strong>Executing a failover</strong>:</p>
+
+<p>Run the failover playbook with the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ansible-playbook dr-rhv-failover.yml --tags "fail_over"&#x000A;</code></pre></div>
+<p>When the primary site becomes active, ensure that you clean the environment before failing back.</p>
+
+<h2 id="clean-the-primary-site">Clean the Primary Site</h2>
+
+<p>After you fail over, you must clean the environment in the primary site before failing back to it:</p>
+
+<ul>
+  <li>
+    <p>Reboot all hosts in the primary site.</p>
+  </li>
+  <li>
+    <p>Ensure the secondary site's storage domains are in read/write mode and the primary site's storage domains are in read only mode.</p>
+  </li>
+  <li>
+    <p>Synchronize the replication from the secondary site's storage domains to the primary site's storage domains.</p>
+  </li>
+  <li>
+    <p>Clean the primary site of all storage domains to be imported. This can be done manually in the Engine, or by creating and running an Ansible playbook.</p>
+  </li>
+</ul>
+
+<p>This example uses the <code>dr-cleanup.yml</code> playbook created earlier to clean the environment.</p>
+
+<p><strong>Cleaning the primary site:</strong></p>
+
+<p>Clean up the primary site with the following command:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # ansible-playbook dr-cleanup.yml --tags "clean_engine"&#x000A;</code></pre></div>
+<p>You can now failback the environment to the primary site. See the "Execute a Failback" section for more information.</p>
+
+<h2 id="execute-a-failback">Execute a Failback</h2>
+
+<p>Once you fail over, you can fail back to the primary site when it is active and you have performed the necessary steps to clean the environment.</p>
+
+<p><strong>Prerequisites</strong>:</p>
+
+<ul>
+  <li>
+    <p>The environment in the primary site is running and has been cleaned, see the "Clean the Primary Site" section for more information.</p>
+  </li>
+  <li>The environment in the secondary site is running, and has active storage domains.</li>
+  <li>
+    <p>A machine running Ansible Engine that can connect via SSH to the Engine in the primary and secondary site, with the required packages and files:</p>
+
+    <ul>
+      <li>
+        <p>The <code>oVirt.disaster-recovery</code> package.</p>
+      </li>
+      <li>
+        <p>The mapping file and required failback playbook.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>This example uses the <code>dr-rhv-failback.yml</code> playbook created earlier.</p>
+
+<p><strong>Executing a failback</strong>:</p>
+
+<ol>
+  <li>
+    <p>Run the failback playbook with the following command:</p>
+
+    <p>#  ansible-playbook dr-rhv-failback.yml –tags "fail_back"</p>
+  </li>
+  <li>
+    <p>Enable replication from the primary storage domains to the secondary storage domains.</p>
+  </li>
+</ol>
+
+<p><strong>Prev:</strong> <a href="active_active_overview">Chapter 2: Active-Active Disaster Recovery</a><br />
+<strong>Next:</strong> <a href="mapping_file_attributes">Appendix A: Mapping File Attributes</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/disaster_recovery_guide/active_passive">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/disaster-recovery-guide/active_passive_overview.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/disaster-recovery-guide/active_passive_overview.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+One certificate-key pair per NIC &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/infra/">Infra</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="one-certificate-key-pair-per-nic">One certificate-key pair per NIC</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature is necessary to get TLS right on hosts. Once implemented, it will erradicate need for explicit host subject override as used for spice now and it will also allow separation of migration network from management network.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: djasa (Djasa)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#100;&#106;&#097;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#100;&#106;&#097;&#115;&#097;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+  <li>Won't be able to implement myself. Feel free to take this</li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Not started</li>
+  <li>Last updated date: Mon June 25 2012</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Currently, VDSM takes "one TLS certificate rules them all" approach to TLS-enabled services on host. This is sufficient as long as all services are accessed via management network FQDN/IP.</p>
+
+<p>Things go wrong when the host is multihomed with separation of various kinds of traffic because standards-based SSL/TLS handshakes fail because clients will connect to secondary adresses (like that of display networks) but the services will present themselves with management network address (IP or FQDN) in the CN entry of Subject field of their certificate. This produces infamous ssl error:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>SSL_connect: error:00000001:lib(0):func(0):reason(1)&#x000A;</code></pre></div>
+<p>that will prevent to establish a connection. Spice consoles fired by admin/user portal work this around by passing the technically incorrect host subject used by spice-server to the client via Portal and browser plugin which will then override default subject check. Other stuff like migration is not handled at all.</p>
+
+<h3 id="proposal">Proposal</h3>
+
+<p>This seems to be the correct path to get the issue straight:</p>
+
+<ul>
+  <li>server certs/keys used on host should be generated by vdsm itself if it isn't already so</li>
+  <li>use separate files for every service that uses certificates (similarly as libvirt/qemu is pointed for spice certs to <code>/etc/pki/vdsm/libvirt-spice</code>) or learn to point the services to correct certs – if not already present</li>
+  <li>certs/keys should be regenerated after saving of a new NIC configuration that affected address and signed again by oVirt engine CA
+    <ul>
+      <li>provision for definition of secondary NICs by their FQDN should be made so that CN=FQDN scenario is handled as well when implemented by engine</li>
+    </ul>
+  </li>
+  <li>after new keys are ready, cert and key files used by affected services should be replaced by new ones (contents of <code>/etc/pki/vdsm/libvirt-spice</code> when the display network is modified for instance).</li>
+</ul>
+
+<p>Note: I'm not familiar with oVirt at code level so the closer to it, the bigger grain of salt has to be taken.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>get rid of Host Subject hack for Display Network</li>
+  <li>allow using correct TLS certificates
+    <ul>
+      <li>allow separation of migration network from management network</li>
+      <li>maybe other network roles can be made separate as well</li>
+    </ul>
+  </li>
+  <li>when done right, DNS/IP modifications of host without host reinstall could be based on this feature</li>
+</ul>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<ul>
+  <li>if TLS keys/certificates workflow from the one below, it should be modified accordingly (probably as a separate feature?):
+    <ol>
+      <li>NIC configuration changes</li>
+      <li>vdsm generates a new key and a certificate request</li>
+      <li>vdsm passes a cert request to be signed by engine's CA</li>
+      <li>engine's CA:
+        <ol>
+          <li>signs the request hands the resulting certificate</li>
+          <li>hands the new certificate back to host</li>
+          <li>puts an old certificate on CRL (if any) as it is no longer valid</li>
+        </ol>
+      </li>
+      <li>vdsm puts the new certificate in place and updates all the configuration and/or symlinks that use it</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="related-bugs">related bugs</h3>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=672765">Regenerate Spice certificate on Host name/IP change</a></li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=670450">Backend: changing host name does not change the spice certificate on the vds -&gt; can't connect through trusted spice</a>
+    <ul>
+      <li>private, subject says it all, resolved by forcing host remove &amp; re-add instead of host name/IP change since 3.0</li>
+    </ul>
+  </li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=788977">Return hypervisor FQDN to spice client instead of hypervisor IP address</a>
+    <ul>
+      <li>private</li>
+      <li>request to define secondary interface that has Display Network role by its FQDN instead of IP address</li>
+      <li>concept can be extrapolated to define any interface used for any role by FQDN, not just management one</li>
+      <li>in addition to IPv4/DNAT use case, this will help oVirt get ready for bunch of other scenarios:
+        <ul>
+          <li>IPv4/IPv6 dual-stack networking</li>
+          <li>multiple IPv6 addresses on the interface at the same time</li>
+          <li>IPv6 Network Prefix Translation compatibility</li>
+        </ul>
+      </li>
+      <li>as said above - material for its own feature page?</li>
+    </ul>
+  </li>
+  <li><a href="https://bugzilla.redhat.com/show_bug.cgi?id=807384">expose host subject in host properties or VM properties</a>
+    <ul>
+      <li>request to get host-subject-override hack to REST API as well</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=835018">Generate separate certificates for spice / display network, update them on display network modification</a></p>
+
+<ul>
+  <li>this very page is directly based on the RFE</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/infra/one-certificate-key-pair-per-nic.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/infra/one-certificate-key-pair-per-nic.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

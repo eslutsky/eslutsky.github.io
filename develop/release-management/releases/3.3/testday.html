@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 3.3 TestDay &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/releases/">Releases</a></li>
+<li><a href="/develop/release-management/releases/3.3/">oVirt 3.3 release notes</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-33-testday">oVirt 3.3 TestDay</h1>
+
+<h3 id="objective">Objective</h3>
+
+<ul>
+  <li>engage project users and stakeholders to a hands-on experiences with oVirt new release.</li>
+  <li>improve the quality of oVirt.</li>
+  <li>Introduce and validating new oVirt 3.3 features</li>
+</ul>
+
+<h3 id="what-i-should-do">What I should do</h3>
+
+<ul>
+  <li>If you already have the hardware, verify if it meets the hardware requirement, refer information detail section below</li>
+  <li>Update the Participants section.</li>
+  <li>Go a head and <a href="/develop/release-management/releases/3.3/testday/#installation-notes">install ovirt</a></li>
+  <li>Accomplish the goals set in objective section , run the tests, update the test matrix.</li>
+  <li>Running into any issues - <a href="/community/">Try to get answer</a> or <a href="https://bugzilla.redhat.com/enter_bug.cgi?classification=oVirt">open a BZ</a></li>
+</ul>
+
+<h3 id="installation-notes">Installation notes</h3>
+
+<ul>
+  <li>make sure you have either a fedora 19 or centos 6.4 machine installed.</li>
+  <li>install the release pkg:</li>
+</ul>
+
+<p><code>sudo yum localinstall </code><a href="/releases/ovirt-release.noarch.rpm"><code>http://ovirt.org/releases/ovirt-release.noarch.rpm</code></a></p>
+
+<ul>
+  <li>make sure to enable the [ovirt-beta] &amp; [ovirt-stable] repos and disable the [ovirt-nightly] repo.</li>
+  <li>
+    <p>if you're using centos, make sure you have epel repo enabled as well:</p>
+
+    <p>[epel]
+  name=Extra Packages for Enterprise Linux 6 - $basearch
+  mirrorlist=<code>[</code>https://mirrors.fedoraproject.org/metalink?repo=epel-6&amp;arch<code>](https://mirrors.fedoraproject.org/metalink?repo=epel-6&amp;arch)</code>=$basearch
+  enabled=1
+  gpgcheck=0</p>
+  </li>
+  <li>
+    <p>install &amp; run setup</p>
+
+    <p>sudo yum install -y ovirt-engine
+  sudo engine-setup</p>
+  </li>
+  <li>for more info, checkout <a href="/download/">install oVirt</a></li>
+</ul>
+
+<h4 id="known-issues">Known issues</h4>
+
+<h5 id="host-installation">host installation</h5>
+
+<p>Fedora 19: If the ovirtmgmt bridge is not successfully installed during initial host-setup, manually click on the host, setup networks, and add the ovirtmgmt bridge. It is recommended to disable NetworkManager as well.</p>
+
+<h3 id="ovirt-33-new-features---test-status-table">oVirt 3.3 New Features - Test Status Table</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Functional team</th>
+      <th>Feature</th>
+      <th>Owner</th>
+      <th>Dev - Status</th>
+      <th>Test page</th>
+      <th>Tested By/ Distro</th>
+      <th>BZs</th>
+      <th>remarks</th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>General</td>
+      <td>General regressions</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/ram-snapshots/">RAM Snapshots</a></td>
+      <td>Arik Hadas (ahadas)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/ram-snapshots/#testing">Features/RAM Snapshots#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/novnc-console/">noVNC console</a></td>
+      <td>Frantisek Kobzik (FKobzik)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/novnc-console/#testing">Features/noVNC console#Testing</a></td>
+      <td>Einav Cohen (Ecohen) / Fedora 19</td>
+      <td> </td>
+      <td>tested only test case 2; encountered problems; notes were sent to feature owner.</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td>VNC keyboard layout per VM</td>
+      <td>Martin Betak (mbetak)</td>
+      <td>Green</td>
+      <td> </td>
+      <td>Yair Zaslavsky (Yair Zaslavsky)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td>multiple VMs from pool to user</td>
+      <td>Martin Betak (mbetak)</td>
+      <td>Green</td>
+      <td> </td>
+      <td>Maor Lipchuk (Maor Lipchuk)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>(Not related to this feature) -</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/non-plugin-console-invocation/">Non Plugin RDP Invocation</a></td>
+      <td>Frantisek Kobzik (FKobzik)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/non-plugin-console-invocation/#rdp">Features/Non plugin console invocation#RDP</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/instance-types/">Instance Types - VM Dialog Redesing</a></td>
+      <td>Tomas Jelinek (tjelinek) Omer Frenkel (ofrenkel)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/instance-types/#testing">Features/Instance Types#Testing</a></td>
+      <td>Alissa Bonas (abonas)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/instance-types/">Instance Types - change server/desktop behavior to 'optimize for'</a></td>
+      <td>Tomas Jelinek (tjelinek) Omer Frenkel (ofrenkel)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/instance-types/#testing">Features/Instance Types#Testing</a></td>
+      <td>Alexander Wels</td>
+      <td> </td>
+      <td>Ran all the tests and couldn't find any problems not mentioned above (Fedora 19 engine/Fedora 19 host)</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/os-info/">OS Info</a></td>
+      <td>Roy Golan (rgolan)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/os-info/#testing">OS info#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/console-connection-settings-dialog-in-portals/">Redesigned Display Options dialog</a></td>
+      <td>Frantisek Kobzik (fkobzik)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/console-connection-settings-dialog-in-portals/#testing">Features/Console connection settings dialog in portals#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="Features/EmulatedMachine">EmulatedMachine</a></td>
+      <td>Roy Golan (rgolan)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/cluster-emulation-modes/#testing">Cluster emulation modes#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/virt/spicehtml5/">SPICE HTML5 client integration</a></td>
+      <td>Frantisek Kobzik (fkobzik)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/virt/spicehtml5/#testing">Features/SpiceHTML5#Testing</a></td>
+      <td>Greg Sheremeta</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/cloud/cloud-init-integration/">Cloud-Init Integration</a></td>
+      <td>Greg Padgett (Gpadgett) Omer Frenkel (Ofrenkel)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/cloud/cloud-init-integration/#testing">Features/Cloud-Init Integration#Testing</a></td>
+      <td>pstehlik (F19)</td>
+      <td>didn't reach test itself</td>
+      <td>Only available with UI, no REST implementation yet.</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Virt</td>
+      <td><a href="/develop/release-management/features/storage/glusterfs-storage-domain/">GlusterFS Storage Domain</a></td>
+      <td>Deepak C Shetty (vdsm) &amp; Sharad Mishra (engine)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/storage/glusterfs-storage-domain/#testing">Features/GlusterFS Storage Domain#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td>Predictable host timeouts for ha/fencing</td>
+      <td>Juan Hernandez (juan)</td>
+      <td>Green</td>
+      <td> </td>
+      <td>laravot (laravot)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/network/device-custom-properties/">Device Custom Properties</a></td>
+      <td>Martin Perina (mperina) - infra Assaf Muller (amuller) - network</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="Features/Foreman Integration">Foreman Integration</a></td>
+      <td>Over Orvalli (ovedo) - Projects</td>
+      <td>Red</td>
+      <td><a href="/develop/release-management/features/foreman/foremanintegration/">Features/ForemanIntegration</a></td>
+      <td> </td>
+      <td>Eyal Edri (eedri)</td>
+      <td> </td>
+      <td> </td>
+      <td>Tested on fedora19</td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/infra/asynctaskmanagerchanges-3.3/">Async task manager changes</a></td>
+      <td>Yair Zaslavsky (Yair Zaslavsky)</td>
+      <td>Green - Merged</td>
+      <td><a href="/develop/release-management/features/infra/asynctaskmanagerchanges-3.3/#testing">Features/AsyncTaskManagerChanges 3.3#Testing</a></td>
+      <td><User:Amureini></User:Amureini></td>
+      <td>(reopened)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/infra/externaltasks/">ExternalTasks</a></td>
+      <td>Eli Mesika (emesika)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/infra/externaltasks/#testing">Features/ExternalTasks#Testing</a></td>
+      <td>Vojtech Szocs / Fedora 19</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/vdsm/supervdsm-service/">Supervdsm service</a></td>
+      <td>Yaniv Bronhaim (ybronhei)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/vdsm/supervdsm-service/">Features/Supervdsm service</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/developer-guide/engine/automatic-fencing/#automatic-fencing-in-ovirt-3.3">SSH Soft Fencing</a></td>
+      <td>Martin Perina (mperina)</td>
+      <td>Green</td>
+      <td><a href="/develop/developer-guide/engine/automatic-fencing/#testing">Automatic Fencing#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="Features/Java_SDK">Java SDK</a></td>
+      <td>Michael Pasternak (Michael pasternak)</td>
+      <td>Green - Merged</td>
+      <td><a href="http://www.ovirt.org/Features/Java_SDK_3.3#Testing">http://www.ovirt.org/Features/Java_SDK_3.3#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Infra</td>
+      <td><a href="/develop/release-management/features/infra/ssh-abilities/">SSH Abilities</a></td>
+      <td>Yaniv Bronhaim (ybronhei)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/infra/ssh-abilities/#testing">Features/Ssh Abilities#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/normalized-ovirtmgmt-initialization/">Normalized ovirtmgmt Initialization</a></td>
+      <td>Moti Asayag (masayag)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/network/normalized-ovirtmgmt-initialization/#testing">Features/Normalized_ovirtmgmt_Initialization#Testing</a></td>
+      <td><a href="https://github.com/sandrobonazzola">Sandro Bonazzola</a>/Fedora 19,oVirt Node</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Martin Pavlik (Mpavlik)/Fedora 19</td>
+      <td><a href="https://bugzilla.redhat.com/show_bug.cgi?id=987813">987813</a>, <a href="https://bugzilla.redhat.com/show_bug.cgi?id=987832">987832</a>, <a href="https://bugzilla.redhat.com/show_bug.cgi?id=987950">987950</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/migration-network/">Migration Network</a></td>
+      <td>Alona Kaplan (alkaplan)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/network/migration-network/#testing">Features/Migration_Network#Testing</a></td>
+      <td>Antoni Segura Puimedon (APuimedo)/Fedora 19</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/multiple-gateways/">Multiple Gateways</a></td>
+      <td>Assaf Muller (amuller)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/network/multiple-gateways/#testing">Features/Multiple_Gateways#Testing</a></td>
+      <td>David Caro Estévez (Dcaroest)/Fedora 19</td>
+      <td> </td>
+      <td>Tested only on Fedora 19 with two nics on different vlans</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Networking</td>
+      <td><a href="/develop/release-management/features/network/osn-integration/">Quantum Integration</a></td>
+      <td>Mike Kolesnik (mkolesni)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/network/osn-integration/#testing">Features/Quantum_Integration#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/virtio-scsi/">Virtio-SCSI support</a></td>
+      <td>Daniel Erez (derez)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/storage/virtio-scsi/#testing">Features/Virtio-SCSI#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/manage-storage-connections/">Manage Storage Connections</a></td>
+      <td>Alissa Bonas (abonas)</td>
+      <td>orange - Work in Progress</td>
+      <td><a href="/develop/release-management/features/storage/manage-storage-connections/#testing">Features/Manage_Storage_Connections#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/disk-hooks/">Adding VDSM hooks for hotplugging/unplugging a disk</a></td>
+      <td>Vered Volansky (vvolansk)</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage</td>
+      <td><a href="/develop/release-management/features/storage/moveascopyanddelete/">Separating "Move" vm operation to "Copy" and "Delete" operations to improve VM availability</a></td>
+      <td>laravot (laravot)</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="/develop/release-management/features/engine/watchdog-engine-support/">Watchdog engine support</a></td>
+      <td>lhornyak@redhat.com (LHornyak)</td>
+      <td> </td>
+      <td><a href="/develop/release-management/features/engine/watchdog-engine-support/#test-cases">Test cases</a></td>
+      <td>Douglas (dougsland)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>SLA</td>
+      <td><a href="/develop/release-management/features/sla/trusted-compute-pools/">Trusted compute pools</a></td>
+      <td><User:OMasad></User:OMasad></td>
+      <td> </td>
+      <td><a href="/develop/release-management/features/sla/trusted-compute-pools/#test-cases">Trusted_compute_pools#Test_cases</a></td>
+      <td>Ravi Nori (Rnori)</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Gluster</td>
+      <td><a href="/develop/release-management/features/gluster/gluster-hooks-management/">Gluster Hooks Management</a></td>
+      <td>Sahina Bose (Sahina)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/gluster/gluster-hooks-management/#test-cases">Gluster Hooks Management Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td>Available in UI. No REST API yet</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Gluster</td>
+      <td><a href="/develop/release-management/features/gluster/gluster-swift-management/">Gluster Swift Management</a></td>
+      <td>Sahina Bose (Sahina), avishwan@redhat.com (vdsm)</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/gluster/gluster-swift-management/#test-cases">Features/Gluster Swift Management#Test_Cases</a></td>
+      <td> </td>
+      <td> </td>
+      <td>Available in UI. No REST API yet</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Node</td>
+      <td><a href="/develop/release-management/features/node/universal-image/">Universal Node Image</a></td>
+      <td>mburns@redhat.com</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Node</td>
+      <td><a href="/develop/release-management/features/vdsm/vdsm-plugin/">Node VDSM Plugin</a></td>
+      <td>mburns</td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/vdsm/vdsm-plugin/#testing">Features/Node_vdsm_plugin#Testing</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Integration</td>
+      <td><a href="/develop/release-management/features/integration/otopi-infra-migration/">Otopi Infra Migration</a></td>
+      <td><a href="https://github.com/sandrobonazzola">Sandro Bonazzola</a></td>
+      <td>Green</td>
+      <td><a href="/develop/release-management/features/integration/otopi-infra-migration/#basic-testing">Test cases</a></td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>UX</td>
+      <td>User Portal performance improvements for IE8</td>
+      <td>vszocs@redhat.com, awels@redhat.com</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>UX</td>
+      <td><a href="Feature/Branding">Branding Support</a></td>
+      <td>awels@redhat.com</td>
+      <td>Green</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="regression-testing">Regression testing</h3>
+
+<h4 id="general">General</h4>
+
+<p>You need at least two physical servers to install and configure a basic yet complete oVirt environment with shared storage to exercise the following:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Bugs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Setup oVirt engine using either Active Directory or Local IPA, two hosts configured as hypervisors (Fedora / Ovirt-Node / other) with power management (Storage Domains - Data Domain / ISO Domain and Export Domain)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Setup oVirt engine - basic AIO flow</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Use ISO Uploader to populate images of OS and tools</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Basic Network Configuration</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create virtual machines and assign them to users</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Migrate Virtual Machines between the hypervisors</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Collect log file using the log collector tool</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Upgrade from 3.2 to 3.3 including Fedora upgrade</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="configuration">Configuration</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Bugs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Configure high availability for virtual machines which are running mission critical workloads, so they will be restarted on another host if hardware failure occurs</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Use the multi-level administration feature to assign different levels of user permissions</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Live Migration Scenarios</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Enable smartcard support for a VM and verify that the <smartcard mode="passthrough" type="spicevmc"></smartcard> is passed to libvirt</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="storage">Storage</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Bugs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Use the General configuration as a base configuration</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create different types of storage domains (NFS, ISCSI, FC, local storage) with 2 or more data domains</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Install at least 2 VMs on each of the Data Centers</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Move the master domain to a different domain within the Data Center</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Export one of the installed VMs, delete it, import it to another Data Center</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create a template from one of the VMs and then create a new VM based on this template</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Move the newly created VM to another data domain</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create several snapshots from a VM (Each time change something in the guest)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create several live snapshots from a VM (Each time change something in the guest)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Restore a previous snapshot</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Live migrate a disk between storage domains</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Storage Failovers</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Host Failovers</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Power User Portal provides power users the ability to create and manage virtual machines from the power user portal</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>High Availability scenarios provides instructions to configure virtual machine and host high availability</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="network">Network</h4>
+
+<ul>
+  <li>Important Note: Known Fedora 19 bug: If the ovirtmgmt bridge is not successfully installed during initial host-setup, manually click on the host, setup networks, and add the ovirtmgmt bridge.</li>
+  <li>Base config - single NIC, bridge on top, VMs attached to NIC</li>
+  <li>Advanced configurations:</li>
+</ul>
+
+<p><img alt="" width="717" height="442" src="/images/wiki/Vlan_bonding.png?1560777612" /> make sure each of the configs can:</p>
+
+<ul>
+  <li>survive a reboot</li>
+  <li>test network at both host and VM level</li>
+  <li>ping and transfer large amounts of data (2Gb size files should be enough)</li>
+  <li>remain operational over time (1hr of uptime should be sufficient for the basic testing)</li>
+</ul>
+
+<p>Bugs found:</p>
+
+<ul>
+  <li>Bug 906289 - [oVirt-webadmin] [network] Non-VM networks shown as VM networks on cluster attachment dialog</li>
+  <li>Bug 906291 - [oVirt-webadmin] [network] Non-VM networks not being detached from cluster</li>
+  <li>Bug 906313 - [oVirt-webadmin] [setupNetworks] "No valid Operation for <network_name> and Unassigned Logical Networks panel"</network_name></li>
+  <li>Bug 906383 - [vdsm] [setupNetworks] Error while attaching non-VM network to interface on Fedora 18</li>
+  <li>Bug 906393 - [oVirt] [network] Audit log message for unmanaged network</li>
+  <li>Bug 906394 - [oVirt-webadmin] [network] Loading animation in network main tab 'hosts' and 'vms' subtab is stuck on first view of the sub tab</li>
+  <li>Bug 906405 - Bad Error Message when Removing vNic from Running VM</li>
+  <li>Bug 906434 - Editing vnic's type and mac are blocked when the vnic was unplugged and updated to plugged</li>
+  <li>Bug 906440 - Updating type of a plugged nic should be blocked on the ui side</li>
+</ul>
+
+<h4 id="tools">Tools</h4>
+
+<ul>
+  <li>Basic operations on iso-uploader:</li>
+</ul>
+
+<ol>
+  <li><strong>engine-iso-uploader list</strong></li>
+  <li>**engine-iso-uploader upload <iso> -i <iso-domain-name> -v -f**</iso-domain-name></iso></li>
+</ol>
+
+<ul>
+  <li>Basic operations on log-collector:</li>
+</ul>
+
+<ol>
+  <li><strong>engine-log-collector list</strong></li>
+  <li><strong>engine-log-collector collect</strong></li>
+</ol>
+
+<ul>
+  <li>Basic operation on image-uploader</li>
+</ul>
+
+<p>**engine-image-uploader –name=<new name="" here=""> -e <domain> upload my.ovf**</domain></new></p>
+
+<h5 id="new-to-v31">New to v3.1:</h5>
+
+<ul>
+  <li>port mirroring: one can setup a VM that sniffs all IP traffic between VMs on a network on a host.</li>
+  <li>no mac spoofing: VMs cannot emit packets with spoofed mac address (unless specifically allowed to).</li>
+  <li>Sync network: change network MTU (or other property) on host, verify that Engine may overwrite it with Sync network</li>
+  <li>Jumbo packets: see if can be configured and used by storage</li>
+</ul>
+
+<h5 id="new-to-v32">New to v3.2:</h5>
+
+<ul>
+  <li>Network main tab operational: you can search hosts and VM based on their network connectivity</li>
+  <li>Guest agent reported devices: install guest agent on a VM and see it report internal information of the vNics (internal device name, IPv4 and IPv6)</li>
+  <li>Network Linking: allow changing network the VM is connect to while it is running</li>
+</ul>
+
+<h4 id="apis">APIs</h4>
+
+<p>by default we'll be using the webadmin as our API for testing on this section we'll try to have default deployment with the different APIs</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Webadmin</th>
+      <th>UserPortal</th>
+      <th>Rest</th>
+      <th>Python-SDK</th>
+      <th>CLI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create a data-center</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create a cluster</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Update cluster</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Install a host</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create a storage domain on DC</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Attach export/ISO domain to DC</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create vm</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Delete vm</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Import vm</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Start/hibernate/resume/stop vm</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create a snapshot to vm</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create a template from vm</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create vm from template</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Sign out</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>General</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Python API of the above scenarios can be found in: <a href="/develop/api/pythonapi/">Testing/PythonApi</a></p>
+
+<h4 id="spice">Spice</h4>
+
+<p>For details about configuration check <a href="/develop/infra/testing/spice/">Testing/Spice</a></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Bugs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Install Windows VM and a Linux VM with Guest Tools (QXL graphic driver and spice vdagent)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Assign user to these vms, login to a user portal, from your client machine, and connect to it using the Spice protocol</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Try to watch a clip via YouTube or any other web based video (with QXL driver installed on VM)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Try to watch a Local movie (with QXL driver installed on VM)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Try to use client mouse mode and clipboard share between client and VM (with spice agent installed on VM)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Install AutoCAD or any other graphic application a try to work with it (with QXL driver installed on VM)</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="user-interface">User Interface</h4>
+
+<p>Webadmin:</p>
+
+<h4 id="node">Node</h4>
+
+<p>oVirt Node image is not currently available for the Test Day. The image should be available within the next day or two.</p>
+
+<h4 id="sla">SLA</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Bugs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Set DC Quota enforcement mode to 'Enforced'</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create new Quota which limits storage</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create new Quota which limits cpu and memory</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Define consumers for the quotas</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Asign the quotas to VMs and Disks</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Run VM with quota</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Move a disk</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Snapshot a vm (disk)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Stop VM</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Commit snapshot</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>See that quota usage makes sance</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Open User Portal</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Log-in as a user defined as quota consumer</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Create VMs and Disks</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Run VMs</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Go to resources tab and see that quota usage makes sance</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="bug-reporting">Bug Reporting</h3>
+
+<ul>
+  <li>ovirt - <a href="https://bugzilla.redhat.com/enter_bug.cgi?classification=oVirt">https://bugzilla.redhat.com/enter_bug.cgi?classification=oVirt</a></li>
+  <li>Spice - <a href="https://bugs.freedesktop.org/">https://bugs.freedesktop.org/</a> under Spice product</li>
+  <li>VDSM - <a href="https://bugzilla.redhat.com/show_bug.cgi?id=831998">https://bugzilla.redhat.com/show_bug.cgi?id=831998</a></li>
+</ul>
+
+<p>Tracker bug for the release - <a href="https://bugzilla.redhat.com/881006">https://bugzilla.redhat.com/881006</a></p>
+
+<h2 id="test-day-summary">Test Day Summary</h2>
+
+<h3 id="release-blockers">Release Blockers</h3>
+
+<h3 id="participants-table">Participants Table</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Tested Features</th>
+      <th>Distro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>jdoe@redhat.com</td>
+      <td>Watchdog engine support</td>
+      <td>EL6</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/sandrobonazzola">Sandro Bonazzola</a></td>
+      <td><a href="/develop/release-management/features/network/normalized-ovirtmgmt-initialization/">Normalized_ovirtmgmt_Initialization</a>, Network Base config</td>
+      <td>Fedora 19, oVirt Node</td>
+    </tr>
+    <tr>
+      <td>Amureini (Amureini)</td>
+      <td><a href="/develop/release-management/features/infra/asynctaskmanagerchanges-3.3/">Features/AsyncTaskManagerChanges 3.3</a></td>
+      <td>EL6</td>
+    </tr>
+    <tr>
+      <td>omasad (Omasad)</td>
+      <td><a href="bz#892260">bz#892260</a></td>
+      <td>Fedora 19</td>
+    </tr>
+    <tr>
+      <td>Arik Hadas (ahadas)</td>
+      <td><a href="/develop/release-management/features/storage/online-virtual-drive-resize/">Online_Virtual_Drive_Resize</a></td>
+      <td>Fedora 19</td>
+    </tr>
+    <tr>
+      <td>mtayer (mtayer)</td>
+      <td><a href="bz#866319">bz#866319</a>, <a href="bz#854369">bz#854369</a> - both are small cli features</td>
+      <td>Fedora 19</td>
+    </tr>
+    <tr>
+      <td>mtayer (mtayer)</td>
+      <td>Compressing DWH DB backup</td>
+      <td>Fedora 19</td>
+    </tr>
+    <tr>
+      <td>Omer Frenkel (Ofrenkel)</td>
+      <td>Select host as SPM</td>
+      <td>Fedora 19</td>
+    </tr>
+  </tbody>
+</table>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/releases/3.3/testday.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/releases/3.3/testday.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

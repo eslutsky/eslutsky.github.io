@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Proposal VDSM - Engine Data Statistics Retrieval &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/developer-guide/">Developer-guide</a></li>
+<li><a href="/develop/developer-guide/vdsm/">Vdsm</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="proposal-vdsm---engine-data-statistics-retrieval">Proposal VDSM - Engine Data Statistics Retrieval</h1>
+
+<p>== VDSM &lt;=&gt; Engine data retrieval optimization ==</p>
+
+<h2 id="motivation">Motivation:</h2>
+
+<p>Currently the oVirt Engine is polling a lot of data from VDSM every 15 seconds. This should be optimized and the amount of data requested should be more specific.</p>
+
+<p>For each VM the data currently contains much more information than actually needed which blows up the size of the XML content quite big. We could optimize this by splitting the reply on the getVmStats based on the needs of the engine into different requests. For this reason Omer Frenkel and me have split up the data into parts based on their usage.</p>
+
+<h2 id="changes">Changes</h2>
+
+<h4 id="new-verbs">New Verbs</h4>
+
+<h5 id="getallvmruntimestats">getAllVmRuntimeStats</h5>
+
+<p>Get runtime information of all VMs
+Returns for each VM a map with UUID and a value of:</p>
+
+<ul>
+  <li><strong>@cpuSys</strong> Ratio of CPU time spent by qemu on other than guest time</li>
+  <li><strong>@cpuUser</strong> Ratio of CPU time spent by the guest VM</li>
+  <li><strong>@memUsage</strong> The percent of memory in use by the guest</li>
+  <li><strong>@elapsedTime</strong> The number of seconds that the VM has been running</li>
+  <li><strong>@status</strong> The current status of the given VM</li>
+  <li><strong>@statsAge</strong> The age of these statistics in seconds</li>
+  <li><strong>@hashes</strong> Hashes of several statistics and information around VMs</li>
+</ul>
+
+<p>Hashes consists of:</p>
+
+<ul>
+  <li><strong>@info</strong> Hash for VmConfInfo data</li>
+  <li><strong>@config</strong> Hash of the VM configuration XML</li>
+  <li><strong>@status</strong> Hash of the VmStatusInfo data</li>
+  <li><strong>@guestDetails</strong> Hash of the VmGuestDetails data</li>
+</ul>
+
+<h5 id="getvmstatus">getVmStatus</h5>
+
+<p>Get status information about a list of VMs
+Parameters:</p>
+
+<ul>
+  <li><strong>@vmIDs</strong> a list of UUIDs for VMs to query</li>
+</ul>
+
+<p>Returns for each VM in vmIDs a map with UUID and a value of:</p>
+
+<ul>
+  <li><strong>timeOffset</strong> The time difference from host to the VM in seconds</li>
+  <li><strong>monitorResponse</strong> Indicates if the qemu monitor is responsive</li>
+  <li><strong>clientIp</strong> The IP address of the client connected to the display</li>
+  <li><strong>username</strong> the username associated with the current session</li>
+  <li><strong>session</strong> The current state of user interaction with the VM</li>
+  <li><strong>guestIPs</strong> A space separated string of assigned IPv4 addresses</li>
+  <li><strong>pauseCode</strong> Indicates the reason a VM has been paused</li>
+</ul>
+
+<h5 id="getvmconfinfo">getVmConfInfo</h5>
+
+<p>Get configuration information about a list of VMs
+Parameters:</p>
+
+<ul>
+  <li><strong>@vmIDs</strong> a list of UUIDs for VMs to query</li>
+</ul>
+
+<p>Returns for each VM in vmIDs a map with UUID and a value of:</p>
+
+<ul>
+  <li><strong>acpiEnable</strong> Indicates if ACPI is enabled inside the VM</li>
+  <li><strong>displayPort</strong> The port in use for unencrypted display data</li>
+  <li><strong>displaySecurePort</strong> The port in use for encrypted display data</li>
+  <li><strong>displayType</strong> The type of display in use</li>
+  <li><strong>displayIp</strong> The IP address to use for accessing the VM display</li>
+  <li><strong>pid</strong> The process ID of the underlying qemu process</li>
+  <li><strong>vmType</strong> The type of VM</li>
+  <li><strong>kvmEnable</strong> Indicates if KVM hardware acceleration is enabled</li>
+  <li><strong>cdrom</strong> <strong><em>optional</em></strong> The path to an ISO image used in the VM's CD-ROM device</li>
+  <li><strong>boot</strong> <strong><em>optional</em></strong> An alias for the type of device used to boot the VM</li>
+</ul>
+
+<h5 id="getallvmdevicestats">getAllVmDeviceStats</h5>
+
+<p>VM device statistics containing information for getting statistics and SLA information
+Returns for each VM a map with UUID and a value of:</p>
+
+<ul>
+  <li><strong>memoryStats</strong> Memory statistics as reported by the guest agent</li>
+  <li><strong>balloonInfo</strong> Guest memory balloon information</li>
+  <li><strong>disksUsage</strong> Info about mounted filesystems as reported by the agent</li>
+  <li><strong>network</strong> Network bandwidth/utilization statistics</li>
+  <li><strong>disks</strong> Disk bandwidth/utilization statistics</li>
+</ul>
+
+<h5 id="getvmguestdetails">getVmGuestDetails</h5>
+
+<p>Get details from the guest OS from a list of VMs
+Parameters:</p>
+
+<ul>
+  <li><strong>@vmIDs</strong> a list of UUIDs for VMs to query</li>
+</ul>
+
+<p>Returns for each VM in vmIDs a map with UUID and a value of:</p>
+
+<ul>
+  <li><strong>appsList</strong> A list of installed applications with their versions</li>
+  <li><strong>netIfaces</strong> Network device address info as reported by the agent</li>
+</ul>
+
+<h4 id="usage">Usage</h4>
+
+<p>Currently the engine is requesting currently every 3 seconds the vm list from each vdsm host and every 15 seconds all the data mentioned above for all VMs.</p>
+
+<p>The change would be as follows:</p>
+
+<p>The engine requests every 3 seconds getAllVmRuntimeStats from vdsm which will give the engine the most used data. If the engine has a mismatch of the hashes returned by getAllVmRuntimeStats it should request the data changed.</p>
+
+<p>if hashes.info changed =&gt; request getVmConfInfo with all vmIDs on that host where the hash changed if hashes.status changed =&gt; request getVmStatus with all vmIDs on that host where the hash changed if hashes.guestDetails changed =&gt; request getVmGuestDetails with all vmIDs on that host where the hash changed</p>
+
+<p>Request getAllVmDeviceStats periodically e.g. every 5 minutes, which should be sufficient for the DWH, in case it is not it could be even configurable.</p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/developer-guide/vdsm/proposal-vdsm-engine-data-statistics-retrieval.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/developer-guide/vdsm/proposal-vdsm-engine-data-statistics-retrieval.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Cumulative RX TX Statistics &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="cumulative-network-usage-statistics">Cumulative Network Usage Statistics</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature will implement reporting of total received/transmitted bytes per network interface (both for hosts and for VMs), on top of the currently-reported receive/transmit rate.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Lior Vernia</li>
+  <li>Email: lvernia@redhat.com</li>
+</ul>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<p>Numerous benefits have been suggested:</p>
+
+<ul>
+  <li>This data is useful in several use cases (e.g. hosting services), where total VM network usage needs to be accounted for. While it's possible to compute total usage out of the reported rates, it requires implementing some logic in a script, and the precision of the reported rate is limited).</li>
+  <li>Due to the aforementioned limited precision of reported rate (e.g. traffic needs to be bigger, on average over a 15-second period, than an interface's speed divided by 1000 to be reported), reporting the total RX/TX statistics will allow to spot thinner traffic going through the interface, for example to make sure that an interface is operational.</li>
+  <li>The reported 'speed' of each interface is nothing to be trusted. It may change during <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1118699">1118699 a single measurement window</a>, causing currently-reported rxRate/txRate utterly meaningless.</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<p>Currently, the only network usage statistics reported for network interfaces (whether host or VM) are momentary receive/transmit rates. By popular demand, as part of this feature reporting will be added for total received/transmitted bytes for both hosts and VMs, both in the GUI and via REST.</p>
+
+<p>This will generally be implemented by having vdsm report total RX/TX byte statistics and sample times back to the engine, and having the engine store and show those statistics, as well as compute the average rate from the previous sample rather than depend on the reported vdsm rate (depending on cluster compatibility version).</p>
+
+<p>To store cumulative statistics from the beginning of a VM interface's life to its end, surviving shut downs, migrations and hot-unplugs - these reset the counters on the network devices - we will have to also store for each interface offset numbers for RX and TX traffic (and update whenever one of the above cases happen). A nice touch would be to also keep these offsets for hosts, starting from zero when they're added to a deployment, which will enable VDI-type deployments to keep count of total network resources used by their hosts (e.g. in case the hosts are leased from a VPS provider).</p>
+
+<p>All values will be stored as Long - this will limit them to values up to 2^63 (as Java currently only uses signed longs). This is probably okay and we would not have to deal with wraparound values. Null values will correspond to hosts/VMs residing in incompatible clusters (where the data is not reported so it's not available).</p>
+
+<h4 id="entity-description">Entity Description</h4>
+
+<p>No new entities need to be implemented, but NetworkStatistics (used by both host and VM interfaces) will be added total RX, total TX, RX offset, TX offset and sample time members. Corresponding columns will be added to the vds_interface_statistics and vm_interface_statistics tables, whose DAOs will have to be updated accordingly. Related views will need to be updated as well.</p>
+
+<h4 id="engine-flows">Engine Flows</h4>
+
+<p>Whenever new statistics reported by vdsm (either for a host or for a VM) are collected for persistence to the DB, and assuming cluster compatibility version &gt;= 3.6:</p>
+
+<ul>
+  <li>Total RX/TX should be updated, after accounting for the offset at the time.</li>
+  <li>The sample time should be stored as reported.</li>
+  <li>RX/TX rates should be computed from the difference between the sampled values divided by the difference between sample times. Special care should be taken with statistics reported for the first time, when the previous sample value and sample time should be null - in which case, it's best to set the rate to null (it will be updated as soon as the next sample arrives). Similar care should be taken if the time interval isn't positive - this likely means that the host had been rebooted and the time measurement had reset.</li>
+  <li>RX/TX offsets should be updated if the reported value is bigger than the previous one - this means that for some reason, RX/TX counters had reset. The offset should be set to the previously reported values (newly sampled values will start from zero again, so they would have to be added to whatever had been accumulated before). This should take care of VM interface hot-unplug, VM migration and host/VM reboot/shutdown. As with the rates, caution should be exercised in the case of a first-time measurement - this would mean that the interface has not been encountered yet, therefore its offset should be set to minus the currently-reported total RX/TX (so that accounting will begin from zero at this point in time).</li>
+</ul>
+
+<p>If the cluster compatibility version &lt; 3.6, rate and drop statistics should be updated as before, and the newly-reported statistics should be set to null (including the internally-used offsets). This should take care of hosts/VMs being moved from a compatible cluster to an incompatible one - whenever the first statistics data arrive in the new cluster, previous values will be cleared.</p>
+
+<h4 id="user-experience">User Experience</h4>
+
+<p>The "new" statistics should be reported as additional columns in all the existing tables where interface statistics are displayed: host/interfaces subtab, VM/interfaces subtab, network/hosts subtab, network/VMs subtab.</p>
+
+<h4 id="vdsm">VDSM</h4>
+
+<p>New data entries should be added to the NIC dictionaries reported in getVdsStats and getVmStats: "rx", "tx" and "sampleTime".</p>
+
+<p><a href="http://gerrit.ovirt.org/#/q/status:merged+project:vdsm+branch:master+topic:rx_tx,n,z">http://gerrit.ovirt.org/#/q/status:merged+project:vdsm+branch:master+topic:rx_tx,n,z</a></p>
+
+<h4 id="rest">REST</h4>
+
+<p>New data entries should be added to the host and VM NIC statistical queries: "data.total.rx" and "data.total.tx". There's no apparent reason to expose the sample time, as the existing RFEs haven't asked for it - it could be exposed in the future if need be. The new entries should all be of type "Counter", of value "Integer" and of unit "Bytes".</p>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>RFE for vdsm to report total byte count: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1066570">https://bugzilla.redhat.com/show_bug.cgi?id=1066570</a>.</li>
+  <li>RFE for engine to report it via the GUI and REST: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1063343">https://bugzilla.redhat.com/show_bug.cgi?id=1063343</a></li>
+  <li>RFE requesting better accounting information in general: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=1172153">https://bugzilla.redhat.com/show_bug.cgi?id=1172153</a></li>
+  <li>Workaround using existing reported rates: <a href="https://lists.ovirt.org/pipermail/users/2014-November/029048.html">https://lists.ovirt.org/pipermail/users/2014-November/029048.html</a></li>
+  <li>Various other requests on the users@ovirt.org mailing list.</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<h3 id="host-interfaces">Host interfaces</h3>
+
+<ul>
+  <li>Verify the reported RX/TX values correspond to the ones reported inside the host itself, when running for example "ip -s link show" on the interface.</li>
+  <li>Verify that when a host is moved from a compatible cluster to an incompatible cluster, the total RX/TX statistics are reset.</li>
+  <li>Initiate constant traffic on a host interface (for example by using iperf), of a rate lower than the interface's speed divided by 1000. Verify that while no rate is displayed, the total byte count increases as expected.</li>
+</ul>
+
+<h3 id="vm-interfaces">VM interfaces</h3>
+
+<ul>
+  <li>Verify that total RX/TX statistics are reset to zero when:
+    <ul>
+      <li>A new interface is created.</li>
+      <li>A VM is moved from an incompatible cluster to a compatible cluster.</li>
+    </ul>
+  </li>
+  <li>Verify that total RX/TX statistics are NOT reset to zero when:
+    <ul>
+      <li>An interface is hot-unplugged and then hot-plugged back.</li>
+      <li>The VM is brought down and then up (possibly unplugging and plugging interfaces while the VM is down).</li>
+      <li>The VM is migrated.</li>
+    </ul>
+  </li>
+  <li>Verify that total RX/TX statistics are cleared (not reported) when:
+    <ul>
+      <li>A new interface is created for a VM in an incompatible cluster.</li>
+      <li>A VM is moved from a compatible cluster to an incompatible cluster.</li>
+    </ul>
+  </li>
+  <li>Run the same traffic test as with the host interfaces.</li>
+</ul>
+
+<h2 id="contingency-plan">Contingency Plan</h2>
+
+<p>Could be postponed to the next minor version - this feature doesn't provide critical functionality, and workarounds exist.</p>
+
+<h2 id="comments-and-discussion">Comments and Discussion</h2>
+
+<p>At the moment there don't appear to be any critical open issues concerning this feature. The feature is being discussed in a dedicated thread on the users@ovirt.org mailing list.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/cumulative-rx-tx-statistics.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/cumulative-rx-tx-statistics.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 22 May 2018 09:18 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Installing oVirt &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/install-guide/">oVirt Installation Guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-3-installing-ovirt">Chapter 3: Installing oVirt</h1>
+
+<h2 id="installing-the-ovirt-engine-packages">Installing the oVirt Engine Packages</h2>
+
+<p>Before you can configure and use the oVirt Engine, you must install the <code>ovirt-engine</code> package and dependencies.</p>
+
+<p><strong>Installing the oVirt Engine Packages</strong></p>
+
+<ol>
+  <li>
+    <p>Before you can start installing oVirt, add the official repository:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release43.rpm&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>To ensure all packages are up to date, run the following command on the machine where you are installing the oVirt Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum update&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> Reboot the machine if any kernel related packages have been updated.</p>
+  </li>
+  <li>
+    <p>Run the following command to install the <code>ovirt-engine</code> package and dependencies.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install ovirt-engine&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Proceed to the next step to configure your oVirt Engine.</p>
+
+<h2 id="configuring-the-ovirt-engine">Configuring the oVirt Engine</h2>
+
+<p>After you have installed the <code>ovirt-engine</code> package and dependencies, you must configure the oVirt Engine using the <code>engine-setup</code> command. This command asks you a series of questions and, after you provide the required values for all questions, applies that configuration and starts the <code>ovirt-engine</code> service.</p>
+
+<p>By default, <code>engine-setup</code> creates and configures the Engine database locally on the Engine machine. Alternatively, you can configure the Engine to use a remote database or a manually-configured local database; however, you must set up that database before running <code>engine-setup</code>.</p>
+
+<p>To set up a remote database see <a href="appe-Preparing_a_Remote_PostgreSQL_Database">Preparing a Remote PostgreSQL Database</a>. To set up a manually-configured local database, see <a href="appe-Preparing_a_Local_Manually-Configured_PostgreSQL_Database">Preparing a Local Manually-Configured PostgreSQL Database</a>.</p>
+
+<p>By default, <code>engine-setup</code> will configure a websocket proxy on the Engine. However, for security and performance reasons, the user can choose to configure it on a separate host. See <a href="appe-Installing_the_Websocket_Proxy_on_a_different_host">Installing the Websocket Proxy on a different host</a> for instructions.</p>
+
+<p><strong>Important:</strong> The <code>engine-setup</code> command guides you through several distinct configuration stages, each comprising several steps that require user input. Suggested configuration defaults are provided in square brackets; if the suggested value is acceptable for a given step, press <strong>Enter</strong> to accept that value.</p>
+
+<p>You can run <code>engine-setup --accept-defaults</code> to automatically accept all questions that have default answers. This option should be used with caution and only if you are familiar with engine-setup.</p>
+
+<p><strong>Configuring the oVirt Engine</strong></p>
+
+<ol>
+  <li>
+    <p>Run the <code>engine-setup</code> command to begin configuration of the oVirt Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to configure the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure Engine on this host (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Optionally allow <code>engine-setup</code> to configure the Image I/O Proxy (<code>ovirt-imageio-proxy</code>) to allow the Engine to upload virtual disks into storage domains.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure Image I/O Proxy on this host? (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Optionally allow <code>engine-setup</code> to configure a websocket proxy server for allowing users to connect to virtual machines via the noVNC or HTML 5 consoles:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure WebSocket Proxy on this machine? (Yes, No) [Yes]:&#x000A;</code></pre></div>
+    <p>To configure the websocket proxy on a separate machine, select <code>No</code> and refer to <a href="appe-Installing_the_Websocket_Proxy_on_a_Separate_Machine">Installing the Websocket Proxy on a Separate Machine</a> for configuration instructions.</p>
+  </li>
+  <li>
+    <p>Choose whether to configure Data Warehouse on the Engine machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Please note: Data Warehouse is required for the engine. If you choose to not configure it on this host, you have to configure it on a remote host, and then configure the engine on this host so that it can access the database of the remote Data Warehouse host.&#x000A; Configure Data Warehouse on this host (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Optionally allow access to a virtual machines's serial console from the command line.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure VM Console Proxy on this host (Yes, No) [Yes]:&#x000A;</code></pre></div>
+    <p>Additional configuration is required on the client machine to use this feature. See "Opening a Serial Console to a Virtual Machine" in the <a href="/documentation/vmm-guide/Virtual_Machine_Management_Guide/">Virtual Machine Management Guide</a>.</p>
+  </li>
+  <li>
+    <p>Optionally install Open Virtual Network (OVN). Selecting Yes will install an OVN central server on the Engine machine, and add it to oVirt as an external network provider. The default cluster will use OVN as its default network provider, and hosts added to the default cluster will automatically be configured to communicate with OVN.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Configure ovirt-provider-ovn (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Press <strong>Enter</strong> to accept the automatically detected hostname, or enter an alternative hostname and press <strong>Enter</strong>. Note that the automatically detected hostname may be incorrect if you are using virtual hosts.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Host fully qualified DNS name of this server [*autodetected host name*]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The <code>engine-setup</code> command checks your firewall configuration and offers to modify that configuration to open the ports used by the Engine for external communication such as TCP ports 80 and 443. If you do not allow <code>engine-setup</code> to modify your firewall configuration, then you must manually open the ports used by the Engine. Firewalld will be configured as the firewall manager because <code>iptables</code> have been deprecated.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> Setup can automatically configure the firewall on this system.&#x000A; Note: automatic configuration of the firewall may overwrite current settings.&#x000A; NOTICE: iptables is deprecated and will be removed in future releases&#x000A; Do you want Setup to configure the firewall? (Yes, No) [Yes]:&#x000A;</code></pre></div>
+    <p>If you choose to automatically configure the firewall, and no firewall managers are active, you are prompted to select your chosen firewall manager from a list of supported options. Type the name of the firewall manager and press <strong>Enter</strong>. This applies even in cases where only one option is listed.</p>
+  </li>
+  <li>
+    <p>Choose to use either a local or remote PostgreSQL database as the Data Warehouse database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Where is the DWH database located? (Local, Remote) [Local]:&#x000A;</code></pre></div>
+    <ul>
+      <li>
+        <p>If you select <code>Local</code>, the <code>engine-setup</code> command can configure your database automatically (including adding a user and a database), or it can connect to a preconfigured local database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Setup can configure the local postgresql server automatically for the DWH to run. This may conflict with existing applications.&#x000A;  Would you like Setup to automatically configure postgresql and create DWH database, or prefer to perform that manually? (Automatic, Manual) [Automatic]:&#x000A;</code></pre></div>      </li>
+      <li>
+        <p>If you select <code>Automatic</code> by pressing <strong>Enter</strong>, no further action is required here.</p>
+      </li>
+      <li>
+        <p>If you select <code>Manual</code>, input the following values for the manually-configured local database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  DWH database secured connection (Yes, No) [No]:&#x000A;  DWH database name [ovirt_engine_history]:&#x000A;  DWH database user [ovirt_engine_history]:&#x000A;  DWH database password:&#x000A;</code></pre></div>
+        <p><strong>Note:</strong> <code>engine-setup</code> requests these values after the Engine database is configured in the next step.</p>
+      </li>
+      <li>
+        <p>If you select <code>Remote</code>, input the following values for the preconfigured remote database host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  DWH database host [localhost]:&#x000A;  DWH database port [5432]:&#x000A;  DWH database secured connection (Yes, No) [No]:&#x000A;  DWH database name [ovirt_engine_history]:&#x000A;  DWH database user [ovirt_engine_history]:&#x000A;  DWH database password:&#x000A;</code></pre></div>
+        <p><strong>Note:</strong> <code>engine-setup</code> requests these values after the Engine database is configured in the next step.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Choose to use either a local or remote PostgreSQL database as the Engine database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Where is the Engine database located? (Local, Remote) [Local]:&#x000A;</code></pre></div>
+    <ul>
+      <li>
+        <p>If you select <code>Local</code>, the <code>engine-setup</code> command can configure your database automatically (including adding a user and a database), or it can connect to a preconfigured local database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Setup can configure the local postgresql server automatically for the engine to run. This may conflict with existing applications.&#x000A;  Would you like Setup to automatically configure postgresql and create Engine database, or prefer to perform that manually? (Automatic, Manual) [Automatic]:&#x000A;</code></pre></div>
+        <ul>
+          <li>
+            <p>If you select <code>Automatic</code> by pressing <strong>Enter</strong>, no further action is required here.</p>
+          </li>
+          <li>
+            <p>If you select <code>Manual</code>, input the following values for the manually-configured local database:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Engine database secured connection (Yes, No) [No]:&#x000A;  Engine database name [engine]:&#x000A;  Engine database user [engine]:&#x000A;  Engine databuase password:&#x000A;</code></pre></div>          </li>
+          <li>
+            <p>If you select <code>Remote</code>, input the following values for the preconfigured remote database host:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  Engine database host [localhost]:&#x000A;  Engine database port [5432]:&#x000A;  Engine database secured connection (Yes, No) [No]:&#x000A;  Engine database name [engine]:&#x000A;  Engine database user [engine]:&#x000A;  Engine database password:&#x000A;</code></pre></div>          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Set a password for the automatically created administrative user of the oVirt Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Engine admin password:&#x000A;Confirm engine admin password:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Select <strong>Gluster</strong>, <strong>Virt</strong>, or <strong>Both</strong>:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Application mode (Both, Virt, Gluster) [Both]:&#x000A;</code></pre></div>
+    <p><strong>Both</strong> offers the greatest flexibility. In most cases, select <code>Both</code>. Virt application mode allows you to run virtual machines in the environment; Gluster application mode only allows you to manage GlusterFS from the Administration Portal.</p>
+  </li>
+  <li>
+    <p>If you installed the OVN provider, you can choose to use the default credentials, or specify an alternative.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Use default credentials (admin@internal) for ovirt-provider-ovn (Yes, No) [Yes]:&#x000A;oVirt OVN provider user[admin@internal]:&#x000A;oVirt OVN provider password:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Set the default value for the <code>wipe_after_delete</code> flag, which wipes the blocks of a virtual disk when the disk is deleted.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Default SAN wipe after delete (Yes, No) [No]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>The Engine uses certificates to communicate securely with its hosts. This certificate can also optionally be used to secure HTTPS communications with the Engine. Provide the organization name for the certificate:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Organization name for certificate [*autodetected domain-based name*]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Optionally allow <code>engine-setup</code> to make the landing page of the Engine the default page presented by the Apache web server:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Setup can configure the default page of the web server to present the application home page. This may conflict with existing applications.&#x000A;Do you wish to set the application as the default web page of the server? (Yes, No) [Yes]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>By default, external SSL (HTTPS) communication with the Engine is secured with the self-signed certificate created earlier in the configuration to securely communicate with hosts. Alternatively, choose another certificate for external HTTPS connections; this does not affect how the Engine communicates with hosts:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Setup can configure apache to use SSL using a certificate issued from the internal CA.&#x000A;Do you wish Setup to configure that, or prefer to perform that manually? (Automatic, Manual) [Automatic]:&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Choose how long Data Warehouse will retain collected data:</p>
+
+    <p><strong>Note:</strong> This step is skipped if you chose not to configure Data Warehouse on the Engine machine.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Please choose Data Warehouse sampling scale:&#x000A;(1) Basic&#x000A;(2) Full&#x000A;(1, 2)[1]:&#x000A;</code></pre></div>
+    <p><code>Full</code> uses the default values for the data storage settings listed in the <a href="/documentation/data-warehouse/Data_Warehouse_Guide/">Data Warehouse Guide</a> (recommended when Data Warehouse is installed on a remote host).</p>
+
+    <p><code>Basic</code> reduces the values of <code>DWH_TABLES_KEEP_HOURLY</code> to <code>720</code> and <code>DWH_TABLES_KEEP_DAILY</code> to <code>0</code>, easing the load on the Engine machine (recommended when the Engine and Data Warehouse are installed on the same machine).</p>
+  </li>
+  <li>
+    <p>Review the installation settings, and press <strong>Enter</strong> to accept the values and proceed with the installation:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>Please confirm installation settings (OK, Cancel) [OK]:&#x000A;</code></pre></div>
+    <p>When your environment has been configured, <code>engine-setup</code> displays details about how to access your environment. If you chose to manually configure the firewall, <code>engine-setup</code> provides a custom list of ports that need to be opened, based on the options selected during setup. The <code>engine-setup</code> command also saves your answers to a file that can be used to reconfigure the Engine using the same values, and outputs the location of the log file for the oVirt Engine configuration process.</p>
+  </li>
+  <li>
+    <p>If you intend to link your oVirt environment with a directory server, configure the date and time to synchronize with the system clock used by the directory server to avoid unexpected account expiry issues.</p>
+  </li>
+  <li>
+    <p>Install the certificate authority according to the instructions provided by your browser. You can get the certificate authority’s certificate by navigating to<code>http://your-manager-fqdn/ovirt-engine/services/pki-resource?resource=ca-certificate&amp;format=X509-PEM-CA</code>, replacing your-manager-fqdn with the fully qualified domain name (FQDN) that you provided during the installation.</p>
+  </li>
+</ol>
+
+<p>Proceed to the next section to connect to the Administration Portal as the <code>admin@internal</code> user. Then, proceed with setting up hosts, and attaching storage.</p>
+
+<h2 id="connecting-to-the-administration-portal">Connecting to the Administration Portal</h2>
+
+<p>Access the Administration Portal using a web browser.</p>
+
+<ol>
+  <li>
+    <p>In a web browser, navigate to <code>https://your-manager-fqdn/ovirt-engine</code>, replacing <em><code>your-manager-fqdn</code></em> with the fully qualified domain name that you provided during installation.</p>
+
+    <p><strong>Note:</strong> You can access the Administration Portal using alternate host names or IP addresses. To do so, you need to add a configuration file under <strong>/etc/ovirt-engine/engine.conf.d/</strong>. For example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   # vi /etc/ovirt-engine/engine.conf.d/99-custom-sso-setup.conf&#x000A;   SSO_ALTERNATE_ENGINE_FQDNS="alias1.example.com alias2.example.com"&#x000A;</code></pre></div>
+    <p>The list of alternate host names needs to be separated by spaces. You can also add the IP address of the Engine to the list, but using IP addresses instead of DNS-resolvable host names is not recommended.</p>
+  </li>
+  <li>
+    <p>Click <strong>Administration Portal</strong>. An SSO login page displays. SSO login enables you to log in to the Administration and VM Portal at the same time.</p>
+  </li>
+  <li>
+    <p>Enter your <strong>User Name</strong> and <strong>Password</strong>. If you are logging in for the first time, use the user name <code>admin</code> in conjunction with the password that you specified during installation.</p>
+  </li>
+  <li>
+    <p>Select the domain against which to authenticate from the <strong>Domain</strong> list. If you are logging in using the internal <code>admin</code> user name, select the <code>internal</code> domain.</p>
+  </li>
+  <li>
+    <p>Click <strong>Log In</strong>.</p>
+  </li>
+  <li>
+    <p>You can view the Administration Portal in multiple languages. The default selection will be chosen based on the locale settings of your web browser. If you would like to view the Administration Portal in a language other than the default, select your preferred language from the drop-down list on the welcome page.</p>
+  </li>
+</ol>
+
+<p>To log out of the oVirt Administration Portal, click your user name in the header bar and click <strong>Sign Out</strong>. You are logged out of all portals and the Engine welcome screen displays.</p>
+
+<p>The next chapter contains additional Engine-related tasks that are optional. If the tasks are not applicable to your environment, proceed to <strong>Part III: Installing Hosts</strong>.</p>
+
+<p><strong>Prev:</strong> <a href="chap-System_Requirements">Chapter 2: System Requirements</a> <br />
+<strong>Next:</strong> <a href="chap-oVirt_Engine_Related_Tasks">Chapter 4: oVirt Engine Related Tasks</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/installation_guide/chap-red_hat_virtualization_manager">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/install-guide/chap-Installing_oVirt.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/install-guide/chap-Installing_oVirt.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 4 Feb 2019 14:04 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

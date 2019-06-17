@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+DetailedNetworkLinking &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="detailed-network-linking">Detailed Network Linking</h1>
+
+<h2 id="network-linking">Network Linking</h2>
+
+<h3 id="summary">Summary</h3>
+
+<p>The network wiring feature is an enhancement for the VM Network Interface management. It supports the following actions without unplugging the Vnic, maintaining the address of the Vnic:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>* Dynamically changing the network of a running VM (without unplugging the Vnic)&#x000A;* Unwiring a network of a VM without unplugging the vnic [Network Linking Feature Page](/Feature/NetworkLinking)&#x000A;</code></pre></div>
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>Name: Alona Kaplan (alkaplan)</li>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#097;&#108;&#107;&#097;&#112;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#097;&#108;&#107;&#097;&#112;&#108;&#097;&#110;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h3 id="current-status">Current status</h3>
+
+<ul>
+  <li>On Design</li>
+  <li>Last update date: 11/11/2012</li>
+</ul>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<h4 id="rest-api">Rest API</h4>
+
+<ul>
+  <li>The user will enter link_state as a string ("up"/"down").</li>
+  <li>The link_state string will be translated to boolean before sending the entity to the backend.</li>
+  <li>Plug/Unplug actions will call UpdateVmInterfaceCommand instead of ActivateDeactivateVmNicCommand.</li>
+</ul>
+
+<h4 id="engine-api">Engine API</h4>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  VmNetworkInterface:&#x000A;    boolean linked;&#x000A;</code></pre></div>
+<h4 id="database-changes">Database Changes</h4>
+
+<p><span style="color:Teal"><strong>VM_INTERFACE</strong></span>
+{|class="wikitable" !border="1"| Column Name ||Column Type ||Null? / Default ||Definition |- |linked || boolean ||not null ||Indicates wether the vnic's link state is "up" or "down" |- |}</p>
+
+<p><span style="color:Teal"><strong>VM_INTERFACE_VIEW</strong></span>
+{|class="wikitable" !border="1"| Column Name ||Column Type ||Definition |- |linked || boolean ||Indicates wether the vnic's link state is "up" or "down" |- |}</p>
+
+<h4 id="engine-flows">Engine Flows</h4>
+
+<h5 id="add-vnic">Add Vnic</h5>
+
+<ul>
+  <li>canDoAction- allow 'null' network just for 3.2 or upper cluster compatibility version.</li>
+  <li>
+    <p>'linkState' property of VmNetworkInterface should be stored in the DB</p>
+
+    <p>VmNetworkInterfaceDAODbFacadeImpl- save</p>
+  </li>
+  <li>The 'linkState' property is sent to the VDSM by ActivateDeactivateVmNicCommand command (for running VMs with the nic set to plugged)</li>
+</ul>
+
+<h5 id="update-vnic">Update Vnic</h5>
+
+<ul>
+  <li><strong>shouldn't</strong> throw canDo when trying to update a nic when the vm is running and the nic is plugged.</li>
+  <li>canDoAction- allow 'null' network.</li>
+  <li>
+    <p>'linkState' property of VmNetworkInterface should also be stored in the DB</p>
+
+    <p>VmNetworkInterfaceDAODbFacadeImpl- update</p>
+  </li>
+  <li>
+    <p>If the vm is up</p>
+
+    <ul>
+      <li>plugged –&gt; unplugged ('plugged' property was changed to false)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>:** Unplug should be sent to the VDSM</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>* unplugged --&gt; plugged&#x000A;</code></pre></div>
+<p>:** Plug should be sent to the VDSM</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>* plugged --&gt; plugged&#x000A;</code></pre></div>
+<p>:** If MAC Address or Driver Type were updated</p>
+
+<p>:*** Throw canDoAction "Cannot perform hot update when updating 'Type' or 'MAC', please Unplug and then Plug again."</p>
+
+<p>:** Otherwise, if network is changed or disconnected</p>
+
+<p>:*** If cluster c. version is 3.2 or upper updateVmDevice should be sent to the VDSM.</p>
+
+<p>:*** Otherwise, throw canDoAction</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>* unplugged --&gt; unplugged&#x000A;</code></pre></div>
+<p>:** nothing should be sent to VDSM</p>
+
+<h5 id="remove-vnic">Remove Vnic</h5>
+
+<ul>
+  <li>no change (can be done only if the VM is down or the Vnic is unplugged)</li>
+</ul>
+
+<h5 id="run-vm">Run VM</h5>
+
+<ul>
+  <li>
+    <p>When running a VM, the VM's Vnics' 'linkState' property should also be passed to the VDSM, for 3.2 cluster and above.</p>
+
+    <p>VmInfoBuilder.addNetworkInterfaceProperties</p>
+  </li>
+  <li>
+    <p>network should be sent to the VDSM just if it is not null.</p>
+  </li>
+</ul>
+
+<h5 id="plug-nic">Plug nic</h5>
+
+<ul>
+  <li>Should be used just as internal command.</li>
+  <li>network should be sent to the VDSM just if it is not null.</li>
+  <li>canDoAction should allow null network.</li>
+</ul>
+
+<h5 id="unplug-nic">Unplug nic</h5>
+
+<ul>
+  <li>Should be used just as internal command.</li>
+</ul>
+
+<h5 id="other-effected-flows">Other effected flows</h5>
+
+<ul>
+  <li>ChangeVMClusterCommand</li>
+  <li>AddVmTemplateCommand</li>
+  <li>AddVmTemplateInterfaceCommand</li>
+  <li>UpdateVmTemplateInterfaceCommand</li>
+  <li>UpdateVmCommand</li>
+  <li>ImportVmCommand</li>
+  <li>ImportVmTemplateCommand</li>
+  <li>OvfVm</li>
+  <li>OvfTemplate</li>
+</ul>
+
+<h5 id="error-codes">Error codes</h5>
+
+<p>Add translation to VDSM error codes: UPDATE_VNIC_FAILED = 'Failed to update VM Network Interface.'</p>
+
+<h4 id="vdsm-api">VDSM API</h4>
+
+<h5 id="new-api">New API</h5>
+
+<p>A new API is added for this feature.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>vmUpdateDevice (vmId, params)&#x000A;&#x000A;params = {&#x000A;   'devicType': 'interface',&#x000A;   'network': 'network name',     &lt;--- bridge name. If not set, the vnic stays on the current network. If it equals to the empty string, it is taken to the dummy bridge.&#x000A;   'linkActive': 'bool',&#x000A;   'alias': &lt;string&gt;,      &#x000A;   'portMirroring': blue[,red],    &lt;---  If not specified, the current portMirroring keeps in effect. Otherwise, only the specified networks will be mirrored to the vnic, e.g., empty list -&gt; unset any mirroring.&#x000A; }&#x000A;</code></pre></div>
+<p>Vdsm would implement this using <a href="http://libvirt.org/html/libvirt-libvirt.html#virDomainUpdateDeviceFlags">http://libvirt.org/html/libvirt-libvirt.html#virDomainUpdateDeviceFlags</a> .</p>
+
+<p>If the vnic doesn't have a network, the network will be omitted from the params sent to the vdsm.</p>
+
+<h5 id="updated-apis">Updated APIs</h5>
+
+<ul>
+  <li><strong>hotplugNic</strong>
+    <ul>
+      <li>the vdsm should connect the Vnic's Network according to the 'linkState' property passed on the Vnic.</li>
+      <li>If the vnic doesn't have a network, the network will be omitted from the params sent to the vdsm.</li>
+    </ul>
+  </li>
+  <li><strong>createVm</strong>
+    <ul>
+      <li>the vdsm should connect each of the Vm's Vnics according to the 'linkState' property passed on the each Vnic.</li>
+      <li>If the vnic doesn't have a network, the network will be omitted from the params sent to the vdsm.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>In both cases, 'linkState' property would be implemented by setting libvirt's <link state="" /> element <a href="http://libvirt.org/formatdomain.html#elementLink">http://libvirt.org/formatdomain.html#elementLink</a> .
+New vdsm errors will be added:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>UPDATE_VNIC_FAILED- code 56&#x000A;</code></pre></div>
+<h4 id="events">Events</h4>
+
+<h5 id="add-vnic-1">Add Vnic</h5>
+
+<ul>
+  <li>AuditLogType.NETWORK_ADD_VM_INTERFACE</li>
+  <li>AuditLogType.NETWORK_ADD_VM_INTERFACE_FAILED</li>
+</ul>
+
+<h5 id="update-vnic-1">Update Vnic</h5>
+
+<ul>
+  <li>AuditLogType.NETWORK_UPDATE_VM_INTERFACE</li>
+  <li>AuditLogType.NETWORK_UPDATE_VM_INTERFACE_FAILED</li>
+</ul>
+
+<h5 id="remove-vnic-1">Remove Vnic</h5>
+
+<ul>
+  <li>AuditLogType.NETWORK_REMOVE_VM_INTERFACE</li>
+  <li>AuditLogType.NETWORK_REMOVE_VM_INTERFACE_FAILED</li>
+</ul>
+
+<h5 id="plug-nic-1">Plug nic</h5>
+
+<ul>
+  <li>AuditLogType.NETWORK_ACTIVATE_VM_INTERFACE_SUCCESS</li>
+  <li>AuditLogType.NETWORK_ACTIVATE_VM_INTERFACE_FAILURE;</li>
+</ul>
+
+<h5 id="unplug-nic-1">Unplug nic</h5>
+
+<ul>
+  <li>AuditLogType.NETWORK_DEACTIVATE_VM_INTERFACE_SUCCESS</li>
+  <li>AuditLogType.NETWORK_DEACTIVATE_VM_INTERFACE_FAILURE</li>
+</ul>
+
+<h4 id="open-issues">Open Issues</h4>
+
+<ol>
+  <li>Should ActivateDeactivateVmNic be renamed to PlugUnplug ?</li>
+</ol>
+
+<h3 id="documentation--external-references">Documentation / External references</h3>
+
+<h3 id="stretch-goals">Stretch Goals</h3>
+
+<ul>
+  <li>Enable hot changes in port mirroring (without plugging and unplugging)</li>
+</ul>
+
+<h3 id="comment">Comment</h3>
+
+<ul>
+  <li>After the VM is connected to a new network, no one on that network is aware of the change. It was suggested, that much like in vm migration, the VM should emit a gratuitous arp packet, to notify the world about its existence. However note that in vm migration, the vm does not change its layer-2 subnet and telling the switch of its new location is all that is needed. This is NOT the case when the VM is connected to a different network, with its own vlan and ip limitations. One cannot assume that a guest server application would continue to operate uninterrupted.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/detailednetworklinking.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/detailednetworklinking.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

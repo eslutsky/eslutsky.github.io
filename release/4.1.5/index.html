@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+oVirt 4.1.5 Release Notes &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/release/">Release</a></li>
+<li class='active'>oVirt 4.1.5 Release Notes</li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="ovirt-415-release-notes">oVirt 4.1.5 Release Notes</h1>
+
+<p>The oVirt Project is pleased to announce the availability of the 4.1.5
+release as of August 22, 2017.</p>
+
+<p>oVirt is an open source alternative to VMware™ vSphere™, providing an
+awesome KVM management interface for multi-node virtualization.
+This release is available now for Red Hat Enterprise Linux 7.3,
+CentOS Linux 7.3 (or similar).
+Packages for Fedora 24 are also available as a Tech Preview.</p>
+
+<p>For a general overview of oVirt, read the <a href="/documentation/quickstart/quickstart-guide/">Quick Start Guide</a>
+and visit the <a href="../../community/about.html">About oVirt</a> page.</p>
+
+<p>For detailed installation instructions, read the <a href="/documentation/install-guide/Installation_Guide/">Installation Guide</a>.</p>
+
+<p>To learn about features introduced before 4.1.5, see the <a href="/documentation/#previous-release-notes">release notes for previous versions</a>.</p>
+
+<ol id="markdown-toc">
+  <li><a id="markdown-toc-ovirt-415-release-notes" href="#ovirt-415-release-notes">oVirt 4.1.5 Release Notes</a>    <ol>
+      <li><a id="markdown-toc-install--upgrade-from-previous-versions" href="#install--upgrade-from-previous-versions">Install / Upgrade from previous versions</a>        <ol>
+          <li><a id="markdown-toc-fedora--centos--rhel" href="#fedora--centos--rhel">Fedora / CentOS / RHEL</a></li>
+          <li><a id="markdown-toc-ovirt-hosted-engine" href="#ovirt-hosted-engine">oVirt Hosted Engine</a></li>
+          <li><a id="markdown-toc-epel" href="#epel">EPEL</a></li>
+        </ol>
+      </li>
+      <li><a id="markdown-toc-whats-new-in-415" href="#whats-new-in-415">What's New in 4.1.5?</a>        <ol>
+          <li><a id="markdown-toc-enhancements" href="#enhancements">Enhancements</a>            <ol>
+              <li><a id="markdown-toc-ovirt-release-package" href="#ovirt-release-package">oVirt Release Package</a></li>
+              <li><a id="markdown-toc-ovirt-engine" href="#ovirt-engine">oVirt Engine</a></li>
+              <li><a id="markdown-toc-vdsm" href="#vdsm">VDSM</a></li>
+              <li><a id="markdown-toc-ovirt-engine-metrics" href="#ovirt-engine-metrics">oVirt Engine Metrics</a></li>
+              <li><a id="markdown-toc-ovirt-hosted-engine-setup" href="#ovirt-hosted-engine-setup">oVirt Hosted Engine Setup</a></li>
+              <li><a id="markdown-toc-ovirt-hosted-engine-ha" href="#ovirt-hosted-engine-ha">oVirt Hosted Engine HA</a></li>
+            </ol>
+          </li>
+          <li><a id="markdown-toc-deprecated-functionality" href="#deprecated-functionality">Deprecated Functionality</a>            <ol>
+              <li><a id="markdown-toc-ovirt-engine-1" href="#ovirt-engine-1">oVirt Engine</a></li>
+            </ol>
+          </li>
+          <li><a id="markdown-toc-bug-fixes" href="#bug-fixes">Bug Fixes</a>            <ol>
+              <li><a id="markdown-toc-ovirt-release-package-1" href="#ovirt-release-package-1">oVirt Release Package</a></li>
+              <li><a id="markdown-toc-ovirt-engine-2" href="#ovirt-engine-2">oVirt Engine</a></li>
+              <li><a id="markdown-toc-vdsm-1" href="#vdsm-1">VDSM</a></li>
+              <li><a id="markdown-toc-imgbased" href="#imgbased">imgbased</a></li>
+              <li><a id="markdown-toc-ovirt-hosted-engine-ha-1" href="#ovirt-hosted-engine-ha-1">oVirt Hosted Engine HA</a></li>
+            </ol>
+          </li>
+          <li><a id="markdown-toc-other" href="#other">Other</a>            <ol>
+              <li><a id="markdown-toc-ovirt-engine-3" href="#ovirt-engine-3">oVirt Engine</a></li>
+              <li><a id="markdown-toc-vdsm-2" href="#vdsm-2">VDSM</a></li>
+              <li><a id="markdown-toc-ovirt-cockpit-plugin" href="#ovirt-cockpit-plugin">oVirt Cockpit Plugin</a></li>
+              <li><a id="markdown-toc-imgbased-1" href="#imgbased-1">imgbased</a></li>
+              <li><a id="markdown-toc-ovirt-engine-sdk-4-python" href="#ovirt-engine-sdk-4-python">oVirt Engine SDK 4 Python</a></li>
+            </ol>
+          </li>
+          <li><a id="markdown-toc-no-doc-update" href="#no-doc-update">No Doc Update</a>            <ol>
+              <li><a id="markdown-toc-ovirt-hosted-engine-setup-1" href="#ovirt-hosted-engine-setup-1">oVirt Hosted Engine Setup</a></li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+
+<h2 id="install--upgrade-from-previous-versions">Install / Upgrade from previous versions</h2>
+
+<h3 id="fedora--centos--rhel">Fedora / CentOS / RHEL</h3>
+
+<p>In order to install it on a clean system, you need to install</p>
+
+<p><code># yum install </code><a href="http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm"><code>http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm</code></a></p>
+
+<p>and then follow our
+<a href="http://www.ovirt.org/documentation/install-guide/Installation_Guide/">Installation Guide</a>.</p>
+
+<p>If you're upgrading from a previous release on Enterprise Linux 7 you just need
+to execute:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # yum install http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm&#x000A;  # yum update "ovirt-*-setup*"&#x000A;  # engine-setup&#x000A;</code></pre></div>
+<h3 id="ovirt-hosted-engine">oVirt Hosted Engine</h3>
+
+<p>If you're going to install oVirt as a Hosted Engine on a clean system please
+follow <a href="/documentation/how-to/hosted-engine/#fresh-install">Hosted_Engine_Howto#Fresh_Install</a>
+guide or the corresponding section in
+<a href="/documentation/self-hosted/Self-Hosted_Engine_Guide/">Self Hosted Engine Guide</a>.</p>
+
+<p>If you're upgrading an existing Hosted Engine setup, please follow
+<a href="/documentation/how-to/hosted-engine/#upgrade-hosted-engine">Hosted_Engine_Howto#Upgrade_Hosted_Engine</a>
+guide or the corresponding section within the
+<a href="/documentation/upgrade-guide/upgrade-guide/">Upgrade Guide</a>.</p>
+
+<h3 id="epel">EPEL</h3>
+
+<p>TL;DR Don't enable all of EPEL on oVirt machines.</p>
+
+<p>The ovirt-release package enables the EPEL repositories and includes several
+specific packages that are required from there. It also enables and uses
+the CentOS SIG repos, for other packages.</p>
+
+<p>If you want to use other packages from EPEL, you should make sure to
+use <code>includepkgs</code> and add only those you need avoiding to override
+packages from other repos.</p>
+
+<h2 id="whats-new-in-415">What's New in 4.1.5?</h2>
+
+<h3 id="enhancements">Enhancements</h3>
+
+<h4 id="ovirt-release-package">oVirt Release Package</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1364083">BZ 1364083</a> <b>[RFE] Provide ppc64le arch packages</b><br />With this update, oVirt Host related packages are now also available for ppc64le architecture.</li>
+</ul>
+
+<h4 id="ovirt-engine">oVirt Engine</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1022961">BZ 1022961</a> <b>Gluster: running a VM from a gluster domain should use gluster URI instead of a fuse mount</b><br />This release adds libgfapi support to the Manager and VDSM. libgfapi provides virtual machines with faster access to their images, stored on a Gluster volume, compared to a fuse interface. With the 'LibgfApi' data center feature enabled, or 'lubgfapi_supported' cluster-level feature enabled, virtual machines will access their images, stored on Gluster volumes, directly via libgfapi.</li>
+</ul>
+
+<h4 id="vdsm">VDSM</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1022961">BZ 1022961</a> <b>Gluster: running a VM from a gluster domain should use gluster URI instead of a fuse mount</b><br />This release adds libgfapi support to the Manager and VDSM. libgfapi provides virtual machines with faster access to their images, stored on a Gluster volume, compared to a fuse interface. With the 'LibgfApi' data center feature enabled, or 'lubgfapi_supported' cluster-level feature enabled, virtual machines will access their images, stored on Gluster volumes, directly via libgfapi.</li>
+</ul>
+
+<h4 id="ovirt-engine-metrics">oVirt Engine Metrics</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1462500">BZ 1462500</a> <b>Add a check that ovirt_env_name is a valid OpenShift namespace identifier</b><br />This release adds checks to the ovirt_env_name, to make sure it is a valid OpenShift namespace identifier. If it is not, the metrics script will now fail. The name must be valid in order for the records to be kept by the Elasticsearch running in OpenShift.</li>
+</ul>
+
+<h4 id="ovirt-hosted-engine-setup">oVirt Hosted Engine Setup</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1457357">BZ 1457357</a> <b>Allow editing all the shared storage configuration values</b><br />You can now change more self-hosted engine configuration in the hosted-engine.conf file.<br />For example, to set the value: <br />hosted-engine –set-shared-config gateway 10.35.1.254<br /><br />To get the value: <br />hosted-engine –get-shared-config gateway<br /><br />The commands can be used with the additional parameter "type", if there is concern for duplicate keys in different files: <br />hosted-engine –set-shared-config gateway 10.35.1.254 –type=he_conf<br />hosted-engine –get-shared-config gateway –type=he_conf</li>
+</ul>
+
+<h4 id="ovirt-hosted-engine-ha">oVirt Hosted Engine HA</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1457357">BZ 1457357</a> <b>Allow editing all the shared storage configuration values</b><br />You can now change more self-hosted engine configuration in the hosted-engine.conf file.<br />For example, to set the value: <br />hosted-engine –set-shared-config gateway 10.35.1.254<br /><br />To get the value: <br />hosted-engine –get-shared-config gateway<br /><br />The commands can be used with the additional parameter "type", if there is concern for duplicate keys in different files: <br />hosted-engine –set-shared-config gateway 10.35.1.254 –type=he_conf<br />hosted-engine –get-shared-config gateway –type=he_conf</li>
+</ul>
+
+<h3 id="deprecated-functionality">Deprecated Functionality</h3>
+
+<h4 id="ovirt-engine-1">oVirt Engine</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1473179">BZ 1473179</a> <b>ovirt-engine-setup-plugin-dockerc is now deprecated</b><br />The ovirt-engine-setup-plugin-dockerc package is now deprecated, and will be removed in version 4.2.</li>
+</ul>
+
+<h3 id="bug-fixes">Bug Fixes</h3>
+
+<h4 id="ovirt-release-package-1">oVirt Release Package</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1476650">BZ 1476650</a> <b>RHV-H Upgrade Breaks System Clock Sync</b><br /></li>
+</ul>
+
+<h4 id="ovirt-engine-2">oVirt Engine</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1414499">BZ 1414499</a> <b>[RFE] ability to download images that are attached to vms</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1476979">BZ 1476979</a> <b>Cannot set ImageProxyAddress with engine-config</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1464819">BZ 1464819</a> <b>[API] Setting Custom Compatibility Version for a VM via REST api to a none/empty value  is not working</b><br /></li>
+</ul>
+
+<h4 id="vdsm-1">VDSM</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1461029">BZ 1461029</a> <b>Live merge fails when file based domain includes "images" in its path</b><br /></li>
+</ul>
+
+<h4 id="imgbased">imgbased</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1476071">BZ 1476071</a> <b>ovirt-imageio-daemon fails to run after upgrading from 4.0 NGN (as  directory "/var/log/ovirt-imageio-daemon/" is owned by user root)</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1478339">BZ 1478339</a> <b>capabilities of /usr/bin/ping got corrupted after upgrade from 4.1.2 async to 4.1.3</b><br /></li>
+</ul>
+
+<h4 id="ovirt-hosted-engine-ha-1">oVirt Hosted Engine HA</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1479768">BZ 1479768</a> <b>[downstream clone - 4.1.5] Hosted engine issues too many lvm operations</b><br /></li>
+</ul>
+
+<h3 id="other">Other</h3>
+
+<h4 id="ovirt-engine-3">oVirt Engine</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1437152">BZ 1437152</a> <b>v2v import from VmWare via REST API doesn't override the original mac address</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1454811">BZ 1454811</a> <b>[downstream clone - 4.1.5] No error pops when logging with a locked ovirt user account</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1475272">BZ 1475272</a> <b>MAC addresses are not freed when a storage domain is destroyed from a data-center</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1336708">BZ 1336708</a> <b>disk enumeration order in API don't match disk order in the qemu command line</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1481098">BZ 1481098</a> <b>[downstream clone - 4.1.5] engine does not start due to trying to call non-existent callback.</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1465859">BZ 1465859</a> <b>OVESETUP_ENGINE_CONFIG/fqdn value not getting logged in answerfile when installing remote dwh</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1476744">BZ 1476744</a> <b>No validation on the storage_domain parameter when creating VM disks attachments</b><br />Cause: There was no validation on the storage_domain parameter on SDK / REST API. Therefore, it was "possible" to create a vm's disk_attachment without a storage_domain.<br /><br />Consequence: Disk attachment has been created, and the storage_domain's parameter was set as the other VM's disk storage domain.<br /><br />Fix: Add validation for the storage_domain parameter which supplied by the user (as a part of SDK / REST API command parameters).  <br /><br />Result: Error message which indicates that storage_domain wasn't supplied + operation stops.</li>
+  <li><a href="https://bugzilla.redhat.com/1477375">BZ 1477375</a> <b>v2v: In audit log IMPORTEXPORT_STARTING_IMPORT_VM is accompanied by ID of the source VM instead of the destination one</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1468301">BZ 1468301</a> <b>Creating a new Pool fails if 'Auto select target' check box is enabled and the created Pool is based on a Template with at least one disk</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1448650">BZ 1448650</a> <b>UX: uncaught exception when trying to access the tab "Virtual Machine &gt; Guest Info" of a offline instance.</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1471759">BZ 1471759</a> <b>Synchronizing a direct lun that is also a part of a storage domain causes its virtual group ID to be removed from the DB</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1465539">BZ 1465539</a> <b>Auto Generated snapshots failed to remove when live migrating disks concurrently</b><br /></li>
+</ul>
+
+<h4 id="vdsm-2">VDSM</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1422508">BZ 1422508</a> <b>acquire lease Operations which depends on acquire lease, fails with error 'Sanlock resource not acquired', since the acquire has not been completed before the operation took place.</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1479829">BZ 1479829</a> <b>Can't set DHCP bootproto for non-VM network that is attached to a bond interface</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1474638">BZ 1474638</a> <b>[SR-IOV] - Vdsm doesn't report VFs with zero MAC addresses 00:00:00:00:00:00 - bnx2x driver</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1473344">BZ 1473344</a> <b>vdsm's ssl_excludes not working, can't connect to engine</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1408304">BZ 1408304</a> <b>Confusing errors when a volume does not exists in Volume.getInfo</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1473295">BZ 1473295</a> <b>vdsm with python/ssl ssl_implementation cannot connect to engine</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1469175">BZ 1469175</a> <b>vdsm path checking stops</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1449944">BZ 1449944</a> <b>remove &amp; format iscsi storage domain fails sometimes -  FormatStorageDomainVDS failed</b><br /></li>
+</ul>
+
+<h4 id="ovirt-cockpit-plugin">oVirt Cockpit Plugin</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1469436">BZ 1469436</a> <b>set the shard-block-size to recommended value</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1477452">BZ 1477452</a> <b>Remove the parameter OVEHOSTED_STORAGE/imgSizeGB from file  /usr/share/cockpit/ovirt-dashboard/gdeploy-templates/he-common.conf</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1474267">BZ 1474267</a> <b>thinpoolsize should include poolmetatadatasize plus lv size.</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1441523">BZ 1441523</a> <b>Conditionally show packages tab in cockpit UI for RHEL</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1459894">BZ 1459894</a> <b>Newly created LV for brick entry should be of type thinlv</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1459886">BZ 1459886</a> <b>Additional volume creation,shows up the volume entry with default volume type as arbiter</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1455010">BZ 1455010</a> <b>Trim whitespaces in the user provided text in the cockpit UI</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1476292">BZ 1476292</a> <b>gdeploy config file doesn't load on the 'Review' Step of hosted-engine setup wizard</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1460614">BZ 1460614</a> <b>The page "Virtual Machines" has no response on Cockpit</b><br /></li>
+</ul>
+
+<h4 id="imgbased-1">imgbased</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1477942">BZ 1477942</a> <b>Missing new layer boot entry sometimes when upgrade to rhvh-4.1-20170802</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1477001">BZ 1477001</a> <b>Rpm is not persistent after upgrade to rhvh-4.1-20170728.0</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1472193">BZ 1472193</a> <b>The NIST LVs generated by auto partitioning are not consistent with the ones generated by manual partitioning</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1476094">BZ 1476094</a> <b>Upgrade failed when upgrade to rhvh-4.1-20170727.1</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1475111">BZ 1475111</a> <b>Missing discard for /</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1472189">BZ 1472189</a> <b>Missing discard for the NIST partitions when choosing auto partitioning</b><br /></li>
+</ul>
+
+<h4 id="ovirt-engine-sdk-4-python">oVirt Engine SDK 4 Python</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1459818">BZ 1459818</a> <b>Build instructions fails</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1461060">BZ 1461060</a> <b>SDK4 fails when handling data with accents using Python2</b><br /></li>
+  <li><a href="https://bugzilla.redhat.com/1459625">BZ 1459625</a> <b>Strange choices in spec file for rpm build.</b><br /></li>
+</ul>
+
+<h3 id="no-doc-update">No Doc Update</h3>
+
+<h4 id="ovirt-hosted-engine-setup-1">oVirt Hosted Engine Setup</h4>
+
+<ul>
+  <li><a href="https://bugzilla.redhat.com/1460982">BZ 1460982</a> <b>[downstream clone - 4.1.5] [TEXT] Error message is confusing when hosted-engine Storage Domain can't be mounted</b><br /></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/release/4.1.5/index.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/release/4.1.5/index.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Fri 1 Mar 2019 23:15 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Watchdog Device &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+This developer documentation is
+<strong>
+outdated
+</strong>
+, but provides historical context.
+<br>
+<br>
+It is
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="watchdog-device">Watchdog Device</h1>
+
+<h2 id="vdsm-side"><strong>VDSM side</strong></h2>
+
+<p><strong>1) support watchdog device</strong></p>
+
+<p>A virtual hardware watchdog device can be added to the guest via the the "devices" configuration. And only one watchdog device is supported for each VM.</p>
+
+<p>When a watchdog device is active and take action, the vdsm will log this event.</p>
+
+<p>The watchdog device requires an additional driver and management daemon in the guest. Just enabling the watchdog in the vdsm "devices" configuration does not do anything useful on its own.</p>
+
+<p><strong>model of watchdog:</strong></p>
+
+<p>The required model attribute specifies what real watchdog device is emulated. Valid values are specific to the underlying hypervisor.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  'i6300esb'    default model, emulating a PCI Intel 6300ESB&#x000A;  'ib700'       emulating an ISA iBase IB700&#x000A;</code></pre></div>
+<p><strong>action of watchdog timeout:</strong></p>
+
+<p>The optional action attribute describes what action to take when the watchdog expires. Valid values are specific to the underlying hypervisor.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  'reset'          forcefully reset the guest &#x000A;  'shutdown'       gracefully shutdown the guest (not recommended)&#x000A;  'poweroff'       forcefully power off the guest&#x000A;  'pause'          pause the guest&#x000A;  'none'           default, do nothing&#x000A;  'dump'           automatically dump the guest&#x000A;</code></pre></div>
+<p>The watchdog device can be used to detect guest crash or hang, and if 'dump' is chosen for the action of watchdog timeout, libvirt will dump guest's memory on timeout automatically. And the directory to save dump files can be configured by auto_dump_path in file /etc/libvirt/qemu.conf.</p>
+
+<p>you can add the watchdog to the vm parameter when create a vm as follow:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  import vdscli&#x000A;  s = vdscli.connect()&#x000A;  # add a wathdog device parameter&#x000A;  dev_list = [{'device': 'watchdog', 'type': 'watchdog', 'specParams': {'model': 'i6300esb', 'action': "none"}}&#x000A;  s.create(dict(vmId=vmId,&#x000A;               drives=[dict(poolID=spUUID, domainID=sdUUID, imageID=imgUUID, volumeID=volUUID)],&#x000A;               memSize=256, display="vnc", vmName="vm1", devices = dev_list,)&#x000A;</code></pre></div>
+<p>This is aready implemented in vdsm.</p>
+
+<p><strong>2) report the watchdog event</strong></p>
+
+<p>There will be another patch to resolve that.</p>
+
+<p><strong>1.</strong> In the host level, vdsm should get the notification from libvirt, and report it in the vm stats.</p>
+
+<p>A flag in vm stats indicate the event happened and what action was taken. Then engine could find it by polling vm's stats.</p>
+
+<p>Maybe this is not a good way for a watchdog event. But simple.</p>
+
+<p>The problem is that when and how to clean this flag shoule be clean? if clean this flag once it is read, only one rpc client can get the watchdog event.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  import vdscli&#x000A;  s = vdscli.connect()&#x000A;  # poll vm's stats to check a wathdog event &#x000A;  while True:&#x000A;      stat = getVmStats(vmId)&#x000A;      # stats = getAllVmStats()&#x000A;      # watchdogEvent is opptional.  It depends on watchdog device was added.  &#x000A;      if hasattr(stat, 'watchdogEvent'):&#x000A;          print stat['watchdogEvent']&#x000A;</code></pre></div>
+<p><strong>2.</strong></p>
+
+<p>There is not a event channel in vdsm.</p>
+
+<p>If add an event register mechanism. This is a big work.</p>
+
+<h2 id="engine-side"><strong>Engine side</strong></h2>
+
+<p>See: <a href="Features/Watchdog_engine_support">Features/Watchdog_engine_support</a></p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/sla/watchdog-device.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/sla/watchdog-device.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Mon 17 Dec 2018 03:36 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

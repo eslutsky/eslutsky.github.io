@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Normalized ovirtmgmt Initialization &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/network/">Network</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="normalized-ovirtmgmt-initialization">Normalized ovirtmgmt Initialization</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>Generate <code>ovirtmgmt</code> network based on DC definitions using <code>setupNetworks</code> and not during new host deployment.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Moti Asayag (masayag)</li>
+</ul>
+
+<!-- -->
+
+<ul>
+  <li>Email: <a href="&#109;&#097;&#105;&#108;&#116;&#111;:&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;">&#109;&#097;&#115;&#097;&#121;&#097;&#103;&#064;&#114;&#101;&#100;&#104;&#097;&#116;&#046;&#099;&#111;&#109;</a></li>
+</ul>
+
+<h2 id="current-status">Current status</h2>
+
+<ul>
+  <li>Feature is merged (14/1/2013) and moved back to development as a requirement (reboot after install) raised (7/5/2013)</li>
+  <li>Last updated: ,</li>
+</ul>
+
+<h2 id="detailed-description">Detailed Description</h2>
+
+<h3 id="current-condition">Current condition</h3>
+
+<p>The management network, named ovirtmgmt, is created during host bootstrap. It consists of a bridge device, connected to the network device that was used to communicate with Engine (nic, bonding or vlan). It inherits its ip settings from the latter device.</p>
+
+<h3 id="why-is-the-management-network-needed">Why Is the Management Network Needed?</h3>
+
+<p>Understandably, some may ask why do we need to have a management network - why having a host with IPv4 configured on it is not enough. The answer is twofold:</p>
+
+<ol>
+  <li>In oVirt, a network is an abstraction of the resources required for connectivity of a host for a specific usage. This is true for the management network just as it is for VM network or a display network. The network entity is the key for adding/changing nics and IP address.</li>
+  <li>In many occasions (such as small setups) the management network is used as a VM/display network as well.</li>
+</ol>
+
+<h3 id="problems-in-current-condition">Problems in current condition</h3>
+
+<p>According to alonbl of ovirt-host-deploy fame, and with no conflict to my own experience, creating the management network is the most fragile, error-prone step of bootstrap.</p>
+
+<p>Currently it always creates a bridged network (even if the DC requires a non-bridged ovirtmgmt), it knows nothing about the defined MTU for ovirtmgmt, it uses ping to guess on top of which device to build (and thus requires Vdsm-to-Engine reverse connectivity), and is the sole remaining user of the <code>addNetwork</code>/<code>vdsm-store-net-conf</code> scripts.</p>
+
+<h3 id="suggested-feature">Suggested feature</h3>
+
+<p>Bootstrap would avoid creating a management network. Instead, after bootstrapping a host, Engine would send a <code>getVdsCaps</code> probe to the installed host, receiving a complete picture of the network configuration on the host. Among this picture is the device that holds the host's management IP address.</p>
+
+<p>Engine would send <code>setupNetwork</code> command to generate <code>ovirtmgmt</code> with details devised from this picture, and according to the DC definition of ovirtmgmt. For example, if Vdsm reports:</p>
+
+<ul>
+  <li>vlan bond4.3000 has the host's IP, configured to use dhcp.</li>
+  <li>bond4 is comprises eth2 and eth3</li>
+  <li>ovirtmgmt is defined as a VM network with MTU 9000</li>
+</ul>
+
+<p>then Engine sends the likes of:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>   setupNetworks(ovirtmgmt: {bridged=True, vlan=3000, iface=bond4,&#x000A;                 bonding=bond4: {eth2,eth3}, MTU=9000)&#x000A;</code></pre></div>
+<p>A call to <code>setSafeNetConfig</code> would wrap the network configuration up.</p>
+
+<p>Currently, the host undergoes a reboot as the last step of bootstrap. This allows us to verify immediately if the host would be accessible post-boot using its new network configuration. If we want to maintain this, Engine would need to send a <code>fenceNode</code> request.</p>
+
+<h2 id="benefit-to-ovirt">Benefit to oVirt</h2>
+
+<ul>
+  <li>Simplified bootstrapping</li>
+  <li>Simplified <code>ovirt-node</code> registration (similar ovirtmgmt-generation logic lies there).</li>
+  <li>Host installation ends with an ovirtmgmt network that matches DC definition (bridged-ness, mtu, vlan).</li>
+  <li>vdsm-to-engine connectivity is not required.</li>
+</ul>
+
+<h2 id="dependencies--related-features">Dependencies / Related Features</h2>
+
+<h3 id="vdsm">Vdsm</h3>
+
+<p>Already reports all relevant network devices, as well lastClientIface (the interface used to receive the current client communication). According to this information, <code>Engine</code> can deduce the structure of the management network <code>ovirtmgmt</code>.</p>
+
+<h3 id="ovirt-host-deploy">ovirt-host-deploy</h3>
+
+<p>Already has <code>VDSM/managementBridgeName </code> environment variable defined. If missing, no management network would be created.</p>
+
+<h3 id="engine">Engine</h3>
+
+<p>Most of the work lies here, where the output of <code>getVdsCaps</code> should be parsed, and a <code>setupNetworks</code> command should be transmitted after a new host is added to the data center.</p>
+
+<ol>
+  <li>start host deployment with
+    <ul>
+      <li>ODEPLOY/forceReboot = False</li>
+      <li>VDSM/managementBridgeName undefined</li>
+    </ul>
+  </li>
+  <li>after <code>otopi</code> finishes, start to poll host with <code>getVdsCaps</code> or <code>ping</code>. If timeout expires, fail host deployment.</li>
+  <li>Host deployment ends here, by trying to configure the management network the newly-added host.</li>
+</ol>
+
+<p>When a management network is being configured on the the host Engine should</p>
+
+<ol>
+  <li>Wait VDSM to become responsive</li>
+  <li>call getVdsCaps</li>
+  <li>check if management network <code>ovirtmgmt</code> configured on host
+    <ol>
+      <li>if already defined, confirm network compliance and declare success.</li>
+      <li>else acquire <code>lastClientInterface</code> and devise network definition for <code>ovirtmgmt</code>. Simon suggested that the Engine learns the vlan ID of <code>ovirtmgmt</code> from the first host added to the DC, but with no consensus about this, Engine would use its DB definition of network as configured on DC level. If <code>lastClientInterface</code> is none of host nic, bond or vlan, network configuration should fail. Network configuration fails also if it is a vlan with a mismatching vlan tag.</li>
+      <li>send <code>setupNetworks</code> with the new management network definition with the <code>lastClientInterface</code> only.</li>
+      <li>on success, send <code>setSafeNetConfig</code>. On failure show an event to the user. the host would be left non-operational, and may need manual network configuration.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3 id="ovirt-node">ovirt-node</h3>
+
+<p>Still needs <strong>TODO</strong>: drop bridge-creation logic from <code>ovirt-node</code>.
+There is an open bug for ovirt-node for allowing bridgeless networks: <a href="https://bugzilla.redhat.com/show_bug.cgi?id=967866">Bug 967866</a></p>
+
+<h3 id="behavioral-changes">Behavioral Changes</h3>
+
+<p>The updated host installation flow is described in the chart below, where each flow ends with setting the host status to reflect the current host status:</p>
+
+<p><img alt="" width="875" height="787" src="/images/wiki/Installation-flowchart.png?1560777613" /></p>
+
+<p>The noticeable changes from the previous installation flow are:
+* We added support in creating a bridgless management network during installation.</p>
+
+<ul>
+  <li>The behaviour up until 3.3 was to reboot host after installation, in release 3.3 we are changing this behaviour and reboot will no longer take place after installation, this change holds for all host from cluster level 3.1 and up.</li>
+  <li>In Add-Host / Re-install host - rebootAfterInstallation property is deprecated (ignored for clusters 3.1 and up). The reboot will no longer take place, regardless of the provided value of rebootAfterInstallation property. This property was available only via the API.</li>
+  <li>ovirt-node - during the registration of ovirt-node, the management network is created as part of the bootstrap process as a bridged network. ATM there is no support in configuring the management network for ovirt-node according to its logical network definition. Therefore if the logical network definition of the management network is bridgeless network, the ovirt-node will be added with its management network marked as 'not synced' (event log) and the admin will have to use the 'setup networks' dialogue to sync the network.</li>
+  <li>For 3.1 hosts and above, if the creation of the management network fails, the host will move to non-operational.</li>
+  <li>At the end of a successful installation, the host moves to 'initializing' status instead of former 'non responsive'.</li>
+  <li>After the ovirt-host-deploy ends, the engine will await to VDSM to become responsive for 2 minutes. If it fails, the host will move to 'non responsive'.</li>
+  <li>After VDSM is up, the engine will invoke the first GetVdsCapabilities in order to get the host's network configuration and the lastClientIface.</li>
+  <li>The lastClientIface (reported by GetVdsCapabilities) is the interface which is used for communication between the engine to the host. The lastClientIface wasn't in use in previous releases by the engine.</li>
+  <li>For lastClientIface which represents a bridge, configuring management network is not supported and manual innervation is required (using setup networks)</li>
+</ul>
+
+<h3 id="additional-event-logs">Additional event logs</h3>
+
+<ul>
+  <li>INVALID_INTERFACE_FOR_MANAGEMENT_NETWORK_CONFIGURATION</li>
+  <li>VLAN_ID_MISMATCH_FOR_MANAGEMENT_NETWORK_CONFIGURATION</li>
+  <li>SETUP_NETWORK_FAILED_FOR_MANAGEMENT_NETWORK_CONFIGURATION</li>
+  <li>PERSIST_NETWORK_FAILED_FOR_MANAGEMENT_NETWORK</li>
+</ul>
+
+<h2 id="testing">Testing</h2>
+
+<p>Cover all methods for installing a host in oVirt Engine</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test</th>
+      <th>Steps</th>
+      <th>Expected Result</th>
+      <th>Status</th>
+      <th>Version</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>New host (with plan interface+dhcp only) installation</td>
+      <td>Add host to a 3.1 and above system</td>
+      <td>Host should show up in Engine</td>
+      <td><a href="https://bugzilla.redhat.com/show_bug.cgi?id=987813">BZ# 987813</a></td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster</td>
+    </tr>
+    <tr>
+      <td>New 3.0 host installation</td>
+      <td>Add host to a 3.0 cluster</td>
+      <td>Host should show up in Engine (with management network as bridge)</td>
+      <td><a href="https://bugzilla.redhat.com/show_bug.cgi?id=987813">BZ# 987813</a>, host rebooted</td>
+      <td>Fedora 19, nightly - git0c5620a, 3.0 cluster and dc</td>
+    </tr>
+    <tr>
+      <td>New host (with plan interface+static ip only) installation</td>
+      <td>Add host to a 3.1 and above system</td>
+      <td>Host should show up in Engine</td>
+      <td><a href="https://bugzilla.redhat.com/show_bug.cgi?id=987832">BZ #987832</a></td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster</td>
+    </tr>
+    <tr>
+      <td>New host (with bond only) installation</td>
+      <td>Add host to a 3.1 and above system</td>
+      <td>Host should show up in Engine</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>New host (with ovirtmgmt exists) installation</td>
+      <td>Add host to a 3.1 and above system</td>
+      <td>Host should show up in Engine</td>
+      <td>verified</td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster</td>
+    </tr>
+    <tr>
+      <td>New host (with nic + networks on other nics) installation</td>
+      <td>Add host to a 3.1 and above system</td>
+      <td>Host should show up in Engine, existing networks should be preserved</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>New host (with plan interface) installation, ovirtmgmt is non-VM network</td>
+      <td>Add host to a 3.1 and above system</td>
+      <td>Host should show up in Engine, ovirtmgmt on host is non-VM network.</td>
+      <td>verified</td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster</td>
+    </tr>
+    <tr>
+      <td>New ovirt-node installation (ovirtmgmt is a VM network)</td>
+      <td>Add ovirt-node to a 3.1 system</td>
+      <td>Host should show up in Engine, ovirtmgmt on host is a VM network.</td>
+      <td><a href="https://bugzilla.redhat.com/show_bug.cgi?id=987950">BZ #987950</a></td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster and 3.2 cluster</td>
+    </tr>
+    <tr>
+      <td>New ovirt-node installation (ovirtmgmt is a non-vm network)</td>
+      <td>Add ovirt-node to a 3.1 system</td>
+      <td>Host should show up in Engine, ovirtmgmt on host is a VM network and marked is 'out-of-sync'</td>
+      <td><a href="https://bugzilla.redhat.com/show_bug.cgi?id=987950">BZ #987950</a></td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster and 3.2 cluster</td>
+    </tr>
+    <tr>
+      <td>Negative: New host with bridge (other than ovirtmgmt) installation</td>
+      <td>Add host to cluster 3.1 and above</td>
+      <td>Installation failed, host in Non-Operational status, event log informs wrong nic for mgmt network</td>
+      <td>verified</td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster</td>
+    </tr>
+    <tr>
+      <td>Negative: New host installation with non-responsive VDSM</td>
+      <td>Add host to cluster 3.1 and above, after Termination message appears, shutdown VDSM on the host</td>
+      <td>Installation failed, host in Non-Responsive status, event log informs error communicating with VDSM</td>
+      <td>verified</td>
+      <td>Fedora 19, nightly - git0c5620a, 3.3 cluster</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="documentation--external-references">Documentation / External references</h2>
+
+<ul>
+  <li>mailing-list discussion about this feature: <a href="https://lists.ovirt.org/pipermail/arch/2012-December/001101.html">https://lists.ovirt.org/pipermail/arch/2012-December/001101.html</a></li>
+</ul>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/network/normalized-ovirtmgmt-initialization.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/network/normalized-ovirtmgmt-initialization.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Tue 22 May 2018 09:18 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

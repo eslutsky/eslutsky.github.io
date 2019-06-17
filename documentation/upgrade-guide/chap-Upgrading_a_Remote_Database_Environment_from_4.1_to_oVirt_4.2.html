@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Upgrading a Remote Database Environment from 4.1 to oVirt 4.2 &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/upgrade-guide/">Upgrade-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-7-upgrading-a-remote-database-environment-from-41-to-ovirt-42">Chapter 7: Upgrading a Remote Database Environment from 4.1 to oVirt 4.2</h1>
+
+<h2 id="planning-an-upgrade-from-a-41-environment-with-a-remote-database-to-42">Planning an Upgrade from a 4.1 Environment with a Remote Database to 4.2</h2>
+
+<p>Upgrading your environment from 4.1 to 4.2 includes the following steps:</p>
+
+<ol>
+  <li>
+    <p>Upgrade the database from PostgreSQL 9.2 to 9.5</p>
+  </li>
+  <li>
+    <p>Update the 4.1 Engine to the latest version of 4.1</p>
+  </li>
+  <li>
+    <p>Upgrade the Engine from 4.1 to 4.2</p>
+  </li>
+  <li>
+    <p>Upgrade the hosts</p>
+  </li>
+  <li>
+    <p>Perform <a href="chap-Post-Upgrade_Tasks/">post-upgrade tasks</a></p>
+  </li>
+</ol>
+
+<h2 id="upgrading-remote-databases">Upgrading Remote Databases</h2>
+
+<p>oVirt 4.2 uses PostgreSQL 9.5 instead of PostgreSQL 9.2. If your databases are installed locally, the upgrade script will automatically upgrade them from version 9.2 to 9.5, and you can skip this section and proceed to the next step. However, if either of your databases (Engine or Data Warehouse) is installed on a separate machine, you must perform the following procedure on each remote database before upgrading the Engine.</p>
+
+<ol>
+  <li>Stop the service running on the machine:</li>
+</ol>
+
+<ul>
+  <li>
+    <p>Stop the ovirt-engine service on the Manager machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # systemctl stop ovirt-engine&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Stop the ovirt-engine-dwh service on the Data Warehouse machine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  # systemctl stop ovirt-engine-dwhd&#x000A;</code></pre></div>  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Install the PostgreSQL 9.5 packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum install rh-postgresql95 rh-postgresql95-postgresql-contrib&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Stop and disable the PostgreSQL 9.2 service:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl stop postgresql&#x000A; # systemctl disable postgresql&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Upgrade the PostgreSQL 9.2 database to PostgreSQL 9.5:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # scl enable rh-postgresql95 -- postgresql-setup upgrade&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Start and enable the <code>rh-postgresql95-postgresql.service</code> and check that it is running:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # systemctl start rh-postgresql95-postgresql.service&#x000A; # systemctl enable rh-postgresql95-postgresql.service&#x000A; # systemctl status rh-postgresql95-postgresql.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>Ensure that you see an output similar to the following:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    rh-postgresql95-postgresql.service - PostgreSQL database server&#x000A;       Loaded: loaded (/usr/lib/systemd/system/rh-postgresql95-postgresql.service;&#x000A;    enabled; vendor preset: disabled)&#x000A;       Active: active (running) since Mon 2018-05-07 08:48:27 CEST; 1h 59min ago&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Log in to the database and enable the uuid-ossp extension:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # su - postgres -c "scl enable rh-postgresql95 -- psql -d database-name"&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Execute the following SQL commands:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # database-name=# DROP FUNCTION IF EXISTS uuid_generate_v1();&#x000A; # database-name=# CREATE EXTENSION "uuid-ossp";&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Copy the <code>pg_hba.conf</code> client configuration file from the 9.2 environment to your 9.5 environment:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # cp -p /var/lib/pgsql/data/pg_hba.conf  /var/opt/rh/rh-postgresql95/lib/pgsql/data/pg_hba.conf&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Update the following parameters in the postgresql.conf file:</p>
+  </li>
+</ol>
+
+<h1 id="vi-varoptrhrh-postgresql95libpgsqldatapostgresqlconf">vi /var/opt/rh/rh-postgresql95/lib/pgsql/data/postgresql.conf</h1>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    listen_addresses='\*'&#x000A;    autovacuum_vacuum_scale_factor='0.01'&#x000A;    autovacuum_analyze_scale_factor='0.075'&#x000A;    autovacuum_max_workers='6'&#x000A;    maintenance_work_mem='65536'&#x000A;    max_connections='150'&#x000A;    work_mem = '8192'&#x000A;</code></pre></div>
+<ol>
+  <li>
+    <p>Restart the PostgreSQL 9.5 service to apply the configuration changes:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># systemctl restart rh-postgresql95-postgresql.service&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>The remote databases have been upgraded.</p>
+
+<h2 id="update-the-ovirt-engine">Update the oVirt Engine</h2>
+
+<p>Updates to the oVirt Engine are released through the oVirt repositories.</p>
+
+<p><strong>Procedure</strong></p>
+
+<ol>
+  <li>
+    <p>On the oVirt Engine machine, check if updated packages are available:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-upgrade-check&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> If updates are expected, but not available, enable the required repositories. See Enabling the oVirt Engine Repositories in the Installation Guide.</p>
+  </li>
+  <li>
+    <p>Update the setup packages:</p>
+
+    <p># yum update ovirt*setup*</p>
+
+    <p># yum update rhevm-setup</p>
+  </li>
+  <li>
+    <p>Update the oVirt Engine. The <code>engine-setup</code> script prompts you with some configuration questions, then stops the <strong>ovirt-engine</strong> service, downloads and installs the updated packages, backs up and updates the database, performs post-installation configuration, and starts the <strong>ovirt-engine</strong> service.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> The <code>engine-setup</code> script is also used during the oVirt Engine installation process, and it stores the configuration values supplied. During an update, the stored values are displayed when previewing the configuration, and may not be up to date if <code>engine-config</code> was used to update configuration after installation. For example, if <code>engine-config</code> was used to update <code>SANWipeAfterDelete</code> to <code>true</code> after installation, <code>engine-setup</code> will output "Default SAN wipe after delete: False" in the configuration preview. However, the updated values will not be overwritten by <code>engine-setup</code>.</p>
+
+    <p><strong>Important:</strong> The update process may take some time; allow time for the update process to complete and do not stop the process once initiated.</p>
+  </li>
+  <li>
+    <p>Update the base operating system and any optional packages installed on the Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum update&#x000A;</code></pre></div>
+    <p><strong>Important:</strong> If the update upgraded any kernel packages, reboot the system to complete the changes.</p>
+  </li>
+</ol>
+
+<h2 id="upgrading-the-engine-from-41-to-42">Upgrading the Engine from 4.1 to 4.2</h2>
+
+<p><strong>Prerequisites</strong></p>
+
+<p>This procedure assumes that the system on which the Manager is installed is attached to the subscriptions for receiving oVirt 4.1 packages.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Important:** If the upgrade fails, the `engine-setup` command will attempt to roll your oVirt Engine installation back to its previous state. For this reason, the repositories required by oVirt 4.0 must not be removed until after the upgrade is complete. If the upgrade fails, detailed instructions display that explain how to restore your installation.&#x000A;</code></pre></div>
+<p><strong>Procedure</strong></p>
+
+<ol>
+  <li>
+    <p>Update the setup packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum update ovirt\*setup\*&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Run the following command and follow the prompts to upgrade the oVirt Engine:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # engine-setup&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Remove or disable the oVirt Engine 4.1 repositories to ensure the system does not use any oVirt Engine 4.1 packages:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # subscription-manager repos --disable=rhel-7-server-rhv-4.1-rpms&#x000A; # subscription-manager repos --disable=rhel-7-server-rhv-4.1-manager-rpms&#x000A; # subscription-manager repos --disable=rhel-7-server-rhv-4-tools-rpms&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Update the base operating system:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # yum update&#x000A;&#x000A;   **Important:** If any kernel packages were updated, reboot the system to complete the update.&#x000A;</code></pre></div>  </li>
+</ol>
+
+<p>You can now update the hosts.</p>
+
+<h2 id="update-the-hosts">Update the Hosts</h2>
+
+<p>Use the host upgrade manager to update individual hosts directly from the oVirt Engine.</p>
+
+<p>oVirt 3.6 supported three types of host. If you are using Enterprise Linux hosts or oVirt Nodes 3.6, use this procedure to update them. However, if you are using oVirt Node 4.0+, you must reinstall them with oVirt Node 4.2.</p>
+
+<p>If you are not sure if you are using oVirt Node 3.6 or oVirt Node 4.0+, run:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># imgbase check&#x000A;</code></pre></div>
+<p>If the command fails, the host is oVirt Node 3.6. If the command succeeds, the host is oVirt Node.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** The upgrade manager only checks host with a status of `Up` or `Non-operational`, but not `Maintenance`.&#x000A;&#x000A;**Important:** On oVirt Node 4.0+, the update only preserves modified content in the /etc and /var directories. Modified data in other paths is overwritten during an update.&#x000A;</code></pre></div>
+<p><strong>Prerequisites</strong></p>
+
+<ul>
+  <li>
+    <p>If migration is enabled at cluster level, virtual machines are automatically migrated to another host in the cluster; as a result, it is recommended that host updates are performed at a time when the host’s usage is relatively low.</p>
+  </li>
+  <li>
+    <p>Ensure that the cluster contains more than one host before performing an update. Do not attempt to update all the hosts at the same time, as one host must remain available to perform Storage Pool Manager (SPM) tasks.</p>
+  </li>
+  <li>Ensure that the cluster to which the host belongs has sufficient memory reserve in order for its hosts to perform maintenance. If a cluster lacks sufficient memory, the virtual machine migration operation will hang and then fail. You can reduce the memory usage of this operation by shutting down some or all virtual machines before updating the host.</li>
+  <li>You cannot migrate a virtual machine using a vGPU to a different host. Virtual machines with vGPUs installed must be shut down before updating the host.</li>
+</ul>
+
+<p><strong>Procedure</strong></p>
+
+<ol>
+  <li>
+    <p>If your Enterprise Linux hosts are set to version 7.3, you must reset them to the general EL 7 version before updating.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # subscription-manager release --set=7Server&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Disable your current repositories:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code> # subscription-manager repos --disable=*&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>Ensure the correct repositories are enabled. You can check which repositories are currently enabled by running yum repolist.</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p>For oVirt Nodes:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># subscription-manager repos --enable=rhel-7-server-oVirt Node-4-rpms&#x000A;</code></pre></div>  </li>
+  <li>
+    <p>For Enterprise Linux hosts:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code># subscription-manager repos --enable=rhel-7-server-rpms&#x000A;# subscription-manager repos --enable=rhel-7-server-rhv-4-mgmt-agent-rpms&#x000A;# subscription-manager repos --enable=rhel-7-server-ansible-2-rpms&#x000A;</code></pre></div>  </li>
+</ul>
+
+<ol>
+  <li>
+    <p>Click <strong>Compute</strong> → <strong>Hosts</strong> and select the host to be updated.</p>
+  </li>
+  <li>
+    <p>Click <strong>Installation</strong> → <strong>Check</strong> for Upgrade.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to begin the upgrade check.</p>
+  </li>
+  <li>
+    <p>Click <strong>Installation</strong> → <strong>Upgrade</strong>.</p>
+  </li>
+  <li>
+    <p>Click <strong>OK</strong> to update the host. The details of the host are updated in Compute → Hosts and the status will transition through these stages:</p>
+  </li>
+</ol>
+
+<ul>
+  <li>
+    <p><strong>Maintenance</strong></p>
+  </li>
+  <li>
+    <p><strong>Installing</strong></p>
+  </li>
+  <li>
+    <p><strong>Up</strong></p>
+  </li>
+</ul>
+
+<p>After the update, the host is rebooted. Once successfully updated, the host displays a status of <code>Up</code>. If any virtual machines were migrated off the host, they are now migrated back.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** If the update fails, the host’s status changes to Install Failed. From Install Failed you can click **Installation** &amp;rarr; **Upgrade** again.&#x000A;</code></pre></div>
+<p>Repeat this procedure for each host in the oVirt environment.</p>
+
+<p><strong>Prev:</strong> <a href="chap-Upgrading_a_Remote_Database_Environment_from_4.0_to_oVirt_4.2">Chapter 6: Upgrading a Remote Database Environment from 4.0 to oVirt 4.2</a><br />
+<strong>Next:</strong> <a href="chap-Post-Upgrade_Tasks/">Chapter 8: Post-Upgrade Tasks</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/upgrade_guide/chap-remote_upgrading_to_red_hat_virtualization_4.2">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/upgrade-guide/chap-Upgrading_a_Remote_Database_Environment_from_4.1_to_oVirt_4.2.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/upgrade-guide/chap-Upgrading_a_Remote_Database_Environment_from_4.1_to_oVirt_4.2.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

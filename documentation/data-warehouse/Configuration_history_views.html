@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Configuration History Views &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/data-warehouse/">Data-warehouse</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h2 id="configuration-history-views">Configuration History Views</h2>
+
+<p>To query a configuration view, run SELECT * FROM view_name;. For example:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>    # SELECT * FROM v4_0_configuration_history_datacenters; To list all available views, run:&#x000A;&#x000A;    # \dv&#x000A;</code></pre></div>
+<p><strong>Note:</strong> <code>delete_date</code> does not appear in latest views because these views provide the latest configuration of living entities, which, by definition, have not been deleted.</p>
+
+<h3 id="data-center-configuration">Data Center Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the data centers in the system.</p>
+
+<p><strong>v4_2_configuration_history_datacenters</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `datacenter_configuration_version` in the `v4_2_configuration_history_clusters` view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>datacenter_id</td>
+   <td>uuid</td>
+   <td>The unique ID of the data center in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>datacenter_name</td>
+   <td>character varying(40)</td>
+   <td>Name of the data center, as displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>datacenter_description</td>
+   <td>charcter varying(4000)</td>
+   <td>Description of the data center, as displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>is_local_storage</td>
+   <td>boolean</td>
+   <td>A flag to indicate whether the data center uses local storage.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="data-center-storage-domain-map">Data Center Storage Domain Map</h3>
+
+<p>The following table shows the relationships between storage domains and data centers in the system.</p>
+
+<p><strong>v4_2_map_history_datacenters_storage_domains</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Indexed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>history_id</td>
+      <td>integer</td>
+      <td>The ID of the configuration version in the history database. This is identical to the value of <code>datacenter_configuration_version</code> in the <code>v4_2_configuration_history_clusters</code> view and it can be used to join them.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>storage_domain_id</td>
+      <td>uuid</td>
+      <td>The unique ID of this storage domain in the system.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>datacenter_id</td>
+      <td>uuid</td>
+      <td>The unique ID of the data center in the system.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>attach_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date the storage domain was attached to the data center.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>detach_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date the storage domain was detached from the data center.</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="storage-domain-configuration">Storage Domain Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the storage domains in the system.</p>
+
+<p><strong>v4_2_configuration_history_storage_domains</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `storage_configuration_version` in the storage domain statistics views and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>storage_domain_id</td>
+   <td>uuid</td>
+   <td>The unique ID of this storage domain in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>storage_domain_name</td>
+   <td>chracter varying(250)</td>
+   <td>Storage domain name.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>storage_domain_type</td>
+   <td>smallint</td>
+   <td>
+    <ul>
+     <li>0 - Data (Master)</li>
+     <li>1 - Data</li>
+     <li>2 - ISO</li>
+     <li>3 - Export</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>storage_type</td>
+   <td>smallint</td>
+   <td>
+    <ul>
+     <li>0 - Unknown</li>
+     <li>1 - NFS</li>
+     <li>2 - FCP</li>
+     <li>3 - iSCSI</li>
+     <li>4 - Local</li>
+     <li>6 - All</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="cluster-configuration">Cluster Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the clusters in the system.</p>
+
+<p><strong>v4_2_configuration_history_clusters</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Indexed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>history_id</td>
+      <td>integer</td>
+      <td>The ID of the configuration version in the history database. This is identical to the value of <code>cluster_configuration_version</code> in the <code>v4_2_configuration_history_hosts</code> and <code>v4_2_configuration_history_vms</code> views and it can be used to join them.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>cluster_id</td>
+      <td>uuid</td>
+      <td>The unique identifier of the datacenter this cluster resides in.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>cluster_name</td>
+      <td>character varying(40)</td>
+      <td>Name of the cluster, as displayed in the edit dialog.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>cluster_description</td>
+      <td>character varying(4000)</td>
+      <td>As defined in the edit dialog.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>datacenter_id</td>
+      <td>uuid</td>
+      <td>The unique identifier of the datacenter this cluster resides in.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>cpu_name</td>
+      <td>character varying(255)</td>
+      <td>As displayed in the edit dialog.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>compatibility_version</td>
+      <td>character varying(40)</td>
+      <td>As displayed in the edit dialog.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>datacenter_configuration_version</td>
+      <td>integer</td>
+      <td>The data center configuration version at the time of creation or update.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>create_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was added to the system.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>update_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was changed in the system.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>delete_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was deleted from the system.</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="host-configuration">Host Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the hosts in the system.</p>
+
+<p><strong>v4_2_configuration_history_hosts</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+   </thead>
+   <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `host_configuration_version` in the host statistics views and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_id</td>
+   <td>uuid</td>
+   <td>The unique ID of the host in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>host_unique_id</td>
+   <td>character varying(128)</td>
+   <td>This field is a combination of the host physical UUID and one of its MAC addresses, and is used to detect hosts already registered in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_name</td>
+   <td>character varying(255)</td>
+   <td>Name of the host (same as in the edit dialog).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cluster_id</td>
+   <td>uuid</td>
+   <td>The unique ID of the cluster that this host belongs to.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>host_type</td>
+   <td>smallint</td>
+   <td>
+    <ul>
+     <li>0 - RHEL Host</li>
+     <li>2 - RHEV Hypervisor Node</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>fqdn_or_ip</td>
+   <td>character varying(255)</td>
+   <td>The host's DNS name or its IP address for oVirt Engine to communicate with (as displayed in the edit dialog).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>memory_size_mb</td>
+   <td>integer</td>
+   <td>The host's physical memory capacity, expressed in megabytes (MB).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>swap_size_mb</td>
+   <td>integer</td>
+   <td>The host swap partition size.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cpu_model</td>
+   <td>character varying(255)</td>
+   <td>The host's CPU model.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>number_of_cores</td>
+   <td>smallint</td>
+   <td>Total number of CPU cores in the host.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>number_of_sockets</td>
+   <td>smallint</td>
+   <td>Total number of CPU sockets.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cpu_speed_mh</td>
+   <td>numeric(18,0)</td>
+   <td>The host's CPU speed, expressed in megahertz (MHz).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_os</td>
+   <td>character varying(255)</td>
+   <td>The host's operating system version.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>kernel_version</td>
+   <td>character varying(255)</td>
+   <td>The host's kernel version.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>kvm_version</td>
+   <td>character varying(255)</td>
+   <td>The host's KVM version.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vdsm_version</td>
+   <td>character varying(40)</td>
+   <td>The host's VDSM version.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vdsm_port</td>
+   <td>integer</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>threads_per_core</td>
+   <td>smallint</td>
+   <td>Total number of threads per core.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>hardware_manufacturer</td>
+   <td>character varying(255)</td>
+   <td>The host’s hardware manufacturer.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>hardware_product_name</td>
+   <td>character varying(255)</td>
+   <td>The product name of the host’s hardware.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>hardware_version</td>
+   <td>character varying(255)</td>
+   <td>The version of the host’s hardware.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>hardware_serial_number</td>
+   <td>character varying(255)</td>
+   <td>The serial number of the host’s hardware.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cluster_configuration_version</td>
+   <td>integer</td>
+   <td>The cluster configuration version at the time of creation or update. This is identical to the value of `history_id` in the `v4_2_configuration_history_clusters` view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="host-interface-configuration">Host Interface Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the host interfaces in the system.</p>
+
+<p><strong>v4_2_configuration_history_hosts_interfaces</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+   </thead>
+   <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `host_interface_configuration_version` in the host interface statistics views and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_interface_id</td>
+   <td>uuid</td>
+   <td>The unique ID of this interface in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>host_interface_name</td>
+   <td>character varying(50)</td>
+   <td>The interface name as reported by the host.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_id</td>
+   <td>uuid</td>
+   <td>Unique ID of the host this interface belongs to.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>host_interface_type</td>
+   <td>smallint</td>
+   <td>
+    <ul>
+     <li>0 - rt18139_pv</li>
+     <li>1 - rt18139</li>
+     <li>2 - e1000</li>
+     <li>3 - pv</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_interface_speed_bps</td>
+   <td>integer</td>
+   <td>The interface speed in bits per second.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>mac_address</td>
+   <td>character varying(20)</td>
+   <td>The interface MAC address.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>logical_network_name</td>
+   <td>character varying(50)</td>
+   <td>The logical network associated with the interface.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>ip_address</td>
+   <td>character varying(20)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>gateway</td>
+   <td>character varying(20)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>bond</td>
+   <td>boolean</td>
+   <td>A flag to indicate if this interface is a bonded interface.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>bond_name</td>
+   <td>character varying(50)</td>
+   <td>The name of the bond this interface is part of (if it is part of a bond).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vlan_id</td>
+   <td>integer</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>host_configuration_version</td>
+   <td>integer</td>
+   <td>The host configuration version at the time of creation or update. This is identical to the value of `history_id` in the `v4_2_configuration_history_hosts` view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="virtual-machine-configuration">Virtual Machine Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the virtual machines in the system.</p>
+
+<p><strong>v4_2_configuration_history_vms</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+   </thead>
+   <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `vm_configuration_version` in the virtual machine statistics views and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_id</td>
+   <td>uuid</td>
+   <td>The unique ID of this VM in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>vm_name</td>
+   <td>character varying(255)</td>
+   <td>The name of the virtual machine.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_description</td>
+   <td>character varying(4000)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_type</td>
+   <td>smallint</td>
+   <td>
+    <ul>
+     <li>0 - Desktop</li>
+     <li>1 - Server</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cluster_id</td>
+   <td>uuid</td>
+   <td>The unique ID of the cluster this VM belongs to.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>template_id</td>
+   <td>uuid</td>
+   <td>The unique ID of the template this VM is derived from. The field is for future use, as the templates are not synchronized to the history database in this version of oVirt.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>template_name</td>
+   <td>character varying(40)</td>
+   <td>Name of the template from which this virtual machine is derived.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cpu_per_socket</td>
+   <td>smallint</td>
+   <td>Virtual CPUs per socket.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>number_of_sockets</td>
+   <td>smallint</td>
+   <td>Total number of virtual CPU sockets.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>memory_size_mb</td>
+   <td>integer</td>
+   <td>Total memory allocated to the virtual machine, expressed in megabytes (MB).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>operating_system</td>
+   <td>smallint</td>
+   <td>
+    <ul>
+     <li>0 - Other OS</li>
+     <li>1 - Windows XP</li>
+     <li>3 - Windows 2003</li>
+     <li>4 - Windows 2008</li>
+     <li>5 - Linux</li>
+     <li>7 - Red Hat Enterprise Linux 5.x</li>
+     <li>8 - Red Hat Enterprise Linux 4.x</li>
+     <li>9 - Red Hat Enterprise Linux 3.x</li>
+     <li>10 - Windows 2003 x64</li>
+     <li>11 - Windows 7</li>
+     <li>12 - Windows 7 x64</li>
+     <li>13 - Red Hat Enterprise Linux 5.x x64</li>
+     <li>14 - Red Hat Enterprise Linux 4.x x64</li>
+     <li>15 - Red Hat Enterprise Linux 3.x x64</li>
+     <li>16 - Windows 2008 x64</li>
+     <li>17 - Windows 2008 R2 x64</li>
+     <li>18 - Red Hat Enterprise Linux 6.x</li>
+     <li>19 - Red Hat Enterprise Linux 6.x x64</li>
+     <li>20 - Windows 8</li>
+     <li>21 - Windows 8 x64</li>
+     <li>23 - Windows 2012 x64</li>
+     <li>1001 - Other</li>
+     <li>1002 - Linux</li>
+     <li>1003 - Red Hat Enterprise Linux 6.x</li>
+     <li>1004 - SUSE Linux Enterprise Server 11</li>
+     <li>1193 - SUSE Linux Enterprise Server 11</li>
+     <li>1252 - Ubuntu Precise Pangolin LTS</li>
+     <li>1253 - Ubuntu Quantal Quetzal</li>
+     <li>1254 - Ubuntu Raring Ringtails</li>
+     <li>1255 - Ubuntu Saucy Salamander</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>default_host</td>
+   <td>uuid</td>
+   <td>As displayed in the edit dialog, the ID of the default host in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>high_availability</td>
+   <td>boolean</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>initialized</td>
+   <td>boolean</td>
+   <td>A flag to indicate if this VM was started at least once for Sysprep initialization purposes.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>stateless</td>
+   <td>boolean</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>fail_back</td>
+   <td>boolean</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>usb_policy</td>
+   <td>smallint</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>time_zone</td>
+   <td>character varying(40)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_pool_id</td>
+   <td>uuid</td>
+   <td>The virtual machine's pool unique ID.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_pool_name</td>
+   <td>character varying(255)</td>
+   <td>The name of the virtual machine's pool.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>created_by_user_id</td>
+   <td>uuid</td>
+   <td>The ID of the user that created this virtual machine.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>cluster_configuration_version</td>
+   <td>integer</td>
+   <td>The cluster configuration version at the time of creation or update. This is identical to the value of `history_id` in the `v4_2_configuration_history_clusters` view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>default_host_configuration_version</td>
+   <td>integer</td>
+   <td>The host configuration version at the time of creation or update. This is identical to the value of `history_id` in the `v4_2_configuration_history_hosts` view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="virtual-machine-interface-configuration">Virtual Machine Interface Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the virtual interfaces in the system.</p>
+
+<p><strong>v4_2_configuration_history_vms_interfaces</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+ </thead>
+ <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `vm_interface_configuration_version` in the virtual machine interface statistics view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_id</td>
+   <td>uuid</td>
+   <td>Unique ID of the virtual machine in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>vm_interface_id</td>
+   <td>uuid</td>
+   <td>The unique ID of this interface in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>vm_interface_name</td>
+   <td>character varying(50)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_interface_type</td>
+   <td>smallint</td>
+   <td>
+    <p>The type of the virtual interface.</p>
+    <ul>
+     <li>0 - rt18139_pv</li>
+     <li>1 - rt18139</li>
+     <li>2 - e1000</li>
+     <li>3 - pv</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_interface_speed_bps</td>
+   <td>integer</td>
+   <td>The average speed of the interface during the aggregation in bits per second.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>mac_address</td>
+   <td>character varying(20)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>logical_network_name</td>
+   <td>character varying(50)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_configuration_version</td>
+   <td>integer</td>
+   <td>The virtual machine configuration version at the time of creation or update. This is identical to the value of `history_id` in the `v4_2_configuration_history_vms` view and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+ </tbody>
+</table>
+
+<h3 id="virtual-machine-device-configuration">Virtual Machine Device Configuration</h3>
+
+<p>The following table shows the relationships between virtual machines and their associated devices, including disks and virtual interfaces.</p>
+
+<p><strong>v4_2_configuration_history_vms_devices</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Indexed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>history_id</td>
+      <td>integer</td>
+      <td>The ID of the configuration version in the history database.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>vm_id</td>
+      <td>uuid</td>
+      <td>The unique ID of the virtual machine in the system.</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>device_id</td>
+      <td>uuid</td>
+      <td>The unique ID of the device in the system.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>character varying(30)</td>
+      <td>The type of virtual machine device. This can be "disk" or "interface".</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>address</td>
+      <td>character varying(255)</td>
+      <td>The device's device physical address</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>is_managed</td>
+      <td>boolean</td>
+      <td>Flag that indicates if the device is managed by the Engine</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>is_plugged</td>
+      <td>boolean</td>
+      <td>Flag that indicates if the device is plugged into the virtual machine.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>is_readonly</td>
+      <td>boolean</td>
+      <td>Flag that indicates if the device is read only.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>vm_configuration_version</td>
+      <td>integer</td>
+      <td>The virtual machine configuration version at the time the sample was taken.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>device_configuration_version</td>
+      <td>integer</td>
+      <td>The device configuration version at the time the sample was taken. If the value of the <code>type</code> field is set to <code>interface</code>, this field is joined with the <code>history_id</code> field in the <code>v4_2_configuration_history_vms_interfaces</code> view. If the value of the <code>type</code> field is set to d<code>isk, this field is joined with the </code>history_id<code> field in the </code>v4_2_configuration_history_vms_disks` view.</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>create_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was added to the system.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>update_date timestamp</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was added to the system.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>delete_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was added to the system.</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="virtual-disk-configuration">Virtual Disk Configuration</h3>
+
+<p>The following table shows the configuration history parameters of the virtual disks in the system.</p>
+
+<p><strong>v4_2_configuration_history_vms_disks</strong></p>
+
+<table>
+ <thead>
+  <tr>
+   <td>Name</td>
+   <td>Type</td>
+   <td>Description</td>
+   <td>Indexed</td>
+  </tr>
+   </thead>
+   <tbody>
+  <tr>
+   <td>history_id</td>
+   <td>integer</td>
+   <td>The ID of the configuration version in the history database. This is identical to the value of `vm_disk_configuration_version` in the virtual disks statistics views and it can be used to join them.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_disk_id</td>
+   <td>uuid</td>
+   <td>The unique ID of this disk in the system.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>vm_disk_name</td>
+   <td>text</td>
+   <td>The name of the virtual disk, as displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_disk_description</td>
+   <td>character varying(4000)</td>
+   <td>As displayed in the edit dialog.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>image_id</td>
+   <td>uuid</td>
+   <td>The unique ID of the image in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>storage_domain_id</td>
+   <td>uuid</td>
+   <td>The ID of the storage domain this disk image belongs to.</td>
+   <td>Yes</td>
+  </tr>
+  <tr>
+   <td>vm_disk_size_mb</td>
+   <td>integer</td>
+   <td>The defined size of the disk in megabytes (MB).</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_disk_type</td>
+   <td>integer</td>
+   <td>
+    <p>As displayed in the edit dialog. Only System and data are currently used.</p>
+    <ul>
+     <li>0 - Unassigned</li>
+     <li>1 - System</li>
+     <li>2 - Data</li>
+     <li>3 - Shared</li>
+     <li>4 - Swap</li>
+     <li>5 - Temp</li>
+    </ul>
+   </td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>vm_disk_format</td>
+   <td>integer</td>
+   <td>
+    <p>As displayed in the edit dialog.</p>
+    <ul>
+     <li>3 - Unassigned</li>
+     <li>4 - COW</li>
+     <li>5 - RAW</li>
+    </ul>
+    <td>No</td>
+   </td>
+  </tr>
+  <tr>
+   <td>is_shared</td>
+   <td>boolean</td>
+   <td>Flag that indicates if the virtual machine's disk is shared.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>create_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was added to the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>update_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was changed in the system.</td>
+   <td>No</td>
+  </tr>
+  <tr>
+   <td>delete_date</td>
+   <td>timestamp with time zone</td>
+   <td>The date this entity was deleted from the system.</td>
+   <td>No</td>
+  </tr>
+  </tbody>
+ </table>
+
+<h3 id="user-details-history">User Details History</h3>
+
+<p>The following table shows the configuration history parameters of the users in the system.</p>
+
+<p><strong>v4_2_users_details_history</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>user_id</td>
+      <td>uuid</td>
+      <td>The unique ID of the user in the system as generated by Engine.</td>
+    </tr>
+    <tr>
+      <td>first_name</td>
+      <td>character varying(255)</td>
+      <td>The user's first name.</td>
+    </tr>
+    <tr>
+      <td>last_name</td>
+      <td>character varying(255)</td>
+      <td>The user's last name.</td>
+    </tr>
+    <tr>
+      <td>domain</td>
+      <td>character varying(255)</td>
+      <td>The name of the authorization extension.</td>
+    </tr>
+    <tr>
+      <td>username</td>
+      <td>character varying(255)</td>
+      <td>The account name</td>
+    </tr>
+    <tr>
+      <td>department</td>
+      <td>character varying(255)</td>
+      <td>The organizational department the user belongs to.</td>
+    </tr>
+    <tr>
+      <td>user_role_title</td>
+      <td>character varying(255)</td>
+      <td>The title or role of the user within the organization.</td>
+    </tr>
+    <tr>
+      <td>email</td>
+      <td>character varying(255)</td>
+      <td>The email of the user in the organization.</td>
+    </tr>
+    <tr>
+      <td>external_id</td>
+      <td>text</td>
+      <td>The unique identifier of the user from the external system.</td>
+    </tr>
+    <tr>
+      <td>active</td>
+      <td>boolean</td>
+      <td>If the user is active or not - this is being checked once in an hour, if the user can be found in the authorization extension then it will remain active. A user can be turned to active also on successful login.</td>
+    </tr>
+    <tr>
+      <td>create_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was added to the system.</td>
+    </tr>
+    <tr>
+      <td>update_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was changed in the system.</td>
+    </tr>
+    <tr>
+      <td>delete_date</td>
+      <td>timestamp with time zone</td>
+      <td>The date this entity was deleted from the system.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Prev:</strong> <a href="Statistics_history_views">Statistics History Views</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/data_warehouse_guide/sect-configuration_history_views">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/data-warehouse/Configuration_history_views.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/data-warehouse/Configuration_history_views.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Sun 16 Dec 2018 00:48 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

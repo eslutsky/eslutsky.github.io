@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Hot Unplug Memory &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/virt/">Virt</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="hot-unplug-memory">Hot unplug memory</h1>
+
+<h2 id="summary">Summary</h2>
+
+<p>This feature allows removing memory from a VM while the VM is running.</p>
+
+<h2 id="owner">Owner</h2>
+
+<ul>
+  <li>Name: Milan Zamazal</li>
+  <li>Email: mzamazal@redhat.com</li>
+  <li>BZ: https://bugzilla.redhat.com/1228543</li>
+</ul>
+
+<h2 id="description">Description</h2>
+
+<p>Until now, it was possible to only add memory to a running VM.  In order to
+remove memory from a VM, the VM had to be shut down.</p>
+
+<p>It is now possible to hot unplug memory from a running VM.  However there are
+some limitations:</p>
+
+<ul>
+  <li>
+    <p>You can't remove arbitrary amount of memory.  Only previously hot plugged
+memory devices can be removed.</p>
+  </li>
+  <li>
+    <p>The guest OS must support memory hot unplug.  Up-to-date RHEL/CentOS 7
+systems support it.</p>
+  </li>
+  <li>
+    <p>All blocks of the previously hot plugged memory must be onlined as movable.</p>
+  </li>
+  <li>
+    <p>It is not recommended to combine memory hot unplug with memory ballooning.</p>
+  </li>
+</ul>
+
+<p>If any of those conditions is not satisfied, the memory hot unplug action may
+fail or cause problems.</p>
+
+<h2 id="making-hot-plugged-memory-movable">Making hot plugged memory movable</h2>
+
+<p>To fulfill the requirement of making hot plugged memory movable on an
+up-to-date RHEL/CentOS 7 guest system, ovirt-guest-agent of version
+1.0.13-2.el7 or higher must be installed in the guest.  Please note that proper
+ovirt-guest-agent version must be installed in the guest prior to hot plugging
+any memory in order to guarantee that hot plugged memory is movable.</p>
+
+<h2 id="how-to-hot-unplug-memory-from-a-vm">How to hot unplug memory from a VM</h2>
+
+<h3 id="webadmin">WebAdmin</h3>
+
+<p>The previously hot plugged memory appears in the form of memory devices in
+<em>Vm Devices</em> tab of the given VM.  You can remove any of the devices (assuming
+they have been hot plugged considering the constraints described above) and
+thus remove that amount of memory from the VM.  Once the memory device is
+successfully hot unplugged the device disappears from the device list.</p>
+
+<p><em>Physical Memory Guaranteed</em> is decremented if necessary.</p>
+
+<p>If next run configuration exists and its memory values is the same as the memory
+size of the running VM before hot unplug, next run configuration is updated.</p>
+
+<p><img alt="" title="Memory hot unplug button in 'VM Devices' tab in Administration Portal" width="1109" height="353" src="/images/wiki/memory-hot-unplug-webadmin.png?1560777612" /></p>
+
+<h3 id="rest-api">REST API</h3>
+
+<p>Memory hot unplug can be performed by updating a VM with decremented value
+of <code>/vm/memory</code> tag. It may be required to decrement value of <em>Physical
+Memory Guaranteed</em> (<code>vm/memory_policy/guaranteed</code>) as well to keep it lesser than
+value of memory. Both properties are set in bytes that are later floored to MiB.</p>
+
+<p>Memory devices to hot unplug are picked so that sum of sizes of hot unplugged
+devices will be smaller or equal to requested memory size decrement.</p>
+
+<p>Values for next run configuration are not rounded.</p>
+
+<h4 id="example">Example</h4>
+
+<p>Let's suppose there is a running VM started with 1GiB memory that was given three 
+256MiB hot-plugs. This resulted in additional memory devices of following sizes:
+256MiB, 256MiB, 128MiB, 128MiB and the VM having 1792MiB memory available in total.</p>
+
+<p>Firing request requiring 1400MiB memory and 900MiB physical memory guaranteed will
+result in updating next run configuration with memory of 1400MiB and physical memory
+guaranteed of 900MiB. Currently running VM will be asked to release memory devices
+of sizes 256MiB and 128MiB. Thus the VM will end up with 1792MiB - (256MiB + 128MiB)
+= 1408MiB &gt;= requested 1400MiB. Physical memory guaranteed will be hot set to value
+900MiB.</p>
+
+<div class="highlight"><pre class="highlight xml"><code>PUT api/vms/{vmId}&#x000A;&#x000A;<span class="nt">&lt;vm&gt;</span>&#x000A;    <span class="nt">&lt;memory&gt;</span>1468006400<span class="nt">&lt;/memory&gt;</span> <span class="c">&lt;!-- 1400 * 1024^2 --&gt;</span>&#x000A;    &#x000A;    <span class="c">&lt;!-- and optionally --&gt;</span>&#x000A;    <span class="nt">&lt;memory_policy&gt;</span>&#x000A;        <span class="nt">&lt;guaranteed&gt;</span>943718400<span class="nt">&lt;/guaranteed&gt;</span> <span class="c">&lt;!-- 900 * 1024^2 --&gt;</span>&#x000A;    <span class="nt">&lt;/memory_policy&gt;</span>&#x000A;<span class="nt">&lt;/vm&gt;</span>&#x000A;</code></pre></div>
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/virt/hot-unplug-memory.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/virt/hot-unplug-memory.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 16 Nov 2017 22:37 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

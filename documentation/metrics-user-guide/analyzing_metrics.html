@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+Analyzing Metrics &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/documentation/">Documentation</a></li>
+<li><a href="/documentation/metrics-user-guide/">Metrics-user-guide</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<!--[if lt IE 7]>
+<p class="chromeframe">You are using an outdated browser.
+<a href="http://browsehappy.com/">Upgrade your browser today</a> or
+<a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+<![endif]-->
+<h1 id="chapter-2-analyzing-metrics">Chapter 2: Analyzing Metrics</h1>
+
+<p>Kibana offers two ways of analyzing metrics:</p>
+
+<ul>
+  <li>
+    <p>Build your own visualizations such as charts, graphs, and tables.</p>
+  </li>
+  <li>
+    <p>Load and use predefined sets of visualizations</p>
+  </li>
+</ul>
+
+<p>The oVirt Project suggests that you start off by using the predefined visualizations. Each set is known as a <em>dashboard</em>. Dashboards have the advantage of enabling you to quickly access a wide range of metrics while offering the flexibility of changing them to match your individual needs.</p>
+
+<h1 id="using-dashboards">Using Dashboards</h1>
+
+<p>A dashboard displays a set of saved visualizations. Dashboards have the advantage of enabling you to quickly access a wide range of metrics while offering the flexibility of changing them to match your individual needs.</p>
+
+<p>You can use the <strong>Dashboard</strong> tab to create your own dashboards. Alternatively, Red Hat provides the following dashboard examples, which you can import into Kibana and use as is or customize to suit your specific needs:</p>
+
+<ul>
+  <li>
+    <p>System dashboard</p>
+  </li>
+  <li>
+    <p>Hosts dashboard</p>
+  </li>
+  <li>
+    <p>VMs dashboard</p>
+  </li>
+</ul>
+
+<p><strong>Importing Dashboard Examples</strong></p>
+
+<ol>
+  <li>
+    <p>Copy the <code>/etc/ovirt-engine-metrics/dashboards-examples</code> directory from the Engine virtual machine to your local machine.</p>
+  </li>
+  <li>
+    <p>Open Kibana and click the <strong>Settings</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Indices</strong> tab.</p>
+  </li>
+  <li>
+    <p>Select the <strong>Index Patterns</strong> that start with <code>project.*</code> in the <strong>Index Patterns</strong> pane and click the <strong>Refresh field list</strong> <img alt="" width="40" height="41" src="/images/metrics-user-guide/refresh.png?1560777613" /> button.</p>
+  </li>
+  <li>
+    <p>Do step #4 for each relevant index pattern.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Objects</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click <strong>Import</strong> and import <strong>Searches</strong> from your local copy of <code>/etc/ovirt-engine-metrics/dashboards-examples</code>.</p>
+  </li>
+</ol>
+
+<p><strong>NOTE</strong> Admin user will be notofied to choose the relevant <strong>Index Patterns</strong> for the imported searches. Choose <code>project.*</code>.</p>
+
+<ol>
+  <li>Click <strong>Import</strong> and import <strong>Visualizations</strong>.</li>
+</ol>
+
+<p><strong>NOTE</strong> Admin user will be notofied to choose the relevant <strong>Index Patterns</strong> for the imported searches. Choose <code>project.*</code>.</p>
+
+<p><strong>If you see an error message while importing the visualizations, check your hosts to ensure that Collectd and Fluentd are running without errors.</strong></p>
+
+<ol>
+  <li>
+    <p>Click <strong>Import</strong> and import <strong>Dashboards</strong>.</p>
+
+    <p>The imported dashboards are now stored in the system.</p>
+  </li>
+</ol>
+
+<p><strong>Loading Saved Dashboards</strong></p>
+
+<p>Once you have created and saved a dashboard, or imported Red Hat's sample dashboards, you can display them in the <em>Dashboard</em> tab:</p>
+
+<ol>
+  <li>
+    <p>Click the <strong>Dashboard</strong> tab.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Load Saved Dashboard</strong> <img alt="" width="60" height="46" src="/images/metrics-user-guide/loadSavedDashboard.png?1560777613" /> button to display a list of saved dashboards.</p>
+  </li>
+  <li>
+    <p>Click a saved dashboard to load it.</p>
+  </li>
+</ol>
+
+<h2 id="creating-a-new-visualization">Creating a New Visualization</h2>
+
+<p>Use the <strong>Visualize</strong> page to design data visualizations based on the metrics or log data collected by Metrics Store.
+You can save these visualizations, use them individually, or combine visualizations into a dashboard.
+A visualization can be based on one of the following data source types:</p>
+
+<ul>
+  <li>
+    <p>A new interactive search</p>
+  </li>
+  <li>
+    <p>A saved search</p>
+  </li>
+  <li>
+    <p>An existing saved visualization</p>
+  </li>
+</ul>
+
+<p>Visualizations are based on Elasticsearch's <a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.3/search-aggregations.html">aggregation feature</a>.</p>
+
+<p><strong>Creating a New Visualization</strong></p>
+
+<p>Kibana guides you through the creation process with the help of a visualization wizard.</p>
+
+<ol>
+  <li>
+    <p>To start the new visualization wizard, click the <strong>Visualize</strong> tab.</p>
+  </li>
+  <li>
+    <p>In step 1, <strong>Create a new visualization table</strong>, select the type of visualization you want to create.</p>
+  </li>
+  <li>
+    <p>In step 2, <strong>Select a search source</strong>, select whether you want to create a new search or reuse a saved search:</p>
+
+    <ul>
+      <li>
+        <p>To create a new search, select <strong>From a new search</strong> and enter the indexes to use as the source. Use <em>project.ovirt-logs</em> prefix for log data or <em>project.ovirt-metrics</em> prefix for metric data.</p>
+      </li>
+      <li>
+        <p>To create a visualization from a saved search, select <strong>From a saved search</strong> and enter the name of the search.</p>
+
+        <p>The visualization editor appears.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="graphic-user-interface-elements">Graphic User Interface Elements</h2>
+
+<p>The visualization editor consists of three main areas:</p>
+
+<ul>
+  <li>
+    <p><img alt="" width="18" height="18" src="/images/metrics-user-guide/1.png?1560777613" /> The toolbar</p>
+  </li>
+  <li>
+    <p><img alt="" width="20" height="20" src="/images/metrics-user-guide/2.png?1560777613" /> The aggregation builder</p>
+  </li>
+  <li>
+    <p><img alt="" width="20" height="20" src="/images/metrics-user-guide/3.png?1560777613" /> The preview pane</p>
+  </li>
+</ul>
+
+<p><strong>Visualization Editor</strong></p>
+
+<p><img alt="visualization editor screenshot" width="1918" height="839" src="/images/metrics-user-guide/visualize.png?1560777613" /></p>
+
+<h2 id="using-the-visualization-editor">Using the Visualization Editor</h2>
+
+<p>Use the visualization editor to create visualizations by:</p>
+
+<ul>
+  <li>
+    <p>Submitting search queries from the toolbar</p>
+  </li>
+  <li>
+    <p>Selecting metrics and aggregations from the aggregation builder</p>
+  </li>
+</ul>
+
+<h3 id="submitting-search-queries">Submitting Search Queries</h3>
+
+<p>Use the toolbar to perform search queries based on the Lucene query parser syntax. For a detailed explanation of this syntax, see <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Apache Lucene - Query Parser Syntax</a>.</p>
+
+<h3 id="selecting-metrics-and-aggregations">Selecting Metrics and Aggregations</h3>
+
+<p>Use the aggregation builder to define which metrics to display, how to aggregate the data, and how to group the results.</p>
+
+<p>The aggregation builder performs two types of aggregations, metric and bucket, which differ depending on the type of visualization you are creating:</p>
+
+<ul>
+  <li>
+    <p>Bar, line, or area chart visualizations use <strong>metrics</strong> for the y-axis and <strong>buckets</strong> for the x-axis, segment bar colors, and row/column splits.</p>
+  </li>
+  <li>
+    <p>Pie charts use <strong>metrics</strong> for the slice size and <strong>buckets</strong> to define the number of slices.</p>
+  </li>
+</ul>
+
+<p><strong>To define a visualization from the aggregation bar:</strong></p>
+
+<ol>
+  <li>
+    <p>Select the metric aggregation for your visualization’s y-axis from the <strong>Aggregation</strong> drop-down list in the <strong>metrics</strong> section, for example, count, average, sum, min, max, or unique count. For more information about how these aggregations are calculated, see <a href="https://www.elastic.co/guide/en/elasticsearch/reference/2.3//search-aggregations-metrics.html">Metrics Aggregation</a> in the Elasticsearch Reference documentation.</p>
+  </li>
+  <li>
+    <p>Use the <strong>buckets</strong> area to select the aggregations for the visualization’s x-axis, color slices, and row/column splits:</p>
+
+    <p>i. Use the <strong>Aggregation</strong> drop-down list to define how to aggregate the bucket. Common bucket aggregations include date histogram, range, terms, filters, and significant terms.</p>
+
+    <p><strong>Note:</strong> The order in which you define the buckets determines the order in which they will be executed, so the first aggregation determines the data set for any subsequent aggregations. For more information, see <a href="https://www.elastic.co/guide/en/kibana/4.5/visualize.html#aggregation-builder">Aggregation Builder</a> in the Kibana documentation.</p>
+
+    <p>ii. Select the metric you want to display from the <strong>Field</strong> drop-down list. For details about each of the available metrics, see <a href="Metrics_Schema">Metrics Schema</a>.</p>
+
+    <p>iii. Select the required interval from the <strong>Interval</strong> field.</p>
+  </li>
+  <li>
+    <p>Click <strong>Apply Changes</strong> <img alt="" width="45" height="53" src="/images/metrics-user-guide/create.png?1560777613" />.</p>
+  </li>
+</ol>
+
+<h2 id="metrics-schema">Metrics Schema</h2>
+
+<p>The following sections describe the metrics that are available from the <em>Field</em> menu when creating visualizations.</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>**Note:** All metric values are collected at 10 second intervals.&#x000A;</code></pre></div>
+<h3 id="aggregation-metrics">Aggregation Metrics</h3>
+
+<p>The Aggregation metric aggregates several values into one using aggregation functions such as sum, average, min, and max. It is used to provide a combined value for average and total CPU statistics.</p>
+
+<p>The following table describes the aggregation metrics reported by the <strong>Aggregation</strong> plugin.</p>
+
+<table>
+<tr>
+<th>Metric Name</th>
+<th>collectd.type_instance</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>collectd.aggregation.percent a</td>
+<td><ul>
+<li>interrupt</li>
+<li>user</li>
+<li>wait</li>
+<li>nice</li>
+<li>softirq</li>
+<li>system</li>
+<li>idle</li>
+<li>steal</li>
+</ul></td>
+<td>The average and total CPU usage, as an aggregated percentage, for each of the *collectd.type_instance* states.</td>
+</tr>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Aggregation</p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> cpu-average / cpu-sum</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong></p>
+  </li>
+  <li>
+    <p><strong>collectd.type:</strong> percent</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Gauge</p>
+  </li>
+</ul>
+
+<h3 id="cpu-metrics">CPU Metrics</h3>
+
+<p>CPU metrics display the amount of time spent by the hosts' CPUs, as a percentage.</p>
+
+<p>The following table describes CPU metrics as reported by the <strong>CPU</strong> plugin.</p>
+
+<p><strong>CPU Metrics</strong></p>
+
+<table>
+<tr>
+<th>Metric Name</th>
+<th>collectd.type_instance</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>collectd.cpu.percent a</td>
+<td><ul>
+<li>interrupt</li>
+<li>user</li>
+<li>wait</li>
+<li>nice</li>
+<li>softirq</li>
+<li>system</li>
+<li>idle</li>
+<li>steal</li>
+</ul></td>
+<td>The percentage of time spent, per CPU, in the *collectd.type_instance* states.</td>
+</tr>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> CPU</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>The CPU's number</em></p>
+  </li>
+  <li>
+    <p><strong>collectd.type:</strong> percent</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Gauge</p>
+  </li>
+</ul>
+
+<h3 id="cpu-load-average-metrics">CPU Load Average Metrics</h3>
+
+<p>CPU load represents CPU contention, that is, the average number of schedulable processes at any given time. This is reported as an average value for all CPU cores on the host. Each CPU core can only execute one process at a time. Therefore, a CPU load average above 1.0 indicates that the CPUs have more work than they can perform, and the system is overloaded.</p>
+
+<p>CPU load is reported over short term (last one minute), medium term (last five minutes) and long term (last fifteen minutes). While it is normal for a host's short term load average to exceed 1.0 (for a single CPU), sustained load average above 1.0 on a host may indicate a problem.</p>
+
+<p>On multi-processor systems, the load is relative to the number of processor cores available. The "100% utilization" mark is 1.00 on a single-core, 2.00 on a dual-core, 4.00 on a quad-core system.</p>
+
+<p>The oVirt Project recommends looking at CPU load in conjunction with CPU Metrics.</p>
+
+<p>The following table describes the CPU load metrics reported by the <strong>Load</strong> plugin.</p>
+
+<p><strong>CPU Load Average Metrics</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.load.load.longterm</td>
+      <td>Average number of schedulable processes per CPU core over the last 15 minutes. A value above 1.0 indicates the system was overloaded during the last 15 minutes.</td>
+    </tr>
+    <tr>
+      <td>collectd.load.load.midterm</td>
+      <td>Average number of schedulable processes per CPU core over the last five minutes. A value above 1.0 indicates the system was overloaded during the last 5 minutes.</td>
+    </tr>
+    <tr>
+      <td>collectd.load.load.shortterm</td>
+      <td>Average number of schedulable processes per CPU core over the last one minute. A value above 1.0 indicates the system was overloaded during the last minute.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Load</p>
+  </li>
+  <li>
+    <p><strong>collectd.type:</strong> load</p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> <a href="Gauge">Guide</a></p>
+  </li>
+</ul>
+
+<h3 id="disk-consumption-metrics">Disk Consumption Metrics</h3>
+
+<p>Disk consumption (DF) metrics enable you to monitor metrics about disk consumption, such as the used, reserved, and free space for each mounted file system.</p>
+
+<p>The following table describes the disk consumption metrics reported by the <em>DF</em> plugin.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.df.df_complex</td>
+      <td>The amount of free, used, and reserved disk space, in bytes, on this file system.</td>
+    </tr>
+    <tr>
+      <td>collectd.df.percent_bytes</td>
+      <td>The amount of free, used, and reserved disk space, as a percentage of total disk space, on this file system.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> DF</p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> free, used, reserved</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>A mounted partition</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Gauge</p>
+  </li>
+</ul>
+
+<h3 id="disk-operation-metrics">Disk Operation Metrics</h3>
+
+<p>Disk operation metrics are reported per physical disk on the host, and per partition.</p>
+
+<p>The following table describes the disk operation metrics reported by the <strong>Disk</strong> plugin.</p>
+
+<p><strong>Disk Operation Metrics</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>Description</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.disk.disk_ops.read</td>
+      <td>The number of disk read operations.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_ops.write</td>
+      <td>The number of disk write operations.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_merged.read</td>
+      <td>The number of disk reads that have been merged into single physical disk access operations. In other words, this metric measures the number of instances in which one physical disk access served multiple disk reads. The higher the number, the better.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_merged.write</td>
+      <td>The number of disk writes that were merged into single physical disk access operations. In other words, this metric measures the number of instances in which one physical disk access served multiple write operations. The higher the number, the better.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_time.read</td>
+      <td>The average amount of time it took to do a read operation, in milliseconds.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_time.write</td>
+      <td>The average amount of time it took to do a write operation, in milliseconds.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.pending_operations</td>
+      <td>The queue size of pending I/O operations.</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_io_time.io_time</td>
+      <td>The time spent doing I/Os in milliseconds. This can be used as a device load percentage, where a value of 1 second of time spent represents a 100% load.</td>
+      <td>Derive</td>
+    </tr>
+    <tr>
+      <td>collectd.disk.disk_io_time.weighted_io_time</td>
+      <td>A measure of both I/O completion time and the backlog that may be accumulating.</td>
+      <td>Derive</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Disk</p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>The disk's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+</ul>
+
+<h3 id="entropy-metrics">Entropy Metrics</h3>
+
+<p>Entropy metrics display the available entropy pool size on the host. Entropy is important for generating random numbers, which are used for encryption, authorization, and similar tasks.</p>
+
+<p>The following table describes the entropy metrics reported by the <strong>Entropy</strong> plugin.</p>
+
+<p><strong>Entropy Metrics</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.entropy.entropy</td>
+      <td>The entropy pool size, in bits, on the host.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Entropy</p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Gauge</p>
+  </li>
+</ul>
+
+<h3 id="network-interface-metrics">Network Interface Metrics</h3>
+
+<p>The following types of metrics are reported from physical and virtual network interfaces on the host:</p>
+
+<ul>
+  <li>
+    <p>Bytes (octets) transmitted and received (total, or per second)</p>
+  </li>
+  <li>
+    <p>Packets transmitted and received (total, or per second)</p>
+  </li>
+  <li>
+    <p>Interface errors (total, or per second)</p>
+  </li>
+</ul>
+
+<p>The following table describes the network interface metrics reported by the <strong>Interface</strong> plugin.</p>
+
+<p><strong>Network Interface Metrics</strong></p>
+
+<table>
+<tr>
+  <th>collectd.type</th>
+  <th>Metric Name</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>if_octets</td>
+  <td>collectd.interface.if_octets.rx</td>
+  <td>
+    <p>A count of the bytes received by the interface. You can view this metric as a Rate/sec or a cumulative count (Max):</p>
+    <ul>
+      <li>Rate/sec: Provides the current traffic level on the interface in bytes/sec.</li>
+      <li>Max: Provides the cumulative count of bytes received. Note that since this metric is a cumulative counter, its value will periodically restart from zero when the maximum possible value of the counter is exceeded.</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>if_octets</td>
+  <td>collectd.interface.if_octets.tx</td>
+  <td>
+    <p>A count of the bytes transmitted by the interface. You can view this metric as a Rate/sec or a cumulative count (Max):</p>
+    <ul>
+      <li>Rate/sec: Provides the current traffic level on the interface in bytes/sec.</li>
+      <li>Max: Provides the cumulative count of bytes transmitted. Note that since this metric is a cumulative counter, its value will periodically restart from zero when the maximum possible value of the counter is exceeded.</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>if_packets</td>
+  <td>collectd.interface.if_packets.rx</td>
+  <td>
+    <p>A count of the packets received by the interface.</p>
+    <p>You can view this metric as a Rate/sec or a cumulative count (Max):</p>
+    <ul>
+      <li>Rate/sec: Provides the current traffic level on the interface in bytes/sec.</li>
+      <li>Max: Provides the cumulative count of packets received. Note that since this metric is a cumulative counter, its value will periodically restart from zero when the maximum possible value of the counter is exceeded. </li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>if_packets</td>
+  <td>collectd.interface.if_packets.tx</td>
+  <td>
+    <p>A count of the packets transmitted by the interface.</p>
+    <p>You can view this metric as a Rate/sec or a cumulative count (Max):</p>
+    <ul>
+      <li>Rate/sec: Provides the current traffic level on the interface in packets/sec.</li>
+      <li>Max: Provides the cumulative count of packets transmitted. Note that since this metric is a cumulative counter, its value will periodically restart from zero when the maximum possible value of the counter is exceeded. </li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>if_errors</td>
+  <td>collectd.interface.if_errors.rx</td>
+  <td>
+    <p>A count of errors received on the interface.</p>
+    <p>You can view this metric as a Rate/sec or a cumulative count (Max).</p>
+    <ul>
+      <li>Rate/sec rollup provides the current rate of errors received on the interface in errors/sec.</li>
+      <li>Max rollup provides the total number of errors received since the beginning. Note that since this is a cumulative counter, its value will periodically restart from zero when the maximum possible value of the counter is exceeded.</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>if_errors</td>
+  <td>collectd.interface.if_errors.tx</td>
+  <td>
+    <p>A count of errors transmitted on the interface.</p>
+    <p>You can view this metric as a Rate/sec or a cumulative count (Max).</p>
+    <ul>
+      <li>Rate/sec rollup provides the current rate of errors transmitted on the interface in errors/sec.</li>
+      <li>Max rollup provides the total number of errors transmitted since the beginning. Note that since this is a cumulative counter, its value will periodically restart from zero when the maximum possible value of the counter is exceeded.</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>if_dropped</td>
+  <td>collectd.interface.if_dropped.rx</td>
+  <td></td>
+</tr>
+<tr>
+  <td>if_dropped</td>
+  <td>collectd.interface.if_dropped.tx</td>
+  <td></td>
+</tr>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Interface</p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>The network's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Derive</p>
+  </li>
+</ul>
+
+<h3 id="memory-metrics">Memory Metrics</h3>
+
+<p>Metrics collected about memory usage.</p>
+
+<p>The following table describes the memory usage metrics reported by the <strong>Memory</strong> plugin.</p>
+
+<p><strong>Memory Metrics</strong></p>
+
+<table>
+<tr>
+  <th>Metric Name</th>
+  <th>collectd.type</th>
+  <th>collectd.type_instance</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td rowspan="6">collectd.memory.memory</td>
+  <td rowspan="6">memory</td>
+  <td>used</td>
+  <td>The total amount of memory used.</td>
+</tr>
+<tr>
+  <td>free</td>
+  <td>The total amount of unused memory.</td>
+</tr>
+<tr>
+  <td>cached</td>
+  <td>The amount of memory used for caching disk data for reads, memory-mapped files, or tmpfs data.</td>
+</tr>
+<tr>
+  <td>buffered</td>
+  <td>The amount of memory used for buffering, mostly for I/O operations.</td>
+</tr>
+<tr>
+  <td>slab_recl</td>
+  <td>The amount of reclaimable memory used for slab kernel allocations.</td>
+</tr>
+<tr>
+  <td>slab_unrecl</td>
+  <td>Amount of unreclaimable memory used for slab kernel allocations.</td>
+</tr>
+<tr>
+  <td rowspan="6">collectd.memory.percent</td>
+  <td rowspan="6">percent</td>
+  <td>used</td>
+  <td>The total amount of memory used, as a percentage.</td>
+</tr>
+<tr>
+  <td>free</td>
+  <td>The total amount of unused memory, as a percentage.</td>
+</tr>
+<tr>
+  <td>cached</td>
+  <td>The amount of memory used for caching disk data for reads, memory-mapped files, or tmpfs data, as a percentage.</td>
+</tr>
+<tr>
+  <td>buffered</td>
+  <td>The amount of memory used for buffering I/O operations, as a percentage.</td>
+</tr>
+<tr>
+  <td>slab_recl</td>
+  <td>The amount of reclaimable memory used for slab kernel allocations, as a percentage.</td>
+</tr>
+<tr>
+  <td>slab_unrecl</td>
+  <td>The amount of unreclaimable memory used for slab kernel allocations, as a percentage.</td>
+</tr>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Memory</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> Host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Gauge</p>
+  </li>
+</ul>
+
+<h3 id="nfs-metrics">NFS Metrics</h3>
+
+<p>NFS metrics enable you to analyze the use of NFS procedures.</p>
+
+<p>The following table describes the NFS metrics reported by the <strong>NFS</strong> plugin.</p>
+
+<table>
+<tr>
+  <th>Metric Name</th>
+  <th colspan="3">collectd.type_instance</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>collectd.nfs.nfs_procedure </td>
+  <td>null / getattr / lookup / access / readlink / read / write / create / mkdir / symlink / mknod / rename / readdir / remove / link / fsstat / fsinfo / readdirplus / pathconf / rmdir / commit / compound / reserved / access / close / delegpurge / putfh / putpubfh putrootfh / renew / restorefh / savefh / secinfo </td>
+  <td> / setattr / setclientid / setcltid_confirm / verify / open / openattr / open_confirm / exchange_id / create_session / destroy_session / bind_conn_to_session / delegreturn / getattr / getfh / lock / lockt / locku / lookupp /  open_downgrade / nverify </td>
+  <td> / release_lockowner / backchannel_ctl / free_stateid / get_dir_delegation / getdeviceinfo / getdevicelist / layoutcommit / layoutget / layoutreturn / secinfo_no_name / sequence / set_ssv / test_stateid / want_delegation / destroy_clientid / reclaim_complete </td>
+  <td>The number of processes per _collectd.type_instance_ state.</td>
+</tr>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> NFS</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>File system + server or client (for example: v3client)</em></p>
+  </li>
+  <li>
+    <p><strong>collectd.type:</strong> nfs_procedure</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Derive</p>
+  </li>
+</ul>
+
+<h1 id="postgresql-metrics">PostgreSQL Metrics</h1>
+
+<p>PostgreSQL data collected by executing SQL statements on a PostgreSQL database.</p>
+
+<p>The following table describes the PostgreSQL metrics reported by the <strong>PostgreSQL</strong> plugin.</p>
+
+<p><strong>PostgreSQL Metrics</strong></p>
+
+<table>
+<tr>
+  <th>Metric Name</th>
+  <th>collectd.type_instance</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td>collectd.postgresql.pg_numbackends</td>
+  <td>N/A</td>
+  <td>How many server processes this database is using.</td>
+</tr>
+<tr>
+  <td rowspan="2">collectd.postgresql.pg_n_tup_g</td>
+  <td>live</td>
+  <td>The number of live rows in the database. </td>
+</tr>
+<tr>
+  <td>dead</td>
+  <td>The number of dead rows in the database. Rows that are deleted or obsoleted by an update are not physically removed from their table; they remain present as dead rows until a VACUUM is performed.</td>
+</tr>
+<tr>
+  <td rowspan="4">collectd.postgresql.pg_n_tup_c</td>
+  <td>del</td>
+  <td>The number of delete operations. </td>
+</tr>
+<tr>
+  <td>upd</td>
+  <td>The number of update operations. </td>
+</tr>
+<tr>
+  <td>hot_upd</td>
+  <td>The number of update operations that have been performed without requiring an index update. </td>
+</tr>
+<tr>
+  <td>ins</td>
+  <td>The number of insert operations.</td>
+</tr>
+<tr>
+  <td>collectd.postgresql.pg_xact</td>
+  <td>num_deadlocks</td>
+  <td>The number of deadlocks that have been detected by the database. Deadlocks are caused by two or more competing actions that are unable to finish because each is waiting for the other's resources to be unlocked. </td>
+</tr>
+<tr>
+  <td>collectd.postgresql.pg_db_size</td>
+  <td>N/A</td>
+  <td>The size of the database on disk, in bytes.  </td>
+</tr>
+<tr>
+  <td rowspan="7">collectd.postgresql.pg_blks a</td>
+  <td>heap_read </td>
+  <td>How many disk blocks have been read. </td>
+</tr>
+<tr>
+  <td>heap_hit </td>
+  <td>How many read operations were served from the buffer in memory, so that a disk read was not necessary. This only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache. </td>
+</tr>
+<tr>
+  <td>idx_read </td>
+  <td>How many disk blocks have been read by index access operations.</td>
+</tr>
+<tr>
+  <td>idx_hit </td>
+  <td>How many index access operations have been served from the buffer in memory.</td>
+</tr>
+<tr>
+  <td>toast_read </td>
+  <td>How many disk blocks have been read on TOAST tables.</td>
+</tr>
+<tr>
+  <td>toast_hit </td>
+  <td>How many TOAST table reads have been served from buffer in memory.</td>
+</tr>
+<tr>
+  <td>tidx_read </td>
+  <td>How many disk blocks have been read by index access operations on TOAST tables.</td>
+</tr>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Postgresql</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>Database's Name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> engine</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+  <li>
+    <p><strong>collectd.dstypes:</strong> Gauge</p>
+  </li>
+</ul>
+
+<h3 id="process-metrics">Process Metrics</h3>
+
+<p>The following table describes the process metrics reported by the <strong>Processes</strong> plugin.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>collectd.type</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.processes.ps_state</td>
+      <td>ps_state</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_ops.read</td>
+      <td>ps_disk_ops</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_ops.write</td>
+      <td>ps_disk_ops</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_vm</td>
+      <td>ps_vm</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_rss</td>
+      <td>ps_rss</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_data</td>
+      <td>ps_data</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_code</td>
+      <td>ps_code</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_stacksize</td>
+      <td>ps_stacksize</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_cputime.syst</td>
+      <td>ps_cputime</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_cputime.user</td>
+      <td>ps_cputime</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_count.processes</td>
+      <td>ps_count</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_count.threads</td>
+      <td>ps_count</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_pagefaults.majfltadd</td>
+      <td>ps_pagefaults</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_pagefaults.minflt</td>
+      <td>ps_pagefaults</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_octets.write</td>
+      <td>ps_disk_octets</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.ps_disk_octets.read</td>
+      <td>ps_disk_octets</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.processes.fork_rate</td>
+      <td>fork_rate</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Processes</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> <em>The process's name (except for collectd.processes.fork_rate=N/A)</em></p>
+  </li>
+  <li>
+    <p><strong>collectd.type_instance:</strong> N/A (except for collectd.processes.ps_state=running/ zombies/ stopped/ paging/ blocked/ sleeping)</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+</ul>
+
+<h3 id="swap-metrics">Swap Metrics</h3>
+
+<p>Swap metrics enable you to view the amount of memory currently written onto the hard disk, in bytes, according to available, used, and cached swap space.</p>
+
+<p>The following table describes the Swap metrics reported by the <strong>Swap</strong> plugin.</p>
+
+<p><strong>Swap Metrics</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.dstypes</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.swap.swap</td>
+      <td>swap</td>
+      <td>used / free /  cached</td>
+      <td>Gauge</td>
+      <td>The used, available, and cached swap space (in bytes).</td>
+    </tr>
+    <tr>
+      <td>collectd.swap.swap_io</td>
+      <td>swap_io</td>
+      <td>in / out</td>
+      <td><a href="Derive">Derive</a></td>
+      <td>The number of swap pages written and read per second.\</td>
+    </tr>
+    <tr>
+      <td>collectd.swap.percent</td>
+      <td>percent</td>
+      <td>used / free / cached</td>
+      <td>Gauge</td>
+      <td>The percentage of used, available, and cached swap space.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Fields</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> Swap</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> None</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> host or Manager</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+</ul>
+
+<h3 id="virtual-machine-metrics">Virtual Machine Metrics</h3>
+
+<p>The following table describes the virtual machine metrics reported by the <strong>Virt</strong> plugin.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Metric Name</th>
+      <th>collectd.type</th>
+      <th>collectd.type_instance</th>
+      <th>collectd.dstypes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>collectd.virt.ps_cputime.syst</td>
+      <td>ps_cputime.syst</td>
+      <td>N/A</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.percent</td>
+      <td>percent</td>
+      <td>virt_cpu_total</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.ps_cputime.user</td>
+      <td>ps_cputime.user</td>
+      <td>N/A</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.virt_cpu_total</td>
+      <td>virt_cpu_total</td>
+      <td>CPU number</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.virt_vcpu</td>
+      <td>virt_vcpu</td>
+      <td>CPU number</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_octets.read</td>
+      <td>disk_octets.read</td>
+      <td>disk name</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_ops.read</td>
+      <td>disk_ops.read</td>
+      <td>disk name</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_octets.write</td>
+      <td>disk_octets.write</td>
+      <td>disk name</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.disk_ops.write</td>
+      <td>disk_ops.write</td>
+      <td>disk name</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_octets.rx</td>
+      <td>if_octets.rx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_dropped.rx</td>
+      <td>if_dropped.rx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_errors.rx</td>
+      <td>if_errors.rx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_octets.tx</td>
+      <td>if_octets.tx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_dropped.tx</td>
+      <td>if_dropped.tx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_errors.tx</td>
+      <td>if_errors.tx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_packets.rx</td>
+      <td>if_packets.rx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.if_packets.tx</td>
+      <td>if_packets.tx</td>
+      <td>network name</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.memory</td>
+      <td>memory</td>
+      <td>rss / total /actual_balloon / available / unused / usable / last_update / major_fault / minor_fault / swap_in / swap_out</td>
+      <td>Gauge</td>
+    </tr>
+    <tr>
+      <td>collectd.virt.total_requests</td>
+      <td>total_requests</td>
+      <td>flush-DISK</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.total_time_in_ms</td>
+      <td>total_time_in_ms</td>
+      <td>flush-DISK</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+    <tr>
+      <td>collectd.virt.total_time_in_ms</td>
+      <td>total_time_in_ms</td>
+      <td>flush-DISK</td>
+      <td><a href="Derive">Derive</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Additional Values</strong></p>
+
+<ul>
+  <li>
+    <p><strong>collectd.plugin:</strong> virt</p>
+  </li>
+  <li>
+    <p><strong>collectd.plugin_instance:</strong> The virtual machine's name</p>
+  </li>
+  <li>
+    <p><strong>ovirt.entity:</strong> vm</p>
+  </li>
+  <li>
+    <p><strong>ovirt.cluster.name.raw:</strong> <em>The cluster's name</em></p>
+  </li>
+  <li>
+    <p><strong>ovirt.engine_fqdn.raw:</strong> <em>The Manager's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>hostname:</strong> <em>The host's FQDN</em></p>
+  </li>
+  <li>
+    <p><strong>ipaddr4:</strong> <em>IP address</em></p>
+  </li>
+  <li>
+    <p><strong>interval:</strong> 10</p>
+  </li>
+</ul>
+
+<h3 id="gauge-and-derive-data-source-types">Gauge and Derive Data Source Types</h3>
+
+<p>Each metric includes a <em>collectd.dstypes</em> value that defines the data source's type:</p>
+
+<ul>
+  <li>
+    <p><strong>Gauge</strong>: A gauge value is simply stored as-is and is used for values that may increase or decrease, such as the amount of memory used.</p>
+  </li>
+  <li>
+    <p><strong>Derive</strong>: These data sources assume that the change of the value is interesting, i.e., the derivative. Such data sources are very common for events that can be counted, for example the number of disk read operations. The total number of disk read operations is not interesting, but rather the change since the value was last read. The value is therefore converted to a rate using the following formula:</p>
+
+<div class="highlight"><pre class="highlight plaintext"><code>  rate = value(new)-value(old)\&#x000A;          time(new)-time(old)&#x000A;</code></pre></div>
+    <p><strong>Note:</strong> If value(new) is less than value (old), the resulting rate will be negative. If the minimum value to zero, such data points will be discarded.</p>
+  </li>
+</ul>
+
+<h2 id="working-with-metrics-store-indexes">Working with Metrics Store Indexes</h2>
+
+<p>Metrics Store creates the following two indexes per day:</p>
+
+<ul>
+  <li>
+    <p>project.ovirt-metrics-&lt;ovirt-env-name&gt;.uuid.yyyy.mm.dd</p>
+  </li>
+  <li>
+    <p>project.ovirt-logs-&lt;ovirt-env-name&gt;.uuid.yyyy.mm.dd</p>
+  </li>
+</ul>
+
+<p>When using the <strong>Discover</strong> page, select the index named project.ovirt-logs-&lt;ovirt-env-name&gt;.uuid.</p>
+
+<p>In the <strong>Visualization</strong> page select project.ovirt-metrics-&lt;ovirt-env-name&gt;.uuid for metrics data or project.ovirt-logs-&lt;ovirt-env-name&gt;.uuid for log data.</p>
+
+<p><strong>Prev:</strong> <a href="Introduction">Chapter 1: Introduction</a><br />
+<strong>Next:</strong> <a href="Logs">Chapter 3: Analyzing Logs</a></p>
+
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_virtualization/4.2/html/metrics_store_user_guide/chap-metrics">Adapted from RHV 4.2 documentation - CC-BY-SA</a></p>
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=documentation&amp;title=Issue:%20/source/documentation/metrics-user-guide/analyzing_metrics.html.md&amp;template=issue_template_documentation.md"><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/documentation/metrics-user-guide/analyzing_metrics.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Thu 11 Apr 2019 08:12 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>

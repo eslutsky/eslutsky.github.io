@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7" lang="en-us"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]> <html class="no-js lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if lt IE 10]> <html class="no-js lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]> > <![endif]-->
+<html class='no-js' lang='en'>
+<!-- <![endif] -->
+<head>
+<title>
+VmPinningToMultipleHosts &mdash;
+oVirt
+</title>
+<meta charset='utf-8'>
+<meta content='' name='description'>
+<meta content='' name='author'>
+<meta content='initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width' name='viewport'>
+
+<link href='/images/favicon.ico' rel='shortcut icon'>
+<link href='/images/apple-touch-icon-precomposed.png' rel='apple-touch-icon-precomposed'>
+<link href='/images/apple-touch-icon-57x57-precomposed.png' rel='apple-touch-icon-precomposed' sizes='57x57'>
+<link href='/images/apple-touch-icon-72x72-precomposed.png' rel='apple-touch-icon-precomposed' sizes='72x72'>
+<link href='/images/apple-touch-icon-114x114-precomposed.png' rel='apple-touch-icon-precomposed' sizes='114x114'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+<link href="/stylesheets/application.css?1560777611" rel="stylesheet" type="text/css" />
+<link href="/stylesheets/print.css?1560777612" rel="stylesheet" type="text/css" media="print" />
+</head>
+<body class=' source-md'>
+<header class='masthead hidden-print' id='branding' role='banner'>
+<section class='hgroup'></section>
+<div id='access'>
+<nav id="mainNav" class="navbar-fixed-top affix-top navForMobileHack" style="font-family: 'Open Sans', sans-serif; display: flex; justify-content: center;">
+      <a href="/"><img id="logo" style="float: left; margin-right: 70px; height: 40px; padding: 0; margin-top: 12px;" alt="oVirt" src="/images/logo.svg"></a>
+      <div>
+          <div class="navbar-header page-scroll" style="min-width: 170px">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu_id0980fddf">
+                  <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+              </button>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="menu_id0980fddf">
+
+              <ul class="nav navbar-nav">
+                  <li class="hidden active">
+                      <a href="#page-top"></a>
+                  </li>
+<li role='menuitem'>
+  <a href='/'>Home</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/download/'>Download</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/documentation/'>Documentation</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/develop/'>Developers</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/community/'>Community</a>
+</li>
+
+<li role='menuitem'>
+  <a href='//lists.ovirt.org/archives/'>Forum</a>
+</li>
+
+<li role='menuitem'>
+  <a href='/blog/'>Blog</a>
+</li>
+
+              </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+  </nav>
+
+</div>
+</header>
+
+<section class='page-wrap' id='page-wrap'>
+<section class='page' id='page'>
+<ul class='breadcrumb'>
+<li><a href="/develop/">Develop</a></li>
+<li><a href="/develop/release-management/">Release-management</a></li>
+<li><a href="/develop/release-management/features/">Features</a></li>
+<li><a href="/develop/release-management/features/sla/">Sla</a></li>
+</ul>
+
+<section class='container content' id='content'>
+<div class='alert alert-warning'>
+Feature pages are design documents that developers have created while collaborating on oVirt.
+<br>
+<br>
+Most of them are
+<strong>
+outdated
+</strong>
+, but provide historical design context.
+<br>
+<br>
+They are
+<strong>
+not
+</strong>
+user documentation and should not be treated as such.
+<br>
+<br>
+<a href='/documentation/'>Documentation is available here.</a>
+</div>
+<h1 id="vm-pinning-to-multiple-hosts">VM Pinning To Multiple Hosts</h1>
+
+<h3 id="summary">Summary</h3>
+
+<p>In oVirt 3.5 it is possible to pin a VM to a specific host. The pinning functionality provides the following benefits:</p>
+
+<ol>
+  <li>Controlled physical hardware configuration for VM (e.g NUMA, CPU, NICs…).</li>
+  <li>Prevent VM migration, satisfying administrative constraints. Such as: licensing, physical proximity, optimize CPU utilization, network optimization…</li>
+</ol>
+
+<p>oVirt users favor host pinning feature and wish to extend the single host pinning to multiple hosts pinning.
+See this <a href="https://bugzilla.redhat.com/1107512">RFE</a>.</p>
+
+<h3 id="owner">Owner</h3>
+
+<ul>
+  <li>
+    <p>Name: Dudi Maroshi</p>
+  </li>
+  <li>
+    <p>Email: maroshi@redhat.com</p>
+  </li>
+</ul>
+
+<h3 id="general-description">General Description</h3>
+
+<h4 id="functional-requirements">Functional requirements</h4>
+
+<p>We name hosts group within a cluster, hosts bundle, or just bundle. The hosts bundle introduction, provides a fine grained migration domain internal to a specific cluster. Limiting specified VM migration (one or more VMs) to the hosts bundle.</p>
+
+<p><strong>Following the rational in the general description above:</strong></p>
+
+<ol>
+  <li>User may define many bounding bundles, and assign multiple hosts (in same cluster) to bounding bundle.</li>
+  <li>Hosts can be member in more than one bounding bundle.</li>
+  <li>User defining a preferred starting host need to chose from the following:
+    <ol>
+      <li>All hosts in cluster
+        <ol>
+          <li>Preferred hosts (one or more) in the cluster (all hosts in cluster selection list)</li>
+        </ol>
+      </li>
+      <li>A bounding bundle in the cluster
+        <ol>
+          <li>Preferred hosts (one or more) in the bounding bundle (shorter selection list)</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>The migration policy will bound the VM to the selected bounding bundle.</li>
+  <li>For backward compatibility, user may pin a single host in the bounding bundle.</li>
+  <li>Running VM should display its bounding hosts list. The bounding group name if exist or list of bounding host for ad-hoc group.</li>
+</ol>
+
+<p><strong>Planned Functionality levels:</strong></p>
+
+<ol>
+  <li>Provide VM pinning to multiple host functionality with REST-api</li>
+  <li>Provide VM pinning to multiple host functionality with GUI</li>
+  <li>Provide management of bounding bundles, and VM bounding to bundle with REST-api</li>
+  <li>Provide management of bounding bundles, and VM bounding to bundle with GUI</li>
+</ol>
+
+<h3 id="detailed-description">Detailed Description</h3>
+
+<p><strong>Functionality level 1</strong></p>
+
+<p>Requires extensive refactoring in the data access layer and business logic due to large dependency tree.</p>
+
+<h4 id="architecture-flows">Architecture flows</h4>
+
+<p><strong>Functionality level 1</strong></p>
+
+<p>Refactor the current preferred host, from single host to list of hosts. This will require change at database level, change to scheduling, change to all VM types and their management commands. Refactor REST-api structure and mapping to handle preferring multiple hosts.</p>
+
+<h4 id="detailed-design">Detailed design</h4>
+
+<p><strong>Functionality level 1</strong></p>
+
+<ol>
+  <li>Refactor database schema (tables, constraints, view)</li>
+  <li>Refactor stored procedures to manage hosts removal consistency with VMs</li>
+  <li>Refactor all VM entities to accepts list of preferred hosts</li>
+  <li>Refactor data access layer to transform hosts bundle presentation from CSV text to list</li>
+  <li>Refactor all references of preferred single host, to use list. Requires some logic redesign for managing: NUMA, OVF, host devices.</li>
+  <li>Refactor REST-api schema and mapper. With consistency verifications.</li>
+</ol>
+
+<p><strong>Accepted XML elements for REST-api in VM element.</strong></p>
+
+<p><strong>Single host pinning by id</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;placement_policy&gt;</span>&#x000A;    <span class="nt">&lt;host</span> <span class="na">id=</span><span class="s">"bbf42054-2e5b-4f3c-8c19-e3428f5fd5c9"</span><span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;affinity&gt;</span>pinned<span class="nt">&lt;/affinity&gt;</span>&#x000A;<span class="nt">&lt;/placement_policy&gt;</span>&#x000A;</code></pre></div>
+<p><strong>Single host pinning by name</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;placement_policy&gt;</span>&#x000A;    <span class="nt">&lt;host&gt;&lt;name&gt;</span>"host-1"<span class="nt">&lt;/name&gt;&lt;/host&gt;</span>&#x000A;    <span class="nt">&lt;affinity&gt;</span>pinned<span class="nt">&lt;/affinity&gt;</span>&#x000A;<span class="nt">&lt;/placement_policy&gt;</span>&#x000A;</code></pre></div>
+<p><strong>Multiple host pinning by id</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;placement_policy&gt;</span>&#x000A;    <span class="nt">&lt;hosts&gt;</span>&#x000A;        <span class="nt">&lt;host</span> <span class="na">id=</span><span class="s">"bbf42054-2e5b-4f3c-8c19-e3428f5fd5c9"</span><span class="nt">/&gt;</span>&#x000A;        <span class="nt">&lt;host</span> <span class="na">id=</span><span class="s">"bbf42054-2e5b-4f3c-8c19-e3428f5fd5ca"</span><span class="nt">/&gt;</span>&#x000A;    <span class="nt">&lt;/hosts&gt;</span>&#x000A;<span class="nt">&lt;affinity&gt;</span>pinned<span class="nt">&lt;/affinity&gt;</span>&#x000A;<span class="nt">&lt;/placement_policy&gt;</span>&#x000A;</code></pre></div>
+<p><strong>Multiple host pinning by name</strong></p>
+
+<div class="highlight"><pre class="highlight xml"><code><span class="nt">&lt;placement_policy&gt;</span>&#x000A;    <span class="nt">&lt;hosts&gt;</span>&#x000A;        <span class="nt">&lt;host&gt;&lt;name&gt;</span>"host-1"<span class="nt">&lt;/name&gt;&lt;/host&gt;</span>&#x000A;        <span class="nt">&lt;host&gt;&lt;name&gt;</span>"host-2"<span class="nt">&lt;/name&gt;&lt;/host&gt;</span>&#x000A;    <span class="nt">&lt;/hosts&gt;</span>&#x000A;    <span class="nt">&lt;affinity&gt;</span>pinned<span class="nt">&lt;/affinity&gt;</span>&#x000A;<span class="nt">&lt;/placement_policy&gt;</span>&#x000A;</code></pre></div>
+<h3 id="benefit-to-ovirt">Benefit to oVirt</h3>
+
+<p>The business argument for multiple hosts pinning is the following:</p>
+
+<ol>
+  <li>oVirt admin wants to provide high availability for VMs running on hosts group. When hosts group share similar physical hardware configuration.</li>
+  <li>oVirt admin wants to provide high availability for host with pinned VM.</li>
+  <li>Prevent VM migration outside of the hosts group (see benefit 2 in previous paragraph).</li>
+</ol>
+
+<h3 id="dependencies--related-features">Dependencies / Related Features</h3>
+
+<p>Depends on the following oVirt-engine subsystems: Database, entities, bll, GUI, REST-api</p>
+
+<ol>
+  <li>vm_static table and related views. Data access stored procedures.</li>
+  <li>All business logic commands referencing preferred host. (16 commands)</li>
+  <li>Scheduling manager and validators.</li>
+  <li>Business entities dependant on preferred host. (VM, template, numa, host_device)</li>
+</ol>
+
+<p>Currently the implementation of NUMA pinning and Host Devices requires <strong>single</strong> host pinning. The command verification method (canDoAction) in each respective command is refactored, and a descriptive error message is provided to prevent multiple host pinning on NUMA or host device.</p>
+
+
+</section>
+</section>
+</section>
+<footer class='text-center' id='footer'>
+<hr class='visible-print'>
+<ul class='footer-nav-list'>
+<li><a target="_blank" href="../../../../site/privacy-policy.html">Privacy policy</a></li>
+<li><a target="_blank" href="../../../../community/about.html">About</a></li>
+<li><a target="_blank" href="../../../../site/general-disclaimer.html">Disclaimers</a></li>
+</ul>
+
+&copy; 2013&ndash;2019 oVirt
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/issues/new?labels=content&amp;title=Issue:%20/source/develop/release-management/features/sla/vmpinningtomultiplehosts.html.md&amp;template="><i class="icon fa fa-github"></i>Report an issue with this page</a>
+</div>
+<div class='edit-this-page'>
+<a target="_blank" href="https://github.com/oVirt/ovirt-site/edit/master/source/develop/release-management/features/sla/vmpinningtomultiplehosts.html.md"><i class="icon fa fa-github"></i>Edit this page</a>
+</div>
+<div class='last-modified'>
+Page last modified
+Wed 12 Jul 2017 17:57 UTC
+</div>
+        <script type="text/javascript">
+        var _paq = _paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://stats.phx.ovirt.org/";
+        _paq.push(['setTrackerUrl', u+'piwik.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+        })();
+        </script>
+<noscript><p><img src="https://stats.phx.ovirt.org/piwik.php?idsite=1" style="border:0;" alt="" /></p></noscript>
+</footer>
+
+
+<script src="/javascripts/application.js?1560777657" type="text/javascript"></script>
+
+</body>
+</html>
